@@ -1,0 +1,11 @@
+#gitignore
+
+###
+#ignore TS row files
+ts_medium.txt
+ts_small.txt
+ts_large.txt
+
+###
+#ignore checkpoint files
+.ipynb_checkpoints/
