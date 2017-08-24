@@ -9,3 +9,5 @@ ts_large.txt
 ###
 #ignore checkpoint files
 .ipynb_checkpoints/
+
+row_function.txt
