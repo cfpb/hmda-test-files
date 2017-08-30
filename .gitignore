@@ -8,6 +8,10 @@ ts_large.txt
 
 ###
 #ignore checkpoint files
+python/.ipynb_checkpoints/
 .ipynb_checkpoints/
-
+python/__pycache__
+__pycache__
 row_function.txt
+lar_generator.txt
+edits_files
