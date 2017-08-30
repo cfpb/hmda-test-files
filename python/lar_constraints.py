@@ -1,0 +1,475 @@
+import random
+
+class lar_constraints(object):
+
+	def __init__(self):
+		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const"]
+
+	#constraint functions
+	#these functions will be used to re-generate data for a specific LAR row so that the data row is valid 
+	#For example, preapproval code 2 limits the valid entries for action taken
+	#list of constraining edits:
+	#S303: requires panel (matches LEI, TAX ID, Federal Agency)
+
+	#constraints NOTE: check fields of highest variability (most enumerations) first
+	def s305_const():
+		"""S305: duplicate row, checks all fields to determine if it is a duplicate record"""
+		pass
+
+
+	def v610_const(self, row):
+		"""V610: application date must be NA when action taken = 6, reverse must also be true"""
+		if row["app_date"] == "NA" or row["action_taken"] == "6":
+			row["app_date"] = "NA"
+			row["action_taken"] = "6"
+		return row
+		
+	def v612_const(self, row):
+		"""V612: if preapproval = 1 then loan purpose = 1"""
+		if row["preapproval"] == "1":
+			row["loan_purpose"] = "1"
+		return row
+	
+	def v613_const(self, row):
+		"""V613: 2) If Action Taken equals 7 or 8, then Preapproval must equal 1.
+			   3) If Action Taken equals 3, 4, 5 or 6, then Preapproval must equal 2.
+			   4) If Preapproval equals 1, then Action Taken must equal 1, 2, 7 or 8."""
+		
+		if row["preapproval"] == "2":
+			row["action_taken"] = random.choice(("3", "4", "5", "6"))
+		elif row["preapproval"] == "1":
+			row["action_taken"] = random.choice(("1", "2", "7", "8"))
+		return row
+		
+	def v614_const(self, row):
+		"""V614: 1) If Loan Purpose equals 2, 4, 31, 32, or 5, then Preapproval must equal 2.
+			   2) If Multifamily Affordable Units is a number, then Preapproval must equal 2.
+			   3) If Reverse Mortgage equals 1, then Preapproval must equal 2.
+			   4) If Open-End Line of Credit equals 1, then Preapproval must equal 2."""
+
+		if row["loan_purpose"] in ("2", "4", "31", "32", "5"):
+			row["preapproval"] = "2"
+		if row["affordable_units"] != "NA":
+			row["preapproval"] = "2"
+		if row["reverse_mortgage"] == "1":
+			row["preapproval"] = "2"
+		if row["open_end_credit"] == "1":
+			row["preapproval"] = "2"
+		return row
+		
+	def v615_const(self, row):
+		"""V615: 2) If Manufactured Home Land Property Interest equals 1, 2, 3 or 4, then Construction Method must equal 2.
+	          		   3) If Manufactured Home Secured Property Type equals 1 or 2 then Construction Method must equal 2."""
+
+		if row["manufactured_interest"] in ("1", "2", "3", "4"):
+			row["const_method"] = "2"
+		if row["manufactured_type"] in ("1", "2"):
+			row["const_method"] = "2"
+		return row
+	
+	def v619_const(self, row, reporting_year="2018"):
+		"""V619: 2) The Action Taken Date must be in the reporting year.
+	      		   3) The Action Taken Date must be on or after the Application Date."""	
+		if row["action_date"][:4] != "2018":
+			row["action_date"] = "2018" + row["action_date"][4:]
+		if row["action_date"] != "NA" and int(row["action_date"]) < int(row["app_date"]):
+			row["action_date"] = row["app_date"]
+		return row
+		
+	def v622_const(self, row):
+		"""V622: 1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA."""
+		if row["street_address"] != "NA":
+			if row["city"] == "":
+				row["city"] = "Spudfarm"
+			if row["state"] == "":
+				row["state"] = "UT"
+			if row["zip_code"] == "":
+				row["zip_code"] = "12345"
+		return row
+
+	def v627_const(self, row):
+		"""V627: 1) If County and Census Tract are not reported NA, they must be a valid combination of information.
+			       The first five digits of the Census Tract must match the reported five digit County FIPS code. """
+ 		#requires actual use of real data, CBSA file
+		pass
+	#V628: 1) Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, or 4, and cannot be left blank,
+	#         unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other
+	#         Hispanic or Latino. 
+	#      2) Ethnicity of Applicant or Borrower: 2; Ethnicity of Applicant or Borrower: 3; Ethnicity of Applicant or
+	#         Borrower: 4; Ethnicity of Applicant or Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank.
+	#      3) Each Ethnicity of Applicant or Borrower code can only be reported once
+	#      4) If Ethnicity of Applicant or Borrower: 1 equals 3 or 4; then Ethnicity of Applicant or Borrower: 2; Ethnicity
+	#         of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4; Ethnicity of Applicant or Borrower: 5
+	#         must be left blank.
+
+	#V629: 2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1,
+	#         then Ethnicity of Applicant or Borrower: 1 must equal 1 or 2; and Ethnicity of Applicant or Borrower: 2 must
+	#         equal 1, 2 or be left blank; and Ethnicity of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4;
+	#         and Ethnicity of Applicant or Borrower: 5 must all be left blank.
+	#      3) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,
+	#         then Ethnicity of Applicant or Borrower: 1 must equal
+	#         1, 11, 12, 13, 14, 2 or 3. 
+
+	#V630: 1) If Ethnicity of Applicant or Borrower: 1 equals 4, then Ethnicity of Applicant or Borrower Collected on
+	#         the Basis of Visual Observation or Surname must equal 3.
+	#      2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3,
+	#         then Ethnicity of Applicant or Borrower: 1 must equal 3 or 4.
+
+	#V631: 1) Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, 4, or 5, and cannot be
+	#         left blank, unless an ethnicity is provided in Ethnicity of Co-Applicant or Co-Borrower: Free Form Text
+	#         Field for Other Hispanic or Latino..
+	#      2) Ethnicity of Co-Applicant or Co-Borrower: 2; Ethnicity of Co-Applicant or Co-Borrower: 3; Ethnicity
+	#         of Co-Applicant or Co-Borrower: 4; Ethnicity of CoApplicant or Co-Borrower: 5 must equal 1, 11, 12, 13,
+	#         14, 2, or be left blank.
+	#      3) Each Ethnicity of Co-Applicant or Co-Borrower code can only be reported once.
+	#      4) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 3, 4, or 5; then Ethnicity of Co-Applicant or
+	#         Co-Borrower: 2; Ethnicity of Co-Applicant or CoBorrower:  3; Ethnicity of Co-Applicant or CoBorrower:
+	#         4; Ethnicity of Co-Applicant or CoBorrower: 5 must be left blank.
+
+	#V632: 2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or
+	#         Surname equals 1; then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1 or 2; and Ethnicity of
+	#         Co-Applicant or Co-Borrower: 2 must equal 1, 2 or be left blank; and Ethnicity of Co-Applicant or CoBorrower:
+	#         3; Ethnicity of Co-Applicant or CoBorrower: 4; Ethnicity of Co-Applicant or CoBorrower:
+	#         5 must all be left blank. 
+	#      3) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 
+	#         2; then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3
+
+	#V633: 1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4, then Ethnicity of Co-Applicant or CoBorrower
+	#         Collected on the Basis of Visual Observation or Surname must equal 3. 
+	#      2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or
+	#         Surname equals 3; then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 3 or 4.
+
+	#V634: 1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5, then Ethnicity of Co-Applicant or CoBorrower
+	#         Collected on the Basis of Visual Observation or Surname must equal 4, and the reverse must be true.
+
+	#V635: 1) Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, or
+	#         7, and cannot be left blank, unless a race is provided in Race of Applicant or Borrower: Free Form Text
+	#         Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of Applicant or Borrower:
+	#         Free Form Text Field for Other Asian, or Race of Applicant or Borrower: Free Form Text Field for Other
+	#         Pacific Islander.
+	#      2) Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or
+	#         Borrower: 4; Race of Applicant or Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43,
+	#         44, 5, or be left blank.
+	#      3) Each Race of Applicant or Borrower code can only be reported once.
+	#      4) If Race of Applicant or Borrower: 1 equals 6 or 7; then Race of Applicant or Borrower: 2; Race of
+	#         Applicant or Borrower: 3; Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must
+	#         all be left blank.
+
+	#V636: 2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1;
+	#         then Race of Applicant or Borrower: 1 must equal 1, 2, 3, 4, or 5; and Race of Applicant or Borrower: 2;
+	#         Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5
+	#         must equal 1, 2, 3, 4, or 5, or be left blank. 
+	#      3) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,
+	#         Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5 or 6; 
+	#         and Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4;
+	#         Race of Applicant or Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be
+	#         left blank.
+
+	#V637: 1) If Race of Applicant or Borrower: 1 equals 7, then Race of Applicant or Borrower Collected on the Basis
+	#         of Visual Observation or Surname must equal 3.
+	#      2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3;
+	#         then Race of Applicant or Borrower: 1 must equal 6 or 7. 
+
+	#V638: 1) Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43,
+	#         44, 5, 6, 7, or 8, and cannot be left blank, unless a race is provided in Race of Co-Applicant or CoBorrower:
+	#         Free Form Text Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of
+	#         Co-Applicant or Co-Borrower: Free Form Text Field for Other Asian, or Race of Co-Applicant or CoBorrower:
+	#         Free Form Text Field for Other Pacific Islander.
+	#      2) Race of Co-Applicant or Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of CoApplicant
+	#         or Co-Borrower: 4; Race of Co-Applicant or Co-Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25,
+	#         26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank. 
+	#      3) Each Race of Co-Applicant or Co-Borrower code can only be reported once.
+	#      4) If Race of Co-Applicant or Co-Borrower: 1 equals 6, 7, or 8, then Race of Co-Applicant or Co-Borrower:
+	#         2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co-Borrower: 4; and Race of CoApplicant
+	#         or Co-Borrower: 5 must be left blank.
+
+	#V639: 2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
+	#         equals 1, then Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 3, 4, or 5; and Race of CoApplicant
+	#         or Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or CoBorrower:
+	#         4; Race of Co-Applicant or Co-Borrower: 5 must equal 1, 2, 3, 4, or 5, or be left blank.
+	#      3) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
+	#         equals 2, then Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41,
+	#         42, 43, 44, 5 or 6; and Race of Co-Applicant or CoBorrower:
+	#         2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co-Borrower: 4; Race of CoApplicant
+	#         or Co-Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank.
+
+	#V640: 1) If Race of Co-Applicant or Co-Borrower: 1 equals 7, then Race of Co-Applicant or Co-Borrower
+	#         Collected on the Basis of Visual Observation or Surname must equal 3.
+	#      2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
+	#         equals 3, then Race of Co-Applicant or Co-Borrower: 1 must equal 6 or 7.
+
+	#V641: 1) If Race of Co-Applicant or Co-Borrower: 1 equals 8, then Race of Co-Applicant or Co-Borrower
+	#         Collected on the Basis of Visual Observation or Surname must equal 4, and the reverse must be true. 
+
+	#V643: 1) If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1,
+	#         then Sex of Applicant or Borrower must equal 1 or 2. 
+	#      2) If Sex of Applicant or Borrower equals 1 or 2, then the Sex of Applicant or Borrower Collected on the
+	#         Basis of Visual Observation or Surname must equal 1 or 2.
+
+	#V644: 1) If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,
+	#         then Sex of Applicant or Borrower must equal 1, 2, 3, or 6.
+	#      2) If Sex of Applicant or Borrower equals 6, then Sex of Applicant or Borrower Collected on the Basis of
+	#         Visual Observation or Surname must equal 2.
+
+	#V645: 1) If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3,
+	#         then Sex of Applicant or Borrower must equal 3 or 4.
+	#      2) If Sex of Applicant or Borrower equals 4, then Sex of Applicant or Borrower Collected on the Basis of
+	#         Visual Observation or Surname must equal 3.
+
+	#V647: 1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
+	#         equals 1, then Sex of Co-Applicant or Co-Borrower must equal 1 or 2.
+	#      2) If Sex of Co-Applicant or Co-Borrower equals 1 or 2, then Sex of Co-Applicant or Co-Borrower Collected
+	#         on the Basis of Visual Observation or Surname must equal 1 or 2.
+
+	#V648: 1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
+	#         equals 2, then Sex of Co-Applicant or Co-Borrower must equal 1, 2, 3 or 6.
+	#      2) If Sex of Co-Applicant or Co-Borrower equals 6, then Sex of Co-Applicant or Co-Borrower Collected
+	#         on the Basis of Visual Observation or Surname must equal 2.
+
+	#V649: 1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
+	#         equals 3, then Sex of Co-Applicant or Co-Borrower must equal 3 or 4.
+	#      2) If Sex of Co-Applicant or Co-Borrower equals 4, then Sex of Co-Applicant or Co-Borrower Collected
+	#         on the Basis of Visual Observation or Surname must equal 3.
+
+	#V650: 1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
+	#         equals 4, then Sex of Co-Applicant or Co-Borrower must equal 5, and the reverse must be true.
+
+	#V651: 2) If the Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7;
+	#         and Sex of Applicant or Borrower equals 4 indicating the applicant or borrower is a non-natural person,
+	#         then Age of Applicant or Borrower must equal 8888.
+
+	#V652: 2) If the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower:
+	#        1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or coborrower
+	#        is a non-natural person, then Age of CoApplicant or Co-Borrower must equal 8888.
+
+	#V654: 2) If Multifamily Affordable Units is a number, then Income must be NA.
+
+	#V655: 1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
+	#         Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person, then Income
+	#         must be NA.
+	#      2) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower:
+	#         1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or coborrower
+	#         is a non-natural person, then Income must be NA. 
+
+	#V656: 2) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Type of Purchaser must equal 0.
+
+	#V657: 2) If Action Taken equals 3, 4, 5, 6, or 7, then Rate Spread must be NA.
+	#      3) If Reverse Mortgage equals 1, then Rate Spread must be NA.
+
+	#V658: 2) If Action Taken equals 2, 3, 4, 5, 7, or 8, then HOEPA Status must be 3.
+
+	#V661: 1) If Credit Score of Applicant or Borrower equals 8888 indicating not applicable, then Applicant or
+	#         Borrower, Name and Version of Credit Scoring Model must equal 9, and the reverse must be true
+
+	#V662: 1) If Applicant or Borrower, Name and Version of Credit Scoring Model equals 1, 2, 3, 4, 5, 6, 7, or 9,
+	#         then Applicant or Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text
+	#         Field for Code 8 must be left blank, and the reverse must be true.
+	#      2) If Applicant or Borrower, Name and Version of Credit Scoring Model equals 8, then Applicant or
+	#         Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8
+	#         must not be blank, and the reverse must be true. 
+
+	#V663: 1) If Action Taken equals 4, 5, or 6, then Credit Score of Applicant or Borrower must equal 8888; and
+	#         Applicant or Borrower, Name and Version of Credit Scoring Model must equal 9; and Applicant or
+	#         Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8
+	#         must be left blank.
+
+	#V664: 1) If Action Taken equals 4, 5, or 6, then Credit Score of Co-Applicant or Co-Borrower must equal 8888;
+	#         and Co-Applicant or Co-Borrower, Name and Version
+	#         of Credit Scoring Model must equal 9; and CoApplicant or Co-Borrower, Name and Version of
+	#         Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank
+
+	#V666: 1) If Credit Score of Co-Applicant or Co-Borrower equals 8888 indicating not applicable, then CoApplicant
+	#         or Co-Borrower, Name and Version of Credit Scoring Model must equal 9, and the reverse must be true.
+	#      2) If Credit Score of Co-Applicant or Co-Borrower equals 9999 indicating no co-applicant, then CoApplicant
+	#         or Co-Borrower, Name and Version of Credit Scoring Model must equal 10, and the reverse must be true. 
+
+	#v667: 1) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals 1, 2, 3, 4, 5, 6, 7, 9, or
+	#         10, then Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free
+	#         Form Text Field for Code 8 must be left blank, and the reverse must be true.
+	#      2) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals 8, then Co-Applicant
+	#         or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8
+	#         must not be left blank, and the reverse must be true. 
+
+	#V668: 1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
+	#         Sex of Applicant or Borrower equals 4 indicating the applicant is a non-natural person then Credit Score of
+	#         Applicant or Borrower must equal 8888 indicating not applicable.
+	#      2) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower:
+	#         1 equals 7; and Sex of Co-Applicant or Co-Borrower equals 4 indicating that the co-applicant is a nonnatural
+	#         person, then Credit Score of Co-Applicant or Co-Borrower must equal 8888 indicating not applicable.
+
+	#V669: 2) Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must equal 1, 2, 3, 4, 5, 6, 7, 8,
+	#         9, or be left blank. 
+	#      3) Each Reason for Denial code can only be reported once.
+	#      4) If Reason for Denial: 1 equals 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for
+	#         Denial: 4 must all be left blank.
+
+	#V670: 1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9, and
+	#         the reverse must be true.
+	#      2) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal 10, and the reverse
+	#         must be true. 
+
+	#V671: 1) Reason for Denial: 1; Reason for Denial: 2; Reason for Denial: 3; or Reason for Denial: 4 was
+	#         reported Code 9: Other; however, the Reason for Denial: Conditional Free Form Text Field for Code 9
+	#         was left blank; or
+	#      2) The Reason for Denial: Conditional Free Form Text Field for Code 9 was reported, but Code 9 was
+	#         not reported in Reason for Denial: 1; Reason for Denial: 2; Reason for Denial: 3; or Reason for Denial: 4.
+
+	#V672: 1) Total Loan Costs must be a number greater than or equal to 0 or NA, and cannot be left blank.
+	#      2) If Total Points and Fees is a number greater than or equal to 0, then Total Loan Costs must be NA.
+	#      3) If Reverse Mortgage equals 1, then Total Loan Costs must be NA.
+	#      4) If Open-End Line of Credit equals 1, then Total Loan Costs must be NA.
+	#      5) If Business or Commercial Purpose equals 1, then Total Loan Costs must be NA.
+	#      6) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Total Loan Costs must be NA.
+
+	#V673: 1) Total Points and Fees must be a number greater than or equal to 0 or NA, and cannot be left blank.
+	#      2) If Action Taken equals 2, 3, 4, 5, 6, 7 or 8 then Total Points and Fees must be NA.
+	#      2) If Reverse Mortgage equals 1, then Total Points and Fees must be NA.
+	#      3) If Business or Commercial Purpose equals 1, then Total Points and Fees must be NA.
+	#      5) If Total Loan Costs is a number greater than or equal to 0, then Total Points and Fees must be NA. 
+
+	#V674: 1) Origination Charges must be a number greater than or equal to 0 or NA, and cannot be left blank.
+	#      2) If Reverse Mortgage equals 1, then Origination Charges must be NA.
+	#      3) If Open-End Line of Credit equals 1, then Origination Charges must be NA.
+	#      4) If Business or Commercial Purpose equals 1, then Origination Charges must be NA.
+	#      5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Origination Charges must be NA.
+
+	#V675: 1) Discount Points must be a number greater than 0, blank, or NA.
+	#      2) If Reverse Mortgage equals 1, then Discount Points must be NA.
+	#      3) If Open-End Line of Credit equals 1, then Discount Points must be NA.
+	#      4) If Business or Commercial Purpose equals 1, then Discount Points must be NA.
+	#      5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Discount Points must be NA.
+
+	#V676: 1) Lender Credits must be a number greater than 0, blank, or NA.
+	#      2) If Reverse Mortgage equals 1, then Lender Credits must be NA.
+	#      3) If Open-End Line of Credit equals 1, then Lender Credits must be NA.
+	#      4) If Business or Commercial Purpose equals 1, then Lender Credits must be NA.
+	#      5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Lender Credits must be NA. 
+
+	#V677: 1) Interest Rate must be a number greater than 0 or NA, and cannot be left blank.
+	#      2) If Action Taken equals 3, 4, 5, or 7; then Interest Rate must be NA. 
+
+	#V678: 1) Prepayment Penalty Term must be a whole number greater than 0 or NA, and cannot be left blank.
+	#      2) If Action Taken equals 6, then Prepayment Penalty Term must be NA.
+	#      3) If Reverse Mortgage equals 1, then Prepayment Penalty Term must be NA.
+	#      4) If Business or Commercial Purpose equals 1, then Prepayment Penalty Term must be NA.
+	#      5) If both Prepayment Penalty Term and Loan Term are numbers, then Prepayment Penalty Term must 
+	#         be less than or equal to Loan Term.
+
+	#V679: 1) Debt-to-Income Ratio must be either a number or NA, and cannot be left blank.
+	#      2) If Action Taken equals 4, 5 or 6, then Debt-toIncome Ratio must be NA.
+	#      3) If Multifamily Affordable Units is a number, then Debt-to-Income Ratio must be NA.
+
+	#V680: 1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
+	#         Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person;
+	#         and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower:
+	#         1 equals 8; and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or
+	#         co-borrower, then Debt-to-Income Ratio must be NA.
+	#      2) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
+	#         Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person;
+	#         and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower:
+	#         1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or coborrower
+	#         is also a non-natural person, then Debt-toIncome Ratio must be NA. 
+
+	#V681: 1) Combined Loan-to-Value Ratio must be either a number greater than 0 or NA, and cannot be left blank.
+	#      2) If Action Taken equals 4, 5, or 6, then Combined Loan-to-Value ratio must be NA. 
+
+	#V682: 1) Loan Term must be either a whole number greater than zero or NA, and cannot be left blank. 
+	#      2) If Reverse Mortgage equals 1, then Loan Term must be NA.
+
+	#V688: 1) Property Value must be either a number greater than 0 or NA, and cannot be left blank.
+	#      2) If Action Taken equals 4 or 5, then Property Value must be NA. 
+
+	#V689: 1) Manufactured Home Secured Property Type must equal 1, 2 or 3, and cannot be left blank.
+	#      2) If Multifamily Affordable Units is a number, then Manufactured Home Secured Property Type must equal 3.
+	#      3) If Construction Method equals 1, then Manufactured Home Secured Property Type must equal 3.
+
+	#V690: 1) Manufactured Home Land Property Interest must equal 1, 2, 3, 4, or 5, and cannot be left blank.
+	#      2) If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal 5.
+	#      3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal 5.
+
+	#V692: 2) If Total Units is less than 5, then Multifamily Affordable Units must be NA.
+	#      3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or
+	#         equal to Total Units. 
+
+	#V693: 2) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true. 
+
+	#V694: 1) Initially Payable to Your Institution must equal 1, 2 or 3, and cannot be left blank.
+	#      2) If Action Taken equals 6, then Initially Payable to Your Institution must equal 3.
+	#      3) If Action Taken equals 1, then Initially Payable to Your Institution must equal 1 or 2. 
+
+	#V696: 1) Automated Underwriting System: 1 must equal 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated
+	#         Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; and
+	#         Automated Underwriting System: 5 must equal 1, 2, 3, 4, 5, or be left blank.
+	#      2) Automated Underwriting System Result: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+	#         16, or 17, and cannot be left blank. Automated Underwriting System Result: 2; Automated
+	#         Underwriting System Result: 3; Automated Underwriting System Result: 4; and Automated
+	#         Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or be left
+	#         blank.
+	#      3) The number of reported Automated Underwriting Systems must equal the number of reported Automated Underwriting System Results.
+
+	#V697: 1) If Automated Underwriting System: 1, Automated Underwriting System: 2; Automated Underwriting
+	#         System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 1, then the
+	#         corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
+	#         Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
+	#         Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, or 7.
+
+	#V698: 1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting
+	#         System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 2, then the
+	#         corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
+	#         Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
+	#         Automated Underwriting System Result: 5 must equal 8, 9, 10, 11, or 12.
+
+	#V699: 1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting
+	#         System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 5, then the
+	#         corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
+	#         Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
+	#         Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, or 16.
+
+	#V700: 1) If Automated Underwriting System: 1 equals 6, then the corresponding Automated Underwriting
+	#         System Result: 1 must equal 17; and the Automated Underwriting System: 2; 
+	#         Automated UnderwritingSystem: 3; Automated Underwriting System: 4; Automated Underwriting System: 5; 
+	#         Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated
+	#         Underwriting System Result: 4; and Automated Underwriting System Result: 5 must all be left blank.
+	#      2) If Automated Underwriting System Result: 1 equals 17, then the corresponding 
+	#         Automated Underwriting System: 1 must equal 6; and the Automated Underwriting System: 2; Automated
+	#         Underwriting System: 3; Automated Underwriting System: 4; Automated Underwriting System: 5;
+	#         Automated Underwriting System Result: 2; Automated Underwriting System Result: 3;
+	#         Automated Underwriting System Result: 4; and Automated Underwriting System Result: 5 must all be left blank.
+
+	#V701: 1) If Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting
+	#         System: 4; or Automated Underwriting System: 5 was left blank, then the corresponding reported
+	#         Automated Underwriting System Result: 2; Automated Underwriting System Result: 3;
+	#         Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5 must be left blank.
+
+	#V702: 1) Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting
+	#         System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 was reported
+	#         Code 5: Other. However, the Automated Underwriting System: Conditional Free Form Text Field for Code 5
+	#         was left blank; or
+	#      2) The Automated Underwriting System: Conditional Free Form Text Field for Code 5 was reported, but
+	#         Code 5 was not reported in Automated Underwriting System: 1; Automated Underwriting System: 2;
+	#         Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5.
+
+	#V703: 1) Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
+	#         Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
+	#         Automated Underwriting System Result: 5 was reported Code 16: Other. However, the Automated
+	#         Underwriting System Result: Conditional Free Form Text Field for Code 16 was left blank; or
+	#      2) The Automated Underwriting System Result : Conditional Free Form Text Field for Code 16 was 
+	#         reported, but Code 16 was not reported in Automated Underwriting System Result: 1; Automated
+	#         Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated
+	#         Underwriting System Result: 4; or Automated Underwriting System Result: 5.
+
+	#V704: 1) If Action Taken equals 6, then Automated Underwriting System: 1 must equal 6.
+	#      2) If Action Taken equals 6, then Automated Underwriting System Result: 1 must equal 17. 
+
+	#V705: 1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
+	#         Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person; and the
+	#         Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower: 1 equals
+	#         8; and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or coborrower,
+	#         then Automated Underwriting System: 1 must equal 6; and Automated Underwriting System Result: 1 must equal 17.
+	#      2) If the Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7;
+	#         and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural
+	#         person; and Ethnicity of Co-Applicant or CoBorrower: 1 equals 4; and Race of Co-Applicant or
+	#         Co-Borrower: 1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the coapplicant
+	#         or co-borrower is also a non-natural person, then Automated Underwriting System: 1 must equal
+	#         6; and Automated Underwriting System Result: 1 must equal 17.
+
