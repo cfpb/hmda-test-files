@@ -1,19 +1,17 @@
-# This repository contains code used to generate synthetic LAR files. These files will be used to support the development of the 2018 HMDA data submission platform. The success of the HMDA program requires that the data submitted meet the technical and business requirements of the HMDA Platform. The code and test files in this repository will provide a standardized means of checking the implementation of the business rules for data submission in the HMDA Platform.
+# Repository Purpose:
+This repository contains code used to generate synthetic LAR files. These files will be used to support the development of the 2018 HMDA data submission platform. The success of the HMDA program requires that the data submitted meet the technical and business requirements of the HMDA Platform. The code and test files in this repository will provide a standardized means of checking the implementation of the business rules for data submission in the HMDA Platform.
 
-# The code, and files produced by it, have several use cases:
+## Repository Use Cases:
 - Enable business analysts to test the 2018 HMDA Platform
 - Provide files to check API returns
 - Provide a resource for developers to use while implementing business rules in code
 
 
 ## Dependancies
+- US Census tract to CBSA data for the most current year
 - Python 3.5 or greater
 - TBD: A full list of packages used can be found in [requirements.txt](https://github.com/cfpb/hmda-viz-prototype/blob/gh-pages/processing/requirements.txt)
     - `pip install -r requirements.txt` to install the requirements
-
-
-## Dependancies
-- US Census tract to CBSA data for the most current year
 
 ## Repository Workflow
 - The [Test file maker](https://github.com/Kibrael/2018_test_files/blob/master/python/2018_test_file_maker.ipynb) uses the classes [lar_generator]() and [lar_constraints]() to first create a Python dictionary of synthetic data, and then apply business rules to ensure that the data are valid for submission.
