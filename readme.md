@@ -1,4 +1,4 @@
-# Repository Purpose:
+## Repository Purpose:
 This repository contains code used to generate synthetic LAR files. These files will be used to support the development of the 2018 HMDA data submission platform. The success of the HMDA program requires that the data submitted meet the technical and business requirements of the HMDA Platform. The code and test files in this repository will provide a standardized means of checking the implementation of the business rules for data submission in the HMDA Platform.
 
 ## Repository Use Cases:
