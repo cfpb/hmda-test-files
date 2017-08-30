@@ -4,7 +4,8 @@ class lar_constraints(object):
 
 	def __init__(self, counties, tracts):
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
-		"v629_const", "v630_const"]
+		"v629_const", "v630_const", "v631_const"
+		]
 		self.tracts = tracts
 		self.counties = counties
 
@@ -16,28 +17,28 @@ class lar_constraints(object):
 
 	#constraints NOTE: check fields of highest variability (most enumerations) first
 	def s305_const():
-		"""S305: duplicate row, checks all fields to determine if it is a duplicate record"""
+		"""duplicate row, checks all fields to determine if it is a duplicate record"""
 		pass
 
 
 	def v610_const(self, row):
-		"""V610: application date must be NA when action taken = 6, reverse must also be true"""
+		"""application date must be NA when action taken = 6, reverse must also be true"""
 		if row["app_date"] == "NA" or row["action_taken"] == "6":
 			row["app_date"] = "NA"
 			row["action_taken"] = "6"
 		return row
 		
 	def v612_const(self, row):
-		"""V612: if preapproval = 1 then loan purpose = 1"""
+		"""if preapproval = 1 then loan purpose = 1"""
 		if row["preapproval"] == "1":
 			row["loan_purpose"] = "1"
 		return row
 	
 	def v613_const(self, row):
-		"""V613: 2) If Action Taken equals 7 or 8, then Preapproval must equal 1.
-			   3) If Action Taken equals 3, 4, 5 or 6, then Preapproval must equal 2.
-			   4) If Preapproval equals 1, then Action Taken must equal 1, 2, 7 or 8."""
-		
+		"""2) If Action Taken equals 7 or 8, then Preapproval must equal 1.
+		   3) If Action Taken equals 3, 4, 5 or 6, then Preapproval must equal 2.
+		   4) If Preapproval equals 1, then Action Taken must equal 1, 2, 7 or 8."""
+	
 		if row["preapproval"] == "2":
 			row["action_taken"] = random.choice(("3", "4", "5", "6"))
 		elif row["preapproval"] == "1":
@@ -45,10 +46,10 @@ class lar_constraints(object):
 		return row
 		
 	def v614_const(self, row):
-		"""V614: 1) If Loan Purpose equals 2, 4, 31, 32, or 5, then Preapproval must equal 2.
-			   2) If Multifamily Affordable Units is a number, then Preapproval must equal 2.
-			   3) If Reverse Mortgage equals 1, then Preapproval must equal 2.
-			   4) If Open-End Line of Credit equals 1, then Preapproval must equal 2."""
+		"""1) If Loan Purpose equals 2, 4, 31, 32, or 5, then Preapproval must equal 2.
+		   2) If Multifamily Affordable Units is a number, then Preapproval must equal 2.
+		   3) If Reverse Mortgage equals 1, then Preapproval must equal 2.
+		   4) If Open-End Line of Credit equals 1, then Preapproval must equal 2."""
 
 		if row["loan_purpose"] in ("2", "4", "31", "32", "5"):
 			row["preapproval"] = "2"
@@ -61,8 +62,8 @@ class lar_constraints(object):
 		return row
 		
 	def v615_const(self, row):
-		"""V615: 2) If Manufactured Home Land Property Interest equals 1, 2, 3 or 4, then Construction Method must equal 2.
-					   3) If Manufactured Home Secured Property Type equals 1 or 2 then Construction Method must equal 2."""
+		"""2) If Manufactured Home Land Property Interest equals 1, 2, 3 or 4, then Construction Method must equal 2.
+		   3) If Manufactured Home Secured Property Type equals 1 or 2 then Construction Method must equal 2."""
 
 		if row["manufactured_interest"] in ("1", "2", "3", "4"):
 			row["const_method"] = "2"
@@ -71,7 +72,7 @@ class lar_constraints(object):
 		return row
 	
 	def v619_const(self, row, reporting_year="2018"):
-		"""V619: 2) The Action Taken Date must be in the reporting year.
+		"""2) The Action Taken Date must be in the reporting year.
 				   3) The Action Taken Date must be on or after the Application Date."""	
 		if row["action_date"][:4] != "2018":
 			row["action_date"] = "2018" + row["action_date"][4:]
@@ -80,7 +81,7 @@ class lar_constraints(object):
 		return row
 		
 	def v622_const(self, row):
-		"""V622: 1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA."""
+		"""1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA."""
 		if row["street_address"] != "NA":
 			if row["city"] == "":
 				row["city"] = "Spudfarm"
@@ -91,23 +92,23 @@ class lar_constraints(object):
 		return row
 
 	def v627_const(self, row):
-		"""V627: 1) If County and Census Tract are not reported NA, they must be a valid combination of information.
-			   The first five digits of the Census Tract must match the reported five digit County FIPS code. """
+		"""1) If County and Census Tract are not reported NA, they must be a valid combination of information.
+		   The first five digits of the Census Tract must match the reported five digit County FIPS code. """
 		if row["tract"] != "NA" and row["county"] != "NA" and (row["tract"] not in self.tracts or row["county"] not in self.counties):
 			row["tract"] = random.choice(self.tracts)
 			row["county"] = row["tract"][:5]
 		return row
 	
 	def v628_const(self, row):
-		"""V628: 1) Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, or 4, and cannot be left blank,
+		"""1) Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, or 4, and cannot be left blank,
 			   unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other
 			   Hispanic or Latino. 
-			   2) Ethnicity of Applicant or Borrower: 2; Ethnicity of Applicant or Borrower: 3; Ethnicity of Applicant or
-			   Borrower: 4; Ethnicity of Applicant or Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank.
-			   3) Each Ethnicity of Applicant or Borrower code can only be reported once
-			   4) If Ethnicity of Applicant or Borrower: 1 equals 3 or 4; then Ethnicity of Applicant or Borrower: 2; Ethnicity
-			   of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4; Ethnicity of Applicant or Borrower: 5
-			  must be left blank."""
+		   2) Ethnicity of Applicant or Borrower: 2; Ethnicity of Applicant or Borrower: 3; Ethnicity of Applicant or
+		   	Borrower: 4; Ethnicity of Applicant or Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank.
+		   3) Each Ethnicity of Applicant or Borrower code can only be reported once
+		   4) If Ethnicity of Applicant or Borrower: 1 equals 3 or 4; then Ethnicity of Applicant or Borrower: 2; Ethnicity
+		   	of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4; Ethnicity of Applicant or Borrower: 5
+		  	must be left blank."""
 		if row["app_eth_1"] =="" and row["app_eth_code_14"] =="":
 			row["app_eth_1"] = "1"
 		if row["app_eth_1"] in ("3", "4"):
@@ -118,14 +119,14 @@ class lar_constraints(object):
 		return row
 
 	def v629_const(self, row):
-		"""V629: 2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1,
-	         			then Ethnicity of Applicant or Borrower: 1 must equal 1 or 2; 
-	         			and Ethnicity of Applicant or Borrower: 2 must equal 1, 2 or be left blank; 
-	         			and Ethnicity of Applicant or Borrower: 3; 
-	         			Ethnicity of Applicant or Borrower: 4;
-	         			and Ethnicity of Applicant or Borrower: 5 must all be left blank.
-	      		3) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,
-	         			then Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3. """
+		"""2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1,
+         			then Ethnicity of Applicant or Borrower: 1 must equal 1 or 2; 
+         			and Ethnicity of Applicant or Borrower: 2 must equal 1, 2 or be left blank; 
+         			and Ethnicity of Applicant or Borrower: 3; 
+         			Ethnicity of Applicant or Borrower: 4;
+         			and Ethnicity of Applicant or Borrower: 5 must all be left blank.
+  		3) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,
+         			then Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3. """
 		if row["app_eth_basis"] =="1":
 			row["app_eth_1"] = random.choice(("1", "2"))
 			row["app_eth_2"] = ""
@@ -139,9 +140,9 @@ class lar_constraints(object):
 		return row
 
 	def v630_const(self, row):
-		"""V630: 1) If Ethnicity of Applicant or Borrower: 1 equals 4, then Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname 
+		"""1) If Ethnicity of Applicant or Borrower: 1 equals 4, then Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname 
 			must equal 3.
-			2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3, then Ethnicity of Applicant or Borrower: 1 
+		2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3, then Ethnicity of Applicant or Borrower: 1 
 			must equal 3 or 4."""
 		if row["app_eth_1"] == "4":
 			row["app_eth_basis"] = "3"
@@ -149,17 +150,64 @@ class lar_constraints(object):
 			row["app_eth_1"] = random.choice(("3", "4"))
 		return row
 			
+	def v631_const(self, row):
+		"""1) Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, 4, or 5, and cannot be
+			left blank, unless an ethnicity is provided in Ethnicity of Co-Applicant or Co-Borrower: Free Form Text
+			Field for Other Hispanic or Latino..
+		2) Ethnicity of Co-Applicant or Co-Borrower: 2; Ethnicity of Co-Applicant or Co-Borrower: 3; Ethnicity
+			of Co-Applicant or Co-Borrower: 4; Ethnicity of CoApplicant or Co-Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank.
+		3) Each Ethnicity of Co-Applicant or Co-Borrower code can only be reported once.
+		4) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 3, 4, or 5; then Ethnicity of Co-Applicant or
+			Co-Borrower: 2; Ethnicity of Co-Applicant or CoBorrower:  3; Ethnicity of Co-Applicant or CoBorrower:
+			4; Ethnicity of Co-Applicant or CoBorrower: 5 must be left blank."""
+		def v631_a(self, row):
+			#check if app eth 1 is blank and code 14 free text is blank, if so, change app_eth_1
+			if row["co_app_eth_1"] == "" and row["co_app_eth_code_14"] == "":
+				row["co_app_eth_1"] = random.choice(["1","11", "12", "13", "14", "2", "3", "4", "5"])
+			return row
+		def v631_b(self, row):
+			#set app eth 2-5 to blank if app eth 1 in 3,4,5
+			if row["co_app_eth_1"] in ("3", "4", "5"):
+				row["co_app_eth_2"] = ""
+				row["co_app_eth_3"] = ""
+				row["co_app_eth_4"] = ""
+				row["co_app_eth_5"] = ""
+			return row
+		def v631_c(self, row):
+			#check for duplicates in app eth 1-5, change duplicates to blank
+			eths = ["1","11", "12", "13", "14", "2"] #list of valid co app eths 2-5
+			if row["co_app_eth_1"] in eths:
+				eths.remove(row["co_app_eth_1"]) #remove eth 1 from valid enums
 
-	#V631: 1) Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, 4, or 5, and cannot be
-	#         left blank, unless an ethnicity is provided in Ethnicity of Co-Applicant or Co-Borrower: Free Form Text
-	#         Field for Other Hispanic or Latino..
-	#      2) Ethnicity of Co-Applicant or Co-Borrower: 2; Ethnicity of Co-Applicant or Co-Borrower: 3; Ethnicity
-	#         of Co-Applicant or Co-Borrower: 4; Ethnicity of CoApplicant or Co-Borrower: 5 must equal 1, 11, 12, 13,
-	#         14, 2, or be left blank.
-	#      3) Each Ethnicity of Co-Applicant or Co-Borrower code can only be reported once.
-	#      4) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 3, 4, or 5; then Ethnicity of Co-Applicant or
-	#         Co-Borrower: 2; Ethnicity of Co-Applicant or CoBorrower:  3; Ethnicity of Co-Applicant or CoBorrower:
-	#         4; Ethnicity of Co-Applicant or CoBorrower: 5 must be left blank.
+			if row["co_app_eth_2"] != "" and row["co_app_eth_2"] not in eths:
+				row["co_app_eth_2"] = random.choice(eths) #reassign valid enumeration
+
+			if row["co_app_eth_2"] in eths:
+				eths.remove(row["co_app_eth_2"]) #remove enumeration from valid remaining enumerations
+
+			if row["co_app_eth_3"] != "" and row["co_app_eth_3"] not in eths:
+				row["co_app_eth_3"] = random.choice(eths)
+
+			if row["co_app_eth_3"] in eths:
+				eths.remove(row["co_app_eth_3"])
+
+			if row["co_app_eth_4"] != "" and row["co_app_eth_4"] not in eths:
+				row["co_app_eth_4"] = random.choice(eths)
+
+			if row["co_app_eth_4"] in eths:
+				eths.remove(row["co_app_eth_4"])
+
+			if row["co_app_eth_5"] != "" and row["co_app_eth_5"] not in eths:
+				row["co_app_eth_5"] = random.choice(eths)
+
+			return row
+
+		v631_a(self,row=row)
+		v631_b(self,row=row)
+		v631_c(self,row=row)
+
+		return row
+
 
 	#V632: 2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or
 	#         Surname equals 1; then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1 or 2; and Ethnicity of
