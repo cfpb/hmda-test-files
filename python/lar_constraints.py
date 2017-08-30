@@ -2,8 +2,11 @@ import random
 
 class lar_constraints(object):
 
-	def __init__(self):
-		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const"]
+	def __init__(self, counties, tracts):
+		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
+		"v629_const"]
+		self.tracts = tracts
+		self.counties = counties
 
 	#constraint functions
 	#these functions will be used to re-generate data for a specific LAR row so that the data row is valid 
@@ -59,7 +62,7 @@ class lar_constraints(object):
 		
 	def v615_const(self, row):
 		"""V615: 2) If Manufactured Home Land Property Interest equals 1, 2, 3 or 4, then Construction Method must equal 2.
-	          		   3) If Manufactured Home Secured Property Type equals 1 or 2 then Construction Method must equal 2."""
+					   3) If Manufactured Home Secured Property Type equals 1 or 2 then Construction Method must equal 2."""
 
 		if row["manufactured_interest"] in ("1", "2", "3", "4"):
 			row["const_method"] = "2"
@@ -69,7 +72,7 @@ class lar_constraints(object):
 	
 	def v619_const(self, row, reporting_year="2018"):
 		"""V619: 2) The Action Taken Date must be in the reporting year.
-	      		   3) The Action Taken Date must be on or after the Application Date."""	
+				   3) The Action Taken Date must be on or after the Application Date."""	
 		if row["action_date"][:4] != "2018":
 			row["action_date"] = "2018" + row["action_date"][4:]
 		if row["action_date"] != "NA" and int(row["action_date"]) < int(row["app_date"]):
@@ -89,26 +92,51 @@ class lar_constraints(object):
 
 	def v627_const(self, row):
 		"""V627: 1) If County and Census Tract are not reported NA, they must be a valid combination of information.
-			       The first five digits of the Census Tract must match the reported five digit County FIPS code. """
- 		#requires actual use of real data, CBSA file
-		pass
-	#V628: 1) Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, or 4, and cannot be left blank,
-	#         unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other
-	#         Hispanic or Latino. 
-	#      2) Ethnicity of Applicant or Borrower: 2; Ethnicity of Applicant or Borrower: 3; Ethnicity of Applicant or
-	#         Borrower: 4; Ethnicity of Applicant or Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank.
-	#      3) Each Ethnicity of Applicant or Borrower code can only be reported once
-	#      4) If Ethnicity of Applicant or Borrower: 1 equals 3 or 4; then Ethnicity of Applicant or Borrower: 2; Ethnicity
-	#         of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4; Ethnicity of Applicant or Borrower: 5
-	#         must be left blank.
+			   The first five digits of the Census Tract must match the reported five digit County FIPS code. """
+		if row["tract"] != "NA" and row["county"] != "NA" and (row["tract"] not in self.tracts or row["county"] not in self.counties):
+			row["tract"] = random.choice(self.tracts)
+			row["county"] = row["tract"][:5]
+		return row
+	
+	def v628_const(self, row):
+		"""V628: 1) Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, or 4, and cannot be left blank,
+			   unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other
+			   Hispanic or Latino. 
+			   2) Ethnicity of Applicant or Borrower: 2; Ethnicity of Applicant or Borrower: 3; Ethnicity of Applicant or
+			   Borrower: 4; Ethnicity of Applicant or Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank.
+			   3) Each Ethnicity of Applicant or Borrower code can only be reported once
+			   4) If Ethnicity of Applicant or Borrower: 1 equals 3 or 4; then Ethnicity of Applicant or Borrower: 2; Ethnicity
+			   of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4; Ethnicity of Applicant or Borrower: 5
+			  must be left blank."""
+		if row["app_eth_1"] =="" and row["app_eth_code_14"] =="":
+			row["app_eth_1"] = "1"
+		if row["app_eth_1"] in ("3", "4"):
+			row["app_eth_2"] = ""
+			row["app_eth_3"] = ""
+			row["app_eth_4"] = ""
+			row["app_eth_5"] = ""
+		return row
 
-	#V629: 2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1,
-	#         then Ethnicity of Applicant or Borrower: 1 must equal 1 or 2; and Ethnicity of Applicant or Borrower: 2 must
-	#         equal 1, 2 or be left blank; and Ethnicity of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4;
-	#         and Ethnicity of Applicant or Borrower: 5 must all be left blank.
-	#      3) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,
-	#         then Ethnicity of Applicant or Borrower: 1 must equal
-	#         1, 11, 12, 13, 14, 2 or 3. 
+	def v629_const(self, row):
+		"""V629: 2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1,
+	         			then Ethnicity of Applicant or Borrower: 1 must equal 1 or 2; 
+	         			and Ethnicity of Applicant or Borrower: 2 must equal 1, 2 or be left blank; 
+	         			and Ethnicity of Applicant or Borrower: 3; 
+	         			Ethnicity of Applicant or Borrower: 4;
+	         			and Ethnicity of Applicant or Borrower: 5 must all be left blank.
+	      		3) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,
+	         			then Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3. """
+		if row["app_eth_basis"] =="1":
+			row["app_eth_1"] = random.choice(("1", "2"))
+			row["app_eth_2"] = ""
+			row["app_eth_3"] = ""
+			row["app_eth_4"] = ""
+			row["app_eth_5"] = ""
+
+		if row["app_eth_basis"] == "2":
+			if row["app_eth_1"] not in ("1", "11", "12", "13", "14", "2", "3"):
+				row["app_eth_1"] = random.choice(("1", "11", "12", "13", "14", "2", "3"))
+		return row
 
 	#V630: 1) If Ethnicity of Applicant or Borrower: 1 equals 4, then Ethnicity of Applicant or Borrower Collected on
 	#         the Basis of Visual Observation or Surname must equal 3.

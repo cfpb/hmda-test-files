@@ -8,12 +8,12 @@ from collections import OrderedDict
 
 class lar_gen(object):
 	""""""
-	def __init__(self, LAR_df=None, TS_df=None):
+	def __init__(self, LAR_df=None, TS_df=None, counties=None, tracts=None):
 		self.LAR_df = LAR_df
 		self.TS_df = TS_df
 		#external data lists
-		self.county_list = ['001', '013', '231'] #list of CBSA counties, dtype string
-		self.tract_list = ['0012.12', '1212.12', '4444.44'] #list of CBSA tracts, dtype string
+		self.county_list = counties #list of CBSA counties, dtype string
+		self.tract_list = tracts #list of CBSA tracts, dtype string
 		self.state_codes = [] #list of valid state and territory codes (two digit letter)
 
 
