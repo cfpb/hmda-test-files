@@ -10,8 +10,8 @@ This repository contains code used to generate synthetic LAR files. These files 
 ## Dependancies
 - US Census tract to CBSA data for the most current year
 - Python 3.5 or greater
-- TBD: A full list of packages used can be found in [requirements.txt](https://github.com/cfpb/hmda-viz-prototype/blob/gh-pages/processing/requirements.txt)
-    - `pip install -r requirements.txt` to install the requirements
+- [Jupyter Notebooks](http://jupyter.org/): pip install jupyter
+- [Pandas](http://pandas.pydata.org/): pip install pandas
 
 ## Repository Workflow
 - The [Test file maker](https://github.com/Kibrael/2018_test_files/blob/master/python/2018_test_file_maker.ipynb) uses the classes [lar_generator]() and [lar_constraints]() to first create a Python dictionary of synthetic data, and then apply business rules to ensure that the data are valid for submission.
