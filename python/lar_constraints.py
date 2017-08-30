@@ -4,7 +4,7 @@ class lar_constraints(object):
 
 	def __init__(self, counties, tracts):
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
-		"v629_const"]
+		"v629_const", "v630_const"]
 		self.tracts = tracts
 		self.counties = counties
 
@@ -138,10 +138,17 @@ class lar_constraints(object):
 				row["app_eth_1"] = random.choice(("1", "11", "12", "13", "14", "2", "3"))
 		return row
 
-	#V630: 1) If Ethnicity of Applicant or Borrower: 1 equals 4, then Ethnicity of Applicant or Borrower Collected on
-	#         the Basis of Visual Observation or Surname must equal 3.
-	#      2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3,
-	#         then Ethnicity of Applicant or Borrower: 1 must equal 3 or 4.
+	def v630_const(self, row):
+		"""V630: 1) If Ethnicity of Applicant or Borrower: 1 equals 4, then Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname 
+			must equal 3.
+			2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3, then Ethnicity of Applicant or Borrower: 1 
+			must equal 3 or 4."""
+		if row["app_eth_1"] == "4":
+			row["app_eth_basis"] = "3"
+		if row["app_eth_basis"] == "3" and row["app_eth_1"] not in ("3", "4"):
+			row["app_eth_1"] = random.choice(("3", "4"))
+		return row
+			
 
 	#V631: 1) Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, 4, or 5, and cannot be
 	#         left blank, unless an ethnicity is provided in Ethnicity of Co-Applicant or Co-Borrower: Free Form Text
