@@ -3,16 +3,14 @@ import random
 class lar_constraints(object):
 
 	def __init__(self, counties, tracts):
+		#list of constraining edits:
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
 		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
 
-	#constraint functions
-	#these functions will be used to re-generate data for a specific LAR row so that the data row is valid 
-	#For example, preapproval code 2 limits the valid entries for action taken
-	#list of constraining edits:
+	#functions used by constraint functions
 	def no_enum_dupes(self, fields=[], enum_list=None):
 		"""Checks all fields to ensure that no enumeration is repeated. If one repeats it is reassigned from the remaining valid enumerations.
 		enum_list_1 contains values for the first field, enum_list contains values for subsequen fields."""
@@ -25,8 +23,11 @@ class lar_constraints(object):
 				fields[i] = random.choice(enum_list)
 				enum_list.remove(fields[i])
 		return fields
+	
+	#constraint functions
+	#these functions will be used to re-generate data for a specific LAR row so that the data row is valid 
+	#For example, preapproval code 2 limits the valid entries for action taken
 	#S303: requires panel (matches LEI, TAX ID, Federal Agency)
-
 	#constraints NOTE: check fields of highest variability (most enumerations) first
 	def s305_const():
 		"""duplicate row, checks all fields to determine if it is a duplicate record"""
@@ -309,18 +310,31 @@ class lar_constraints(object):
 				row["app_race_1"] = random.choice(("6", "7"))
 		return row
 
-	#V638: 1) Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43,
-	#         44, 5, 6, 7, or 8, and cannot be left blank, unless a race is provided in Race of Co-Applicant or CoBorrower:
-	#         Free Form Text Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of
-	#         Co-Applicant or Co-Borrower: Free Form Text Field for Other Asian, or Race of Co-Applicant or CoBorrower:
-	#         Free Form Text Field for Other Pacific Islander.
-	#      2) Race of Co-Applicant or Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of CoApplicant
-	#         or Co-Borrower: 4; Race of Co-Applicant or Co-Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25,
-	#         26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank. 
-	#      3) Each Race of Co-Applicant or Co-Borrower code can only be reported once.
-	#      4) If Race of Co-Applicant or Co-Borrower: 1 equals 6, 7, or 8, then Race of Co-Applicant or Co-Borrower:
-	#         2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co-Borrower: 4; and Race of CoApplicant
-	#         or Co-Borrower: 5 must be left blank.
+	def v638_const(self, row):
+		"""1) Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, 7, or 8, 
+			and cannot be left blank, unless a race is provided in Race of Co-Applicant or CoBorrower: Free Form Text Field 
+			for American Indian or Alaska Native Enrolled or Principal Tribe, Race of Co-Applicant or Co-Borrower: 
+			Free Form Text Field for Other Asian, or Race of Co-Applicant or CoBorrower: Free Form Text Field for Other Pacific Islander.
+		2) Race of Co-Applicant or Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or 
+			Co-Borrower: 4; Race of Co-Applicant or Co-Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank. 
+		3) Each Race of Co-Applicant or Co-Borrower code can only be reported once.
+		4) If Race of Co-Applicant or Co-Borrower: 1 equals 6, 7, or 8, then Race of Co-Applicant or Co-Borrower: 2; 
+			Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co-Borrower: 4; and Race of CoApplicant or Co-Borrower: 5 must be left blank."""
+		if row["co_app_race_1"] =="" and row["co_app_race_code_1"]=="" and row["co_app_race_code_27"]=="" and row["co_app_race_code_44"]=="":
+			row["co_app_race_1"] = random.choice(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7", "8"))
+		#each code must only be used once
+		race_enums = ["1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7","8"]
+		race_fields = [row["co_app_race_1"], row["co_app_race_2"], row["co_app_race_3"], row["co_app_race_4"], row["co_app_race_5"]]
+
+		row["co_app_race_1"], row["co_app_race_2"], row["co_app_race_3"], row["co_app_race_4"], row["co_app_race_5"] = \
+		self.no_enum_dupes(fields=race_fields,  enum_list=race_enums[:-3])
+
+		if row["co_app_race_1"] in ("6", "7", "8"):
+			row["co_app_race_2"] = ""
+			row["co_app_race_3"] = ""
+			row["co_app_race_4"] = ""
+			row["co_app_race_5"] = ""
+		return row
 
 	#V639: 2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
 	#         equals 1, then Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 3, 4, or 5; and Race of CoApplicant
