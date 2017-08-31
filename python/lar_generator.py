@@ -42,6 +42,7 @@ class lar_gen(object):
 		self.prop_val_max = 30000
 		self.prop_val_min = 10
 		self.max_units = 100
+		
 	#helper functions
 	def char_string_gen(self,length):
 		"""Generates a string of chosen length using ascii uppercase and numerical characters"""
@@ -51,15 +52,11 @@ class lar_gen(object):
 		"""Generates and returns a semi-valid date string or an invalid date string. Does not check days per month."""
 		months = list(range(1,13))
 		days = list(range(1,32))
-		
 		if valid:
 			date = str(year)+str(random.choice(months)).zfill(2)+str(random.choice(days)).zfill(2)
 		else:
 			date = str(year)+str(16)+str(33)
-			
-
 		return date
-		
 
 	def random_enum(self, enums):
 		""""""
@@ -76,16 +73,26 @@ class lar_gen(object):
 		else:
 			pass
 
-	def get_schema_list(self, schema="LAR", field=None):
+	def get_schema_list(self, schema="LAR", field=None, empty=False):
 		"""Returns the list of valid values for the specifid schema and field."""
 		if not field:
 			raise ValueError("must specify which field")
 		if schema=="LAR":
-			return self.LAR_df.valid_vals[self.LAR_df.field==field].iloc[0]
+			if empty:
+				schema_enums = self.LAR_df.valid_vals[self.LAR_df.field==field].iloc[0]
+				schema_enums.append("")
+				return schema_enums
+			else: 
+				return self.LAR_df.valid_vals[self.LAR_df.field==field].iloc[0]
 		elif schema=="TS":
-			return self.TS_df.valid_vals[self.TS_df.field==field].iloc[0]
+			if empty:
+				schema_enums = self.TS_df.valid_vals[self.TS_df.field==field].iloc[0]
+				schema_enums.append("")
+				return schema_enums
+			else:
+				return self.TS_df.valid_vals[self.TS_df.field==field].iloc[0]
 
-	def range_and_enum(self, field=None, rng_min=1, rng_max=100, dtype="int"):
+	def range_and_enum(self, field=None, rng_min=1, rng_max=100, dtype="int", empty=False):
 		"""Returns a list of integers or floats. if na is True the list will also contain NA"""
 		lst=[]
 		lst = self.get_schema_list(field=field) #get NA values from schema if present
@@ -95,6 +102,8 @@ class lar_gen(object):
 		elif dtype=="float":
 			for i in range(rng_min, rng_max):
 				lst.append(i*.97)
+		if empty:
+			lst.append("")
 		return lst
 
 	def float_gen(self):
@@ -105,7 +114,7 @@ class lar_gen(object):
 		pass
 
 	#this file will have valid values for all column/row entries
-#some valid value lists contain only "NA", other entries are also valid
+	#some valid value lists contain only "NA", other entries are also valid
 
 	def make_row(self):
 		"""Make num_rows LAR rows and return them as a list of ordered dicts"""
@@ -128,33 +137,33 @@ class lar_gen(object):
 		valid_lar_row["zip_code"] = self.zip_code
 		valid_lar_row["county"] = self.random_enum(self.county_list)
 		valid_lar_row["tract"] = self.random_enum(self.tract_list)
-		valid_lar_row["app_eth_1"] = str(self.random_enum(self.get_schema_list(field="app_eth_1")))
-		valid_lar_row["app_eth_2"] = str(self.random_enum(self.get_schema_list(field="app_eth_2")))
-		valid_lar_row["app_eth_3"] = str(self.random_enum(self.get_schema_list(field="app_eth_3")))
-		valid_lar_row["app_eth_4"] = str(self.random_enum(self.get_schema_list(field="app_eth_4")))
-		valid_lar_row["app_eth_5"] = str(self.random_enum(self.get_schema_list(field="app_eth_5")))
+		valid_lar_row["app_eth_1"] = str(self.random_enum(self.get_schema_list(field="app_eth_1", empty=True)))
+		valid_lar_row["app_eth_2"] = str(self.random_enum(self.get_schema_list(field="app_eth_2", empty=True)))
+		valid_lar_row["app_eth_3"] = str(self.random_enum(self.get_schema_list(field="app_eth_3", empty=True)))
+		valid_lar_row["app_eth_4"] = str(self.random_enum(self.get_schema_list(field="app_eth_4", empty=True)))
+		valid_lar_row["app_eth_5"] = str(self.random_enum(self.get_schema_list(field="app_eth_5", empty=True)))
 		valid_lar_row["app_eth_code_14"] = self.char_string_gen(random.choice(range(100)))
-		valid_lar_row["co_app_eth_1"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_1")))
-		valid_lar_row["co_app_eth_2"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_2")))
-		valid_lar_row["co_app_eth_3"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_3")))
-		valid_lar_row["co_app_eth_4"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_4")))
-		valid_lar_row["co_app_eth_5"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_5")))
+		valid_lar_row["co_app_eth_1"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_1", empty=True)))
+		valid_lar_row["co_app_eth_2"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_2", empty=True)))
+		valid_lar_row["co_app_eth_3"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_3", empty=True)))
+		valid_lar_row["co_app_eth_4"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_4", empty=True)))
+		valid_lar_row["co_app_eth_5"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_5", empty=True)))
 		valid_lar_row["co_app_eth_code_14"] = self.char_string_gen(random.choice(range(100)))
 		valid_lar_row["app_eth_basis"] = str(self.random_enum(self.get_schema_list(field="app_eth_basis")))
 		valid_lar_row["co_app_eth_basis"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_basis")))
-		valid_lar_row["app_race_1"] = str(self.random_enum(self.get_schema_list(field="app_race_1")))
-		valid_lar_row["app_race_2"] = str(self.random_enum(self.get_schema_list(field="app_race_2")))
-		valid_lar_row["app_race_3"] = str(self.random_enum(self.get_schema_list(field="app_race_3")))
-		valid_lar_row["app_race_4"] = str(self.random_enum(self.get_schema_list(field="app_race_4")))
-		valid_lar_row["app_race_5"] = str(self.random_enum(self.get_schema_list(field="app_race_5")))
+		valid_lar_row["app_race_1"] = str(self.random_enum(self.get_schema_list(field="app_race_1", empty=True)))
+		valid_lar_row["app_race_2"] = str(self.random_enum(self.get_schema_list(field="app_race_2", empty=True)))
+		valid_lar_row["app_race_3"] = str(self.random_enum(self.get_schema_list(field="app_race_3", empty=True)))
+		valid_lar_row["app_race_4"] = str(self.random_enum(self.get_schema_list(field="app_race_4", empty=True)))
+		valid_lar_row["app_race_5"] = str(self.random_enum(self.get_schema_list(field="app_race_5", empty=True)))
 		valid_lar_row["app_race_code_1"] = self.char_string_gen(random.choice(range(100)))
 		valid_lar_row["app_race_code_27"] = self.char_string_gen(random.choice(range(100)))
 		valid_lar_row["app_race_code_44"] = self.char_string_gen(random.choice(range(100)))
-		valid_lar_row["co_app_race_1"] = str(self.random_enum(self.get_schema_list(field="co_app_race_1")))
-		valid_lar_row["co_app_race_2"] = str(self.random_enum(self.get_schema_list(field="co_app_race_2")))
-		valid_lar_row["co_app_race_3"] = str(self.random_enum(self.get_schema_list(field="co_app_race_3")))
-		valid_lar_row["co_app_race_4"] = str(self.random_enum(self.get_schema_list(field="co_app_race_4")))
-		valid_lar_row["co_app_race_5"] = str(self.random_enum(self.get_schema_list(field="co_app_race_5")))
+		valid_lar_row["co_app_race_1"] = str(self.random_enum(self.get_schema_list(field="co_app_race_1", empty=True)))
+		valid_lar_row["co_app_race_2"] = str(self.random_enum(self.get_schema_list(field="co_app_race_2", empty=True)))
+		valid_lar_row["co_app_race_3"] = str(self.random_enum(self.get_schema_list(field="co_app_race_3", empty=True)))
+		valid_lar_row["co_app_race_4"] = str(self.random_enum(self.get_schema_list(field="co_app_race_4", empty=True)))
+		valid_lar_row["co_app_race_5"] = str(self.random_enum(self.get_schema_list(field="co_app_race_5", empty=True)))
 		valid_lar_row["co_app_race_code_1"] = self.char_string_gen(random.choice(range(100)))
 		valid_lar_row["co_app_race_code_27"] = self.char_string_gen(random.choice(range(100)))
 		valid_lar_row["co_app_race_code_44"] = self.char_string_gen(random.choice(range(100)))
@@ -178,15 +187,15 @@ class lar_gen(object):
 		valid_lar_row["co_app_score_name"] = str(self.random_enum(self.get_schema_list(field="co_app_score_name")))
 		valid_lar_row["co_app_code_8"] = self.char_string_gen(random.choice(range(100)))
 		valid_lar_row["denial_1"] = str(self.random_enum(self.get_schema_list(field="denial_1")))
-		valid_lar_row["denial_2"] = str(self.random_enum(self.get_schema_list(field="denial_2")))
-		valid_lar_row["denial_3"] = str(self.random_enum(self.get_schema_list(field="denial_3")))
-		valid_lar_row["denial_4"] = str(self.random_enum(self.get_schema_list(field="denial_4")))
+		valid_lar_row["denial_2"] = str(self.random_enum(self.get_schema_list(field="denial_2", empty=True)))
+		valid_lar_row["denial_3"] = str(self.random_enum(self.get_schema_list(field="denial_3", empty=True)))
+		valid_lar_row["denial_4"] = str(self.random_enum(self.get_schema_list(field="denial_4", empty=True)))
 		valid_lar_row["denial_code_9"] = self.char_string_gen(random.choice(range(255)))
 		valid_lar_row["loan_costs"] = str(self.random_enum(self.range_and_enum(field="loan_costs",rng_max=self.loan_costs)))
 		valid_lar_row["points_fees"] = str(self.random_enum(self.range_and_enum(field="points_fees", rng_max=self.points_and_fees)))
 		valid_lar_row["origination_fee"] = str(self.random_enum(self.range_and_enum(field="origination_fee", rng_max=self.orig_charges)))
-		valid_lar_row["discount_points"] = str(self.random_enum(self.range_and_enum(field="discount_points", rng_max=self.discount_points)))
-		valid_lar_row["lender_credits"] = str(self.random_enum(self.range_and_enum(field="lender_credits", rng_max=self.lender_credits)))
+		valid_lar_row["discount_points"] = str(self.random_enum(self.range_and_enum(field="discount_points", rng_max=self.discount_points, empty=True)))
+		valid_lar_row["lender_credits"] = str(self.random_enum(self.range_and_enum(field="lender_credits", rng_max=self.lender_credits, empty=True)))
 		valid_lar_row["interest_rate"] = str(self.random_enum(self.range_and_enum(field="interest_rate", rng_max=25, dtype="float")))
 		valid_lar_row["prepayment_penalty"] = str(self.random_enum(self.range_and_enum(field="prepayment_penalty", rng_max=self.penalty_max)))
 		valid_lar_row["dti"] = str(self.random_enum(self.range_and_enum(field="dti", rng_max=self.dti)))
@@ -206,16 +215,16 @@ class lar_gen(object):
 		valid_lar_row["initially_payable"] = str(self.random_enum(self.get_schema_list(field="initially_payable")))
 		valid_lar_row["mlo_id"] = self.char_string_gen(random.choice(range(25)))
 		valid_lar_row["aus_1"] = str(self.random_enum(self.get_schema_list(field="aus_1")))
-		valid_lar_row["aus_2"] = str(self.random_enum(self.get_schema_list(field="aus_2")))
-		valid_lar_row["aus_3"] = str(self.random_enum(self.get_schema_list(field="aus_3")))
-		valid_lar_row["aus_4"] = str(self.random_enum(self.get_schema_list(field="aus_4")))
-		valid_lar_row["aus_5"] = str(self.random_enum(self.get_schema_list(field="aus_5")))
+		valid_lar_row["aus_2"] = str(self.random_enum(self.get_schema_list(field="aus_2", empty=True)))
+		valid_lar_row["aus_3"] = str(self.random_enum(self.get_schema_list(field="aus_3", empty=True)))
+		valid_lar_row["aus_4"] = str(self.random_enum(self.get_schema_list(field="aus_4", empty=True)))
+		valid_lar_row["aus_5"] = str(self.random_enum(self.get_schema_list(field="aus_5", empty=True)))
 		valid_lar_row["aus_code_5"] = self.char_string_gen(random.choice(range(255)))
 		valid_lar_row["aus_result_1"] = str(self.random_enum(self.get_schema_list(field="aus_result_1")))
-		valid_lar_row["aus_result_2"] = str(self.random_enum(self.get_schema_list(field="aus_result_2")))
-		valid_lar_row["aus_result_3"] = str(self.random_enum(self.get_schema_list(field="aus_result_3")))
-		valid_lar_row["aus_result_4"] = str(self.random_enum(self.get_schema_list(field="aus_result_4")))
-		valid_lar_row["aus_result_5"] = str(self.random_enum(self.get_schema_list(field="aus_result_5")))
+		valid_lar_row["aus_result_2"] = str(self.random_enum(self.get_schema_list(field="aus_result_2", empty=True)))
+		valid_lar_row["aus_result_3"] = str(self.random_enum(self.get_schema_list(field="aus_result_3", empty=True)))
+		valid_lar_row["aus_result_4"] = str(self.random_enum(self.get_schema_list(field="aus_result_4", empty=True)))
+		valid_lar_row["aus_result_5"] = str(self.random_enum(self.get_schema_list(field="aus_result_5", empty=True)))
 		valid_lar_row["aus_code_16"] = self.char_string_gen(random.choice(range(255)))
 		valid_lar_row["reverse_mortgage"] = str(self.random_enum(self.get_schema_list(field="reverse_mortgage")))
 		valid_lar_row["open_end_credit"] = str(self.random_enum(self.get_schema_list(field="open_end_credit")))

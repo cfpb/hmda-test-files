@@ -4,7 +4,7 @@ class lar_constraints(object):
 
 	def __init__(self, counties, tracts):
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
-		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const"
+		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -13,13 +13,23 @@ class lar_constraints(object):
 	#these functions will be used to re-generate data for a specific LAR row so that the data row is valid 
 	#For example, preapproval code 2 limits the valid entries for action taken
 	#list of constraining edits:
+	def no_enum_dupes(self, fields=[], enum_list=None):
+		"""Checks all fields to ensure that no enumeration is repeated. If one repeats it is reassigned from the remaining valid enumerations.
+		enum_list_1 contains values for the first field, enum_list contains values for subsequen fields."""
+		if fields[0] in enum_list:
+			enum_list.remove(fields[0])
+		for i in range(1, len(fields)):
+			if fields[i] in enum_list:
+				enum_list.remove(field)
+			elif fields[i] not in enum_list:
+				fields[i] = random.choice(enum_list)
+		return fields
 	#S303: requires panel (matches LEI, TAX ID, Federal Agency)
-
+	
 	#constraints NOTE: check fields of highest variability (most enumerations) first
 	def s305_const():
 		"""duplicate row, checks all fields to determine if it is a duplicate record"""
 		pass
-
 
 	def v610_const(self, row):
 		"""application date must be NA when action taken = 6, reverse must also be true"""
@@ -178,34 +188,25 @@ class lar_constraints(object):
 			eths = ["1","11", "12", "13", "14", "2"] #list of valid co app eths 2-5
 			if row["co_app_eth_1"] in eths:
 				eths.remove(row["co_app_eth_1"]) #remove eth 1 from valid enums
-
 			if row["co_app_eth_2"] != "" and row["co_app_eth_2"] not in eths:
 				row["co_app_eth_2"] = random.choice(eths) #reassign valid enumeration
-
 			if row["co_app_eth_2"] in eths:
 				eths.remove(row["co_app_eth_2"]) #remove enumeration from valid remaining enumerations
-
 			if row["co_app_eth_3"] != "" and row["co_app_eth_3"] not in eths:
 				row["co_app_eth_3"] = random.choice(eths)
-
 			if row["co_app_eth_3"] in eths:
 				eths.remove(row["co_app_eth_3"])
-
 			if row["co_app_eth_4"] != "" and row["co_app_eth_4"] not in eths:
 				row["co_app_eth_4"] = random.choice(eths)
-
 			if row["co_app_eth_4"] in eths:
 				eths.remove(row["co_app_eth_4"])
-
 			if row["co_app_eth_5"] != "" and row["co_app_eth_5"] not in eths:
 				row["co_app_eth_5"] = random.choice(eths)
-
 			return row
 
 		v631_a(self,row=row)
 		v631_b(self,row=row)
 		v631_c(self,row=row)
-
 		return row
 
 	def v632_const(self, row):
@@ -253,19 +254,32 @@ class lar_constraints(object):
 			row["co_app_eth_1"] = "5"
 		return row
 
-	#V635: 1) Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, or
-	#         7, and cannot be left blank, unless a race is provided in Race of Applicant or Borrower: Free Form Text
-	#         Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of Applicant or Borrower:
-	#         Free Form Text Field for Other Asian, or Race of Applicant or Borrower: Free Form Text Field for Other
-	#         Pacific Islander.
-	#      2) Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or
-	#         Borrower: 4; Race of Applicant or Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43,
-	#         44, 5, or be left blank.
-	#      3) Each Race of Applicant or Borrower code can only be reported once.
-	#      4) If Race of Applicant or Borrower: 1 equals 6 or 7; then Race of Applicant or Borrower: 2; Race of
-	#         Applicant or Borrower: 3; Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must
-	#         all be left blank.
-
+	def v635_const(self, row):
+		"""1) Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, or 7, 
+			and cannot be left blank, unless a race is provided in Race of Applicant or Borrower: Free Form Text 
+			Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of Applicant or Borrower: 
+			Free Form Text Field for Other Asian, or Race of Applicant or Borrower: Free Form Text Field for Other Pacific Islander.
+		2) Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4; 
+			Race of Applicant or Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank.
+		3) Each Race of Applicant or Borrower code can only be reported once.
+		4) If Race of Applicant or Borrower: 1 equals 6 or 7; then Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; 
+			Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must all be left blank."""
+		if row["app_race_1"] ==  "" and row["app_race_code_1"]== "" and row["app_race_code_27"]== "" and row["app_race_code_44"] == "":
+			row["app_race_1"] = random.choice(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7"))
+		#each code must only be used once
+		race_enums = ["1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7"]
+		race_fields = [row["app_race_1"], row["app_race_2"], row["app_race_3"], row["app_race_4"], row["app_race_5"]]
+		
+		row["app_race_1"], row["app_race_2"], row["app_race_3"], row["app_race_4"], row["app_race_5"] = \
+		self.no_enum_dupes(fields=race_fields,  enum_list=race_enums[:-2])
+		
+		if row["app_race_1"] in ("6", "7"):
+			row["app_race_2"] = ""
+			row["app_race_3"] = ""
+			row["app_race_4"] = ""
+			row["app_race_5"] = ""
+			
+		return row
 	#V636: 2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1;
 	#         then Race of Applicant or Borrower: 1 must equal 1, 2, 3, 4, or 5; and Race of Applicant or Borrower: 2;
 	#         Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5
