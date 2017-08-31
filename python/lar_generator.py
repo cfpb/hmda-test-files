@@ -79,12 +79,16 @@ class lar_gen(object):
 			raise ValueError("must specify which field")
 		if schema=="LAR":
 			if empty:
-				return self.LAR_df.valid_vals[self.LAR_df.field==field].iloc[0].append("")
+				schema_enums = self.LAR_df.valid_vals[self.LAR_df.field==field].iloc[0]
+				schema_enums.append("")
+				return schema_enums
 			else: 
 				return self.LAR_df.valid_vals[self.LAR_df.field==field].iloc[0]
 		elif schema=="TS":
 			if empty:
-				return self.TS_df.valid_vals[self.TS_df.field==field].iloc[0].append("")
+				schema_enums = self.TS_df.valid_vals[self.TS_df.field==field].iloc[0]
+				schema_enums.append("")
+				return schema_enums
 			else:
 				return self.TS_df.valid_vals[self.TS_df.field==field].iloc[0]
 
