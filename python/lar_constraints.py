@@ -336,16 +336,29 @@ class lar_constraints(object):
 			row["co_app_race_5"] = ""
 		return row
 
-	#V639: 2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
-	#         equals 1, then Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 3, 4, or 5; and Race of CoApplicant
-	#         or Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or CoBorrower:
-	#         4; Race of Co-Applicant or Co-Borrower: 5 must equal 1, 2, 3, 4, or 5, or be left blank.
-	#      3) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
-	#         equals 2, then Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41,
-	#         42, 43, 44, 5 or 6; and Race of Co-Applicant or CoBorrower:
-	#         2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co-Borrower: 4; Race of CoApplicant
-	#         or Co-Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank.
+	def v639_const(self, row):
+		"""1) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 1, 
+			then Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 3, 4, or 5; and Race of CoApplicant or 
+			Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or CoBorrower: 4; 
+			Race of Co-Applicant or Co-Borrower: 5 must equal 1, 2, 3, 4, or 5, or be left blank.
+		2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 2, 
+			then Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5 or 6; 
+			and Race of Co-Applicant or CoBorrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of 
+			Co-Applicant or Co-Borrower: 4; Race of CoApplicant or Co-Borrower: 5 must equal 
+			1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank."""
+		if row["co_app_race_basis"] == "1":
+			if row["co_app_race_1"] not in ("1", "2", "3", "4", "5"):
+				row["co_app_race_1"] = random.choice(("1", "2", "3", "4", "5"))
+			row["co_app_race_2"] = ""
+			row["co_app_race_3"] = ""
+			row["co_app_race_4"] = ""
+			row["co_app_race_5"] = ""
 
+		if row["co_app_race_basis"] =="2":
+			if row["co_app_race_1"] not in ("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6"):
+				row["co_app_race_1"] = random.choice(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6"))
+			
+		return row
 	#V640: 1) If Race of Co-Applicant or Co-Borrower: 1 equals 7, then Race of Co-Applicant or Co-Borrower
 	#         Collected on the Basis of Visual Observation or Surname must equal 3.
 	#      2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
