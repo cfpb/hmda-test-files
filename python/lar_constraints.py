@@ -4,7 +4,7 @@ class lar_constraints(object):
 
 	def __init__(self, counties, tracts):
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
-		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const"
+		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -296,10 +296,18 @@ class lar_constraints(object):
 			if row["app_race_1"] not in ("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6"):
 				row["app_race_1"] = random.choice(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6"))
 		return row
-	#V637: 1) If Race of Applicant or Borrower: 1 equals 7, then Race of Applicant or Borrower Collected on the Basis
-	#         of Visual Observation or Surname must equal 3.
-	#      2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3;
-	#         then Race of Applicant or Borrower: 1 must equal 6 or 7. 
+
+	def v637_const(self, row):
+		"""1) If Race of Applicant or Borrower: 1 equals 7, then Race of Applicant or Borrower Collected on the Basis of Visual Observation 
+			or Surname must equal 3.
+		2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3; then Race of Applicant or 
+			Borrower: 1 must equal 6 or 7. """
+		if row["app_race_1"] == "7":
+			row["app_race_basis"] = "3"
+		if row["app_race_basis"] == "3":
+			if row["app_race_1"] not in ("6", "7"):
+				row["app_race_1"] = random.choice(("6", "7"))
+		return row
 
 	#V638: 1) Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43,
 	#         44, 5, 6, 7, or 8, and cannot be left blank, unless a race is provided in Race of Co-Applicant or CoBorrower:
