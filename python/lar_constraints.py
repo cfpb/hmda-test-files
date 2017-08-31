@@ -20,12 +20,13 @@ class lar_constraints(object):
 			enum_list.remove(fields[0])
 		for i in range(1, len(fields)):
 			if fields[i] in enum_list:
-				enum_list.remove(field)
+				enum_list.remove(fields[i])
 			elif fields[i] not in enum_list:
 				fields[i] = random.choice(enum_list)
+				enum_list.remove(fields[i])
 		return fields
 	#S303: requires panel (matches LEI, TAX ID, Federal Agency)
-	
+
 	#constraints NOTE: check fields of highest variability (most enumerations) first
 	def s305_const():
 		"""duplicate row, checks all fields to determine if it is a duplicate record"""
@@ -37,24 +38,24 @@ class lar_constraints(object):
 			row["app_date"] = "NA"
 			row["action_taken"] = "6"
 		return row
-		
+
 	def v612_const(self, row):
 		"""if preapproval = 1 then loan purpose = 1"""
 		if row["preapproval"] == "1":
 			row["loan_purpose"] = "1"
 		return row
-	
+
 	def v613_const(self, row):
 		"""2) If Action Taken equals 7 or 8, then Preapproval must equal 1.
 		   3) If Action Taken equals 3, 4, 5 or 6, then Preapproval must equal 2.
 		   4) If Preapproval equals 1, then Action Taken must equal 1, 2, 7 or 8."""
-	
+
 		if row["preapproval"] == "2":
 			row["action_taken"] = random.choice(("3", "4", "5", "6"))
 		elif row["preapproval"] == "1":
 			row["action_taken"] = random.choice(("1", "2", "7", "8"))
 		return row
-		
+
 	def v614_const(self, row):
 		"""1) If Loan Purpose equals 2, 4, 31, 32, or 5, then Preapproval must equal 2.
 		   2) If Multifamily Affordable Units is a number, then Preapproval must equal 2.
@@ -70,7 +71,7 @@ class lar_constraints(object):
 		if row["open_end_credit"] == "1":
 			row["preapproval"] = "2"
 		return row
-		
+
 	def v615_const(self, row):
 		"""2) If Manufactured Home Land Property Interest equals 1, 2, 3 or 4, then Construction Method must equal 2.
 		   3) If Manufactured Home Secured Property Type equals 1 or 2 then Construction Method must equal 2."""
@@ -80,16 +81,16 @@ class lar_constraints(object):
 		if row["manufactured_type"] in ("1", "2"):
 			row["const_method"] = "2"
 		return row
-	
+
 	def v619_const(self, row, reporting_year="2018"):
 		"""2) The Action Taken Date must be in the reporting year.
-				   3) The Action Taken Date must be on or after the Application Date."""	
+				   3) The Action Taken Date must be on or after the Application Date."""
 		if row["action_date"][:4] != "2018":
 			row["action_date"] = "2018" + row["action_date"][4:]
 		if row["action_date"] != "NA" and int(row["action_date"]) < int(row["app_date"]):
 			row["action_date"] = row["app_date"]
 		return row
-		
+
 	def v622_const(self, row):
 		"""1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA."""
 		if row["street_address"] != "NA":
@@ -108,7 +109,7 @@ class lar_constraints(object):
 			row["tract"] = random.choice(self.tracts)
 			row["county"] = row["tract"][:5]
 		return row
-	
+
 	def v628_const(self, row):
 		"""1) Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, or 4, and cannot be left blank,
 			   unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other
@@ -121,6 +122,13 @@ class lar_constraints(object):
 		  	must be left blank."""
 		if row["app_eth_1"] =="" and row["app_eth_code_14"] =="":
 			row["app_eth_1"] = "1"
+
+		eth_enums = ["1", "11", "12", "13", "14", "2", "3", "4"]
+		eth_fields = [row["app_eth_1"], row["app_eth_2"], row["app_eth_3"], row["app_eth_4"], row["app_eth_5"]]
+		#elminate duplicates from ethnicity choices
+		row["app_eth_1"], row["app_eth_2"], row["app_eth_3"], row["app_eth_4"], row["app_eth_5"] = \
+		self.no_enum_dupes(fields=eth_fields,  enum_list=eth_enums[:-2])
+		#set subsequent fields to blank if app_ethnicity is 3 or 4
 		if row["app_eth_1"] in ("3", "4"):
 			row["app_eth_2"] = ""
 			row["app_eth_3"] = ""
@@ -159,7 +167,7 @@ class lar_constraints(object):
 		if row["app_eth_basis"] == "3" and row["app_eth_1"] not in ("3", "4"):
 			row["app_eth_1"] = random.choice(("3", "4"))
 		return row
-			
+
 	def v631_const(self, row):
 		"""1) Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, 4, or 5, and cannot be
 			left blank, unless an ethnicity is provided in Ethnicity of Co-Applicant or Co-Borrower: Free Form Text
@@ -170,6 +178,8 @@ class lar_constraints(object):
 		4) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 3, 4, or 5; then Ethnicity of Co-Applicant or
 			Co-Borrower: 2; Ethnicity of Co-Applicant or CoBorrower:  3; Ethnicity of Co-Applicant or CoBorrower:
 			4; Ethnicity of Co-Applicant or CoBorrower: 5 must be left blank."""
+		co_app_eth_enums=["1","11", "12", "13", "14", "2", "3", "4", "5"]
+		co_app_eth_fields = [row["co_app_eth_1"], row["co_app_eth_2"], row["co_app_eth_3"], row["co_app_eth_4"], row["co_app_eth_5"]]
 		def v631_a(self, row):
 			#check if app eth 1 is blank and code 14 free text is blank, if so, change app_eth_1
 			if row["co_app_eth_1"] == "" and row["co_app_eth_code_14"] == "":
@@ -183,30 +193,12 @@ class lar_constraints(object):
 				row["co_app_eth_4"] = ""
 				row["co_app_eth_5"] = ""
 			return row
-		def v631_c(self, row):
-			#check for duplicates in app eth 1-5, change duplicates to blank
-			eths = ["1","11", "12", "13", "14", "2"] #list of valid co app eths 2-5
-			if row["co_app_eth_1"] in eths:
-				eths.remove(row["co_app_eth_1"]) #remove eth 1 from valid enums
-			if row["co_app_eth_2"] != "" and row["co_app_eth_2"] not in eths:
-				row["co_app_eth_2"] = random.choice(eths) #reassign valid enumeration
-			if row["co_app_eth_2"] in eths:
-				eths.remove(row["co_app_eth_2"]) #remove enumeration from valid remaining enumerations
-			if row["co_app_eth_3"] != "" and row["co_app_eth_3"] not in eths:
-				row["co_app_eth_3"] = random.choice(eths)
-			if row["co_app_eth_3"] in eths:
-				eths.remove(row["co_app_eth_3"])
-			if row["co_app_eth_4"] != "" and row["co_app_eth_4"] not in eths:
-				row["co_app_eth_4"] = random.choice(eths)
-			if row["co_app_eth_4"] in eths:
-				eths.remove(row["co_app_eth_4"])
-			if row["co_app_eth_5"] != "" and row["co_app_eth_5"] not in eths:
-				row["co_app_eth_5"] = random.choice(eths)
-			return row
 
 		v631_a(self,row=row)
+		#check for duplicates in app eth 1-5, change duplicates to blank
+		row["co_app_eth_1"], row["co_app_eth_2"], row["co_app_eth_3"], row["co_app_eth_4"], row["co_app_eth_5"] = \
+		self.no_enum_dupes(fields=co_app_eth_fields,  enum_list=co_app_eth_enums[:-2])
 		v631_b(self,row=row)
-		v631_c(self,row=row)
 		return row
 
 	def v632_const(self, row):
@@ -269,16 +261,15 @@ class lar_constraints(object):
 		#each code must only be used once
 		race_enums = ["1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7"]
 		race_fields = [row["app_race_1"], row["app_race_2"], row["app_race_3"], row["app_race_4"], row["app_race_5"]]
-		
+
 		row["app_race_1"], row["app_race_2"], row["app_race_3"], row["app_race_4"], row["app_race_5"] = \
 		self.no_enum_dupes(fields=race_fields,  enum_list=race_enums[:-2])
-		
+
 		if row["app_race_1"] in ("6", "7"):
 			row["app_race_2"] = ""
 			row["app_race_3"] = ""
 			row["app_race_4"] = ""
 			row["app_race_5"] = ""
-			
 		return row
 	#V636: 2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1;
 	#         then Race of Applicant or Borrower: 1 must equal 1, 2, 3, 4, or 5; and Race of Applicant or Borrower: 2;
