@@ -4,7 +4,7 @@ class lar_constraints(object):
 
 	def __init__(self, counties, tracts):
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
-		"v629_const", "v630_const", "v631_const"
+		"v629_const", "v630_const", "v631_const", "v632_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -208,15 +208,30 @@ class lar_constraints(object):
 
 		return row
 
+	def v632_const(self, row):
+		"""1) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 1; 
+			then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1 or 2; and Ethnicity of Co-Applicant or Co-Borrower: 2 
+			must equal 1, 2 or be left blank; and Ethnicity of Co-Applicant or CoBorrower: 3; Ethnicity of Co-Applicant or 
+			Co-Borrower: 4; Ethnicity of Co-Applicant or CoBorrower: 5 must all be left blank. 
+		2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals  2; 
+			then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3"""
+		
+		eths = ["1", "2"]
+		if row["co_app_eth_basis"] == "1":
+			if row["co_app_eth_1"] not in ("1","2"):
+				row["co_app_eth_1"] = random.choice(eths)
+			if row["co_app_eth_1"] in eths:
+				eths.remove(row["co_app_eth_1"])
+			if row["co_app_eth_2"] not in ("1","2"):
+				row["co_app_eth_2"] = random.choice(eths)
+			row["co_app_eth_3"] = ""
+			row["co_app_eth_4"] = ""
+			row["co_app_eth_5"] = ""
 
-	#V632: 2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or
-	#         Surname equals 1; then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1 or 2; and Ethnicity of
-	#         Co-Applicant or Co-Borrower: 2 must equal 1, 2 or be left blank; and Ethnicity of Co-Applicant or CoBorrower:
-	#         3; Ethnicity of Co-Applicant or CoBorrower: 4; Ethnicity of Co-Applicant or CoBorrower:
-	#         5 must all be left blank. 
-	#      3) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 
-	#         2; then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3
-
+		elif row["co_app_eth_basis"] == "2":
+			if row["co_app_eth_1"] not in ("1", "11", "12", "13", "14", "2", "3"):
+				row["co_app_eth_1"] = random.choice(("1", "11", "12", "13", "14", "2", "3"))
+		return row
 	#V633: 1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4, then Ethnicity of Co-Applicant or CoBorrower
 	#         Collected on the Basis of Visual Observation or Surname must equal 3. 
 	#      2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or
