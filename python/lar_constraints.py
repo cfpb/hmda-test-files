@@ -17,7 +17,6 @@ class lar_constraints(object):
 		"""Checks all fields to ensure that no enumeration is repeated. If one repeats it is reassigned from the remaining valid enumerations.
 		enum_list_1 contains values for the first field, enum_list contains values for subsequen fields."""
 		if fields[0] in enum_list:
-			print("first in enum list")
 			enum_list.remove(fields[0])
 		for i in range(1, len(fields)):
 			if fields[i] in enum_list:
