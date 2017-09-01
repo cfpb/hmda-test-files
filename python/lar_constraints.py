@@ -7,7 +7,7 @@ class lar_constraints(object):
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
 		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const", "v638_const", "v638_const",
 		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const", "v652_const",
-		"v654_const", "v655_const"
+		"v654_const", "v655_const", "v656_const", "v657_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -497,8 +497,12 @@ class lar_constraints(object):
 			row["purchaser_type"] = "0"
 		return row
 
-	#V657: 2) If Action Taken equals 3, 4, 5, 6, or 7, then Rate Spread must be NA.
-	#      3) If Reverse Mortgage equals 1, then Rate Spread must be NA.
+	def v657_const(self, row):
+		"""1) If Action Taken equals 3, 4, 5, 6, or 7, then Rate Spread must be NA.
+		3) If Reverse Mortgage equals 1, then Rate Spread must be NA."""
+		if row["action_taken"] in ("3", "4", "5", "6", "7") or row["reverse_mortgage"] =="1":
+			row["rate_spread"] = "NA"
+		return row
 
 	#V658: 2) If Action Taken equals 2, 3, 4, 5, 7, or 8, then HOEPA Status must be 3.
 
