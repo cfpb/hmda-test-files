@@ -370,8 +370,14 @@ class lar_constraints(object):
 			row["co_app_race_1"] = random.choice(("6","7"))
 		return row
 			
-	#V641: 1) If Race of Co-Applicant or Co-Borrower: 1 equals 8, then Race of Co-Applicant or Co-Borrower
-	#         Collected on the Basis of Visual Observation or Surname must equal 4, and the reverse must be true. 
+	def v641_const(self, row):
+		"""1) If Race of Co-Applicant or Co-Borrower: 1 equals 8, then Race of Co-Applicant or Co-Borrower
+			Collected on the Basis of Visual Observation or Surname must equal 4, and the reverse must be true."""
+		if row["co_app_race_1"] == "8":
+			row["co_app_race_basis"] = "4"
+		if row["co_app_race_basis"] == "4":
+			row["co_app_race_1"] = "8"
+		return row
 
 	#V643: 1) If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1,
 	#         then Sex of Applicant or Borrower must equal 1 or 2. 
