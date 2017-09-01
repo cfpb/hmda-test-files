@@ -502,7 +502,7 @@ class lar_constraints(object):
 		3) If Reverse Mortgage equals 1, then Rate Spread must be NA."""
 		if row["action_taken"] in ("3", "4", "5", "6", "7") or row["reverse_mortgage"] =="1":
 			row["rate_spread"] = "NA"
-		return row
+		return rowa
 
 	#V658: 2) If Action Taken equals 2, 3, 4, 5, 7, or 8, then HOEPA Status must be 3.
 
