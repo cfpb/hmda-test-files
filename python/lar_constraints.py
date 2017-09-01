@@ -6,7 +6,7 @@ class lar_constraints(object):
 		#list of constraining edits:
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
 		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const", "v638_const", "v638_const",
-		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const"
+		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -446,8 +446,14 @@ class lar_constraints(object):
 			row["co_app_sex_basis"] = "3"
 		return row
 
-	#V650: 1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
-	#         equals 4, then Sex of Co-Applicant or Co-Borrower must equal 5, and the reverse must be true.
+	def v650_const(self, row):
+		"""1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 4, 
+			then Sex of Co-Applicant or Co-Borrower must equal 5, and the reverse must be true."""
+		if row["co_app_sex_basis"] == "4":
+			row["co_app_sex"] = "5"
+		if row["co_app_sex"] == "5":
+			row["co_app_sex_basis"] = "4"
+		return row
 
 	#V651: 2) If the Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7;
 	#         and Sex of Applicant or Borrower equals 4 indicating the applicant or borrower is a non-natural person,
