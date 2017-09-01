@@ -6,7 +6,7 @@ class lar_constraints(object):
 		#list of constraining edits:
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
 		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const", "v638_const", "v638_const",
-		"v640_const", "v641_const", "v643_const"
+		"v640_const", "v641_const", "v643_const", "v644_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
