@@ -478,7 +478,7 @@ class lar_constraints(object):
 			if int(row["affordable_units"]) > 0:
 				row["income"] = "NA"
 		return row
-		
+
 	def v655_const(self, row):
 		"""1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
 			Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person, then Income must be NA.
@@ -490,7 +490,7 @@ class lar_constraints(object):
 		if row["co_app_eth_1"] == "4" and row["co_app_race_1"] == "7" and row["co_app_sex"] == "4":
 			row["income"] = "NA"
 		return row
-	
+
 	def v656_const(self, row): 
 		"""2) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Type of Purchaser must equal 0."""
 		if row["action_taken"] in ("2", "3", "4", "5", "7", "8"):
@@ -500,12 +500,15 @@ class lar_constraints(object):
 	def v657_const(self, row):
 		"""1) If Action Taken equals 3, 4, 5, 6, or 7, then Rate Spread must be NA.
 		3) If Reverse Mortgage equals 1, then Rate Spread must be NA."""
-		if row["action_taken"] in ("3", "4", "5", "6", "7") or row["reverse_mortgage"] =="1":
+		if row["action_taken"] in ("3", "4", "5", "6", "7") or row["reverse_mortgage"] == "1":
 			row["rate_spread"] = "NA"
 		return row
 
-	#V658: 2) If Action Taken equals 2, 3, 4, 5, 7, or 8, then HOEPA Status must be 3.
-
+	def v658_const(self, row): 
+		"""1) If Action Taken equals 2, 3, 4, 5, 7, or 8, then HOEPA Status must be 3."""
+		if row["action_taken"] in ("2", "3", "4", "5", "7", "8"):
+			row["hoepa"] = "3"
+		return row
 	#V661: 1) If Credit Score of Applicant or Borrower equals 8888 indicating not applicable, then Applicant or
 	#         Borrower, Name and Version of Credit Scoring Model must equal 9, and the reverse must be true
 
