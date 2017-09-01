@@ -6,7 +6,7 @@ class lar_constraints(object):
 		#list of constraining edits:
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
 		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const", "v638_const", "v638_const",
-		"v640_const", "v641_const", "v643_const", "v644_const"
+		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -403,10 +403,16 @@ class lar_constraints(object):
 		return row
 			
 
-	#V645: 1) If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3,
-	#         then Sex of Applicant or Borrower must equal 3 or 4.
-	#      2) If Sex of Applicant or Borrower equals 4, then Sex of Applicant or Borrower Collected on the Basis of
-	#         Visual Observation or Surname must equal 3.
+	def v645_const(self, row):
+		"""1) If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3, 
+			then Sex of Applicant or Borrower must equal 3 or 4.
+		2) If Sex of Applicant or Borrower equals 4, then Sex of Applicant or Borrower Collected on the Basis of
+			Visual Observation or Surname must equal 3."""
+		if row["app_sex_basis"] == "3" and row["app_sex"] not in ("3", "4"):
+			row["app_sex"] = random.choice(("3", "4"))
+		if row["app_sex"] == "4":
+			row["app_sex_basis"] = "3"
+		return row
 
 	#V647: 1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
 	#         equals 1, then Sex of Co-Applicant or Co-Borrower must equal 1 or 2.
