@@ -490,7 +490,12 @@ class lar_constraints(object):
 		if row["co_app_eth_1"] == "4" and row["co_app_race_1"] == "7" and row["co_app_sex"] == "4":
 			row["income"] = "NA"
 		return row
-	#V656: 2) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Type of Purchaser must equal 0.
+	
+	def v656_const(self, row): 
+		"""2) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Type of Purchaser must equal 0."""
+		if row["action_taken"] in ("2", "3", "4", "5", "7", "8"):
+			row["purchaser_type"] = "0"
+		return row
 
 	#V657: 2) If Action Taken equals 3, 4, 5, 6, or 7, then Rate Spread must be NA.
 	#      3) If Reverse Mortgage equals 1, then Rate Spread must be NA.
