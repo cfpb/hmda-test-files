@@ -6,7 +6,7 @@ class lar_constraints(object):
 		#list of constraining edits:
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
 		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const", "v638_const", "v638_const",
-		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const"
+		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -455,10 +455,13 @@ class lar_constraints(object):
 			row["co_app_sex_basis"] = "4"
 		return row
 
-	#V651: 2) If the Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7;
-	#         and Sex of Applicant or Borrower equals 4 indicating the applicant or borrower is a non-natural person,
-	#         then Age of Applicant or Borrower must equal 8888.
-
+	def v651_const(self, row):
+		"""1) If the Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7;
+			and Sex of Applicant or Borrower equals 4 indicating the applicant or borrower is a non-natural person,
+			then Age of Applicant or Borrower must equal 8888."""
+		if row["app_eth_1"] == "4" and row["app_race_1"] == "7" and row["app_sex"] == "4":
+			row["app_age"] = "8888"
+		return row
 	#V652: 2) If the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower:
 	#        1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or coborrower
 	#        is a non-natural person, then Age of CoApplicant or Co-Borrower must equal 8888.
