@@ -9,7 +9,7 @@ class lar_constraints(object):
 		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const", "v638_const", "v638_const",
 		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const", "v652_const",
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
-		"v668_const", "v669_const"
+		"v668_const", "v669_const", "v670_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -626,11 +626,18 @@ class lar_constraints(object):
 			row["denial_4"] = ""
 		return row
 
-	#V670: 1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9, and
-	#         the reverse must be true.
-	#      2) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal 10, and the reverse
-	#         must be true. 
-
+	def v670_const(self, row): 
+		"""1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9, and the reverse must be true.
+		2) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal 10, and the reverse must be true."""
+		if row["action_taken"] in ("3", "7") and row["denial_1"] not in ("1", "2", "3", "4", "5", "6", "7", "8", "9"):
+			row["denial_1"] = random.choice(("1", "2", "3", "4", "5", "6", "7", "8", "9"))
+		elif row["denial_1"] in ("1", "2", "3", "4", "5", "6", "7", "8", "9") and row["action_taken"] not in ("3", "7"):
+			row["action_taken"] = random.choice(("3", "7"))
+		elif row["action_taken"] in ("1", "2", "4", "5", "6", "8") and row["denial_1"] != "10":
+			row["denial_1"] = "10"
+		elif row["denial_1"] =="10" and row["action_taken"] not in ("1", "2", "4", "5", "6", "8"):
+			row["action_taken"] = random.choice(("1", "2", "4", "5", "6", "8"))
+		return row
 	#V671: 1) Reason for Denial: 1; Reason for Denial: 2; Reason for Denial: 3; or Reason for Denial: 4 was
 	#         reported Code 9: Other; however, the Reason for Denial: Conditional Free Form Text Field for Code 9
 	#         was left blank; or
