@@ -10,7 +10,7 @@ class lar_constraints(object):
 		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const", "v652_const",
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
 		"v668_const", "v669_const", "v670_const", "v671_const", "v672_const", "v673_const", "v674_const", "v675_const", "v676_const", "v677_const", "v678_const",
-		"v679_const", "v680_const", "v681_const", "v682_const", "v688_const", "v689_const", "v690_const", "v692_const"
+		"v679_const", "v680_const", "v681_const", "v682_const", "v688_const", "v689_const", "v690_const", "v692_const", "v693_const", "v694_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -847,10 +847,15 @@ class lar_constraints(object):
 
 	#V693: 2) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true. 
 
-	#V694: 1) Initially Payable to Your Institution must equal 1, 2 or 3, and cannot be left blank.
-	#      2) If Action Taken equals 6, then Initially Payable to Your Institution must equal 3.
-	#      3) If Action Taken equals 1, then Initially Payable to Your Institution must equal 1 or 2. 
-
+	def v694_const(self, row): 
+		"""1) Initially Payable to Your Institution must equal 1, 2 or 3, and cannot be left blank.
+		2) If Action Taken equals 6, then Initially Payable to Your Institution must equal 3.
+		3) If Action Taken equals 1, then Initially Payable to Your Institution must equal 1 or 2."""
+		if row["action_taken"] == "6":
+			row["initially_payable"] = "3"
+		if row["action_taken"] == "1" and row["initially_payable"] not in ("1", "2"):
+			row["initially_payable"] = random.choice(("1", "2"))
+		return row
 	#V696: 1) Automated Underwriting System: 1 must equal 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated
 	#         Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; and
 	#         Automated Underwriting System: 5 must equal 1, 2, 3, 4, 5, or be left blank.
