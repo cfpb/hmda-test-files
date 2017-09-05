@@ -8,7 +8,8 @@ class lar_constraints(object):
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
 		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const", "v638_const", "v638_const",
 		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const", "v652_const",
-		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const"
+		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
+		"v668_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -574,7 +575,7 @@ class lar_constraints(object):
 		if row["co_app_score_name"] == "10":
 			row["co_app_credit_score"] = "9999"
 		return row
-		
+
 	def v667_const(self, row): 
 		"""1) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals 1, 2, 3, 4, 5, 6, 7, 9, or
 			10, then Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free
@@ -591,14 +592,20 @@ class lar_constraints(object):
 		elif row["co_app_score_code_8"] != "" and row["co_app_score_name"] != "8":
 			row["co_app_score_name"] = "8"
 		return row
-			
-	#V668: 1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
-	#         Sex of Applicant or Borrower equals 4 indicating the applicant is a non-natural person then Credit Score of
-	#         Applicant or Borrower must equal 8888 indicating not applicable.
-	#      2) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower:
-	#         1 equals 7; and Sex of Co-Applicant or Co-Borrower equals 4 indicating that the co-applicant is a nonnatural
-	#         person, then Credit Score of Co-Applicant or Co-Borrower must equal 8888 indicating not applicable.
 
+	def v668_const(self, row):
+		"""1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
+			Sex of Applicant or Borrower equals 4 indicating the applicant is a non-natural person then Credit Score of
+			Applicant or Borrower must equal 8888 indicating not applicable.
+		2) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower:
+			1 equals 7; and Sex of Co-Applicant or Co-Borrower equals 4 indicating that the co-applicant is a nonnatural
+			person, then Credit Score of Co-Applicant or Co-Borrower must equal 8888 indicating not applicable."""
+
+		if row["app_eth_1"]  == "4" and row["app_race_1"] == "7" and row["app_sex"] == "4":
+			row["app_credit_score"] = "8888"
+		if row["co_app_eth_1"] == "4" and row["co_app_race_1"] == "7" and row["co_app_sex"] == "4":
+			row["co_app_credit_score"] = "8888"
+		return row
 	#V669: 2) Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must equal 1, 2, 3, 4, 5, 6, 7, 8,
 	#         9, or be left blank. 
 	#      3) Each Reason for Denial code can only be reported once.
