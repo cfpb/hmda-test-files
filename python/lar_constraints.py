@@ -10,7 +10,7 @@ class lar_constraints(object):
 		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const", "v652_const",
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
 		"v668_const", "v669_const", "v670_const", "v671_const", "v672_const", "v673_const", "v674_const", "v675_const", "v676_const", "v677_const", "v678_const",
-		"v679_const", "v680_const", "v681_const", "v682_const", "v688_const", "v689_const", "v690_const"
+		"v679_const", "v680_const", "v681_const", "v682_const", "v688_const", "v689_const", "v690_const", "v692_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -835,9 +835,15 @@ class lar_constraints(object):
 			row["manufactured_type"] = "5"
 		return row
 
-	#V692: 2) If Total Units is less than 5, then Multifamily Affordable Units must be NA.
-	#      3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or
-	#         equal to Total Units. 
+	def v692_const(self, row): 
+		"""2) If Total Units is less than 5, then Multifamily Affordable Units must be NA.
+		3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or
+		equal to Total Units. """
+		if int(row["total_units"]) < 5:
+			row["affordable_units"] = "NA"
+		if row["affordable_units"] !="NA" and int(row["affordable_units"]) > int(row["total_units"]):
+			row["affordable_units"] = row["total_units"]
+		return row
 
 	#V693: 2) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true. 
 
