@@ -9,7 +9,7 @@ class lar_constraints(object):
 		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const", "v638_const", "v638_const",
 		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const", "v652_const",
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
-		"v668_const", "v669_const", "v670_const", "v671_const"
+		"v668_const", "v669_const", "v670_const", "v671_const", "v672_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -27,7 +27,7 @@ class lar_constraints(object):
 				fields[i] = random.choice(enum_list)
 				enum_list.remove(fields[i])
 		return fields
-	
+
 	#constraint functions
 	#these functions will be used to re-generate data for a specific LAR row so that the data row is valid 
 	#For example, preapproval code 2 limits the valid entries for action taken
@@ -650,13 +650,29 @@ class lar_constraints(object):
 		elif row["denial_code_9"] !="" and (row["denial_1"] != "9" and row["denial_2"] !="9" and row["denial_3"]!="9" and row["denial_4"] !="9"):
 			row["denial_4"] = "9"
 		return row
-		
-		#V672: 1) Total Loan Costs must be a number greater than or equal to 0 or NA, and cannot be left blank.
-	#      2) If Total Points and Fees is a number greater than or equal to 0, then Total Loan Costs must be NA.
-	#      3) If Reverse Mortgage equals 1, then Total Loan Costs must be NA.
-	#      4) If Open-End Line of Credit equals 1, then Total Loan Costs must be NA.
-	#      5) If Business or Commercial Purpose equals 1, then Total Loan Costs must be NA.
-	#      6) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Total Loan Costs must be NA.
+
+	def v672_const(self, row):
+		"""1) Total Loan Costs must be a number greater than or equal to 0 or NA, and cannot be left blank.
+		2) If Total Points and Fees is a number greater than or equal to 0, then Total Loan Costs must be NA.
+		3) If Reverse Mortgage equals 1, then Total Loan Costs must be NA.
+		4) If Open-End Line of Credit equals 1, then Total Loan Costs must be NA.
+		5) If Business or Commercial Purpose equals 1, then Total Loan Costs must be NA.
+		6) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Total Loan Costs must be NA."""
+		if row["loan_costs"] !="NA":
+			if float(row["loan_costs"]) <0:
+				row["loan_costs"] = "0"
+		if row["points_fees"] != "NA":
+			if float(row["points_fees"] )>=0:
+				row["loan_costs"] = "NA"
+		if row["reverse_mortgage"] == "1":
+			row["loan_costs"] = "NA"
+		if row["open_end_credit"] == "1":
+			row["loan_costs"] = "NA"
+		if row["business_purpose"] == "1":
+			row["loan_costs"] = "NA"
+		if row["action_taken"] in ("2", "3", "4", "5", "7", "8"):
+			row["loan_costs"] = "NA"
+		return row
 
 	#V673: 1) Total Points and Fees must be a number greater than or equal to 0 or NA, and cannot be left blank.
 	#      2) If Action Taken equals 2, 3, 4, 5, 6, 7 or 8 then Total Points and Fees must be NA.
