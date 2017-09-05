@@ -549,10 +549,16 @@ class lar_constraints(object):
 			row["app_score_code_8"] = ""
 		return row
 
-	#V664: 1) If Action Taken equals 4, 5, or 6, then Credit Score of Co-Applicant or Co-Borrower must equal 8888;
-	#         and Co-Applicant or Co-Borrower, Name and Version
-	#         of Credit Scoring Model must equal 9; and CoApplicant or Co-Borrower, Name and Version of
-	#         Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank
+	def v664_const(self, row): 
+		"""1) If Action Taken equals 4, 5, or 6, then Credit Score of Co-Applicant or Co-Borrower must equal 8888;
+			and Co-Applicant or Co-Borrower, Name and Version
+			of Credit Scoring Model must equal 9; and CoApplicant or Co-Borrower, Name and Version of
+			Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank."""
+		if row["action_taken"] in ("4", "5", "6"):
+			row["co_app_credit_score"] = "8888"
+			row["co_app_score_name"] = "9"
+			row["co_app_score_code_8"] = ""
+		return row
 
 	#V666: 1) If Credit Score of Co-Applicant or Co-Borrower equals 8888 indicating not applicable, then CoApplicant
 	#         or Co-Borrower, Name and Version of Credit Scoring Model must equal 9, and the reverse must be true.
