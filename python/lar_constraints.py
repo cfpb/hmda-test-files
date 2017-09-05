@@ -7,7 +7,7 @@ class lar_constraints(object):
 		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
 		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const", "v638_const", "v638_const",
 		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const", "v652_const",
-		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const"
+		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -536,10 +536,17 @@ class lar_constraints(object):
 		if row["app_score_code_8"] != "":
 			row["app_score_name"] = "8"
 		return row
-	#V663: 1) If Action Taken equals 4, 5, or 6, then Credit Score of Applicant or Borrower must equal 8888; and
-	#         Applicant or Borrower, Name and Version of Credit Scoring Model must equal 9; and Applicant or
-	#         Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8
-	#         must be left blank.
+		
+	def v663_const(self, row): 
+		"""1) If Action Taken equals 4, 5, or 6, then Credit Score of Applicant or Borrower must equal 8888; and
+			Applicant or Borrower, Name and Version of Credit Scoring Model must equal 9; and Applicant or
+			Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8
+			must be left blank."""
+		if row["action_taken"] in ("4", "5", "6"):
+			row["app_credit_score"] = "8888"
+			row["app_score_name"] = "9"
+			row["app_score_code_8"] = ""
+		return row
 
 	#V664: 1) If Action Taken equals 4, 5, or 6, then Credit Score of Co-Applicant or Co-Borrower must equal 8888;
 	#         and Co-Applicant or Co-Borrower, Name and Version
