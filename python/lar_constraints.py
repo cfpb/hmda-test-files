@@ -10,7 +10,7 @@ class lar_constraints(object):
 		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const", "v652_const",
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
 		"v668_const", "v669_const", "v670_const", "v671_const", "v672_const", "v673_const", "v674_const", "v675_const", "v676_const", "v677_const", "v678_const",
-		"v679_const"
+		"v679_const", "v680_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -775,16 +775,24 @@ class lar_constraints(object):
 			row["dti"] = "NA"
 		return row
 
-	#V680: 1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
-	#         Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person;
-	#         and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower:
-	#         1 equals 8; and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or
-	#         co-borrower, then Debt-to-Income Ratio must be NA.
-	#      2) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
-	#         Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person;
-	#         and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower:
-	#         1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or coborrower
-	#         is also a non-natural person, then Debt-toIncome Ratio must be NA. 
+	def v680_const(self, row): 
+		"""1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
+ 			Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person;
+			and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower:
+			1 equals 8; and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or
+			co-borrower, then Debt-to-Income Ratio must be NA.
+		2) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
+			Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person;
+			and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower:
+			1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or coborrower
+			is also a non-natural person, then Debt-toIncome Ratio must be NA."""
+		if row["app_eth_1"] == "4" and row["app_race_1"] == "7" and row ["app_sex"] == "4" and \
+		row["co_app_eth_1"] == "5" and row["co_app_race_1"] == "8" and row["co_app_sex"] == "5":
+			row["dti"] = "NA"
+		if row["app_eth_1"] == "4" and row["app_race_1"] == "7" and row ["app_sex"] == "4" and \
+		row["co_app_eth_1"] == "4" and row["co_app_race_1"] == "7" and row["co_app_sex"] == "4":
+			row["dti"] = "NA"
+		return row
 
 	#V681: 1) Combined Loan-to-Value Ratio must be either a number greater than 0 or NA, and cannot be left blank.
 	#      2) If Action Taken equals 4, 5, or 6, then Combined Loan-to-Value ratio must be NA. 
