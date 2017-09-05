@@ -814,9 +814,16 @@ class lar_constraints(object):
 		if row["action_taken"] in ("4", "5"):
 			row["property_value"] = "NA"
 		return row
-	#V689: 1) Manufactured Home Secured Property Type must equal 1, 2 or 3, and cannot be left blank.
-	#      2) If Multifamily Affordable Units is a number, then Manufactured Home Secured Property Type must equal 3.
-	#      3) If Construction Method equals 1, then Manufactured Home Secured Property Type must equal 3.
+
+	def v689_const(self, row): 
+		"""1) Manufactured Home Secured Property Type must equal 1, 2 or 3, and cannot be left blank.
+		2) If Multifamily Affordable Units is a number, then Manufactured Home Secured Property Type must equal 3.
+		3) If Construction Method equals 1, then Manufactured Home Secured Property Type must equal 3."""
+		if row["affordable_units"] != "NA":
+			row["manufactured_type"] = "3"
+		if row["const_method"] == "1":
+			row["manufactured_interest"] = "3"
+		return row
 
 	#V690: 1) Manufactured Home Land Property Interest must equal 1, 2, 3, 4, or 5, and cannot be left blank.
 	#      2) If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal 5.
