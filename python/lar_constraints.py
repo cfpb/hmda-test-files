@@ -835,9 +835,15 @@ class lar_constraints(object):
 			row["manufactured_type"] = "5"
 		return row
 
-	#V692: 2) If Total Units is less than 5, then Multifamily Affordable Units must be NA.
-	#      3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or
-	#         equal to Total Units. 
+	def v692_const(self, row): 
+		"""2) If Total Units is less than 5, then Multifamily Affordable Units must be NA.
+		3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or
+		equal to Total Units. """
+		if int(row["total_units"]) < 5:
+			row["affordable_units"] = "NA"
+		if row["affordable_units"] !="NA" and int(row["affordable_units"]) > int(row["total_units"]):
+			row["affordable_units"] = row["total_units"]
+		return row
 
 	#V693: 2) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true. 
 
