@@ -745,12 +745,24 @@ class lar_constraints(object):
 		if row["action_taken"] in ("3", "4", "5", "7"):
 			row["interest_rate"] = "NA"
 		return row
-	#V678: 1) Prepayment Penalty Term must be a whole number greater than 0 or NA, and cannot be left blank.
-	#      2) If Action Taken equals 6, then Prepayment Penalty Term must be NA.
-	#      3) If Reverse Mortgage equals 1, then Prepayment Penalty Term must be NA.
-	#      4) If Business or Commercial Purpose equals 1, then Prepayment Penalty Term must be NA.
-	#      5) If both Prepayment Penalty Term and Loan Term are numbers, then Prepayment Penalty Term must 
-	#         be less than or equal to Loan Term.
+
+	def v678_const(self, row): 
+		"""1) Prepayment Penalty Term must be a whole number greater than 0 or NA, and cannot be left blank.
+		2) If Action Taken equals 6, then Prepayment Penalty Term must be NA.
+		3) If Reverse Mortgage equals 1, then Prepayment Penalty Term must be NA.
+		4) If Business or Commercial Purpose equals 1, then Prepayment Penalty Term must be NA.
+		5) If both Prepayment Penalty Term and Loan Term are numbers, then Prepayment Penalty Term must
+		be less than or equal to Loan Term."""
+		if row["action_taken"] == "6":
+			row["prepayment_penalty"] = "NA"
+		if row["reverse_mortgage"] == "1":
+			row["prepayment_penalty"] = "NA"
+		if row["business_purpose"] == "1":
+			row["prepayment_penalty"] = "NA"
+		if row["loan_term"] != "NA" and row["prepayment_penalty"] !="NA":
+			if int(row["loan_term"]) >=0 and int(row["prepayment_penalty"]) > int(row["loan_term"]):
+				row["prepayment_penalty"] = row["loan_term"]
+		return row
 
 	#V679: 1) Debt-to-Income Ratio must be either a number or NA, and cannot be left blank.
 	#      2) If Action Taken equals 4, 5 or 6, then Debt-toIncome Ratio must be NA.
