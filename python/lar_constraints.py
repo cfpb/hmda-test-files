@@ -9,7 +9,7 @@ class lar_constraints(object):
 		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const", "v638_const", "v638_const",
 		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const", "v652_const",
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
-		"v668_const"
+		"v668_const", "v669_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -465,7 +465,7 @@ class lar_constraints(object):
 		if row["app_eth_1"] == "4" and row["app_race_1"] == "7" and row["app_sex"] == "4":
 			row["app_age"] = "8888"
 		return row
-		
+
 	def v652_const(self, row): 
 		"""1) If the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7; 
 			and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or coborrower
@@ -473,7 +473,7 @@ class lar_constraints(object):
 		if row["co_app_eth_1"] == "4" and row["co_app_race_1"] == "7" and row["co_app_sex"] == "4":
 			row["co_app_age"] = "8888"
 		return row
-		
+
 	def v654_const(self,row):
 		"""1) If Multifamily Affordable Units is a number, then Income must be NA."""
 		if row["affordable_units"] != "NA" and row["affordable_units"] !="":
@@ -606,11 +606,25 @@ class lar_constraints(object):
 		if row["co_app_eth_1"] == "4" and row["co_app_race_1"] == "7" and row["co_app_sex"] == "4":
 			row["co_app_credit_score"] = "8888"
 		return row
-	#V669: 2) Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must equal 1, 2, 3, 4, 5, 6, 7, 8,
-	#         9, or be left blank. 
-	#      3) Each Reason for Denial code can only be reported once.
-	#      4) If Reason for Denial: 1 equals 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for
-	#         Denial: 4 must all be left blank.
+
+	def v669_const(self,row): 
+		"""1) Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank.
+		2) Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must equal 1, 2, 3, 4, 5, 6, 7, 8,
+			9, or be left blank. 
+		3) Each Reason for Denial code can only be reported once.
+		4) If Reason for Denial: 1 equals 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must all be left blank."""
+		denial_fields = [row["denial_1"], row["denial_2"], row["denial_3"], row["denial_4"]]
+		denial_enums = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+
+		if row["denial_1"] not in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"):
+			row["denial_1"] = random.choice(("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"))
+		row["denial_1"], row["denial_2"], row["denial_3"], row["denial_4"] = \
+		self.no_enum_dupes(fields=denial_fields, enum_list=denial_enums)
+		if row["denial_1"] == "10":
+			row["denial_2"] = ""
+			row["denial_3"] = ""
+			row["denial_4"] = ""
+		return row
 
 	#V670: 1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9, and
 	#         the reverse must be true.
