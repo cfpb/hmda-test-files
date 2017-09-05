@@ -1,4 +1,5 @@
 import random
+import string
 
 class lar_constraints(object):
 
@@ -532,11 +533,11 @@ class lar_constraints(object):
 		if row["app_score_code_8"] =="" and row["app_score_name"] not in ("1", "2", "3", "4", "5", "6", "7", "9"):
 			row["app_score_name"] = random.choice(("1", "2", "3", "4", "5", "6", "7", "9"))
 		if row["app_score_name"] == "8":
-			row["app_score_code_8"] = char_string_gen(25)
+			row["app_score_code_8"] = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(25))
 		if row["app_score_code_8"] != "":
 			row["app_score_name"] = "8"
 		return row
-		
+
 	def v663_const(self, row): 
 		"""1) If Action Taken equals 4, 5, or 6, then Credit Score of Applicant or Borrower must equal 8888; and
 			Applicant or Borrower, Name and Version of Credit Scoring Model must equal 9; and Applicant or
