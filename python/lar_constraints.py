@@ -845,7 +845,13 @@ class lar_constraints(object):
 			row["affordable_units"] = row["total_units"]
 		return row
 
-	#V693: 2) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true. 
+	def v693_const(self, row):
+		"""1) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true."""
+		if row["action_taken"] == "6":
+			row["submission_type"] = "3"
+		if row["submission_type"] == "3":
+			row["action_taken"] = "6"
+		return row
 
 	def v694_const(self, row): 
 		"""1) Initially Payable to Your Institution must equal 1, 2 or 3, and cannot be left blank.
@@ -856,6 +862,7 @@ class lar_constraints(object):
 		if row["action_taken"] == "1" and row["initially_payable"] not in ("1", "2"):
 			row["initially_payable"] = random.choice(("1", "2"))
 		return row
+		
 	#V696: 1) Automated Underwriting System: 1 must equal 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated
 	#         Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; and
 	#         Automated Underwriting System: 5 must equal 1, 2, 3, 4, 5, or be left blank.
