@@ -10,7 +10,7 @@ class lar_constraints(object):
 		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const", "v652_const",
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
 		"v668_const", "v669_const", "v670_const", "v671_const", "v672_const", "v673_const", "v674_const", "v675_const", "v676_const", "v677_const", "v678_const",
-		"v679_const", "v680_const", "v681_const", "v682_const", "v688_const", "v689_const"
+		"v679_const", "v680_const", "v681_const", "v682_const", "v688_const", "v689_const", "v690_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -825,9 +825,15 @@ class lar_constraints(object):
 			row["manufactured_interest"] = "3"
 		return row
 
-	#V690: 1) Manufactured Home Land Property Interest must equal 1, 2, 3, 4, or 5, and cannot be left blank.
-	#      2) If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal 5.
-	#      3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal 5.
+	def v690_const(self, row): 
+		"""1) Manufactured Home Land Property Interest must equal 1, 2, 3, 4, or 5, and cannot be left blank.
+		2) If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal 5.
+		3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal 5."""
+		if row["affordable_units"] != "NA":
+			row["manufactured_interest"] = "5"
+		if row["const_method"] == "1":
+			row["manufactured_type"] = "5"
+		return row
 
 	#V692: 2) If Total Units is less than 5, then Multifamily Affordable Units must be NA.
 	#      3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or
