@@ -765,9 +765,15 @@ class lar_constraints(object):
 				row["prepayment_penalty"] = row["loan_term"]
 		return row
 
-	#V679: 1) Debt-to-Income Ratio must be either a number or NA, and cannot be left blank.
-	#      2) If Action Taken equals 4, 5 or 6, then Debt-toIncome Ratio must be NA.
-	#      3) If Multifamily Affordable Units is a number, then Debt-to-Income Ratio must be NA.
+	def v679_const(self, row): 
+		"""1) Debt-to-Income Ratio must be either a number or NA, and cannot be left blank.
+		2) If Action Taken equals 4, 5 or 6, then Debt-to-Income Ratio must be NA.
+		3) If Multifamily Affordable Units is a number, then Debt-to-Income Ratio must be NA."""
+		if row["action_taken"] in ("4", "5", "6"):
+			row["dti"] = "NA"
+		if row["affordable_units"] !="NA":
+			row["dti"] = "NA"
+		return row 
 
 	#V680: 1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
 	#         Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person;
