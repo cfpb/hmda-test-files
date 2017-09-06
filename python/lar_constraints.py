@@ -862,17 +862,45 @@ class lar_constraints(object):
 		if row["action_taken"] == "1" and row["initially_payable"] not in ("1", "2"):
 			row["initially_payable"] = random.choice(("1", "2"))
 		return row
-		
-	#V696: 1) Automated Underwriting System: 1 must equal 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated
-	#         Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; and
-	#         Automated Underwriting System: 5 must equal 1, 2, 3, 4, 5, or be left blank.
-	#      2) Automated Underwriting System Result: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-	#         16, or 17, and cannot be left blank. Automated Underwriting System Result: 2; Automated
-	#         Underwriting System Result: 3; Automated Underwriting System Result: 4; and Automated
-	#         Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or be left
-	#         blank.
-	#      3) The number of reported Automated Underwriting Systems must equal the number of reported Automated Underwriting System Results.
 
+	def v696_const(self, row):
+		"""1) Automated Underwriting System: 1 must equal 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated
+			Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; and
+			Automated Underwriting System: 5 must equal 1, 2, 3, 4, 5, or be left blank.
+		2) Automated Underwriting System Result: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+			16, or 17, and cannot be left blank. Automated Underwriting System Result: 2; Automated
+			Underwriting System Result: 3; Automated Underwriting System Result: 4; and Automated
+			Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or be left blank.
+		3) The number of reported Automated Underwriting Systems must equal the number of reported Automated Underwriting System Results."""
+		#set Not applicable and blanks correctly
+		if row["aus_1"] == "6":
+			row["aus_result_1"] ="17"
+		if row["aus_2"] == "":
+			row["aus_result_2"] =""
+		if row["aus_3"] == "":
+			row["aus_result_3"] =""
+		if row["aus_4"] == "":
+			row["aus_result_4"] =""
+		if row["aus_5"] == "":
+			row["aus_result_5"] =""
+
+		#Ensure code 5 free form text is marked if the text field is populated
+		if (row["aus_1"]  != "5" and row["aus_2"] != "5" and row["aus_3"] != "5" and row["aus_4"] != "5" and row["aus_5"] != "5") and \
+		row["aus_code_5"] != "":
+			row["aus_code_5"] = ""
+		#Ensure code 16 free form text is marked if the text field is populated
+		if row["aus_result_1"] != "16" and row["aus_result_2"] != "16" and row["aus_result_3"] != "16" and row["aus_result_4"] !="16" \
+		and row["aus_result_5"] != "16" and row["aus_code_16"] !="":
+			row["aus_code_16"] = ""
+		#number of reported systems must match the number of reported results
+		aus_sys = [row["aus_1"], row["aus_2"], row["aus_3"], row["aus_4"], row["aus_5"]]
+		aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
+		result_enums = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14","15", "16")
+		for i in range(1, len(aus_sys)):
+			if aus_sys[i] in ("1", "2", "3", "4", "5") and aus_results[i] not in result_enums:
+				#aus_results[i] = random.choice(result_enums[:-1])
+				row["aus_result_"+str(i+1)] = random.choice(result_enums[:-1])
+		return row
 	#V697: 1) If Automated Underwriting System: 1, Automated Underwriting System: 2; Automated Underwriting
 	#         System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 1, then the
 	#         corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
