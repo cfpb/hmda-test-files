@@ -11,7 +11,7 @@ class lar_constraints(object):
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
 		"v668_const", "v669_const", "v670_const", "v671_const", "v672_const", "v673_const", "v674_const", "v675_const", "v676_const", "v677_const", "v678_const",
 		"v679_const", "v680_const", "v681_const", "v682_const", "v688_const", "v689_const", "v690_const", "v692_const", "v693_const", "v694_const", "v696_const",
-		"v697_const", "v698_const"
+		"v697_const", "v698_const", "v699_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -933,11 +933,20 @@ class lar_constraints(object):
 					row["aus_result_"+str(i+1)] = random.choice(("8","9", "10", "11", "12"))
 		return row
 		
-	#V699: 1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting
-	#         System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 5, then the
-	#         corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
-	#         Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
-	#         Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, or 16.
+	def v699_const(self, row): 
+		"""1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting
+			System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 5, 
+			then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
+			Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
+			Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, or 16."""
+		aus_sys = [row["aus_1"], row["aus_2"], row["aus_3"], row["aus_4"], row["aus_5"]]
+		aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
+
+		for i in range(len(aus_sys)):
+			if aus_sys[i] == "5":
+				if aus_results[i] not in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"):
+					row["aus_result_"+str(i+1)] = random.choice(("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"))
+		return row
 
 	#V700: 1) If Automated Underwriting System: 1 equals 6, then the corresponding Automated Underwriting
 	#         System Result: 1 must equal 17; and the Automated Underwriting System: 2; 
