@@ -948,17 +948,38 @@ class lar_constraints(object):
 					row["aus_result_"+str(i+1)] = random.choice(("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"))
 		return row
 
-	#V700: 1) If Automated Underwriting System: 1 equals 6, then the corresponding Automated Underwriting
-	#         System Result: 1 must equal 17; and the Automated Underwriting System: 2; 
-	#         Automated UnderwritingSystem: 3; Automated Underwriting System: 4; Automated Underwriting System: 5; 
-	#         Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated
-	#         Underwriting System Result: 4; and Automated Underwriting System Result: 5 must all be left blank.
-	#      2) If Automated Underwriting System Result: 1 equals 17, then the corresponding 
-	#         Automated Underwriting System: 1 must equal 6; and the Automated Underwriting System: 2; Automated
-	#         Underwriting System: 3; Automated Underwriting System: 4; Automated Underwriting System: 5;
-	#         Automated Underwriting System Result: 2; Automated Underwriting System Result: 3;
-	#         Automated Underwriting System Result: 4; and Automated Underwriting System Result: 5 must all be left blank.
-
+	def v700_const(self, row):
+		"""1) If Automated Underwriting System: 1 equals 6, then the corresponding Automated Underwriting
+			System Result: 1 must equal 17; 
+			and the Automated Underwriting System: 2; Automated UnderwritingSystem: 3; Automated Underwriting System: 4; 
+			Automated Underwriting System: 5;vAutomated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated
+			Underwriting System Result: 4; and Automated Underwriting System Result: 5 must all be left blank.
+		2) If Automated Underwriting System Result: 1 equals 17, then the corresponding
+			Automated Underwriting System: 1 must equal 6; and the Automated Underwriting System: 2; Automated
+			Underwriting System: 3; Automated Underwriting System: 4; Automated Underwriting System: 5;
+			Automated Underwriting System Result: 2; Automated Underwriting System Result: 3;
+			Automated Underwriting System Result: 4; and Automated Underwriting System Result: 5 must all be left blank."""
+		if row["aus_1"] == "6":
+			row["aus_2"] = ""
+			row["aus_3"] = ""
+			row["aus_4"] = ""
+			row["aus_5"] = ""
+			row["aus_result_1"] = "17"
+			row["aus_result_2"] = ""
+			row["aus_result_3"] = ""
+			row["aus_result_4"] = ""
+			row["aus_result_5"] = ""
+		if row["aus_result_1"] == "17":
+			row["aus_1"] = "6"
+			row["aus_2"] = ""
+			row["aus_3"] = ""
+			row["aus_4"] = ""
+			row["aus_5"] = ""
+			row["aus_result_2"] = ""
+			row["aus_result_3"] = ""
+			row["aus_result_4"] = ""
+			row["aus_result_5"] = ""
+		return row
 	#V701: 1) If Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting
 	#         System: 4; or Automated Underwriting System: 5 was left blank, then the corresponding reported
 	#         Automated Underwriting System Result: 2; Automated Underwriting System Result: 3;
