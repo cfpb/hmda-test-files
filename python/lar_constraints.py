@@ -917,23 +917,6 @@ class lar_constraints(object):
 				if aus_results[i] not in ("1", "2", "3", "4", "5", "6", "7"):
 					row["aus_result_"+str(i+1)] = random.choice(("1", "2", "3", "4", "5", "6", "7"))
 		return row
-
-	def field_constraints(self, field, field_vals):
-		"""Forces a field to choose from a specified value set"""
-		if field not in field_vals:
-			field = random.choice(field_vals)
-		if row["aus_1"] == "1" and row["aus_result_1"] not in ("1", "2", "3", "4", "5", "6", "7"):
-			row["aus_result_1"] = random.choice(("1", "2", "3", "4", "5", "6", "7"))
-		if row["aus_2"] == "1" and row["aus_result_2"] not in ("1", "2", "3", "4", "5", "6", "7"):
-			row["aus_result_2"] = random.choice(("1", "2", "3", "4", "5", "6", "7"))
-		if row["aus_3"] == "1" and row["aus_result_3"] not in ("1", "2", "3", "4", "5", "6", "7"):
-			row["aus_result_3"] = random.choice(("1", "2", "3", "4", "5", "6", "7"))
-		if row["aus_4"] == "1" and row["aus_result_4"] not in ("1", "2", "3", "4", "5", "6", "7"):
-			row["aus_result_4"] = random.choice(("1", "2", "3", "4", "5", "6", "7"))
-		if row["aus_5"] == "1" and row["aus_result_5"] not in ("1", "2", "3", "4", "5", "6", "7"):
-			row["aus_result_5"] = random.choice(("1", "2", "3", "4", "5", "6", "7"))
-		
-		return field
 	#V698: 1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting
 	#         System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 2, then the
 	#         corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
