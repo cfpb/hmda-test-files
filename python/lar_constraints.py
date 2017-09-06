@@ -11,7 +11,7 @@ class lar_constraints(object):
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
 		"v668_const", "v669_const", "v670_const", "v671_const", "v672_const", "v673_const", "v674_const", "v675_const", "v676_const", "v677_const", "v678_const",
 		"v679_const", "v680_const", "v681_const", "v682_const", "v688_const", "v689_const", "v690_const", "v692_const", "v693_const", "v694_const", "v696_const",
-		"v697_const", "v698_const", "v699_const", "v700_const", "v701_const", "v702_const"
+		"v697_const", "v698_const", "v699_const", "v700_const", "v701_const", "v702_const", "v703_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -1013,14 +1013,27 @@ class lar_constraints(object):
 		if row["aus_code_5"] != "" and row["aus_1"] !="5" and row["aus_2"] !="5" and row["aus_3"] !="5" and row["aus_4"] !="5" and row["aus_5"] !="5":
 			row["aus_code_5"] = ""
 		return row
-	#V703: 1) Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
-	#         Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
-	#         Automated Underwriting System Result: 5 was reported Code 16: Other. However, the Automated
-	#         Underwriting System Result: Conditional Free Form Text Field for Code 16 was left blank; or
-	#      2) The Automated Underwriting System Result : Conditional Free Form Text Field for Code 16 was 
-	#         reported, but Code 16 was not reported in Automated Underwriting System Result: 1; Automated
-	#         Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated
-	#         Underwriting System Result: 4; or Automated Underwriting System Result: 5.
+
+	def v703_const(self, row):
+		"""1) Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
+			Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
+			Automated Underwriting System Result: 5 was reported Code 16: Other. However, the Automated
+			Underwriting System Result: Conditional Free Form Text Field for Code 16 was left blank; or
+		2) The Automated Underwriting System Result : Conditional Free Form Text Field for Code 16 was
+			reported, but Code 16 was not reported in Automated Underwriting System Result: 1; Automated
+			Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated
+			Underwriting System Result: 4; or Automated Underwriting System Result: 5."""
+		#code 16 field is blank but code 16 was reported
+		aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
+		for i in range(len(aus_results)):
+			if aus_results[i] == "16":
+				if row["aus_code_16"] == "":
+					row["aus_code_16"] = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(25))
+		#code 16 field is populated but code 16 was not reported
+		if row["aus_code_16"] != "" and row["aus_result_1"] !="16" and row["aus_result_2"] !="16" and row["aus_result_3"] !="16" and row["aus_result_4"] !="16" \
+		and row["aus_result_5"] !="16":
+			row["aus_code_16"] = ""
+		return row
 
 	#V704: 1) If Action Taken equals 6, then Automated Underwriting System: 1 must equal 6.
 	#      2) If Action Taken equals 6, then Automated Underwriting System Result: 1 must equal 17. 
