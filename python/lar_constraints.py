@@ -11,7 +11,7 @@ class lar_constraints(object):
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
 		"v668_const", "v669_const", "v670_const", "v671_const", "v672_const", "v673_const", "v674_const", "v675_const", "v676_const", "v677_const", "v678_const",
 		"v679_const", "v680_const", "v681_const", "v682_const", "v688_const", "v689_const", "v690_const", "v692_const", "v693_const", "v694_const", "v696_const",
-		"v697_const", "v698_const", "v699_const", "v700_const", "v701_const", "v702_const", "v703_const", "v704_const"
+		"v697_const", "v698_const", "v699_const", "v700_const", "v701_const", "v702_const", "v703_const", "v704_const", "v705_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -1042,15 +1042,24 @@ class lar_constraints(object):
 			row["aus_1"] = "6"
 			row["aus_result_1"] = "17"
 		return row
-	#V705: 1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
-	#         Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person; and the
-	#         Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower: 1 equals
-	#         8; and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or coborrower,
-	#         then Automated Underwriting System: 1 must equal 6; and Automated Underwriting System Result: 1 must equal 17.
-	#      2) If the Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7;
-	#         and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural
-	#         person; and Ethnicity of Co-Applicant or CoBorrower: 1 equals 4; and Race of Co-Applicant or
-	#         Co-Borrower: 1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the coapplicant
-	#         or co-borrower is also a non-natural person, then Automated Underwriting System: 1 must equal
-	#         6; and Automated Underwriting System Result: 1 must equal 17.
-
+	def v705_const(self, row): 
+		"""1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
+			Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person; and the
+			Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower: 1 equals
+			8; and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or coborrower,
+			then Automated Underwriting System: 1 must equal 6; and Automated Underwriting System Result: 1 must equal 17.
+		2) If the Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7;
+			and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural
+			person; and Ethnicity of Co-Applicant or CoBorrower: 1 equals 4; and Race of Co-Applicant or
+			Co-Borrower: 1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the coapplicant
+			or co-borrower is also a non-natural person, then Automated Underwriting System: 1 must equal
+			6; and Automated Underwriting System Result: 1 must equal 17."""
+		if row["app_eth_1"] =="4" and row["app_race_1"] == "7" and row["app_sex"] == "4" and \
+		row["co_app_eth_1"] == "5" and row["co_app_race_1"] =="8" and row["co_app_sex"] == "5":
+			row["aus_1"] = "6"
+			row["aus_result_1"] = "17"
+		if row["app_eth_1"] =="4" and row["app_race_1"] == "7" and row["app_sex"] == "4" and \
+		row["co_app_eth_1"] == "4" and row["co_app_race_1"] =="7" and row["co_app_sex"] == "4":
+			row["aus_1"] = "6"
+			row["aus_result_1"] = "17"
+		return row
