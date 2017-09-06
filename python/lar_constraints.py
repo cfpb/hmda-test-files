@@ -11,7 +11,7 @@ class lar_constraints(object):
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
 		"v668_const", "v669_const", "v670_const", "v671_const", "v672_const", "v673_const", "v674_const", "v675_const", "v676_const", "v677_const", "v678_const",
 		"v679_const", "v680_const", "v681_const", "v682_const", "v688_const", "v689_const", "v690_const", "v692_const", "v693_const", "v694_const", "v696_const",
-		"v697_const", "v698_const", "v699_const", "v700_const", "v701_const"
+		"v697_const", "v698_const", "v699_const", "v700_const", "v701_const", "v702_const"
 		]
 		self.tracts = tracts
 		self.counties = counties
@@ -935,7 +935,7 @@ class lar_constraints(object):
 
 	def v699_const(self, row): 
 		"""1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting
-			System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 5, 
+			System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 5,
 			then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
 			Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
 			Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, or 16."""
@@ -995,14 +995,24 @@ class lar_constraints(object):
 				if aus_results[i] =="":
 					row["aus_result_"+str(i+1)] = random.choice(("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"))
 		return row
-	#V702: 1) Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting
-	#         System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 was reported
-	#         Code 5: Other. However, the Automated Underwriting System: Conditional Free Form Text Field for Code 5
-	#         was left blank; or
-	#      2) The Automated Underwriting System: Conditional Free Form Text Field for Code 5 was reported, but
-	#         Code 5 was not reported in Automated Underwriting System: 1; Automated Underwriting System: 2;
-	#         Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5.
 
+	def v702_const(self, row): 
+		"""1) Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting
+			System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 was reported
+			Code 5: Other. However, the Automated Underwriting System: Conditional Free Form Text Field for Code 5
+			was left blank; or
+		2) The Automated Underwriting System: Conditional Free Form Text Field for Code 5 was reported, but
+			Code 5 was not reported in Automated Underwriting System: 1; Automated Underwriting System: 2;
+			Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5."""
+		aus_sys = [row["aus_1"], row["aus_2"], row["aus_3"], row["aus_4"], row["aus_5"]]
+		aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
+		for i in range(len(aus_sys)):
+			if aus_sys[i] == "5":
+				if row["aus_code_5"] == "":
+					row["aus_code_5"] = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(25))
+		if row["aus_code_5"] != "" and row["aus_1"] !="5" and row["aus_2"] !="5" and row["aus_3"] !="5" and row["aus_4"] !="5" and row["aus_5"] !="5":
+			row["aus_code_5"] = ""
+		return row
 	#V703: 1) Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
 	#         Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
 	#         Automated Underwriting System Result: 5 was reported Code 16: Other. However, the Automated
