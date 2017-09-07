@@ -479,8 +479,7 @@ class lar_constraints(object):
 	def v654_const(self,row):
 		"""1) If Multifamily Affordable Units is a number, then Income must be NA."""
 		if row["affordable_units"] != "NA" and row["affordable_units"] !="":
-			if int(row["affordable_units"]) > 0:
-				row["income"] = "NA"
+			row["income"] = "NA"
 		return row
 
 	def v655_const(self, row):
