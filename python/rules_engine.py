@@ -14,15 +14,15 @@ class rules_engine(object):
 
 	#Helper Functions
 	def split_ts_row(self, path="../edits_files/", data_file="passes_all.txt"):
-			"""This function makes a separate data frame for the TS and LAR portions of a file and returns each as a dataframe."""
-			with open(path+data_file, 'r') as infile:
-				ts_row = infile.readline()
-				ts_data = StringIO(ts_row)
-				lar_rows = infile.readlines()
-				lar_data = [line.split("|") for line in lar_rows]
-				ts_df = pd.read_csv(ts_data,sep="|", dtype=object, header=None, names=self.ts_field_names)
-				lar_df  = pd.DataFrame(data=lar_data, dtype=object, columns=self.lar_field_names)
-			return ts_df, lar_df
+		"""This function makes a separate data frame for the TS and LAR portions of a file and returns each as a dataframe."""
+		with open(path+data_file, 'r') as infile:
+			ts_row = infile.readline()
+			ts_data = StringIO(ts_row)
+			lar_rows = infile.readlines()
+			lar_data = [line.split("|") for line in lar_rows]
+			ts_df = pd.read_csv(ts_data,sep="|", dtype=object, header=None, names=self.ts_field_names)
+			lar_df  = pd.DataFrame(data=lar_data, dtype=object, columns=self.lar_field_names)
+		return ts_df, lar_df
 	#Edit Rules from FIG
 	"""
 	S300 The data provided in the file is incorrect. Please review the information below and update your file accordingly.
