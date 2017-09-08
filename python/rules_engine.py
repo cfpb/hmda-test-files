@@ -54,11 +54,20 @@ class rules_engine(object):
 				count+=1
 				self.results["s301"]["lar_fail_ids"].append(self.lar_df.get_value(index, "lei"))
 		self.results["s301"]["lar_fail_count"] = count
-	
+
+
+	def v600(self):
+		"""1) The required format for LEI is alphanumeric with 20 characters, and it cannot be left blank."""
+		self.results["v600"] = {}
+		self.results["v600"]["lar_fail_ids"] = []
+		#check LAR rows for LEI issues
+		count = 0 #initialize fail count
+		for index, row in self.lar_df.iterrows():
+			if self.lar_df.get_value(index, "lei") == "" or len(self.lar_df.get_value(index, "lei"))!=20:
+				count +=1
+				self.results["v600"]["lar_fail_ids"].append(self.lar_df.get_value(index, "lei")) #append failed LEI value to list of fails
+		self.results["v600"]["lar_fail_count"] = count #add count of fails to result
 	"""
-	V600 An LEI in an invalid format was provided. Please review the information below and update your file accordingly.
-	1) The required format for LEI is alphanumeric with 20 characters, and it cannot be left blank.
-	
 	S302 The reported Calendar Year does not match the filing year indicated at the start of the filing. Please confirm the information below and update your file accordingly.
 	1) The correct file has been uploaded; and
 	2) The correct filing year was chosen at the start of the filing; and
