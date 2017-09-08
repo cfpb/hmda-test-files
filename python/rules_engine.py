@@ -74,7 +74,6 @@ class rules_engine(object):
 		#this applies to the TS only
 		self.results["s302"] = {}
 		self.results["s302"]["ts_row"] = ""
-		
 		if self.ts_df.get_value(0, "calendar_year") !=year:
 			self.results["s302"]["ts_row"] = "failed"
 		else:
@@ -88,13 +87,24 @@ class rules_engine(object):
 			self.results["s304"]["ts_row"] = "failed"
 		else:
 			self.results["s304"]["ts_row"] = "passed"
+
+	def v601(self):
+		"""The following data fields are required, and cannot be left blank. A blank value(s) was provided.
+		1) Financial Institution Name;
+		2) Contact Person's Name;
+		3) Contact Person's E-mail Address;
+		4) Contact Person's Office Street Address;
+		5) Contact Person's Office City"""
+		self.results["v601"] = {}
+		self.results["v601"]["ts_row"] = {}
+		fields = ["contact_name", "contact_tel", "contact_street_address", "office_city", "contact_email"]
+		for field in fields:
+			if self.ts_df.get_value(0, field) == "":
+				self.results["v601"]["ts_row"][field] = "failed"
+			else:
+				self.results["v601"]["ts_row"][field] = "passed"
+
 	"""
-	V601 The following data fields are required, and cannot be left blank. A blank value(s) was provided. Please review the information below and update your file accordingly.
-	1) Financial Institution Name;
-	2) Contact Person's Name;
-	3) Contact Person's E-mail Address;
-	4) Contact Person's Office Street Address;
-	5) Contact Person's Office City
 	
 	V602 An invalid Calendar Quarter was reported. Please review the information below and update your file accordingly.
 	1) Calendar Quarter must equal 4, and cannot be left blank.
