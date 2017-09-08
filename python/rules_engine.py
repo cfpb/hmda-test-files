@@ -7,28 +7,44 @@ import pandas as pd
 
 class rules_engine(object):
 	"""docstring for ClassName"""
-	def __init__(self, lar_schema, ts_schema):
+	def __init__(self, lar_schema, ts_schema, path="../edits_files/", data_file="passes_all.txt"):
 		#lar and TS field names (load from schema names?)
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
-
+		self.ts_df, self.lar_df= self.split_ts_row(path=path, data_file=data_file)
+		self.results = {}
 	#Helper Functions
 	def split_ts_row(self, path="../edits_files/", data_file="passes_all.txt"):
 		"""This function makes a separate data frame for the TS and LAR portions of a file and returns each as a dataframe."""
 		with open(path+data_file, 'r') as infile:
-			ts_row = infile.readline()
-			ts_data = StringIO(ts_row)
+			ts_row = infile.readline().strip("\n")
+			ts_data = []
+			ts_data.append(ts_row.split("|"))
 			lar_rows = infile.readlines()
-			lar_data = [line.split("|") for line in lar_rows]
-			ts_df = pd.read_csv(ts_data,sep="|", dtype=object, header=None, names=self.ts_field_names)
+			lar_data = [line.strip("\rn").split("|") for line in lar_rows]
+			ts_df = pd.DataFrame(data=ts_data, dtype=object, columns=self.ts_field_names)
 			lar_df  = pd.DataFrame(data=lar_data, dtype=object, columns=self.lar_field_names)
 		return ts_df, lar_df
-	#Edit Rules from FIG
-	"""
-	S300 The data provided in the file is incorrect. Please review the information below and update your file accordingly.
-	The following criteria must be met:
-	1) The first row of your file must begin with a 1; and 2) Any subsequent rows must begin with a 2.
 
+	#Edit Rules from FIG
+	def s300(self):
+		"""1) The first row of your file must begin with a 1; and 2) Any subsequent rows must begin with a 2."""
+		self.results["s300"] = {}  #create s300 section of results
+		self.results["s300"]["lar_fail_ids"] = [] #create list for failed row ids
+		if self.ts_df.get_value(0,"record_id") != "1":
+			self.results["s300"]["ts_row"] ="failed"
+		else:
+			self.results["s300"]["ts_row"] ="passed"
+		count = 0 #initialize count of fail rows
+		for index, row in self.lar_df.iterrows():
+			if self.lar_df.get_value(index, "record_id")!="2":
+				print(self.lar_df.get_value(index, "record_id"))
+				count+=1
+				self.results["s300"]["lar_fail_ids"].append(self.lar_df.get_value(index, "uli"))
+		self.results["s300"]["lar_fail_count"] = count
+
+
+	"""
 	S301 The LEI in this row does not match the reported LEI in the transmittal sheet (the first row of your file). Please update your file accordingly.
 	
 	V600 An LEI in an invalid format was provided. Please review the information below and update your file accordingly.
