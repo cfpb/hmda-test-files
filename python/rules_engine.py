@@ -21,7 +21,7 @@ class rules_engine(object):
 			ts_data = []
 			ts_data.append(ts_row.split("|"))
 			lar_rows = infile.readlines()
-			lar_data = [line.strip("\rn").split("|") for line in lar_rows]
+			lar_data = [line.strip("\n").split("|") for line in lar_rows]
 			ts_df = pd.DataFrame(data=ts_data, dtype=object, columns=self.ts_field_names)
 			lar_df  = pd.DataFrame(data=lar_data, dtype=object, columns=self.lar_field_names)
 		return ts_df, lar_df
