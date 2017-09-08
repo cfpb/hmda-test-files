@@ -112,10 +112,20 @@ class rules_engine(object):
 			self.results["v602"]["calendar_quarter"] = "failed"
 		else:
 			self.results["v602"]["calendar_quarter"] = "passed"
+
+	def v603(self):
+		"""An invalid Contact Person's Telephone Number was provided.
+		1) The required format for the Contact Person's Telephone Number is 999-999-9999, and it cannot be left blank."""
+		self.results["v603"] = {}
+		self.results["v603"]["contact_tel"] = ""
+		tel = self.ts_df.get_value(0, "contact_tel")
+		tel2 = tel.replace("-", "")
+		print(tel, tel2)
+		if tel == "" or len(tel) != 12 or tel2.isdigit() == False:
+			self.results["v603"]["contact_tel"] = "failed"
+		else:
+			self.results["v603"]["contact_tel"] = "passed"
 	"""
-	V603 An invalid Contact Person's Telephone Number was provided. Please review the information below and update your file accordingly.
-	1) The required format for the Contact Person's Telephone Number is 999-999-9999, and it cannot be left blank.
-	
 	V604 An invalid Contact Person's Office State was provided. Please review the information below and update your file accordingly.
 	1) Contact Person's Office State must be a two letter state code, and cannot be left blank.
 	
