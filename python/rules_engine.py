@@ -38,15 +38,24 @@ class rules_engine(object):
 		count = 0 #initialize count of fail rows
 		for index, row in self.lar_df.iterrows():
 			if self.lar_df.get_value(index, "record_id")!="2":
-				print(self.lar_df.get_value(index, "record_id"))
 				count+=1
 				self.results["s300"]["lar_fail_ids"].append(self.lar_df.get_value(index, "uli"))
 		self.results["s300"]["lar_fail_count"] = count
 
 
-	"""
-	S301 The LEI in this row does not match the reported LEI in the transmittal sheet (the first row of your file). Please update your file accordingly.
+	def s301(self):
+		"""The LEI in this row does not match the reported LEI in the transmittal sheet (the first row of your file). Please update your file accordingly."""
+		self.results["s301"] = {}
+		self.results["s301"]["lar_fail_ids"] = []
+		ts_lei = self.ts_df.get_value(0, "lei")
+		count = 0
+		for index, row in self.lar_df.iterrows():
+			if self.lar_df.get_value(index, "lei") != ts_lei:
+				count+=1
+				self.results["s301"]["lar_fail_ids"].append(self.lar_df.get_value(index, "lei"))
+		self.results["s301"]["lar_fail_count"] = count
 	
+	"""
 	V600 An LEI in an invalid format was provided. Please review the information below and update your file accordingly.
 	1) The required format for LEI is alphanumeric with 20 characters, and it cannot be left blank.
 	

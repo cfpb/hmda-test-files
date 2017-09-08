@@ -116,11 +116,14 @@ class lar_gen(object):
 	#this file will have valid values for all column/row entries
 	#some valid value lists contain only "NA", other entries are also valid
 
-	def make_row(self):
+	def make_row(self, lei=None):
 		"""Make num_rows LAR rows and return them as a list of ordered dicts"""
 		valid_lar_row = OrderedDict() 
 		valid_lar_row["record_id"] = str(self.LAR_df.valid_vals[self.LAR_df.field=="record_id"].iloc[0][0])
-		valid_lar_row["lei"] = self.char_string_gen(20)
+		if not lei:
+			valid_lar_row["lei"] = self.char_string_gen(20)
+		else:
+			valid_lar_row["lei"] = lei
 		valid_lar_row["uli"] = valid_lar_row['lei'] + self.char_string_gen(25)
 		valid_lar_row["app_date"] = str(self.date_gen())
 		valid_lar_row["loan_type"] = str(self.random_enum(self.get_schema_list(field="loan_type")))
