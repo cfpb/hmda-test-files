@@ -104,11 +104,15 @@ class rules_engine(object):
 			else:
 				self.results["v601"]["ts_row"][field] = "passed"
 
+	def v602(self):
+		"""An invalid Calendar Quarter was reported. 1) Calendar Quarter must equal 4, and cannot be left blank."""
+		self.results["v602"] = {}
+		self.results["v602"]["calendar_quarter"] = ""
+		if self.ts_df.get_value(0, "calendar_quarter") != "4":
+			self.results["v602"]["calendar_quarter"] = "failed"
+		else:
+			self.results["v602"]["calendar_quarter"] = "passed"
 	"""
-	
-	V602 An invalid Calendar Quarter was reported. Please review the information below and update your file accordingly.
-	1) Calendar Quarter must equal 4, and cannot be left blank.
-
 	V603 An invalid Contact Person's Telephone Number was provided. Please review the information below and update your file accordingly.
 	1) The required format for the Contact Person's Telephone Number is 999-999-9999, and it cannot be left blank.
 	
