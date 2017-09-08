@@ -185,7 +185,7 @@ class lar_gen(object):
 		valid_lar_row["app_score_name"] = str(self.random_enum(self.get_schema_list(field="app_score_name")))
 		valid_lar_row["app_score_code_8"] = str(self.char_string_gen(random.choice(range(100))))
 		valid_lar_row["co_app_score_name"] = str(self.random_enum(self.get_schema_list(field="co_app_score_name")))
-		valid_lar_row["co_app_code_8"] = self.char_string_gen(random.choice(range(100)))
+		valid_lar_row["co_app_score_code_8"] = self.char_string_gen(random.choice(range(100)))
 		valid_lar_row["denial_1"] = str(self.random_enum(self.get_schema_list(field="denial_1")))
 		valid_lar_row["denial_2"] = str(self.random_enum(self.get_schema_list(field="denial_2", empty=True)))
 		valid_lar_row["denial_3"] = str(self.random_enum(self.get_schema_list(field="denial_3", empty=True)))
