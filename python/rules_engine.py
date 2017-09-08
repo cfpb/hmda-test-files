@@ -31,6 +31,7 @@ class rules_engine(object):
 		"""1) The first row of your file must begin with a 1; and 2) Any subsequent rows must begin with a 2."""
 		self.results["s300"] = {}  #create s300 section of results
 		self.results["s300"]["lar_fail_ids"] = [] #create list for failed row ids
+		self.results["s300"]["ts_row"] = ""
 		if self.ts_df.get_value(0,"record_id") != "1":
 			self.results["s300"]["ts_row"] ="failed"
 		else:
@@ -67,12 +68,18 @@ class rules_engine(object):
 				count +=1
 				self.results["v600"]["lar_fail_ids"].append(self.lar_df.get_value(index, "lei")) #append failed LEI value to list of fails
 		self.results["v600"]["lar_fail_count"] = count #add count of fails to result
-	"""
-	S302 The reported Calendar Year does not match the filing year indicated at the start of the filing. Please confirm the information below and update your file accordingly.
-	1) The correct file has been uploaded; and
-	2) The correct filing year was chosen at the start of the filing; and
-	3) The calendar year is listed correctly in the file.
-	
+
+	def s302(self, year="2018"):
+		""" The reported Calendar Year does not match the filing year indicated at the start of the filing."""
+		#this applies to the TS only
+		self.results["s302"] = {}
+		self.results["s302"]["ts_row"] = ""
+		
+		if self.ts_df.get_value(0, "calendar_year") !=year:
+			self.results["s302"]["ts_row"] = "failed"
+		else:
+			self.results["s302"]["ts_row"] = "passed"
+	"""	
 	S303 The reported Federal Agency; Federal Taxpayer Identification Number; and Legal Entity Identifier must match the Federal Agency; Federal Taxpayer Identification Number; and Legal Entity Identifier for the financial institution for which you are filing. Please confirm the information below and update your file accordingly.
 	1) The correct financial institution was at the start of the filing; and
 	2) The correct file was uploaded; and
