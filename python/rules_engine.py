@@ -12,6 +12,9 @@ class rules_engine(object):
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 		self.ts_df, self.lar_df= self.split_ts_row(path=path, data_file=data_file)
+		self.state_codes = {'WA':'53', 'WI':'55', 'WV':'54', 'FL':'12', 'WY':'56', 'NH':'33', 'NJ':'34', 'NM':'33', 'NC':'37', 'ND':'38', 'NE':'31', 'NY':'36', 'RI':'44', 'NV':'32', 'CO':'08', 'CA':'06', 'GA':'13', 'CT':'09', 'OK':'40', 'OH':'39',
+							'KS':'20', 'SC':'45', 'KY':'21', 'OR':'41', 'SD':'46', 'DE':'10', 'HI':'15', 'PR':'43', 'TX':'48', 'LA':'22', 'TN':'47', 'PA':'42', 'VA':'51', 'VI':'78', 'AK':'02', 'AL':'01', 'AR':'05', 'VT':'50', 'IL':'17', 'IN':'18',
+							'IA':'19', 'AZ':'04', 'ID':'16', 'ME':'23', 'MD':'24', 'MA':'25', 'UT':'49', 'MO':'29', 'MN':'27', 'MI':'26', 'MT':'30', 'MS':'29', 'DC':'11'}
 		self.results = {}
 	#Helper Functions
 	def split_ts_row(self, path="../edits_files/", data_file="passes_all.txt"):
@@ -120,15 +123,24 @@ class rules_engine(object):
 		self.results["v603"]["contact_tel"] = ""
 		tel = self.ts_df.get_value(0, "contact_tel")
 		tel2 = tel.replace("-", "")
-		print(tel, tel2)
-		if tel == "" or len(tel) != 12 or tel2.isdigit() == False:
+		if tel == "" or len(tel) != 12 or tel2.isdigit() == False: #invalid telephone format provided
 			self.results["v603"]["contact_tel"] = "failed"
-		else:
+		else: #valid telephone format provided
 			self.results["v603"]["contact_tel"] = "passed"
+
+	def v604(self):
+		"""V604 An invalid Contact Person's Office State was provided. Please review the information below and update your file accordingly.
+			1) Contact Person's Office State must be a two letter state code, and cannot be left blank."""
+		self.results["v604"] = {}
+		self.results["v604"]["contact_office_state"] = ""
+		#office code is not valid for US states or territories
+		if self.ts_df.get_value(0, "office_state") not in self.state_codes.keys():
+			print("not here")
+			self.results["v604"]["contact_office_state"] = "failed"
+		#office code is valid for US states or territories
+		else:
+			self.results["v604"]["contact_office_state"] = "passed"
 	"""
-	V604 An invalid Contact Person's Office State was provided. Please review the information below and update your file accordingly.
-	1) Contact Person's Office State must be a two letter state code, and cannot be left blank.
-	
 	V605 An invalid Contact Person's ZIP Code was provided. Please review the information below and update your file accordingly.
 	1) The required format for the Contact Person's ZIP Code is 12345-1010 or 12345, and it cannot be left blank.
 	
