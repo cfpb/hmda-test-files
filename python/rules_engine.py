@@ -169,10 +169,17 @@ class rules_engine(object):
 		else:
 			result["office_zip"] = "passed"
 		self.update_results(edit_name="v605", edit_field_results=result, row_type="TS")
-	"""
-	V606 The reported Total Number of Entries Contained in Submission is not in the valid format. Please review the information below and update your file accordingly.
-	1) The required format for the Total Number of Entries Contained in Submission is a whole number that is greater than zero, and it cannot be left blank.
-	
+
+	def v606(self):
+		"""The reported Total Number of Entries Contained in Submission is not in the valid format.
+		1) The required format for the Total Number of Entries Contained in Submission is a whole number that is greater than zero, and it cannot be left blank."""
+		result = {}
+		if self.ts_df.get_value(0, "lar_entries")=="" or int(self.ts_df.get_value(0, "lar_entries")) < 1 or self.ts_df.get_value(0, "lar_entries").isdigit()==False:
+			result["lar_entries"] = "failed"
+		else:
+			result["lar_entries"] = "passed"
+		self.update_results(edit_name="v606", edit_field_results=result, row_type="TS")
+	"""	
 	V607 An invalid Federal Taxpayer Identification Number was provided. Please review the information below and update your file accordingly.
 	1) The required format for the Federal Taxpayer Identification Number is 99-9999999, and it cannot be left blank.
 	
