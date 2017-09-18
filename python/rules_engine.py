@@ -2,6 +2,7 @@
 #This class should be able to return a list of row fail counts for each S/V edit for each file passed to the class.
 #The return should be JSON formatted data, written to a file?
 #input to the class will be a pandas dataframe
+from collections import OrderedDict
 from io import StringIO
 import pandas as pd
 
@@ -17,16 +18,19 @@ class rules_engine(object):
 							'IA':'19', 'AZ':'04', 'ID':'16', 'ME':'23', 'MD':'24', 'MA':'25', 'UT':'49', 'MO':'29', 'MN':'27', 'MI':'26', 'MT':'30', 'MS':'29', 'DC':'11'}
 		self.results = {}
 	#Helper Functions
-	def update_results(self, edit_name="", edit_field_results={},  row_type="", row_ids=[], fail_count=0):
+	def update_results(self, edit_name="", edit_field_results={},  row_type="", row_ids=None, fail_count=None):
 		"""Updates the results dictionary by adding a sub-dictionary for the edit, any associated fields, and the result of the edit test.
 		edit name is the name of the edit, edit field results is a dict containing field names as keys and pass/fail as values, row type is LAR or TS, 
 		row ids contains a list of all rows failing the test"""
-		self.results[edit_name] = {}
+		self.results[edit_name] = OrderedDict({})
 		self.results[edit_name]["row_type"] = row_type
-		self.results[edit_name]["fail_ids"] = row_ids
+		if row_ids is not None:
+			self.results[edit_name]["fail_ids"] = row_ids
 		for field in edit_field_results.keys():
 			self.results[edit_name][field] = edit_field_results[field]
-		
+			if fail_count is not None:
+				self.results[edit_name]["fail_count"] = fail_count
+				
 	def split_ts_row(self, path="../edits_files/", data_file="passes_all.txt"):
 		"""This function makes a separate data frame for the TS and LAR portions of a file and returns each as a dataframe."""
 		with open(path+data_file, 'r') as infile:
@@ -42,18 +46,10 @@ class rules_engine(object):
 	#Edit Rules from FIG
 	def s300(self):
 		"""1) The first row of your file must begin with a 1; and 2) Any subsequent rows must begin with a 2."""
-
-		#self.results["s300"] = {}  #create s300 section of results
-		#self.results["s300"]["lar_fail_ids"] = [] #create list for failed row ids
-		#self.results["s300"]["ts_row"] = ""
-		self.ts_df.record_id = "2"
-		self.lar_df.record_id = "1"
 		result = {}
 		if self.ts_df.get_value(0,"record_id") != "1":
-			#self.results["s300"]["ts_row"] ="failed"
 			result["record_id_ts"] = "failed"
 		else:
-			#self.results["s300"]["ts_row"] ="passed"
 			result["record_id_ts"] = "passed"
 		count = 0 #initialize count of fail rows
 		failed_rows = [] #initialize list of failed rows
@@ -61,56 +57,57 @@ class rules_engine(object):
 			if self.lar_df.get_value(index, "record_id")!="2":
 				count+=1
 				result["record_id_lar"] = "failed"
-				#self.results["s300"]["lar_fail_ids"].append(self.lar_df.get_value(index, "uli"))
-				failed_rows.append(self.lar_df.get_value(index, "uli")) 
+				failed_rows.append(self.lar_df.get_value(index, "uli"))
 			else:
 				result["record_id_lar"] = "passed"
-		#self.results["s300"]["lar_fail_count"] = count
 		self.update_results(edit_name="s300", edit_field_results=result, row_type="TS/LAR", row_ids=failed_rows, fail_count=count)
 
 	def s301(self):
 		"""The LEI in this row does not match the reported LEI in the transmittal sheet (the first row of your file). Please update your file accordingly."""
-		self.results["s301"] = {}
-		self.results["s301"]["lar_fail_ids"] = []
-		ts_lei = self.ts_df.get_value(0, "lei")
+		result = {}
+		failed_rows = []
 		count = 0
 		for index, row in self.lar_df.iterrows():
-			if self.lar_df.get_value(index, "lei") != ts_lei:
+			if self.lar_df.get_value(index, "lei") != self.ts_df.get_value(0, "lei"):
 				count+=1
-				self.results["s301"]["lar_fail_ids"].append(self.lar_df.get_value(index, "lei"))
-		self.results["s301"]["lar_fail_count"] = count
-
+				result["LEI"] = "failed"
+				failed_rows.append(self.lar_df.get_value(index, "lei")) #add failed row LEI to list of failed rows
+			else:
+				result["LEI"] = "passed"
+		self.update_results(edit_name="s301", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
 
 	def v600(self):
 		"""1) The required format for LEI is alphanumeric with 20 characters, and it cannot be left blank."""
-		self.results["v600"] = {}
-		self.results["v600"]["lar_fail_ids"] = []
-		#check LAR rows for LEI issues
+		result= {}
+		failed_rows = []
 		count = 0 #initialize fail count
 		for index, row in self.lar_df.iterrows():
 			if self.lar_df.get_value(index, "lei") == "" or len(self.lar_df.get_value(index, "lei"))!=20:
 				count +=1
-				self.results["v600"]["lar_fail_ids"].append(self.lar_df.get_value(index, "lei")) #append failed LEI value to list of fails
-		self.results["v600"]["lar_fail_count"] = count #add count of fails to result
+				result["LEI"] = "failed"
+				failed_rows.append(self.lar_df.get_value(index, "lei")) #append failed LEI value to list of fails
+			else:
+				result["LEI"] = "passed"
+		self.update_results(edit_name="v600", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
 
 	def s302(self, year="2018"):
 		""" The reported Calendar Year does not match the filing year indicated at the start of the filing."""
-		#this applies to the TS only
-		self.results["s302"] = {}
-		self.results["s302"]["ts_row"] = ""
+		result={}
 		if self.ts_df.get_value(0, "calendar_year") !=year:
-			self.results["s302"]["ts_row"] = "failed"
+			result["calendar_year"] = "failed"
 		else:
-			self.results["s302"]["ts_row"] = "passed"
+			result["calendar_year"] = "passed"
+		self.update_results(edit_name="s302", edit_field_results=result, row_type="TS")
 
 	def s304(self):
 		"""The reported Total Number of Entries Contained in Submission does not match the total number of LARs in the HMDA file."""
-		self.results["s304"] = {}
-		self.results["s304"]["ts_row"] = ""
+		result={}
 		if self.ts_df.get_value(0, "lar_entries") != str(len(self.lar_df)):
-			self.results["s304"]["ts_row"] = "failed"
+			result["lar_entries"] = "failed"
 		else:
-			self.results["s304"]["ts_row"] = "passed"
+			#self.results["s304"]["ts_row"] = "passed"
+			result["lar_entries"] = "passed"
+		self.update_results(edit_name="s304", edit_field_results=result, row_type="TS/LAR")
 
 	def v601(self):
 		"""The following data fields are required, and cannot be left blank. A blank value(s) was provided.
@@ -119,61 +116,59 @@ class rules_engine(object):
 		3) Contact Person's E-mail Address;
 		4) Contact Person's Office Street Address;
 		5) Contact Person's Office City"""
-		self.results["v601"] = {}
-		self.results["v601"]["ts_row"] = {}
+		result = {}
 		fields = ["contact_name", "contact_tel", "contact_street_address", "office_city", "contact_email"]
 		for field in fields:
 			if self.ts_df.get_value(0, field) == "":
-				self.results["v601"]["ts_row"][field] = "failed"
+				result[field] = "failed"
 			else:
-				self.results["v601"]["ts_row"][field] = "passed"
+				result[field] = "passed"
+		self.update_results(edit_name="v601", edit_field_results=result, row_type="TS")
 
 	def v602(self):
 		"""An invalid Calendar Quarter was reported. 1) Calendar Quarter must equal 4, and cannot be left blank."""
-		self.results["v602"] = {}
-		self.results["v602"]["calendar_quarter"] = ""
+		result = {}
 		if self.ts_df.get_value(0, "calendar_quarter") != "4":
-			self.results["v602"]["calendar_quarter"] = "failed"
+			result["calendar_quarter"] = "failed"
 		else:
-			self.results["v602"]["calendar_quarter"] = "passed"
+			result["calendar_quarter"] = "passed"
+		self.update_results(edit_name="v602", edit_field_results=result, row_type="TS")
 
 	def v603(self):
 		"""An invalid Contact Person's Telephone Number was provided.
 		1) The required format for the Contact Person's Telephone Number is 999-999-9999, and it cannot be left blank."""
-		self.results["v603"] = {}
-		self.results["v603"]["contact_tel"] = ""
+		result = {}
 		tel = self.ts_df.get_value(0, "contact_tel")
 		tel2 = tel.replace("-", "")
 		if tel == "" or len(tel) != 12 or tel2.isdigit() == False: #invalid telephone format provided
-			self.results["v603"]["contact_tel"] = "failed"
+			result["contact_tel"] = "failed"
 		else: #valid telephone format provided
-			self.results["v603"]["contact_tel"] = "passed"
+			result["contact_tel"] = "passed"
+		self.update_results(edit_name="v603", edit_field_results=result, row_type="TS")
 
 	def v604(self):
 		"""V604 An invalid Contact Person's Office State was provided. Please review the information below and update your file accordingly.
 			1) Contact Person's Office State must be a two letter state code, and cannot be left blank."""
-		self.results["v604"] = {}
-		self.results["v604"]["contact_office_state"] = ""
+		result = {}
 		#office code is not valid for US states or territories
 		if self.ts_df.get_value(0, "office_state") not in self.state_codes.keys():
-			print("not here")
-			self.results["v604"]["contact_office_state"] = "failed"
+			result["office_state"] = "failed"
 		#office code is valid for US states or territories
 		else:
-			self.results["v604"]["contact_office_state"] = "passed"
+			result["office_state"] = "passed"
+		self.update_results(edit_name="v604", edit_field_results=result, row_type="TS")
 
 	def v605(self):
 		"""V605 An invalid Contact Person's ZIP Code was provided. Please review the information below and update your file accordingly.
 			1) The required format for the Contact Person's ZIP Code is 12345-1010 or 12345, and it cannot be left blank."""
-		self.results["v605"] = {}
-		self.results["v605"]["office_zip"] = ""
+		result = {}
 		#office zip is not valid format
 		if len(self.ts_df.get_value(0, "office_zip")) not in (5, 10) or self.ts_df.get_value(0, "office_zip").replace("-","").isdigit==False:
-			self.results["v605"]["office_zip"] = "failed"
+			result["office_zip"] = "failed"
 		#offize zip is valid format
 		else:
-			self.results["v605"]["office_zip"] = "passed"
-			
+			result["office_zip"] = "passed"
+		self.update_results(edit_name="v605", edit_field_results=result, row_type="TS")
 	"""
 	V606 The reported Total Number of Entries Contained in Submission is not in the valid format. Please review the information below and update your file accordingly.
 	1) The required format for the Total Number of Entries Contained in Submission is a whole number that is greater than zero, and it cannot be left blank.
