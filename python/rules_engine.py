@@ -17,6 +17,16 @@ class rules_engine(object):
 							'IA':'19', 'AZ':'04', 'ID':'16', 'ME':'23', 'MD':'24', 'MA':'25', 'UT':'49', 'MO':'29', 'MN':'27', 'MI':'26', 'MT':'30', 'MS':'29', 'DC':'11'}
 		self.results = {}
 	#Helper Functions
+	def update_results(self, edit_name="", edit_field_results={},  row_type="", row_ids=[], fail_count=0):
+		"""Updates the results dictionary by adding a sub-dictionary for the edit, any associated fields, and the result of the edit test.
+		edit name is the name of the edit, edit field results is a dict containing field names as keys and pass/fail as values, row type is LAR or TS, 
+		row ids contains a list of all rows failing the test"""
+		self.results[edit_name] = {}
+		self.results[edit_name]["row_type"] = row_type
+		self.results[edit_name]["fail_ids"] = row_ids
+		for field in edit_field_results.keys():
+			self.results[edit_name][field] = edit_field_results[field]
+		
 	def split_ts_row(self, path="../edits_files/", data_file="passes_all.txt"):
 		"""This function makes a separate data frame for the TS and LAR portions of a file and returns each as a dataframe."""
 		with open(path+data_file, 'r') as infile:
@@ -32,20 +42,31 @@ class rules_engine(object):
 	#Edit Rules from FIG
 	def s300(self):
 		"""1) The first row of your file must begin with a 1; and 2) Any subsequent rows must begin with a 2."""
-		self.results["s300"] = {}  #create s300 section of results
-		self.results["s300"]["lar_fail_ids"] = [] #create list for failed row ids
-		self.results["s300"]["ts_row"] = ""
+
+		#self.results["s300"] = {}  #create s300 section of results
+		#self.results["s300"]["lar_fail_ids"] = [] #create list for failed row ids
+		#self.results["s300"]["ts_row"] = ""
+		self.ts_df.record_id = "2"
+		self.lar_df.record_id = "1"
+		result = {}
 		if self.ts_df.get_value(0,"record_id") != "1":
-			self.results["s300"]["ts_row"] ="failed"
+			#self.results["s300"]["ts_row"] ="failed"
+			result["record_id_ts"] = "failed"
 		else:
-			self.results["s300"]["ts_row"] ="passed"
+			#self.results["s300"]["ts_row"] ="passed"
+			result["record_id_ts"] = "passed"
 		count = 0 #initialize count of fail rows
+		failed_rows = [] #initialize list of failed rows
 		for index, row in self.lar_df.iterrows():
 			if self.lar_df.get_value(index, "record_id")!="2":
 				count+=1
-				self.results["s300"]["lar_fail_ids"].append(self.lar_df.get_value(index, "uli"))
-		self.results["s300"]["lar_fail_count"] = count
-
+				result["record_id_lar"] = "failed"
+				#self.results["s300"]["lar_fail_ids"].append(self.lar_df.get_value(index, "uli"))
+				failed_rows.append(self.lar_df.get_value(index, "uli")) 
+			else:
+				result["record_id_lar"] = "passed"
+		#self.results["s300"]["lar_fail_count"] = count
+		self.update_results(edit_name="s300", edit_field_results=result, row_type="TS/LAR", row_ids=failed_rows, fail_count=count)
 
 	def s301(self):
 		"""The LEI in this row does not match the reported LEI in the transmittal sheet (the first row of your file). Please update your file accordingly."""
