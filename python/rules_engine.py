@@ -179,10 +179,17 @@ class rules_engine(object):
 		else:
 			result["lar_entries"] = "passed"
 		self.update_results(edit_name="v606", edit_field_results=result, row_type="TS")
-	"""	
-	V607 An invalid Federal Taxpayer Identification Number was provided. Please review the information below and update your file accordingly.
-	1) The required format for the Federal Taxpayer Identification Number is 99-9999999, and it cannot be left blank.
-	
+
+	def v607(self):
+		"""An invalid Federal Taxpayer Identification Number was provided.
+		1) The required format for the Federal Taxpayer Identification Number is 99-9999999, and it cannot be left blank."""
+		result = {}
+		if len(self.ts_df.get_value(0, "tax_id")) != 10 or self.ts_df.get_value(0, "tax_id").replace("-","").isdigit() == False:
+			result["tax_id"] = "failed"
+		else:
+			result["tax_id"] = "passed"
+		self.update_results(edit_name="v607", edit_field_results=result, row_type="TS")
+"""	
 	S305 A duplicate transaction has been reported. Please review and update your file accordingly.
 	
 	V608 A ULI with an invalid format was provided. Please review the information below and update your file accordingly.
