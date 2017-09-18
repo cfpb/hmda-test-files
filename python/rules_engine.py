@@ -140,10 +140,20 @@ class rules_engine(object):
 		#office code is valid for US states or territories
 		else:
 			self.results["v604"]["contact_office_state"] = "passed"
+
+	def v605(self):
+		"""V605 An invalid Contact Person's ZIP Code was provided. Please review the information below and update your file accordingly.
+			1) The required format for the Contact Person's ZIP Code is 12345-1010 or 12345, and it cannot be left blank."""
+		self.results["v605"] = {}
+		self.results["v605"]["office_zip"] = ""
+		#office zip is not valid format
+		if len(self.ts_df.get_value(0, "office_zip")) not in (5, 10) or self.ts_df.get_value(0, "office_zip").replace("-","").isdigit==False:
+			self.results["v605"]["office_zip"] = "failed"
+		#offize zip is valid format
+		else:
+			self.results["v605"]["office_zip"] = "passed"
+			
 	"""
-	V605 An invalid Contact Person's ZIP Code was provided. Please review the information below and update your file accordingly.
-	1) The required format for the Contact Person's ZIP Code is 12345-1010 or 12345, and it cannot be left blank.
-	
 	V606 The reported Total Number of Entries Contained in Submission is not in the valid format. Please review the information below and update your file accordingly.
 	1) The required format for the Total Number of Entries Contained in Submission is a whole number that is greater than zero, and it cannot be left blank.
 	
