@@ -6,6 +6,8 @@ from collections import OrderedDict
 from io import StringIO
 import pandas as pd
 
+from lar_generator import lar_gen #used for check digit
+
 class rules_engine(object):
 	"""docstring for ClassName"""
 	def __init__(self, lar_schema, ts_schema, path="../edits_files/", data_file="passes_all.txt"):
@@ -47,7 +49,6 @@ class rules_engine(object):
 	def s300(self):
 		"""1) The first row of your file must begin with a 1; and 2) Any subsequent rows must begin with a 2."""
 		result = {}
-		count = 0 #initialize count of fail rows
 		failed_rows = [] #initialize list of failed rows
 		#check for fails in TS row
 		if self.ts_df.get_value(0,"record_id") != "1":
@@ -71,7 +72,6 @@ class rules_engine(object):
 		"""The LEI in this row does not match the reported LEI in the transmittal sheet (the first row of your file). Please update your file accordingly."""
 		result = {}
 		failed_rows = []
-		count = 0
 		#get dataframe of LAR row fails
 		fail_lar = self.lar_df[self.lar_df.lei != self.ts_df.get_value(0, "lei")]
 		if len(fail_lar) > 0:
@@ -88,7 +88,6 @@ class rules_engine(object):
 		"""1) The required format for LEI is alphanumeric with 20 characters, and it cannot be left blank."""
 		result= {}
 		failed_rows = []
-		count = 0 #initialize fail count
 		#get dataframe of failed LAR rows
 		fail_df = self.lar_df[(self.lar_df.lei=="")|(self.lar_df.lei.map(lambda x: len(x))!=20)]
 		if len(fail_df) >0:
@@ -204,14 +203,13 @@ class rules_engine(object):
 		"""A duplicate transaction has been reported. No transaction can be an exact duplicate in a LAR file."""
 		result = {}
 		failed_rows = []
-		count = 0
 		#dupe_row = self.lar_df.iloc[0:1] #create dupe row for testing
 		#test_df = pd.concat([self.lar_df, dupe_row]) #merge dupe row into dataframe
 		duplicate_df = self.lar_df[self.lar_df.duplicated(keep=False)==True] #pull frame of duplicates
 		if len(duplicate_df) > 0:
 			result["all"] = "failed"
+			count = len(duplicate_df)
 			for index, row in duplicate_df.iterrows():
-				count +=1
 				failed_rows.append(row["uli"]) #list duplicate rows by ULI
 			self.update_results(edit_name="s305", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
 		else:
@@ -223,7 +221,6 @@ class rules_engine(object):
 		1) The required format for ULI is alphanumeric with at least 23 characters and up to 45 characters, and it cannot be left blank."""
 		result = {}
 		failed_rows = []
-		count = 0
 		#if length not between 23 and 45 or if ULI is blank
 		#get subset of LAR dataframe that fails ULI conditions
 		uli_df = self.lar_df[((self.lar_df.uli.map(lambda x: len(x))!=23)&(self.lar_df.uli.map(lambda x: len(x))!=45))|(self.lar_df.uli=="")]
@@ -236,12 +233,24 @@ class rules_engine(object):
 		else:
 			result["ULI"] = "passed"
 			self.update_results(edit_name="v608", edit_field_results=result, row_type="LAR")
-	"""
-	
-	
-	V609 An invalid ULI was reported. Please review the information below and update your file accordingly.
-	1) Based on the check digit calculation, the ULI contains a transcription error.
 
+	def v609(self):
+		"""An invalid ULI was reported. Please review the information below and update your file accordingly.
+		1) Based on the check digit calculation, the ULI contains a transcription error."""
+		result = {}
+		failed_rows = []
+		check_digit = lar_gen.check_digit_gen #establish check digit function alias
+		fail_df = self.lar_df[self.lar_df.uli.map(lambda x: str(x)[-2:]) != self.lar_df.uli.map(lambda x: check_digit(ULI=x[:-2]))]
+		if len(fail_df) > 0:
+			count = len(fail_df)
+			result["ULI"] = "failed"
+			for index, row in fail_df.iterrows():
+				failed_rows.append(row["uli"])
+			self.update_results(edit_name="v609", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
+		else:
+			result["ULI"] = "passed"
+			self.update_results(edit_name="v609", edit_field_results=result, row_type="LAR")
+"""
 	V610 An invalid data field was reported. Please review the information below and update your file accordingly.
 	1) Application Date must be either a valid date using YYYYMMDD format or NA, and cannot be left blank.
 	2) If Action Taken equals 6, then Application Date must be NA, and the reverse must be true.
