@@ -202,14 +202,31 @@ class rules_engine(object):
 			for index, row in duplicate_df.iterrows():
 				count +=1
 				failed_rows.append(row["uli"]) #list duplicate rows by ULI
+			self.update_results(edit_name="s305", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
 		else:
 			result["all"] = "passed"
-		self.update_results(edit_name="s305", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
-		
+			self.update_results(edit_name="s305", edit_field_results=result, row_type="LAR")
+
+	def v608(self):
+		"""V608 A ULI with an invalid format was provided.
+		1) The required format for ULI is alphanumeric with at least 23 characters and up to 45 characters, and it cannot be left blank."""
+		result = {}
+		failed_rows = []
+		count = 0
+		#if length not between 23 and 45 or if ULI is blank
+		#get subset of LAR dataframe that fails ULI conditions
+		uli_df = self.lar_df[((self.lar_df.uli.map(lambda x: len(x))!=23)&(self.lar_df.uli.map(lambda x: len(x))!=45))|(self.lar_df.uli=="")]
+		if len(uli_df) > 0:
+			count = len(uli_df)
+			result["ULI"] = "failed"
+			for index, row in uli_df.iterrows():
+				failed_rows.append(row["uli"])
+			self.update_results(edit_name="v608", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
+		else:
+			result["ULI"] = "passed"
+			self.update_results(edit_name="v608", edit_field_results=result, row_type="LAR")
 	"""
 	
-	V608 A ULI with an invalid format was provided. Please review the information below and update your file accordingly.
-	1) The required format for ULI is alphanumeric with at least 23 characters and up to 45 characters, and it cannot be left blank.
 	
 	V609 An invalid ULI was reported. Please review the information below and update your file accordingly.
 	1) Based on the check digit calculation, the ULI contains a transcription error.
