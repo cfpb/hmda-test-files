@@ -30,7 +30,7 @@ class rules_engine(object):
 			self.results[edit_name][field] = edit_field_results[field]
 			if fail_count is not None:
 				self.results[edit_name]["fail_count"] = fail_count
-				
+
 	def split_ts_row(self, path="../edits_files/", data_file="passes_all.txt"):
 		"""This function makes a separate data frame for the TS and LAR portions of a file and returns each as a dataframe."""
 		with open(path+data_file, 'r') as infile:
@@ -71,7 +71,7 @@ class rules_engine(object):
 			if self.lar_df.get_value(index, "lei") != self.ts_df.get_value(0, "lei"):
 				count+=1
 				result["LEI"] = "failed"
-				failed_rows.append(self.lar_df.get_value(index, "lei")) #add failed row LEI to list of failed rows
+				failed_rows.append(self.lar_df.get_value(index, "uli")) #add failed row ULI to list of failed rows
 			else:
 				result["LEI"] = "passed"
 		self.update_results(edit_name="s301", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
@@ -85,7 +85,7 @@ class rules_engine(object):
 			if self.lar_df.get_value(index, "lei") == "" or len(self.lar_df.get_value(index, "lei"))!=20:
 				count +=1
 				result["LEI"] = "failed"
-				failed_rows.append(self.lar_df.get_value(index, "lei")) #append failed LEI value to list of fails
+				failed_rows.append(self.lar_df.get_value(index, "ULI")) #append failed LEI value to list of fails
 			else:
 				result["LEI"] = "passed"
 		self.update_results(edit_name="v600", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
@@ -105,7 +105,6 @@ class rules_engine(object):
 		if self.ts_df.get_value(0, "lar_entries") != str(len(self.lar_df)):
 			result["lar_entries"] = "failed"
 		else:
-			#self.results["s304"]["ts_row"] = "passed"
 			result["lar_entries"] = "passed"
 		self.update_results(edit_name="s304", edit_field_results=result, row_type="TS/LAR")
 
@@ -189,8 +188,25 @@ class rules_engine(object):
 		else:
 			result["tax_id"] = "passed"
 		self.update_results(edit_name="v607", edit_field_results=result, row_type="TS")
-"""	
-	S305 A duplicate transaction has been reported. Please review and update your file accordingly.
+
+	def s305(self):
+		"""A duplicate transaction has been reported. No transaction can be an exact duplicate in a LAR file."""
+		result = {}
+		failed_rows = []
+		count = 0
+		#dupe_row = self.lar_df.iloc[0:1] #create dupe row for testing
+		#test_df = pd.concat([self.lar_df, dupe_row]) #merge dupe row into dataframe
+		duplicate_df = self.lar_df[self.lar_df.duplicated(keep=False)==True] #pull frame of duplicates
+		if len(duplicate_df) > 0:
+			result["all"] = "failed"
+			for index, row in duplicate_df.iterrows():
+				count +=1
+				failed_rows.append(row["uli"]) #list duplicate rows by ULI
+		else:
+			result["all"] = "passed"
+		self.update_results(edit_name="s305", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
+		
+	"""
 	
 	V608 A ULI with an invalid format was provided. Please review the information below and update your file accordingly.
 	1) The required format for ULI is alphanumeric with at least 23 characters and up to 45 characters, and it cannot be left blank.
