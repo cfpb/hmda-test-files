@@ -5,6 +5,7 @@
 from collections import OrderedDict
 from io import StringIO
 import pandas as pd
+import time
 
 from lar_generator import lar_gen #used for check digit
 
@@ -44,6 +45,14 @@ class rules_engine(object):
 			ts_df = pd.DataFrame(data=ts_data, dtype=object, columns=self.ts_field_names)
 			lar_df  = pd.DataFrame(data=lar_data, dtype=object, columns=self.lar_field_names)
 		return ts_df, lar_df
+
+	def valid_date(self, date):
+		"""checks if a passed date is valid. If not returns false."""
+		try:
+			time.strptime(date,'%Y%m%d')
+			return True
+		except:
+			return False
 
 	#Edit Rules from FIG
 	def s300(self):
@@ -240,6 +249,7 @@ class rules_engine(object):
 		result = {}
 		failed_rows = []
 		check_digit = lar_gen.check_digit_gen #establish check digit function alias
+		#get dataframe of check digit failures
 		fail_df = self.lar_df[self.lar_df.uli.map(lambda x: str(x)[-2:]) != self.lar_df.uli.map(lambda x: check_digit(ULI=x[:-2]))]
 		if len(fail_df) > 0:
 			count = len(fail_df)
@@ -250,11 +260,39 @@ class rules_engine(object):
 		else:
 			result["ULI"] = "passed"
 			self.update_results(edit_name="v609", edit_field_results=result, row_type="LAR")
-"""
-	V610 An invalid data field was reported. Please review the information below and update your file accordingly.
-	1) Application Date must be either a valid date using YYYYMMDD format or NA, and cannot be left blank.
-	2) If Action Taken equals 6, then Application Date must be NA, and the reverse must be true.
 
+	def v610_1(self):
+		"""V610 An invalid date field was reported.
+		1) Application Date must be either a valid date using YYYYMMDD format or NA, and cannot be left blank."""
+		result = {}
+		failed_rows = []
+		fail_df = self.lar_df[(self.lar_df.app_date!="NA")&(self.lar_df.app_date.map(lambda x: self.valid_date(x))==False)]
+		if len(fail_df) > 0:
+			count = len(fail_df)
+			result["app_date"] = "failed"
+			for index, row in fail_df.iterrows():
+				failed_rows.append(row["uli"])
+			self.update_results(edit_name="v610_1", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
+		else:
+			result["app_date"] = "passed"
+			self.update_results(edit_name="v610_1", edit_field_results=result, row_type="LAR")
+
+	def v610_2(self):
+		"""V610 An invalid date field was reported.
+		2) If Action Taken equals 6, then Application Date must be NA, and the reverse must be true."""
+		result = {}
+		failed_rows = []
+		fail_df = self.lar_df[((self.lar_df.app_date=="NA")&(self.lar_df.action_taken!="6"))|((self.lar_df.action_taken=="6")&(self.lar_df.app_date!="NA"))]
+		if len(fail_df) > 0:
+			count = len(fail_df)
+			result["app_date"] = "failed"
+			for index, row in fail_df.iterrows():
+				failed_rows.append(row["uli"])
+			self.update_results(edit_name="v610_2", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
+		else:
+			result["app_date"] = "passed"
+			self.update_results(edit_name="v610_2", edit_field_results=result, row_type="LAR")
+"""
 	V611 An invalid Loan Type was reported. Please review the information below and update your file accordingly.
 	1) Loan Type must equal 1, 2, 3, or 4, and cannot be left blank.
 
