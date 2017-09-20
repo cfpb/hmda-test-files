@@ -47,48 +47,59 @@ class rules_engine(object):
 	def s300(self):
 		"""1) The first row of your file must begin with a 1; and 2) Any subsequent rows must begin with a 2."""
 		result = {}
+		count = 0 #initialize count of fail rows
+		failed_rows = [] #initialize list of failed rows
+		#check for fails in TS row
 		if self.ts_df.get_value(0,"record_id") != "1":
 			result["record_id_ts"] = "failed"
 		else:
 			result["record_id_ts"] = "passed"
-		count = 0 #initialize count of fail rows
-		failed_rows = [] #initialize list of failed rows
-		for index, row in self.lar_df.iterrows():
-			if self.lar_df.get_value(index, "record_id")!="2":
-				count+=1
-				result["record_id_lar"] = "failed"
-				failed_rows.append(self.lar_df.get_value(index, "uli"))
-			else:
-				result["record_id_lar"] = "passed"
-		self.update_results(edit_name="s300", edit_field_results=result, row_type="TS/LAR", row_ids=failed_rows, fail_count=count)
+
+		#check for fails in LAR rows
+		fail_lar = self.lar_df[self.lar_df.record_id !="2"]
+		if len(fail_lar) > 0:
+			count = len(fail_lar)
+			result["record_id_lar"] = "failed"
+			for index, row in fail_lar.iterrows():
+				failed_rows.append(row["uli"])
+			self.update_results(edit_name="s300", edit_field_results=result, row_type="TS/LAR", row_ids=failed_rows, fail_count=count)
+		else:
+			result["record_id_lar"] = "passed"
+			self.update_results(edit_name="s300", edit_field_results=result, row_type="TS/LAR")
 
 	def s301(self):
 		"""The LEI in this row does not match the reported LEI in the transmittal sheet (the first row of your file). Please update your file accordingly."""
 		result = {}
 		failed_rows = []
 		count = 0
-		for index, row in self.lar_df.iterrows():
-			if self.lar_df.get_value(index, "lei") != self.ts_df.get_value(0, "lei"):
-				count+=1
-				result["LEI"] = "failed"
-				failed_rows.append(self.lar_df.get_value(index, "uli")) #add failed row ULI to list of failed rows
-			else:
-				result["LEI"] = "passed"
-		self.update_results(edit_name="s301", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
+		#get dataframe of LAR row fails
+		fail_lar = self.lar_df[self.lar_df.lei != self.ts_df.get_value(0, "lei")]
+		if len(fail_lar) > 0:
+			count = len(fail_lar)
+			result["LEI"] = "failed"
+			for index, row in fail_lar.iterrows():
+				failed_rows.append(row["uli"])
+			self.update_results(edit_name="s301", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
+		else:
+			result["LEI"] = "passed"
+			self.update_results(edit_name="s301", edit_field_results=result, row_type="LAR")
 
 	def v600(self):
 		"""1) The required format for LEI is alphanumeric with 20 characters, and it cannot be left blank."""
 		result= {}
 		failed_rows = []
 		count = 0 #initialize fail count
-		for index, row in self.lar_df.iterrows():
-			if self.lar_df.get_value(index, "lei") == "" or len(self.lar_df.get_value(index, "lei"))!=20:
-				count +=1
-				result["LEI"] = "failed"
-				failed_rows.append(self.lar_df.get_value(index, "ULI")) #append failed LEI value to list of fails
-			else:
-				result["LEI"] = "passed"
-		self.update_results(edit_name="v600", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
+		#get dataframe of failed LAR rows
+		fail_df = self.lar_df[(self.lar_df.lei=="")|(self.lar_df.lei.map(lambda x: len(x))!=20)]
+		if len(fail_df) >0:
+			count = len(fail_df)
+			result["LEI"] = "failed"
+			for index, row in fail_df.iterrows():
+				failed_rows.append(row["uli"])
+			self.update_results(edit_name="v600", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
+		else:
+			result["LEI"] = "passed"
+			self.update_results(edit_name="v600", edit_field_results=result, row_type="LAR")
 
 	def s302(self, year="2018"):
 		""" The reported Calendar Year does not match the filing year indicated at the start of the filing."""
