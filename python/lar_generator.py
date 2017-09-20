@@ -3,6 +3,8 @@ import os
 import pandas as pd
 import random
 import string
+import time
+
 from collections import OrderedDict
 
 
@@ -81,7 +83,7 @@ class lar_gen(object):
 	    digit_base = int("".join(mod_uli_chars))
 	    digit_modulo = digit_base % 97
 	    check_digit = 98 - digit_modulo
-	    
+
 	    if valid:
 	        return str(check_digit).zfill(2) #left pad check digit with 0 if length is less than 2
 	    else:
@@ -97,7 +99,14 @@ class lar_gen(object):
 		months = list(range(1,13))
 		days = list(range(1,32))
 		if valid:
-			date = str(year)+str(random.choice(months)).zfill(2)+str(random.choice(days)).zfill(2)
+			valid_date = False
+			while not valid_date:
+				date = str(year)+str(random.choice(months)).zfill(2)+str(random.choice(days)).zfill(2)
+				try:
+					time.strptime(date,'%Y%m%d')
+					valid_date = True
+				except:
+					valid_date = False
 		else:
 			date = str(year)+str(16)+str(33)
 		return date
@@ -118,7 +127,7 @@ class lar_gen(object):
 			pass
 
 	def get_schema_list(self, schema="LAR", field=None, empty=False):
-		"""Returns the list of valid values for the specifid schema and field."""
+		"""Returns the list of valid values for the specified schema and field. Optionally adds blanks to the list of values."""
 		if not field:
 			raise ValueError("must specify which field")
 		if schema=="LAR":
@@ -159,7 +168,7 @@ class lar_gen(object):
 
 	#this file will have valid values for all column/row entries
 	#some valid value lists contain only "NA", other entries are also valid
-
+	#all valid values are included in the selection lists. Some of these values are added using helper functions if they are not present in the JSON schema.
 	def make_row(self, lei=None):
 		"""Make num_rows LAR rows and return them as a list of ordered dicts"""
 		valid_lar_row = OrderedDict() 
