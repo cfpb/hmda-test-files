@@ -281,21 +281,30 @@ class rules_engine(object):
 		field = "preapproval"
 		fail_df = self.lar_df[~(self.lar_df.preapproval.isin(("1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-	
 
 	def v613_2(self):
 		"""An invalid Preapproval data field was provided.
 		2) If Action Taken equals 7 or 8, then Preapproval must equal 1."""
-		#self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+		field = "preapproval"
+		edit_name = "v613_2"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("7", "8")))&(self.lar_df.preapproval!="1")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v613_3(self):
 		"""An invalid Preapproval data field was provided.
 		3) If Action Taken equals 3, 4, 5 or 6, then Preapproval must equal 2."""
-		#self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+		field = "preapproval"
+		edit_name = "v613_3"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("3", "4", "5", "6")))&(self.lar_df.preapproval!="2")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 	def v613_4(self):
 		"""An invalid Preapproval data field was provided.
 		4) If Preapproval equals 1, then Action Taken must equal 1, 2, 7 or 8."""
-		#self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+		field = "preapproval"
+		edit_name = "v613_4"
+		fail_df = self.lar_df[(self.lar_df.preapproval=="1")&(~(self.lar_df.action_taken.isin(("1","2","7","8"))))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
 
 	V614 An invalid Preapproval was provided. Please review the information below and update your file accordingly.
