@@ -292,10 +292,24 @@ class rules_engine(object):
 		else:
 			result["app_date"] = "passed"
 			self.update_results(edit_name="v610_2", edit_field_results=result, row_type="LAR")
-"""
-	V611 An invalid Loan Type was reported. Please review the information below and update your file accordingly.
-	1) Loan Type must equal 1, 2, 3, or 4, and cannot be left blank.
 
+	def v611(self):
+		"""An invalid Loan Type was reported.
+		1) Loan Type must equal 1, 2, 3, or 4, and cannot be left blank."""
+		result = {}
+		failed_rows = []
+		fail_df = self.lar_df[~(self.lar_df.loan_type.isin(("1", "2", "3", "4")))]
+
+		if len(fail_df) > 0:
+			count = len(fail_df)
+			result["loan_type"] = "failed"
+			failed_rows = list(fail_df.uli)
+			self.update_results(edit_name="v611", edit_field_results=result, row_type="LAR", row_ids=failed_rows, fail_count=count)
+		else:
+			result["loan_type"] = "passed"
+			self.update_results(edit_name="v611", edit_field_results=result, row_type="LAR")
+
+"""
 	V612 An invalid Loan Purpose was reported. Please review the information below and update your file accordingly.
 	1) Loan Purpose must equal 1, 2, 31, 32, 4, or 5 and cannot be left blank.
 	2) If Preapproval equals 1, then Loan Purpose must equal 1.
