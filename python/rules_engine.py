@@ -378,10 +378,15 @@ class rules_engine(object):
 		fail_df = fail_df[(fail_df.amount.map(lambda x: int(x))<1)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v618(self):
+		"""An invalid Action Taken was reported.
+		1) Action Taken must equal 1, 2, 3, 4, 5, 6, 7, or 8, and cannot be left blank."""
+		field = "action_taken"
+		edit_name = "v618"
+		fail_df = self.lar_df[~(self.lar_df.action_taken.isin(("1","2","3","4","5","6","7","8")))|(self.lar_df.action_taken=="")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
 
-v618 An invalid Action Taken was reported. Please review the information below and update your file accordingly.
-1) Action Taken must equal 1, 2, 3, 4, 5, 6, 7, or 8, and cannot be left blank.
 
 v619 An invalid Action Taken Date was reported. Please review the information below and update your file accordingly.
 1) Action Taken Date must be a valid date using YYYYMMDD format, and cannot be left blank.
