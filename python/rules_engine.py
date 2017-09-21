@@ -358,3 +358,49 @@ class rules_engine(object):
 		edit_name = "v615_3"
 		fail_df = self.lar_df[(self.lar_df.manufactured_type.isin(("1","2")))&(self.lar_df.const_method!="2")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v616(self):
+		"""An invalid Occupancy Type was reported.
+		1) Occupancy Type must equal 1, 2, or 3, and cannot be left blank."""
+		field = "occupancy"
+		edit_name = "v616"
+		fail_df = self.lar_df[~(self.lar_df.occ_type.isin(("1","2","3")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+		
+"""
+v617 An invalid Loan Amount was reported. Please review the information below and update your file accordingly.
+1) Loan Amount must be a number greater than 0, and cannot be left blank.
+
+v618 An invalid Action Taken was reported. Please review the information below and update your file accordingly.
+1) Action Taken must equal 1, 2, 3, 4, 5, 6, 7, or 8, and cannot be left blank.
+
+v619 An invalid Action Taken Date was reported. Please review the information below and update your file accordingly.
+1) Action Taken Date must be a valid date using YYYYMMDD format, and cannot be left blank.
+2) The Action Taken Date must be in the reporting year.
+3) The Action Taken Date must be on or after the Application Date.
+
+v620 An invalid Street Address was provided. Please review the information below and update your file accordingly.
+1) Street Address cannot be left blank.
+
+v621 An invalid City was provided. Please review the information below and update your file accordingly.
+1) City cannot be left blank.
+
+v622 An invalid City, State and/or Zip Code were provided. Please review the information below and update your file accordingly.
+1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA.
+
+v623 An invalid State was provided. Please review the information below and update your file accordingly.
+1) State must be either a two letter state code or NA, and cannot be left blank.
+
+v624 An invalid Zip Code was provided. Please review the information below and update your file accordingly.
+1) The required format for Zip Code is 12345-1010 or 12345 or NA, and it cannot be left blank.
+
+v625 An invalid Census Tract was provided. Please review the information below and update your file accordingly.
+1) The required format for Census Tract is an eleven digit number or NA, and it cannot be left blank.
+2) If Census Tract is not reported NA, then the number provided must be a valid census tract number defined by the U.S. Census Bureau.
+
+v626 An invalid County was provided. Please review the information below and update your file accordingly.
+1) The required format for County is a five digit FIPS code or NA, and it cannot be left blank
+
+v627 An invalid Census Tract or County was provided. Please review the information below and update your file accordingly.
+1) If County and Census Tract are not reported NA, they must be a valid combination of information. The first five digits of the Census Tract must match the reported five digit County FIPS code.
+"""
