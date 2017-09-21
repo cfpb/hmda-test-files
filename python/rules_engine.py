@@ -334,9 +334,27 @@ class rules_engine(object):
 		edit_name = "v614_4"
 		fail_df = self.lar_df[(self.lar_df.open_end_credit=="1")&(self.lar_df.preapproval!="2")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-"""
-	V615 An invalid Construction Method was reported. Please review the information below and update your file accordingly.
-	1) Construction Method must equal 1 or 2, and cannot be left blank.
-	2) If Manufactured Home Land Property Interest equals 1, 2, 3 or 4, then Construction Method must equal 2.
-	3) If Manufactured Home Secured Property Type equals 1 or 2 then Construction Method must equal 2.
-	"""
+
+	def v615_1(self):
+		"""An invalid Construction Method was reported.
+		1) Construction Method must equal 1 or 2, and cannot be left blank."""
+		field = "const_method"
+		edit_name = "v615_1"
+		fail_df = self.lar_df[~self.lar_df.const_method.isin(("1","2"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v615_2(self):
+		"""An invalid Construction Method was reported.
+		2) If Manufactured Home Land Property Interest equals 1, 2, 3 or 4, then Construction Method must equal 2."""
+		field = "const_method"
+		edit_name = "v615_2"
+		fail_df = self.lar_df[(self.lar_df.manufactured_interest.isin(("1","2", "3","4")))&(self.lar_df.const_method!="2")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v615_3(self):
+		"""An invalid Construction Method was reported.
+		3) If Manufactured Home Secured Property Type equals 1 or 2 then Construction Method must equal 2."""
+		field = "const_method"
+		edit_name = "v615_3"
+		fail_df = self.lar_df[(self.lar_df.manufactured_type.isin(("1","2")))&(self.lar_df.const_method!="2")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
