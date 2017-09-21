@@ -366,10 +366,19 @@ class rules_engine(object):
 		edit_name = "v616"
 		fail_df = self.lar_df[~(self.lar_df.occ_type.isin(("1","2","3")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-		
+
+	def v617(self):
+		"""An invalid Loan Amount was reported.
+		1) Loan Amount must be a number greater than 0, and cannot be left blank."""
+		field = "loan_amount"
+		edit_name = "v617"
+		fail_df = self.lar_df.copy()
+		fail_df["amount"] = fail_df.loan_amount
+		fail_df.amount = fail_df.amount.map(lambda x: 0 if x == "" else x)
+		fail_df = fail_df[(fail_df.amount.map(lambda x: int(x))<1)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 """
-v617 An invalid Loan Amount was reported. Please review the information below and update your file accordingly.
-1) Loan Amount must be a number greater than 0, and cannot be left blank.
 
 v618 An invalid Action Taken was reported. Please review the information below and update your file accordingly.
 1) Action Taken must equal 1, 2, 3, 4, 5, 6, 7, or 8, and cannot be left blank.
