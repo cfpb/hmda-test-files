@@ -305,14 +305,36 @@ class rules_engine(object):
 		edit_name = "v613_4"
 		fail_df = self.lar_df[(self.lar_df.preapproval=="1")&(~(self.lar_df.action_taken.isin(("1","2","7","8"))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v614_1(self):
+		"""An invalid Preapproval was provided.
+		1) If Loan Purpose equals 2, 4, 31, 32, or 5, then Preapproval must equal 2."""
+		field = "preapproval"
+		edit_name = "v614_1"
+		fail_df = self.lar_df[(self.lar_df.loan_purpose.isin(("2", "4", "31", "32", "5")))&(self.lar_df.preapproval!="2")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+	def v614_2(self):
+		"""An invalid Preapproval was provided.
+		2) If Multifamily Affordable Units is a number, then Preapproval must equal 2."""
+		field = "preapproval"
+		edit_name = "v614_2"
+		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: x.isdigit())==True)&(self.lar_df.preapproval!="2")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+	def v614_3(self):
+		"""An invalid Preapproval was provided.
+		3) If Reverse Mortgage equals 1, then Preapproval must equal 2."""
+		field = "preapproval"
+		edit_name = "v614_3"
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.preapproval!="2")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+	def v614_4(self):
+		"""An invalid Preapproval was provided.
+		4) If Open-End Line of Credit equals 1, then Preapproval must equal 2."""
+		field = "preapproval"
+		edit_name = "v614_4"
+		fail_df = self.lar_df[(self.lar_df.open_end_credit=="1")&(self.lar_df.preapproval!="2")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
-
-	V614 An invalid Preapproval was provided. Please review the information below and update your file accordingly.
-	1) If Loan Purpose equals 2, 4, 31, 32, or 5, then Preapproval must equal 2.
-	2) If Multifamily Affordable Units is a number, then Preapproval must equal 2.
-	3) If Reverse Mortgage equals 1, then Preapproval must equal 2.
-	4) If Open-End Line of Credit equals 1, then Preapproval must equal 2.
-
 	V615 An invalid Construction Method was reported. Please review the information below and update your file accordingly.
 	1) Construction Method must equal 1 or 2, and cannot be left blank.
 	2) If Manufactured Home Land Property Interest equals 1, 2, 3 or 4, then Construction Method must equal 2.
