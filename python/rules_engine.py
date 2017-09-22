@@ -426,11 +426,33 @@ class rules_engine(object):
 		edit_name = "v621"
 		fail_df = self.lar_df[(self.lar_df.city=="")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v622_1(self):
+		"""An invalid City, State and/or Zip Code were provided.
+		1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA."""
+		field = "city"
+		edit_name = "v622_1"
+		fail_df = self.lar_df[(self.lar_df.street_address!="NA")&(self.lar_df.city=="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v622_2(self):
+		"""An invalid City, State and/or Zip Code were provided.
+		1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA."""
+		field = "state"
+		edit_name = "v622_2"
+		fail_df = self.lar_df[(self.lar_df.street_address!="NA")&(self.lar_df.state=="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v622_3(self):
+		"""An invalid City, State and/or Zip Code were provided.
+		1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA."""
+		field = "zip_code"
+		edit_name = "v622_3"
+		fail_df = self.lar_df[(self.lar_df.street_address!="NA")&(self.lar_df.zip_code=="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
 
 
-v622 An invalid City, State and/or Zip Code were provided. Please review the information below and update your file accordingly.
-1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA.
 
 v623 An invalid State was provided. Please review the information below and update your file accordingly.
 1) State must be either a two letter state code or NA, and cannot be left blank.
