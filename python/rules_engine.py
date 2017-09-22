@@ -458,14 +458,17 @@ class rules_engine(object):
 		edit_name = "v623"
 		fail_df = self.lar_df[~(self.lar_df.state.isin(self.state_codes))|(self.lar_df.state=="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v624(self):
+		"""An invalid Zip Code was provided.
+		1) The required format for Zip Code is 12345-1010 or 12345 or NA, and it cannot be left blank."""
+		field = "zip_code"
+		edit_name = "v624"
+		fail_df = self.lar_df[((self.lar_df.zip_code.map(lambda x: len(x) not in (10, 5)))|(self.lar_df.zip_code.map(lambda x: x.replace("-","").isdigit())==False))
+		&(self.lar_df.zip_code!="NA")]
+		#validator.lar_df[validator.lar_df.zip_code.map(lambda x: len(x) not in (5,10))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
-
-
-
-
-
-v624 An invalid Zip Code was provided. Please review the information below and update your file accordingly.
-1) The required format for Zip Code is 12345-1010 or 12345 or NA, and it cannot be left blank.
 
 v625 An invalid Census Tract was provided. Please review the information below and update your file accordingly.
 1) The required format for Census Tract is an eleven digit number or NA, and it cannot be left blank.
