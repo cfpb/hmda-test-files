@@ -418,10 +418,16 @@ class rules_engine(object):
 		edit_name = "v620"
 		fail_df = self.lar_df[(self.lar_df.street_address=="")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v621(self):
+		"""An invalid City was provided.
+		1) City cannot be left blank."""
+		field = "city"
+		edit_name = "v621"
+		fail_df = self.lar_df[(self.lar_df.city=="")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
 
-v621 An invalid City was provided. Please review the information below and update your file accordingly.
-1) City cannot be left blank.
 
 v622 An invalid City, State and/or Zip Code were provided. Please review the information below and update your file accordingly.
 1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA.
