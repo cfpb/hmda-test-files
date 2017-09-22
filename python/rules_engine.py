@@ -72,6 +72,17 @@ class rules_engine(object):
 		except:
 			return False
 
+	def check_dupes(self, row):
+		"""checks for duplicate entries in the ethnicity fields"""
+		eths = {1: row["app_eth_1"], 2:row["app_eth_2"], 3:row["app_eth_3"], 4:row["app_eth_4"], 5:row["app_eth_5"]}
+		result = "pass"
+		for key, value in eths.items():
+			for key2, value2 in eths.items():
+				if not key == key2:
+					if value == value2 and value2 != "":
+						result = "fail"
+		return result
+
 	#Edit Rules from FIG
 	def s300_1(self):
 		"""1) The first row of your file must begin with a 1;."""
@@ -503,3 +514,136 @@ class rules_engine(object):
 		edit_name = "v627"
 		fail_df = self.lar_df[((self.lar_df.county!="NA")&(self.lar_df.tract!="NA"))&(self.lar_df.tract.map(lambda x: str(x)[:5])!=self.lar_df.county)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v628_1(self):
+		"""An invalid Ethnicity data field was reported.
+		1) Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, or 4, and cannot be left blank,
+		unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other Hispanic or Latino."""
+		field = "app_eth_1"
+		edit_name = "v628_1"
+		fail_df = self.lar_df[~(self.lar_df.app_eth_1.isin(("1","11", "12", "13", "14", "2", "3","4")))|((self.lar_df.app_eth_free=="")&(self.lar_df.app_eth_1==""))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v628_2a(self):
+		"""An invalid Ethnicity data field was reported.
+		2) Ethnicity of Applicant or Borrower: 2; Ethnicity of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4;
+		Ethnicity of Applicant or Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank."""
+		field = "app_eth_2"
+		edit_name = "v628_2a"
+		fail_df = self.lar_df[~(self.lar_df.app_eth_2.isin(("1","11", "12", "13", "14", "2","")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v628_2b(self):
+		"""An invalid Ethnicity data field was reported.
+		2) Ethnicity of Applicant or Borrower: 3  must equal 1, 11, 12, 13, 14, 2, or be left blank."""
+		field = "app_eth_3"
+		edit_name = "v628_2b"
+		fail_df = self.lar_df[~(self.lar_df.app_eth_3.isin(("1","11", "12", "13", "14", "2","")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v628_2c(self):
+		"""An invalid Ethnicity data field was reported.
+		2) Ethnicity of Applicant or Borrower: 4  must equal 1, 11, 12, 13, 14, 2, or be left blank."""
+		field = "app_eth_4"
+		edit_name = "v628_2c"
+		fail_df = self.lar_df[~(self.lar_df.app_eth_4.isin(("1","11", "12", "13", "14", "2","")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v628_2d(self):
+		"""An invalid Ethnicity data field was reported.
+		2) Ethnicity of Applicant or Borrower: 5  must equal 1, 11, 12, 13, 14, 2, or be left blank."""
+		field = "app_eth_5"
+		edit_name = "v628_2d"
+		fail_df = self.lar_df[~(self.lar_df.app_eth_5.isin(("1","11", "12", "13", "14", "2","")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v628_3(self):
+		"""An invalid Ethnicity data field was reported.
+		3) Each Ethnicity of Applicant or Borrower code can only be reported once"""
+		field = "applicant ethnicities"
+		edit_name = "v628_3"
+		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.check_dupes(x), axis=1)=="fail")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v628_4(self):
+		"""An invalid Ethnicity data field was reported.
+		4) If Ethnicity of Applicant or Borrower: 1 equals 3 or 4; then Ethnicity of Applicant or Borrower: 2; Ethnicity of Applicant or Borrower: 3;
+		Ethnicity of Applicant or Borrower: 4; Ethnicity of Applicant or Borrower: 5 must be left blank"""
+		field = "applicant ethnicities"
+		edit_name = "v628_4"
+		fail_df = self.lar_df[(self.lar_df.app_eth_1.isin(("3","4")))&((self.lar_df.app_eth_2!="")|(self.lar_df.app_eth_3!="")|(self.lar_df.app_eth_4!="")|(self.lar_df.app_eth_5!=""))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+"""
+
+
+V629
+An invalid Ethnicity data field was reported. Please review the information below and update your file accordingly.
+1) Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 1, 2, or 3, and cannot be left blank.
+2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1, then Ethnicity of Applicant or Borrower: 1 must equal 1 or 2; and Ethnicity of Applicant or Borrower: 2 must equal 1, 2 or be left blank; and Ethnicity of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4; and Ethnicity of Applicant or Borrower: 5 must all be left blank.
+3) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2, then Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3.
+
+V630
+An invalid Ethnicity data field was reported. Please review the information below and update your file accordingly.
+1) If Ethnicity of Applicant or Borrower: 1 equals 4, then Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 3.
+2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3, then Ethnicity of Applicant or Borrower: 1 must equal 3 or 4.
+
+V631
+An invalid Ethnicity data field was reported. Please review the information below and update your file accordingly.
+1) Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, 4, or 5, and cannot be left blank, unless an ethnicity is provided in Ethnicity of Co-Applicant or Co-Borrower: Free Form Text Field for Other Hispanic or Latino.
+.
+2) Ethnicity of Co-Applicant or Co-Borrower: 2; Ethnicity of Co-Applicant or Co-Borrower: 3; Ethnicity of Co-Applicant or Co-Borrower: 4; Ethnicity of Co- Applicant or Co-Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank.
+3) Each Ethnicity of Co-Applicant or Co-Borrower code can only be reported once.
+4) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 3, 4, or 5; then Ethnicity of Co-Applicant or Co-Borrower: 2; Ethnicity of Co-Applicant or Co- Borrower: 3; Ethnicity of Co-Applicant or Co- Borrower: 4; Ethnicity of Co-Applicant or Co- Borrower: 5 must be left blank.
+
+v632
+An invalid Ethnicity data field was reported
+1) ethnicity of co-applicant or co-borrow collected on the basis of visual observation or surname must equal 1,2,3,4 and cannot be left blank
+2) if ethnicity of co-applicant or co-borrower collected on the basis of visual observation or surname equals 1; then ethnicity of co-applicant or co-borrower: 1 must equal 1 or 2; and ethnicity of co-applicant or co-borrower: 2 must equal 1 or 2 or be blank and the remaining co borrower ethnicity fields must be left blank.
+2) if ethnicity of co-applicant or co-borrower collected on the basis of visual observation or surname equals 2; then ethnicity of co-applicant or co-borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3
+
+v633
+An invalid Ethnicity data field was reported. Please review the information below and update your file accordingly.
+1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4, then Ethnicity of Co-Applicant or Co- Borrower Collected on the Basis of Visual Observation or Surname must equal 3.
+2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3; then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 3 or
+
+v634
+An invalid Ethnicity data field was reported. Please review the information below and update your file accordingly.
+1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5, then Ethnicity of Co-Applicant or Co- Borrower Collected on the Basis of Visual Observation or Surname must equal 4, and the reverse must be true.
+
+v635
+An invalid Race data field was reported. Please review the information below and update your file accordingly.
+1) Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, or 7, and cannot be left blank, unless a race is provided in Race of Applicant or Borrower: Free Form Text Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of Applicant or Borrower: Free Form Text Field for Other Asian, or Race of Applicant or Borrower: Free Form Text Field for Other Pacific Islander.
+2) Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank.
+3) Each Race of Applicant or Borrower code can only be reported once.
+4) If Race of Applicant or Borrower: 1 equals 6 or 7; then Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must all be left blank.
+
+v636
+An invalid Race data field was reported. Please review the information below and update your file accordingly.
+1) Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 1, 2, or 3, and cannot be left blank.
+2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1; then Race of Applicant or Borrower: 1 must equal 1, 2, 3, 4, or 5; and Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must equal 1, 2, 3, 4, or 5, or be left blank.
+3) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2, Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5 or 6; and Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank.
+
+v637
+An invalid Race data field was reported. Please review the information below and update your file accordingly.
+1) If Race of Applicant or Borrower: 1 equals 7, then Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 3.
+2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3; then Race of Applicant or Borrower: 1 must equal 6 or 7.
+
+v638
+An invalid Race data field was reported. Please review the information below and update your file accordingly.
+1) Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, 7, or 8, and cannot be left blank, unless a race is provided in Race of Co-Applicant or Co- Borrower: Free Form Text Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of Co-Applicant or Co-Borrower: Free Form Text Field for Other Asian, or Race of Co-Applicant or Co- Borrower: Free Form Text Field for Other Pacific Islander.
+2) Race of Co-Applicant or Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of Co- Applicant or Co-Borrower: 4; Race of Co-Applicant or Co-Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank.
+3) Each Race of Co-Applicant or Co-Borrower code can only be reported once.
+4) If Race of Co-Applicant or Co-Borrower: 1 equals 6, 7, or 8, then Race of Co-Applicant or Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co-Borrower: 4; and Race of Co- Applicant or Co-Borrower: 5 must be left blank.
+
+v639
+An invalid Race data field was reported. Please review the information below and update your file accordingly.
+1) Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 1, 2, 3, or 4, and cannot be left blank.
+2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 1, then Race of Co-Applicant or Co-Borrower: 1mustequal1,2,3,4,or5;andRaceofCo- Applicant or Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co- Borrower: 4; Race of Co-Applicant or Co-Borrower: 5 must equal 1, 2, 3, 4, or 5, or be left blank.
+3) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 2, then Race of Co-Applicant or Co-Borrower: 1mustequal1,2,21,22,23,24,25,26,27,3,4,41, 42, 43, 44, 5 or 6; and Race of Co-Applicant or Co- Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co-Borrower: 4; Race of Co- Applicant or Co-Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank.
+
+v640
+An invalid Race data field was reported. Please review the information below and update your file accordingly.
+1) If Race of Co-Applicant or Co-Borrower: 1 equals 7, then Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 3.
+2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3, then Race of Co-Applicant or Co-Borrower: 1 must equal 6 or 7.
+"""
