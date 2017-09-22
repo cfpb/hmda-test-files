@@ -450,12 +450,19 @@ class rules_engine(object):
 		edit_name = "v622_3"
 		fail_df = self.lar_df[(self.lar_df.street_address!="NA")&(self.lar_df.zip_code=="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v623(self):
+		"""An invalid State was provided.
+		1) State must be either a two letter state code or NA, and cannot be left blank."""
+		field = "state"
+		edit_name = "v623"
+		fail_df = self.lar_df[~(self.lar_df.state.isin(self.state_codes))|(self.lar_df.state=="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
 
 
 
-v623 An invalid State was provided. Please review the information below and update your file accordingly.
-1) State must be either a two letter state code or NA, and cannot be left blank.
+
 
 v624 An invalid Zip Code was provided. Please review the information below and update your file accordingly.
 1) The required format for Zip Code is 12345-1010 or 12345 or NA, and it cannot be left blank.
