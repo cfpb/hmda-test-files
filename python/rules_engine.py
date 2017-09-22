@@ -11,8 +11,9 @@ from lar_generator import lar_gen #used for check digit
 
 class rules_engine(object):
 	"""docstring for ClassName"""
-	def __init__(self, lar_schema, ts_schema, path="../edits_files/", data_file="passes_all.txt"):
+	def __init__(self, lar_schema, ts_schema, path="../edits_files/", data_file="passes_all.txt", year="2018"):
 		#lar and TS field names (load from schema names?)
+		self.year = year
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 		self.ts_df, self.lar_df= self.split_ts_row(path=path, data_file=data_file)
@@ -99,11 +100,11 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.lei=="")|(self.lar_df.lei.map(lambda x: len(x))!=20)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="LAR")
 
-	def s302(self, year="2018"):
+	def s302(self):
 		""" The reported Calendar Year does not match the filing year indicated at the start of the filing."""
 		field = "calendar_year"
 		edit_name = "s302"
-		fail_df = self.ts_df[self.ts_df.calendar_year != year]
+		fail_df = self.ts_df[self.ts_df.calendar_year != self.year]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	def s304(self):
@@ -385,14 +386,32 @@ class rules_engine(object):
 		edit_name = "v618"
 		fail_df = self.lar_df[~(self.lar_df.action_taken.isin(("1","2","3","4","5","6","7","8")))|(self.lar_df.action_taken=="")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v619_1(self):
+		"""An invalid Action Taken Date was reported.
+		1) Action Taken Date must be a valid date using YYYYMMDD format, and cannot be left blank."""
+		field = "action_date"
+		edit_name = "v619_1"
+		fail_df = self.lar_df[(self.lar_df.action_date=="")|(self.lar_df.action_date.map(lambda x: self.valid_date(x))==False)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v619_2(self):
+		"""An invalid Action Taken Date was reported.
+		2) The Action Taken Date must be in the reporting year."""
+		field = "action_date"
+		edit_name = "v619_2"
+		fail_df = self.lar_df[(self.lar_df.action_date.map(lambda x: str(x)[:4])!=self.year)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v619_3(self):
+		"""An invalid Action Taken Date was reported.
+		3) The Action Taken Date must be on or after the Application Date."""
+		field = "action_date"
+		edit_name = "v619_3"
+		fail_df = self.lar_df[(self.lar_df.action_date < self.lar_df.app_date)&(self.lar_df.app_date!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 """
-
-
-v619 An invalid Action Taken Date was reported. Please review the information below and update your file accordingly.
-1) Action Taken Date must be a valid date using YYYYMMDD format, and cannot be left blank.
-2) The Action Taken Date must be in the reporting year.
-3) The Action Taken Date must be on or after the Application Date.
-
 v620 An invalid Street Address was provided. Please review the information below and update your file accordingly.
 1) Street Address cannot be left blank.
 
