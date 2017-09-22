@@ -11,9 +11,10 @@ from lar_generator import lar_gen #used for check digit
 
 class rules_engine(object):
 	"""docstring for ClassName"""
-	def __init__(self, lar_schema, ts_schema, path="../edits_files/", data_file="passes_all.txt", year="2018"):
+	def __init__(self, lar_schema=None, ts_schema=None, path="../edits_files/", data_file="passes_all.txt", year="2018", tracts=None):
 		#lar and TS field names (load from schema names?)
 		self.year = year
+		self.tracts = tracts #instantiate valid Census tracts
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 		self.ts_df, self.lar_df= self.split_ts_row(path=path, data_file=data_file)
@@ -466,14 +467,25 @@ class rules_engine(object):
 		edit_name = "v624"
 		fail_df = self.lar_df[((self.lar_df.zip_code.map(lambda x: len(x) not in (10, 5)))|(self.lar_df.zip_code.map(lambda x: x.replace("-","").isdigit())==False))
 		&(self.lar_df.zip_code!="NA")]
-		#validator.lar_df[validator.lar_df.zip_code.map(lambda x: len(x) not in (5,10))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v625_1(self):
+		"""An invalid Census Tract was provided.
+		1) The required format for Census Tract is an eleven digit number or NA, and it cannot be left blank."""
+		field = "tract"
+		edit_name = "v625_1"
+		fail_df = self.lar_df[((self.lar_df.tract.map(lambda x: len(x))!=11)&(self.lar_df.tract!="NA"))|(self.lar_df.tract.map(lambda x: x.isdigit())==False)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v625_2(self):
+		"""An invalid Census Tract was provided.
+		2) If Census Tract is not reported NA, then the number provided must be a valid census tract number defined by the U.S. Census Bureau."""
+		field = "tract"
+		edit_name = "v625_2"
+		fail_df = self.lar_df[(self.lar_df.tract!="NA")&(~self.lar_df.tract.isin(self.tracts))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 """
-
-v625 An invalid Census Tract was provided. Please review the information below and update your file accordingly.
-1) The required format for Census Tract is an eleven digit number or NA, and it cannot be left blank.
-2) If Census Tract is not reported NA, then the number provided must be a valid census tract number defined by the U.S. Census Bureau.
-
 v626 An invalid County was provided. Please review the information below and update your file accordingly.
 1) The required format for County is a five digit FIPS code or NA, and it cannot be left blank
 
