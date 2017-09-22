@@ -411,9 +411,14 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.action_date < self.lar_df.app_date)&(self.lar_df.app_date!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v620(self):
+		"""An invalid Street Address was provided.
+		1) Street Address cannot be left blank."""
+		field = "street_address"
+		edit_name = "v620"
+		fail_df = self.lar_df[(self.lar_df.street_address=="")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
-v620 An invalid Street Address was provided. Please review the information below and update your file accordingly.
-1) Street Address cannot be left blank.
 
 v621 An invalid City was provided. Please review the information below and update your file accordingly.
 1) City cannot be left blank.
