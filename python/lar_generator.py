@@ -159,6 +159,11 @@ class lar_gen(object):
 			lst.append("")
 		return lst
 
+	def tract_from_county(self, county):
+		"""Returns a Census Tract FIPS that is valid for the passed county."""
+		valid_tracts = [tract for tract in self.tract_list if tract[:5]==county ]
+		return random.choice(valid_tracts)
+
 	def float_gen(self):
 		pass
 
@@ -193,7 +198,7 @@ class lar_gen(object):
 		valid_lar_row["state"] = self.state
 		valid_lar_row["zip_code"] = self.zip_code
 		valid_lar_row["county"] = self.random_enum(self.county_list)
-		valid_lar_row["tract"] = self.random_enum(self.tract_list)
+		valid_lar_row["tract"] = self.tract_from_county(valid_lar_row["county"])
 		valid_lar_row["app_eth_1"] = str(self.random_enum(self.get_schema_list(field="app_eth_1", empty=True)))
 		valid_lar_row["app_eth_2"] = str(self.random_enum(self.get_schema_list(field="app_eth_2", empty=True)))
 		valid_lar_row["app_eth_3"] = str(self.random_enum(self.get_schema_list(field="app_eth_3", empty=True)))
