@@ -36,6 +36,7 @@ class rules_engine(object):
 			self.results[edit_name][field] = edit_field_results[field]
 			if fail_count is not None:
 				self.results[edit_name]["fail_count"] = fail_count
+
 	def results_wrapper(self, fail_df=None, field_name=None, edit_name=None, row_type="LAR"):
 		"""Helper function to create results dictionary/JSON object"""
 		result={}
@@ -73,14 +74,14 @@ class rules_engine(object):
 
 	#Edit Rules from FIG
 	def s300_1(self):
-		"""1) The first row of your file must begin with a 1; and 2) Any subsequent rows must begin with a 2."""
+		"""1) The first row of your file must begin with a 1;."""
 		field = "record_id"
 		edit_name = "s300_1"
 		fail_df = self.ts_df[self.ts_df.record_id!="1"]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	def s300_2(self):
-		"""2) Any subsequent rows must begin with a 2."""
+		"""2) Any subsequent rows [of your file] must begin with a 2."""
 		field = "record_id"
 		edit_name = "s300_2"
 		fail_df = self.lar_df[self.lar_df.record_id!="2"]
@@ -493,8 +494,12 @@ class rules_engine(object):
 		edit_name = "v626"
 		fail_df = self.lar_df[(self.lar_df.county!="NA")&((self.lar_df.county.map(lambda x: len(x))!=5)|(self.lar_df.county.map(lambda x: x.isdigit())==False))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-"""
 
-v627 An invalid Census Tract or County was provided. Please review the information below and update your file accordingly.
-1) If County and Census Tract are not reported NA, they must be a valid combination of information. The first five digits of the Census Tract must match the reported five digit County FIPS code.
-"""
+	def v627(self):
+		"""An invalid Census Tract or County was provided.
+		1) If County and Census Tract are not reported NA, they must be a valid combination of information.
+		The first five digits of the Census Tract must match the reported five digit County FIPS code."""
+		field = "tract/county"
+		edit_name = "v627"
+		fail_df = self.lar_df[((self.lar_df.county!="NA")&(self.lar_df.tract!="NA"))&(self.lar_df.tract.map(lambda x: str(x)[:5])!=self.lar_df.county)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
