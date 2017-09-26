@@ -811,17 +811,52 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.app_race_basis=="3")&(~self.lar_df.app_race_1.isin(("6", "7")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v638_1(self):
+		"""An invalid Race data field was reported.
+		1) Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, 7, or 8, and cannot be left blank,
+		unless a race is provided in Race of Co-Applicant or Co- Borrower: Free Form Text Field for American Indian or Alaska Native Enrolled or Principal Tribe,
+		Race of Co-Applicant or Co-Borrower: Free Form Text Field for Other Asian, or
+		Race of Co-Applicant or Co- Borrower: Free Form Text Field for Other Pacific Islander."""
+		field = "Co-Applicant Race 1"
+		edit_name = "v638_1"
+		fail_df = self.lar_df[(~self.lar_df.co_app_race_1.isin(("1", "2", "21", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7", "8")))|
+			((self.lar_df.co_app_race_1=="")&((self.lar_df.co_app_race_native_text=="")&(self.lar_df.co_app_race_islander_text=="")&
+			(self.lar_df.co_app_race_asian_text=="")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v638_2(self):
+		"""An invalid Race data field was reported.
+		2) Race of Co-Applicant or Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3;
+		Race of Co- Applicant or Co-Borrower: 4; Race of Co-Applicant or Co-Borrower: 5
+		must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank."""
+		field = "Co-Applicant Race 2-5"
+		edit_name = "v638_2"
+		fail_df = self.lar_df[~(self.lar_df.co_app_race_2.isin(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "")))|
+			~(self.lar_df.co_app_race_3.isin(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "")))|
+			~(self.lar_df.co_app_race_4.isin(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "")))|
+			~(self.lar_df.co_app_race_5.isin(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v638_3(self):
+		"""An invalid Race data field was reported.
+		3) Each Race of Co-Applicant or Co-Borrower code can only be reported once."""
+		field = "Co-Applicant Races"
+		edit_name = "v638_3"
+		race_fields = ["co_app_race_1", "co_app_race_2", "co_app_race_3", "co_app_race_4", "co_app_race_5"]
+		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.check_dupes(x, fields=race_fields), axis=1)=="fail")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v638_4(self):
+		"""An invalid Race data field was reported.
+		4) If Race of Co-Applicant or Co-Borrower: 1 equals 6, 7, or 8, then Race of Co-Applicant or Co-Borrower: 2;
+		Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co-Borrower: 4; and Race of Co- Applicant or Co-Borrower: 5 must be left blank."""
+		field = "Co-Applicant Races"
+		edit_name = "v638_4"
+		fail_df = self.lar_df[(self.lar_df.co_app_race_1.isin(("6", "7", "8")))&((self.lar_df.co_app_race_2!="")|(self.lar_df.co_app_race_3!="")|(self.lar_df.co_app_race_4!="")
+			|(self.lar_df.co_app_race_5!=""))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 """
-
-
-
-v638
-An invalid Race data field was reported. Please review the information below and update your file accordingly.
-1) Race of Co-Applicant or Co-Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, 7, or 8, and cannot be left blank, unless a race is provided in Race of Co-Applicant or Co- Borrower: Free Form Text Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of Co-Applicant or Co-Borrower: Free Form Text Field for Other Asian, or Race of Co-Applicant or Co- Borrower: Free Form Text Field for Other Pacific Islander.
-2) Race of Co-Applicant or Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of Co- Applicant or Co-Borrower: 4; Race of Co-Applicant or Co-Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank.
-3) Each Race of Co-Applicant or Co-Borrower code can only be reported once.
-4) If Race of Co-Applicant or Co-Borrower: 1 equals 6, 7, or 8, then Race of Co-Applicant or Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co-Borrower: 4; and Race of Co- Applicant or Co-Borrower: 5 must be left blank.
 
 v639
 An invalid Race data field was reported. Please review the information below and update your file accordingly.
