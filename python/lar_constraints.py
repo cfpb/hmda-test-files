@@ -264,7 +264,7 @@ class lar_constraints(object):
 		3) Each Race of Applicant or Borrower code can only be reported once.
 		4) If Race of Applicant or Borrower: 1 equals 6 or 7; then Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; 
 			Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must all be left blank."""
-		if row["app_race_1"] ==  "" and row["app_race_code_1"]== "" and row["app_race_code_27"]== "" and row["app_race_code_44"] == "":
+		if row["app_race_1"] ==  "" and row["app_race_native_text"]== "" and row["app_race_asian_text"]== "" and row["app_race_islander_text"] == "":
 			row["app_race_1"] = random.choice(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7"))
 		#each code must only be used once
 		race_enums = ["1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7"]
