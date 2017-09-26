@@ -856,13 +856,45 @@ class rules_engine(object):
 			|(self.lar_df.co_app_race_5!=""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v639_1(self):
+		"""An invalid Race data field was reported.
+		1) Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 1, 2, 3, or 4, and cannot be left blank."""
+		field = "Co-Applicant Race Basis"
+		edit_name = "v639_1"
+		fail_df = self.lar_df[(~self.lar_df.co_app_race_basis.isin(("1", "2", "3", "4")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v639_2(self):
+		"""An invalid Race data field was reported.
+		2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 1,
+		then Race of Co-Applicant or Co-Borrower: 1must equal 1,2,3,4,or 5; and Race of Co- Applicant or Co-Borrower: 2;
+		Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co- Borrower: 4;
+		Race of Co-Applicant or Co-Borrower: 5 must equal 1, 2, 3, 4, or 5, or be left blank."""
+		field = "Co-Applicant Race Basis"
+		edit_name = "v639_2"
+		fail_df = self.lar_df[(self.lar_df.co_app_race_basis=="1")&((~self.lar_df.co_app_race_1.isin(("1", "2", "3", "4", "5", "")))|
+		(~self.lar_df.co_app_race_2.isin(("1", "2", "3", "4", "5", "")))|(~self.lar_df.co_app_race_3.isin(("1", "2", "3", "4", "5", "")))|
+		(~self.lar_df.co_app_race_4.isin(("1", "2", "3", "4", "5", "")))|(~self.lar_df.co_app_race_5.isin(("1", "2", "3", "4", "5", ""))))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v639_3(self):
+		"""An invalid Race data field was reported.
+		3) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 2, then
+		Race of Co-Applicant or Co-Borrower: 1must equal 1,2,21,22,23,24,25,26,27,3,4,41, 42, 43, 44, 5 or 6; and Race of Co-Applicant or Co- Borrower: 2;
+		Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co-Borrower: 4; Race of Co- Applicant or Co-Borrower: 5
+		must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank."""
+		field = "Co-Applicant Race Basis"
+		edit_name = "v639_3"
+		race_1 = ["1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6"]
+		race_n = race_1[:-1]
+		race_n.append("")
+		fail_df = self.lar_df[(self.lar_df.co_app_race_basis=="2")&((~self.lar_df.co_app_race_1.isin(race_1))|
+		(~self.lar_df.co_app_race_2.isin(race_n))|(~self.lar_df.co_app_race_3.isin(race_n))|(~self.lar_df.co_app_race_4.isin(race_n))|
+		(~self.lar_df.co_app_race_5.isin(race_n)))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 """
 
-v639
-An invalid Race data field was reported. Please review the information below and update your file accordingly.
-1) Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 1, 2, 3, or 4, and cannot be left blank.
-2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 1, then Race of Co-Applicant or Co-Borrower: 1mustequal1,2,3,4,or5;andRaceofCo- Applicant or Co-Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co- Borrower: 4; Race of Co-Applicant or Co-Borrower: 5 must equal 1, 2, 3, 4, or 5, or be left blank.
-3) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 2, then Race of Co-Applicant or Co-Borrower: 1mustequal1,2,21,22,23,24,25,26,27,3,4,41, 42, 43, 44, 5 or 6; and Race of Co-Applicant or Co- Borrower: 2; Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co-Borrower: 4; Race of Co- Applicant or Co-Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank.
 
 v640
 An invalid Race data field was reported. Please review the information below and update your file accordingly.
