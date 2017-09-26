@@ -644,7 +644,7 @@ class rules_engine(object):
 	def v631_3(self):
 		"""An invalid Ethnicity data field was reported.
 		3) Each Ethnicity of Co-Applicant or Co-Borrower code can only be reported once."""
-		field = "co-app ethnicities"
+		field = "Co-App Ethnicities"
 		edit_name = "v631_3"
 		dupe_fields = ["co_app_eth_1", "co_app_eth_2", "co_app_eth_3", "co_app_eth_4", "co_app_eth_5"]
 		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.check_dupes(x, fields=dupe_fields), axis=1)=="fail")]
@@ -655,7 +655,7 @@ class rules_engine(object):
 		4) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 3, 4, or 5; then
 		Ethnicity of Co-Applicant or Co-Borrower: 2; Ethnicity of Co-Applicant or Co- Borrower: 3; Ethnicity of Co-Applicant or Co- Borrower: 4;
 		Ethnicity of Co-Applicant or Co- Borrower: 5 must be left blank."""
-		field = "co-app ethnicities"
+		field = "Co-App Ethnicities"
 		edit_name = "v631_4"
 		fail_df = self.lar_df[(self.lar_df.co_app_eth_1.isin(("3", "4", "5")))&((self.lar_df.co_app_eth_2!="")|(self.lar_df.co_app_eth_3!="")|
 			(self.lar_df.co_app_eth_4!="")|(self.lar_df.co_app_eth_5!=""))]
@@ -664,7 +664,7 @@ class rules_engine(object):
 	def v632_1(self):
 		"""An invalid Ethnicity data field was reported.
 		1) ethnicity of co-applicant or co-borrow collected on the basis of visual observation or surname must equal 1,2,3,4 and cannot be left blank"""
-		field = "co-app ethnicity basis"
+		field = "Co-App Ethnicity Basis"
 		edit_name = "v632_1"
 		fail_df = self.lar_df[~(self.lar_df.co_app_eth_basis.isin(("1", "2", "3", "4")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
@@ -674,7 +674,7 @@ class rules_engine(object):
 		2) if ethnicity of co-applicant or co-borrower collected on the basis of visual observation or surname equals 1;
 		then ethnicity of co-applicant or co-borrower: 1 must equal 1 or 2; and ethnicity of co-applicant or co-borrower: 2 must equal 1 or 2 or be blank
 		and the remaining co borrower ethnicity fields must be left blank."""
-		field = "co-app ethnicity basis"
+		field = "Co-App Ethnicity Basis"
 		edit_name = "v632_2"
 		fail_df = self.lar_df[(self.lar_df.co_app_eth_basis=="1")&(~(self.lar_df.co_app_eth_1.isin(("1", "2")))|(~self.lar_df.co_app_eth_2.isin(("1", "2")))|
 			(self.lar_df.co_app_eth_3!="")|(self.lar_df.co_app_eth_4!="")|(self.lar_df.co_app_eth_5!=""))]
@@ -684,7 +684,7 @@ class rules_engine(object):
 		"""An invalid Ethnicity data field was reported.
 		2) if ethnicity of co-applicant or co-borrower collected on the basis of visual observation or surname equals 2;
 		then ethnicity of co-applicant or co-borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3."""
-		field = "co-app ethnicity basis"
+		field = "Co-App Ethnicity Basis"
 		edit_name = "v632_3"
 		fail_df = self.lar_df[(self.lar_df.co_app_eth_basis=="2")&(~self.lar_df.co_app_eth_1.isin(("1", "11", "12", "13", "14", "2", "3")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
@@ -693,7 +693,7 @@ class rules_engine(object):
 		"""An invalid Ethnicity data field was reported.
 		1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4,
 		then Ethnicity of Co-Applicant or Co- Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
-		field = "Ethnicity basis"
+		field = "Co-App Ethnicity basis"
 		edit_name = "v633_1"
 		fail_df = self.lar_df[(self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_eth_basis!="3")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
@@ -702,18 +702,22 @@ class rules_engine(object):
 		"""An invalid Ethnicity data field was reported.
 		2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3;
 		then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 3 or 4."""
-		field = "Ethnicity basis"
+		field = "Co-App Ethnicity Basis"
 		edit_name = "v633_2"
 		fail_df = self.lar_df[(self.lar_df.co_app_eth_basis=="3")&(~self.lar_df.co_app_eth_1.isin(("3", "4")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-		
 
+	def v634(self):
+		"""An invalid Ethnicity data field was reported.
+		1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5,
+		then Ethnicity of Co-Applicant or Co- Borrower Collected on the Basis of Visual Observation or Surname must equal 4, and the reverse must be true."""
+		field = "Co-App Ethnicity Basis"
+		edit_name = "v634"
+		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="5")&(self.lar_df.co_app_eth_basis!="4"))|
+		((self.lar_df.co_app_eth_basis=="4")&(self.lar_df.co_app_eth_1!="5"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 """
-
-v634
-An invalid Ethnicity data field was reported. Please review the information below and update your file accordingly.
-1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5, then Ethnicity of Co-Applicant or Co- Borrower Collected on the Basis of Visual Observation or Surname must equal 4, and the reverse must be true.
 
 v635
 An invalid Race data field was reported. Please review the information below and update your file accordingly.
