@@ -661,12 +661,35 @@ class rules_engine(object):
 			(self.lar_df.co_app_eth_4!="")|(self.lar_df.co_app_eth_5!=""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v632_1(self):
+		"""An invalid Ethnicity data field was reported.
+		1) ethnicity of co-applicant or co-borrow collected on the basis of visual observation or surname must equal 1,2,3,4 and cannot be left blank"""
+		field = "co-app ethnicity basis"
+		edit_name = "v632_1"
+		fail_df = self.lar_df[~(self.lar_df.co_app_eth_basis.isin(("1", "2", "3", "4")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v632_2(self):
+		"""An invalid Ethnicity data field was reported.
+		2) if ethnicity of co-applicant or co-borrower collected on the basis of visual observation or surname equals 1;
+		then ethnicity of co-applicant or co-borrower: 1 must equal 1 or 2; and ethnicity of co-applicant or co-borrower: 2 must equal 1 or 2 or be blank
+		and the remaining co borrower ethnicity fields must be left blank."""
+		field = "co-app ethnicity basis"
+		edit_name = "v632_2"
+		fail_df = self.lar_df[(self.lar_df.co_app_eth_basis=="1")&(~(self.lar_df.co_app_eth_1.isin(("1", "2")))|(~self.lar_df.co_app_eth_2.isin(("1", "2")))|
+			(self.lar_df.co_app_eth_3!="")|(self.lar_df.co_app_eth_4!="")|(self.lar_df.co_app_eth_5!=""))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v632_3(self):
+		"""An invalid Ethnicity data field was reported.
+		2) if ethnicity of co-applicant or co-borrower collected on the basis of visual observation or surname equals 2;
+		then ethnicity of co-applicant or co-borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3."""
+		field = "co-app ethnicity basis"
+		edit_name = "v632_3"
+		fail_df = self.lar_df[(self.lar_df.co_app_eth_basis=="2")&(~self.lar_df.co_app_eth_1.isin(("1", "11", "12", "13", "14", "2", "3")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 """
-v632
-An invalid Ethnicity data field was reported
-1) ethnicity of co-applicant or co-borrow collected on the basis of visual observation or surname must equal 1,2,3,4 and cannot be left blank
-2) if ethnicity of co-applicant or co-borrower collected on the basis of visual observation or surname equals 1; then ethnicity of co-applicant or co-borrower: 1 must equal 1 or 2; and ethnicity of co-applicant or co-borrower: 2 must equal 1 or 2 or be blank and the remaining co borrower ethnicity fields must be left blank.
-2) if ethnicity of co-applicant or co-borrower collected on the basis of visual observation or surname equals 2; then ethnicity of co-applicant or co-borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3
 
 v633
 An invalid Ethnicity data field was reported. Please review the information below and update your file accordingly.
