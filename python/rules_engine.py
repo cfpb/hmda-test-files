@@ -794,19 +794,27 @@ class rules_engine(object):
 			(~self.lar_df.app_race_2.isin(app_n_races))|(~self.lar_df.app_race_3.isin(app_n_races))|
 			(~self.lar_df.app_race_4.isin(app_n_races))|(~self.lar_df.app_race_4.isin(app_n_races)))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v637_1(self):
+		"""An invalid Race data field was reported.
+		1) If Race of Applicant or Borrower: 1 equals 7, then Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
+		field = "Applicant Race Basis"
+		edit_name = "v637_1"
+		fail_df = self.lar_df[(self.lar_df.app_race_1=="7")&(self.lar_df.app_race_basis!="3")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v637_2(self):
+		"""An invalid Race data field was reported.
+		2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3; then Race of Applicant or Borrower: 1 must equal 6 or 7."""
+		field = "Applicant Race 1"
+		edit_name ="v637_2"
+		fail_df = self.lar_df[(self.lar_df.app_race_basis=="3")&(~self.lar_df.app_race_1.isin(("6", "7")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+
 """
 
 
-
-
-
-v636
-
-
-v637
-An invalid Race data field was reported. Please review the information below and update your file accordingly.
-1) If Race of Applicant or Borrower: 1 equals 7, then Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 3.
-2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3; then Race of Applicant or Borrower: 1 must equal 6 or 7.
 
 v638
 An invalid Race data field was reported. Please review the information below and update your file accordingly.
