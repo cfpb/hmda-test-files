@@ -5,7 +5,7 @@ class lar_constraints(object):
 
 	def __init__(self, counties, tracts):
 		#list of constraining edits:
-		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
+		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "632_const",
 		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const", "v638_const", "v638_const",
 		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const", "v652_const",
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
@@ -192,6 +192,7 @@ class lar_constraints(object):
 			if row["co_app_eth_1"] == "" and row["co_app_eth_code_14"] == "":
 				row["co_app_eth_1"] = random.choice(["1","11", "12", "13", "14", "2", "3", "4", "5"])
 			return row
+
 		def v631_b(self, row):
 			#set app eth 2-5 to blank if app eth 1 in 3,4,5
 			if row["co_app_eth_1"] in ("3", "4", "5"):
@@ -204,7 +205,7 @@ class lar_constraints(object):
 		v631_a(self,row=row)
 		#check for duplicates in app eth 1-5, change duplicates to blank
 		row["co_app_eth_1"], row["co_app_eth_2"], row["co_app_eth_3"], row["co_app_eth_4"], row["co_app_eth_5"] = \
-		self.no_enum_dupes(fields=co_app_eth_fields,  enum_list=co_app_eth_enums[:-2])
+		self.no_enum_dupes(fields=co_app_eth_fields,  enum_list=co_app_eth_enums[:-3])
 		v631_b(self,row=row)
 		return row
 
