@@ -715,16 +715,56 @@ class rules_engine(object):
 		edit_name = "v634"
 		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="5")&(self.lar_df.co_app_eth_basis!="4"))|
 		((self.lar_df.co_app_eth_basis=="4")&(self.lar_df.co_app_eth_1!="5"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df) 
+
+	def v635_1(self):
+		"""An invalid Race data field was reported.
+		1) Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, or 7, and cannot be left blank,
+		unless a race is provided in Race of Applicant or Borrower: Free Form Text Field for American Indian or Alaska Native Enrolled or Principal Tribe,
+		Race of Applicant or Borrower: Free Form Text Field for Other Asian, or Race of Applicant or Borrower: Free Form Text Field for Other Pacific Islander."""
+		field = "App Race 1"
+		edit_name = "v635_1"
+		fail_df = self.lar_df[(~self.lar_df.app_race_1.isin(("1", "2", "21", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7")))|
+		((self.lar_df.app_race_1=="")&((self.lar_df.app_race_native_text=="")&(self.lar_df.app_race_islander_text=="")&(self.lar_df.app_race_asian_text=="")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v635_2(self):
+		"""An invalid Race data field was reported.
+		2) Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4;
+		Race of Applicant or Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank."""
+		field = "App Race 2 - 5"
+		edit_name = "v635_2"
+		fail_df = self.lar_df[~(self.lar_df.app_race_2.isin(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "")))|
+			~(self.lar_df.app_race_3.isin(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "")))|
+			~(self.lar_df.app_race_4.isin(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "")))|
+			~(self.lar_df.app_race_5.isin(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v635_3(self):
+		"""An invalid Race data field was reported.
+		3) Each Race of Applicant or Borrower code can only be reported once."""
+		field = "Applicant Races"
+		edit_name = "v635_3"
+		race_fields = ["app_race_1", "app_race_2", "app_race_3", "app_race_4", "app_race_5"]
+		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.check_dupes(x, fields=race_fields), axis=1)=="fail")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v635_4(self):
+		"""An invalid Race data field was reported.
+		4) If Race of Applicant or Borrower: 1 equals 6 or 7; then Race of Applicant or Borrower: 2;
+		Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must all be left blank."""
+		field = "Applicant Races"
+		edit_name = "v635_4"
+		fail_df = self.lar_df[(self.lar_df.app_race_1.isin(("6", "7")))&((self.lar_df.app_race_2!="")|(self.lar_df.app_race_3!="")|(self.lar_df.app_race_4!="")
+			|(self.lar_df.app_race_5!=""))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 
 """
 
-v635
-An invalid Race data field was reported. Please review the information below and update your file accordingly.
-1) Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, or 7, and cannot be left blank, unless a race is provided in Race of Applicant or Borrower: Free Form Text Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of Applicant or Borrower: Free Form Text Field for Other Asian, or Race of Applicant or Borrower: Free Form Text Field for Other Pacific Islander.
-2) Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank.
-3) Each Race of Applicant or Borrower code can only be reported once.
-4) If Race of Applicant or Borrower: 1 equals 6 or 7; then Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must all be left blank.
+
+
+
 
 v636
 An invalid Race data field was reported. Please review the information below and update your file accordingly.

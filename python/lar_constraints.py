@@ -34,9 +34,9 @@ class lar_constraints(object):
 	#For example, preapproval code 2 limits the valid entries for action taken
 	#S303: requires panel (matches LEI, TAX ID, Federal Agency)
 	#constraints NOTE: check fields of highest variability (most enumerations) first
-	def s305_const():
-		"""duplicate row, checks all fields to determine if it is a duplicate record"""
-		pass
+	#def s305_const(self, row):
+	#	"""duplicate row, checks all fields to determine if it is a duplicate record"""
+	#	pass
 
 	def v610_const(self, row):
 		"""application date must be NA when action taken = 6, reverse must also be true"""
@@ -127,7 +127,7 @@ class lar_constraints(object):
 		   4) If Ethnicity of Applicant or Borrower: 1 equals 3 or 4; then Ethnicity of Applicant or Borrower: 2; Ethnicity
 		   	of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4; Ethnicity of Applicant or Borrower: 5
 		  	must be left blank."""
-		if row["app_eth_1"] =="" and row["app_eth_code_14"] =="":
+		if row["app_eth_1"] =="" and row["app_eth_free"] =="":
 			row["app_eth_1"] = "1"
 
 		eth_enums = ["1", "11", "12", "13", "14", "2", "3", "4"]
@@ -189,9 +189,10 @@ class lar_constraints(object):
 		co_app_eth_fields = [row["co_app_eth_1"], row["co_app_eth_2"], row["co_app_eth_3"], row["co_app_eth_4"], row["co_app_eth_5"]]
 		def v631_a(self, row):
 			#check if app eth 1 is blank and code 14 free text is blank, if so, change app_eth_1
-			if row["co_app_eth_1"] == "" and row["co_app_eth_code_14"] == "":
+			if row["co_app_eth_1"] == "" and row["co_app_eth_free"] == "":
 				row["co_app_eth_1"] = random.choice(["1","11", "12", "13", "14", "2", "3", "4", "5"])
 			return row
+
 		def v631_b(self, row):
 			#set app eth 2-5 to blank if app eth 1 in 3,4,5
 			if row["co_app_eth_1"] in ("3", "4", "5"):
@@ -204,7 +205,7 @@ class lar_constraints(object):
 		v631_a(self,row=row)
 		#check for duplicates in app eth 1-5, change duplicates to blank
 		row["co_app_eth_1"], row["co_app_eth_2"], row["co_app_eth_3"], row["co_app_eth_4"], row["co_app_eth_5"] = \
-		self.no_enum_dupes(fields=co_app_eth_fields,  enum_list=co_app_eth_enums[:-2])
+		self.no_enum_dupes(fields=co_app_eth_fields,  enum_list=co_app_eth_enums[:-3])
 		v631_b(self,row=row)
 		return row
 
@@ -263,7 +264,7 @@ class lar_constraints(object):
 		3) Each Race of Applicant or Borrower code can only be reported once.
 		4) If Race of Applicant or Borrower: 1 equals 6 or 7; then Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; 
 			Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must all be left blank."""
-		if row["app_race_1"] ==  "" and row["app_race_code_1"]== "" and row["app_race_code_27"]== "" and row["app_race_code_44"] == "":
+		if row["app_race_1"] ==  "" and row["app_race_native_text"]== "" and row["app_race_asian_text"]== "" and row["app_race_islander_text"] == "":
 			row["app_race_1"] = random.choice(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7"))
 		#each code must only be used once
 		race_enums = ["1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7"]
@@ -283,9 +284,9 @@ class lar_constraints(object):
 		"""1) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1;
 			then Race of Applicant or Borrower: 1 must equal 1, 2, 3, 4, or 5; and Race of Applicant or Borrower: 2;
 			Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5
-			must equal 1, 2, 3, 4, or 5, or be left blank. 
+			must equal 1, 2, 3, 4, or 5, or be left blank.
 		2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,
-			Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5 or 6; 
+			Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5 or 6;
 			and Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4;
 			Race of Applicant or Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank."""
 		if row["app_race_basis"] == "1":
@@ -326,7 +327,7 @@ class lar_constraints(object):
 		3) Each Race of Co-Applicant or Co-Borrower code can only be reported once.
 		4) If Race of Co-Applicant or Co-Borrower: 1 equals 6, 7, or 8, then Race of Co-Applicant or Co-Borrower: 2; 
 			Race of Co-Applicant or Co-Borrower: 3; Race of Co-Applicant or Co-Borrower: 4; and Race of CoApplicant or Co-Borrower: 5 must be left blank."""
-		if row["co_app_race_1"] =="" and row["co_app_race_code_1"]=="" and row["co_app_race_code_27"]=="" and row["co_app_race_code_44"]=="":
+		if row["co_app_race_1"] =="" and row["co_app_race_native_text"]=="" and row["co_app_race_asian_text"]=="" and row["co_app_race_islander_text"]=="":
 			row["co_app_race_1"] = random.choice(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7", "8"))
 		#each code must only be used once
 		race_enums = ["1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7","8"]
