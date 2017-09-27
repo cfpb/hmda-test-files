@@ -910,3 +910,120 @@ class rules_engine(object):
 		edit_name = "v640_2"
 		fail_df = self.lar_df[(self.lar_df.co_app_race_basis=="3")&(~self.lar_df.co_app_race_1.isin(("6", "7")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v641(self):
+		"""An invalid Race data field was reported.
+		1) If Race of Co-Applicant or Co-Borrower: 1 equals 8, then
+		Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 4, and the reverse must be true."""
+		field = "Co-Applicant Race Basis"
+		edit_name = "v641"
+		fail_df = self.lar_df[((self.lar_df.co_app_race_1=="8")&(self.lar_df.co_app_race_basis!="4"))|
+		((self.lar_df.co_app_race_basis=="4")&(self.lar_df.co_app_race_1!="8"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+"""
+
+
+v642
+An invalid Sex data field was reported. Please review
+the information below and update your file
+accordingly.
+1) Sex of Applicant or Borrower must equal 1, 2, 3, 4,
+or 6, and cannot be left blank.
+2) Sex of Applicant or Borrower Collected on the
+Basis of Visual Observation or Surname must equal
+1, 2, or 3, and cannot be left blank
+
+v643
+An invalid Sex data field was reported. Please review
+the information below and update your file
+accordingly.
+1) If Sex of Applicant or Borrower Collected on the
+Basis of Visual Observation or Surname equals 1,
+then Sex of Applicant or Borrower must equal 1 or 2.
+2) If Sex of Applicant or Borrower equals 1 or 2, then
+the Sex of Applicant or Borrower Collected on the
+Basis of Visual Observation or Surname must equal 1
+or 2.
+
+v644
+n invalid Sex data field was reported. Please review
+the information below and update your file
+accordingly.
+1) If Sex of Applicant or Borrower Collected on the
+Basis of Visual Observation or Surname equals 2,
+then Sex of Applicant or Borrower must equal 1, 2, 3,
+or 6.
+2) If Sex of Applicant or Borrower equals 6, then Sex
+of Applicant or Borrower Collected on the Basis of
+Visual Observation or Surname must equal 2.
+
+v645
+An invalid Sex data field was reported. Please review
+the information below and update your file
+accordingly.
+1) If Sex of Applicant or Borrower Collected on the
+Basis of Visual Observation or Surname equals 3,
+then Sex of Applicant or Borrower must equal 3 or 4.
+2) If Sex of Applicant or Borrower equals 4, then Sex
+of Applicant or Borrower Collected on the Basis of
+Visual Observation or Surname must equal 3.
+
+v646
+An invalid Sex data field was reported. Please review
+the information below and update your file
+accordingly.
+1) Sex of Co-Applicant or Co-Borrower must equal 1,
+2, 3, 4, 5, or 6, and cannot be left blank.
+2) Sex of Co-Applicant or Co-Borrower Collected on
+the Basis of Visual Observation or Surname must
+equal 1, 2, 3, or 4, and cannot be left blank.
+
+v647
+An invalid Sex data field was reported. Please review
+the information below and update your file
+accordingly.
+1) If Sex of Co-Applicant or Co-Borrower Collected
+on the Basis of Visual Observation or Surname
+equals 1, then Sex of Co-Applicant or Co-Borrower
+must equal 1 or 2.
+2) If Sex of Co-Applicant or Co-Borrower equals 1 or
+2, then Sex of Co-Applicant or Co-Borrower Collected
+on the Basis of Visual Observation or Surname must
+equal 1 or 2.
+
+v648
+An invalid Sex data field was reported. Please review
+the information below and update your file
+accordingly.
+1) If Sex of Co-Applicant or Co-Borrower Collected
+on the Basis of Visual Observation or Surname
+equals 2, then Sex of Co-Applicant or Co-Borrower
+must equal 1, 2, 3 or 6.
+2) If Sex of Co-Applicant or Co-Borrower equals 6,
+then Sex of Co-Applicant or Co-Borrower Collected
+on the Basis of Visual Observation or Surname must
+equal 2.
+
+v649
+An invalid Sex data field was reported. Please review
+the information below and update your file
+accordingly.
+1) If Sex of Co-Applicant or Co-Borrower Collected
+on the Basis of Visual Observation or Surname
+equals 3, then Sex of Co-Applicant or Co-Borrower
+must equal 3 or 4.
+2) If Sex of Co-Applicant or Co-Borrower equals 4,
+then Sex of Co-Applicant or Co-Borrower Collected
+on the Basis of Visual Observation or Surname must
+equal 3.
+
+v650
+An invalid Sex data field was reported. Please review
+the information below and update your file
+accordingly.
+1) If Sex of Co-Applicant or Co-Borrower Collected
+on the Basis of Visual Observation or Surname
+equals 4, then Sex of Co-Applicant or Co-Borrower
+must equal 5, and the reverse must be true.
+"""
