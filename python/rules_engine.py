@@ -893,11 +893,20 @@ class rules_engine(object):
 		(~self.lar_df.co_app_race_5.isin(race_n)))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-"""
+	def v640_1(self):
+		"""An invalid Race data field was reported.
+		1) If Race of Co-Applicant or Co-Borrower: 1 equals 7, then
+		Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
+		field = "Co-Applicant Race Basis"
+		edit_name = "v640_1"
+		fail_df = self.lar_df[(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_race_basis!="3")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-
-v640
-An invalid Race data field was reported. Please review the information below and update your file accordingly.
-1) If Race of Co-Applicant or Co-Borrower: 1 equals 7, then Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 3.
-2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3, then Race of Co-Applicant or Co-Borrower: 1 must equal 6 or 7.
-"""
+	def v640_2(self):
+		"""An invalid Race data field was reported.
+		2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3, then
+		Race of Co-Applicant or Co-Borrower: 1 must equal 6 or 7."""
+		field = "Co-Applicant Race Basis"
+		edit_name = "v640_2"
+		fail_df = self.lar_df[(self.lar_df.co_app_race_basis=="3")&(~self.lar_df.co_app_race_1.isin(("6", "7")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
