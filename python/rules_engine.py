@@ -921,18 +921,22 @@ class rules_engine(object):
 		((self.lar_df.co_app_race_basis=="4")&(self.lar_df.co_app_race_1!="8"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v642_1(self):
+		"""An invalid Sex data field was reported.
+		1) Sex of Applicant or Borrower must equal 1, 2, 3, 4, or 6, and cannot be left blank."""
+		field = "Applicant Sex"
+		edit_name = "v642_1"
+		fail_df = self.lar_df[(~self.lar_df.app_sex.isin(("1", "2", "3", "4", "6")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v642_2(self):
+		"""An invalid Sex data field was reported.
+		2) Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 1, 2, or 3, and cannot be left blank."""
+		field = "Applicant Sex Basis"
+		edit_name = "v642_2"
+		fail_df = self.lar_df[(~self.lar_df.app_sex_basis.isin(("1", "2", "3")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
-
-
-v642
-An invalid Sex data field was reported. Please review
-the information below and update your file
-accordingly.
-1) Sex of Applicant or Borrower must equal 1, 2, 3, 4,
-or 6, and cannot be left blank.
-2) Sex of Applicant or Borrower Collected on the
-Basis of Visual Observation or Surname must equal
-1, 2, or 3, and cannot be left blank
 
 v643
 An invalid Sex data field was reported. Please review
