@@ -84,17 +84,19 @@ class rules_engine(object):
 						result = "fail"
 		return result
 
-	def check_number(self, row, field, min_val=None):
+	def check_number(self, field, min_val=None):
 		"""Checks if a passed field contains only digits. Optionally a minimum value can be checked as well"""
 		try:
-			digit = row[field].isdigit()
-			if min_val:
-				if digit and int(row[field]) > min_val:
-					return True
+			digit = field.isdigit() #check if data field is a digit
+			if min_val is not None: #min_val was passed
+				if digit == True and int(field) >= min_val:
+					return True #digit and min_val are True
+				else:
+					return False #digit is True, min_val is False
 			else:
-				return digit
+				return digit #no min value passed
 		except:
-			return False
+			return False #passed value is not a number
 	#Edit Rules from FIG
 	def s300_1(self):
 		"""1) The first row of your file must begin with a 1;."""
@@ -1050,7 +1052,7 @@ class rules_engine(object):
 		Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 2."""
 		field = "Co-Applicant Sex Basis"
 		edit_name = "v648_2"
-		fail_df = self.lar_df[(self.lar_df.co_app_sex=="6")&(self.lar_df.co_app_sex_basis!="6")]
+		fail_df = self.lar_df[(self.lar_df.co_app_sex=="6")&(self.lar_df.co_app_sex_basis!="2")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v649_1(self):
@@ -1086,7 +1088,7 @@ class rules_engine(object):
 		1) Age of Applicant or Borrower must be a whole number greater than zero, and cannot be left blank."""
 		field = "Applicant Age"
 		edit_name = "v651_1"
-		fail_df = self.lar_df[(self.lar_df.app_age=="")|(self.lar_df.app_age.apply(lambda x: self.check_number(x, field="app_age", min_val=1))==False)]
+		fail_df = self.lar_df[(self.lar_df.app_age.map(lambda x: self.check_number(field=x, min_val=1))==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v651_2(self):
@@ -1099,13 +1101,26 @@ class rules_engine(object):
 		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&(self.lar_df.app_age!="8888")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v652_1(self):
+		"""An invalid Age of Co-Applicant or Co-Borrower was reported.
+		1) Age of Co-Applicant or Co-Borrower must be a whole number greater than zero, and cannot be left blank."""
+		field = "Co-Applicant Age"
+		edit_name = "v652_1"
+		fail_df = self.lar_df[(self.lar_df.co_app_age.map(lambda x: self.check_number(field=x, min_val=1))==False)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v652_2(self):
+		"""An invalid Age of Co-Applicant or Co-Borrower was reported.
+		2) If the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7;
+		and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is a non-natural person,
+		then Age of Co- Applicant or Co-Borrower must equal 8888."""
+		field = "Co-Applicant Age"
+		edit_name = "v652_2"
+		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&(self.lar_df.co_app_age!="8888")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+
 """
-
-
-v652
-An invalid Age of Co-Applicant or Co-Borrower was reported. Please review the information below and update your file accordingly.
-1) Age of Co-Applicant or Co-Borrower must be a whole number greater than zero, and cannot be left blank.
-2) If the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is a non-natural person, then Age of Co- Applicant or Co-Borrower must equal 8888.
 
 v654
 An invalid Income was reported. Please review the information below and update your file accordingly.
