@@ -1019,25 +1019,30 @@ class rules_engine(object):
 		"""An invalid Sex data field was reported.
 		2) If Sex of Co-Applicant or Co-Borrower equals 1 or 2, then
 		Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 1 or 2."""
-		field = "Co Applicant Sex Basis"
+		field = "Co-Applicant Sex Basis"
 		edit_name = "v647_2"
 		fail_df = self.lar_df[(self.lar_df.co_app_sex.isin(("1", "2")))&(~self.lar_df.co_app_sex_basis.isin(("1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-		
+
+	def v648_1(self):
+		"""An invalid Sex data field was reported.
+		1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 2,
+		then Sex of Co-Applicant or Co-Borrower must equal 1, 2, 3 or 6."""
+		field = "Co Applicant Sex"
+		edit_name = "v648_1"
+		fail_df = self.lar_df[(self.lar_df.co_app_sex_basis=="2")&(~self.lar_df.co_app_sex.isin(("1","2", "3", "6")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v648_2(self):
+		"""An invalid Sex data field was reported.
+		2) If Sex of Co-Applicant or Co-Borrower equals 6, then
+		Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 2."""
+		field = "Co-Applicant Sex Basis"
+		edit_name = "v648_2"
+		fail_df = self.lar_df[(self.lar_df.co_app_sex=="6")&(self.lar_df.co_app_sex_basis!="6")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
 
-v648
-An invalid Sex data field was reported. Please review
-the information below and update your file
-accordingly.
-1) If Sex of Co-Applicant or Co-Borrower Collected
-on the Basis of Visual Observation or Surname
-equals 2, then Sex of Co-Applicant or Co-Borrower
-must equal 1, 2, 3 or 6.
-2) If Sex of Co-Applicant or Co-Borrower equals 6,
-then Sex of Co-Applicant or Co-Borrower Collected
-on the Basis of Visual Observation or Surname must
-equal 2.
 
 v649
 An invalid Sex data field was reported. Please review
