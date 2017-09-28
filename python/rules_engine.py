@@ -1119,13 +1119,29 @@ class rules_engine(object):
 		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&(self.lar_df.co_app_age!="8888")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v654_1(self):
+		"""An invalid Income was reported.
+		1) Income must be either a positive or negative integer rounded to the nearest thousand or NA, and cannot be left blank."""
+		field = "Income"
+		edit_name = "v654_1"
+		fail_df = self.lar_df[(self.lar_df.income!="NA")&(self.lar_df.income.map(lambda x: x.isdigit())==False)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v654_2(self):
+		"""An invalid Income was reported.
+		2) If Multifamily Affordable Units is a number, then Income must be NA."""
+		field = "Income"
+		edit_name = "v654_2"
+		#fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: x.isdigit())==True)]
+		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: x.isdigit())==True)&(self.lar_df.income!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+		
+		
+		
 
 """
 
-v654
-An invalid Income was reported. Please review the information below and update your file accordingly.
-1) Income must be either a positive or negative integer rounded to the nearest thousand or NA, and cannot be left blank.
-2) If Multifamily Affordable Units is a number, then Income must be NA.
+
 
 v655
 An invalid income was reported.
