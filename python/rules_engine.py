@@ -84,6 +84,17 @@ class rules_engine(object):
 						result = "fail"
 		return result
 
+	def check_number(self, row, field, min_val=None):
+		"""Checks if a passed field contains only digits. Optionally a minimum value can be checked as well"""
+		try:
+			digit = row[field].isdigit()
+			if min_val:
+				if digit and int(row[field]) > min_val:
+					return True
+			else:
+				return digit
+		except:
+			return False
 	#Edit Rules from FIG
 	def s300_1(self):
 		"""1) The first row of your file must begin with a 1;."""
@@ -1069,3 +1080,69 @@ class rules_engine(object):
 		fail_df = self.lar_df[((self.lar_df.co_app_sex_basis=="4")&(self.lar_df.co_app_sex!="5"))|
 			((self.lar_df.co_app_sex=="5")&(self.lar_df.co_app_sex_basis!="4"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v651_1(self):
+		"""An invalid Age of Applicant or Borrower was reported.
+		1) Age of Applicant or Borrower must be a whole number greater than zero, and cannot be left blank."""
+		field = "Applicant Age"
+		edit_name = "v651_1"
+		fail_df = self.lar_df[(self.lar_df.app_age=="")|(self.lar_df.app_age.apply(lambda x: self.check_number(x, field="app_age", min_val=1))==False)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v652_2(self):
+		"""An invalid Age of Applicant or Borrower was reported.
+		2) If the Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
+		Sex of Applicant or Borrower equals 4 indicating the applicant or borrower is a non-natural person,
+		then Age of Applicant or Borrower must equal 8888."""
+		field = "Applicant Age"
+		edit_name = "v652_2"
+		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&(self.lar_df.app_age!="8888")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+"""
+
+
+v652
+An invalid Age of Co-Applicant or Co-Borrower was reported. Please review the information below and update your file accordingly.
+1) Age of Co-Applicant or Co-Borrower must be a whole number greater than zero, and cannot be left blank.
+2) If the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is a non-natural person, then Age of Co- Applicant or Co-Borrower must equal 8888.
+
+v654
+An invalid Income was reported. Please review the information below and update your file accordingly.
+1) Income must be either a positive or negative integer rounded to the nearest thousand or NA, and cannot be left blank.
+2) If Multifamily Affordable Units is a number, then Income must be NA.
+
+v655
+An invalid income was reported.
+1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and 
+Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person, 
+then Income must be NA.
+2) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7; 
+and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is a non-natural person, then Income must be NA
+
+v656
+An invalid Type of Purchaser was reported. Please review the information below and update your file accordingly.
+1) Type of Purchaser must equal 0, 1, 2, 3, 4, 5, 6, 71, 72, 8 or 9, and cannot be left blank.
+2) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Type of Purchaser must equal 0.
+
+v657
+An invalid Rate Spread was reported. Please review the information below and update your file accordingly.
+1) Rate Spread must be a number or NA, and cannot be left blank.
+2) If Action Taken equals 3, 4, 5, 6, or 7, then Rate Spread must be NA.
+3) If Reverse Mortgage equals 1, then Rate Spread must be NA.
+
+v658
+An invalid HOEPA Status was reported. Please review the information below and update your file accordingly.
+1) HOEPA Status must equal 1, 2, or 3, and cannot be left blank.
+2) If Action Taken equals 2, 3, 4, 5, 7, or 8, then HOEPA Status must be 3.
+
+v659
+An invalid Lien Status was reported. Please review the information below and update your file accordingly.
+1) Lien Status must equal 1 or 2, and cannot be left blank.
+
+v660
+An invalid Credit Score data field was reported. Please review the information below and update your file accordingly.
+1) Credit Score of Applicant or Borrower must be a number, and cannot be left blank.
+2) Applicant or Borrower, Name and Version of Credit Scoring Model must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9.
+
+"""
