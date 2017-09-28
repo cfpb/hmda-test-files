@@ -1089,13 +1089,13 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.app_age=="")|(self.lar_df.app_age.apply(lambda x: self.check_number(x, field="app_age", min_val=1))==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v652_2(self):
+	def v651_2(self):
 		"""An invalid Age of Applicant or Borrower was reported.
 		2) If the Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
 		Sex of Applicant or Borrower equals 4 indicating the applicant or borrower is a non-natural person,
 		then Age of Applicant or Borrower must equal 8888."""
 		field = "Applicant Age"
-		edit_name = "v652_2"
+		edit_name = "v651_2"
 		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&(self.lar_df.app_age!="8888")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
