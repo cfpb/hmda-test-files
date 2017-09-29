@@ -1153,16 +1153,24 @@ class rules_engine(object):
 		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&(self.lar_df.income!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v656_1(self):
+		"""An invalid Type of Purchaser was reported.
+		1) Type of Purchaser must equal 0, 1, 2, 3, 4, 5, 6, 71, 72, 8 or 9, and cannot be left blank."""
+		field = "Type of Purchaser"
+		edit_name = "v656_1"
+		fail_df = self.lar_df[~(self.lar_df.purchaser_type.isin(("0", "1", "2", "3", "4", "5", "6", "71", "72", "8", "9")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v656_2(self):
+		"""An invalid Type of Purchaser was reported.
+		2) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Type of Purchaser must equal 0."""
+		field = "Type of Purchaser"
+		edit_name = "v656_2"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7","8")))&(self.lar_df.purchaser_type!="0")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+
 """
-
-
-
-
-
-v656
-An invalid Type of Purchaser was reported. Please review the information below and update your file accordingly.
-1) Type of Purchaser must equal 0, 1, 2, 3, 4, 5, 6, 71, 72, 8 or 9, and cannot be left blank.
-2) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Type of Purchaser must equal 0.
 
 v657
 An invalid Rate Spread was reported. Please review the information below and update your file accordingly.
