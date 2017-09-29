@@ -1232,3 +1232,63 @@ class rules_engine(object):
 		edit_name = "v660_2"
 		fail_df = self.lar_df[(~self.lar_df.app_score_name.isin(("1", "2", "3", "4", "5", "6", "7", "8", "9")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v661(self):
+		"""An invalid Credit Score data field was reported.
+		1) If Credit Score of Applicant or Borrower equals 8888 indicating not applicable, then
+		Applicant or Borrower, Name and Version of Credit Scoring Model must equal 9, and the reverse must be true."""
+		field = "App Credit Score"
+		edit_name = "v661"
+		fail_df = self.lar_df[((self.lar_df.app_credit_score=="8888")&(self.lar_df.app_score_name!="9"))|
+			((self.lar_df.app_score_name=="9")&(self.lar_df.app_credit_score!="8888"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+
+"""
+v662
+An invalid Credit Score data field was reported. Please review the information below update your file accordingly.
+1) If Applicant or Borrower, Name and Version of Credit Scoring Model equals 1, 2, 3, 4, 5, 6, 7, or 9, then Applicant or Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank, and the reverse must be true.
+2) If Applicant or Borrower, Name and Version of Credit Scoring Model equals 8, then Applicant or Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must not be blank, and the reverse must be true.
+
+v663
+
+An invalid Credit Score data field was reported. Please review the information below and update your file accordingly.
+1) If Action Taken equals 4, 5, or 6, then Credit Score of Applicant or Borrower must equal 8888; and Applicant or Borrower, Name and Version of Credit Scoring Model must equal 9; and Applicant or Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank.
+
+v664
+An invalid Credit Score data field was reported. Please review the information below and update your file accordingly.
+1) If Action Taken equals 4, 5, or 6, then Credit Score of Co-Applicant or Co-Borrower must equal 8888; and Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 9; and Co- Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank
+
+v665
+An invalid Credit Score data field was reported. Please review the information below and update your file accordingly.
+1) Credit Score of Co-Applicant or Co-Borrower must be a number, and cannot be left blank.
+2) Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank.
+
+v666
+An invalid Credit Score data field was reported. Please review the information below and update your file accordingly.
+1) If Credit Score of Co-Applicant or Co-Borrower equals 8888 indicating not applicable, then Co- Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 9, and the reverse must be true.
+2) If Credit Score of Co-Applicant or Co-Borrower equals 9999 indicating no co-applicant, then Co- Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 10, and the reverse must be true.
+
+v667
+An invalid Credit Score data field was reported. Please review the information below and update your file accordingly.
+1) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals 1, 2, 3, 4, 5, 6, 7, 9, or 10, then Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank, and the reverse must be true.
+2) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals 8, then Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must not be left blank, and the reverse must be true.
+
+v668
+An invalid Credit Score data point was reported. Please review the information below and update your file accordingly.
+1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and Sex of Applicant or Borrower equals 4 indicating the applicant is a non-natural person then Credit Score of Applicant or Borrower must equal 8888 indicating not applicable.
+2) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7; and Sex of Co-Applicant or Co-Borrower equals 4 indicating that the co-applicant is a non- natural person, then Credit Score of Co-Applicant or Co-Borrower must equal 8888 indicating not applicable.
+
+v669
+An invalid Reason for Denial data field was reported. Please review the information below and update your file accordingly.
+1) Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank.
+2) Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or be left blank.
+3) Each Reason for Denial code can only be reported once.
+4) If Reason for Denial: 1 equals 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must all be left blank.
+
+v670
+An invalid Reason for Denial data field was reported. Please review the information below and update your file accordingly.
+1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9, and the reverse must be true.
+2) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal 10, and the reverse must be true.
+
+"""
