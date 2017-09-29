@@ -1132,24 +1132,32 @@ class rules_engine(object):
 		2) If Multifamily Affordable Units is a number, then Income must be NA."""
 		field = "Income"
 		edit_name = "v654_2"
-		#fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: x.isdigit())==True)]
 		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: x.isdigit())==True)&(self.lar_df.income!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-		
-		
-		
+
+	def v655_1(self):
+		"""An invalid income was reported.
+		1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and
+		Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person, then Income must be NA."""
+		field = "Income"
+		edit_name = "v655_1"
+		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&(self.lar_df.income!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v655_2(self):
+		"""An invalid income was reported.
+		2) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7;
+		and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is a non-natural person, then Income must be NA"""
+		field = "Income"
+		edit_name = "v655_2"
+		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&(self.lar_df.income!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 """
 
 
 
-v655
-An invalid income was reported.
-1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and 
-Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person, 
-then Income must be NA.
-2) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7; 
-and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is a non-natural person, then Income must be NA
+
 
 v656
 An invalid Type of Purchaser was reported. Please review the information below and update your file accordingly.
