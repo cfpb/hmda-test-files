@@ -1216,12 +1216,19 @@ class rules_engine(object):
 		edit_name = "v659"
 		fail_df = self.lar_df[~(self.lar_df.lien.isin(("1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-"""
 
+	def v660_1(self):
+		"""An invalid Credit Score data field was reported.
+		1) Credit Score of Applicant or Borrower must be a number, and cannot be left blank."""
+		field = "App Credit Score"
+		edit_name = "v660_1"
+		fail_df = self.lar_df[(self.lar_df.app_credit_score.map(lambda x: self.check_number(x))==False)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-v660
-An invalid Credit Score data field was reported. Please review the information below and update your file accordingly.
-1) Credit Score of Applicant or Borrower must be a number, and cannot be left blank.
-2) Applicant or Borrower, Name and Version of Credit Scoring Model must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9.
-
-"""
+	def v660_2(self):
+		"""An invalid Credit Score data field was reported.
+		2) Applicant or Borrower, Name and Version of Credit Scoring Model must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9."""
+		field = "App Credit Score"
+		edit_name = "v660_2"
+		fail_df = self.lar_df[(~self.lar_df.app_score_name.isin(("1", "2", "3", "4", "5", "6", "7", "8", "9")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
