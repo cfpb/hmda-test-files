@@ -1243,12 +1243,29 @@ class rules_engine(object):
 			((self.lar_df.app_score_name=="9")&(self.lar_df.app_credit_score!="8888"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v662_1(self):
+		"""An invalid Credit Score data field was reported.
+		1) If Applicant or Borrower, Name and Version of Credit Scoring Model equals 1, 2, 3, 4, 5, 6, 7, or 9, then
+		Applicant or Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank,
+		and the reverse must be true."""
+		field = "App Score Name"
+		edit_name = "v662_1"
+		fail_df = self.lar_df[((self.lar_df.app_score_name.isin(("1", "2", "3", "4", "5", "6", "7", "9")))&(self.lar_df.app_score_code_8!=""))|
+			((self.lar_df.app_score_code_8=="")&(~self.lar_df.app_score_name.isin(("1", "2", "3", "4", "5", "6", "7", "9"))))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v662_2(self):
+		"""An invalid Credit Score data field was reported.
+		2) If Applicant or Borrower, Name and Version of Credit Scoring Model equals 8, then
+		Applicant or Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must not be blank,
+		and the reverse must be true."""
+		field = "App Score Name"
+		edit_name= "v662_2"
+		fail_df = self.lar_df[((self.lar_df.app_score_name=="8")&(self.lar_df.app_score_code_8==""))|
+		((self.lar_df.app_score_code_8=="")&(self.lar_df.app_score_name!="8"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 """
-v662
-An invalid Credit Score data field was reported. Please review the information below update your file accordingly.
-1) If Applicant or Borrower, Name and Version of Credit Scoring Model equals 1, 2, 3, 4, 5, 6, 7, or 9, then Applicant or Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank, and the reverse must be true.
-2) If Applicant or Borrower, Name and Version of Credit Scoring Model equals 8, then Applicant or Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must not be blank, and the reverse must be true.
 
 v663
 
