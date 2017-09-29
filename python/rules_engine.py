@@ -1192,14 +1192,24 @@ class rules_engine(object):
 		edit_name = "v657_3"
 		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.rate_spread!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v658_1(self):
+		"""An invalid HOEPA Status was reported.
+		1) HOEPA Status must equal 1, 2, or 3, and cannot be left blank."""
+		field = "HOEPA"
+		edit_name  = "v658_1"
+		fail_df = self.lar_df[~(self.lar_df.hoepa.isin(("1", "2", "3")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v658_2(self):
+		"""An invalid HOEPA Status was reported.
+		2) If Action Taken equals 2, 3, 4, 5, 7, or 8, then HOEPA Status must be 3."""
+		field = "HOEPA"
+		edit_name = "v658_2"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&(self.lar_df.hoepa!="3")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 """
-
-
-v658
-An invalid HOEPA Status was reported. Please review the information below and update your file accordingly.
-1) HOEPA Status must equal 1, 2, or 3, and cannot be left blank.
-2) If Action Taken equals 2, 3, 4, 5, 7, or 8, then HOEPA Status must be 3.
-
 v659
 An invalid Lien Status was reported. Please review the information below and update your file accordingly.
 1) Lien Status must equal 1 or 2, and cannot be left blank.
