@@ -1169,14 +1169,31 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7","8")))&(self.lar_df.purchaser_type!="0")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v657_1(self):
+		"""An invalid Rate Spread was reported.
+		1) Rate Spread must be a number or NA, and cannot be left blank."""
+		field = "Rate Spread"
+		edit_name = "v657_1"
+		fail_df = self.lar_df[(self.lar_df.rate_spread!="NA")&(self.lar_df.rate_spread.map(lambda x: self.check_number(x))==False)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v657_2(self):
+		"""An invalid Rate Spread was reported.
+		2) If Action Taken equals 3, 4, 5, 6, or 7, then Rate Spread must be NA."""
+		field = "Rate Spread"
+		edit_name = "v657_2"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("3", "4", "5", "6", "7")))&(self.lar_df.rate_spread!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v657_3(self):
+		"""An invalid Rate Spread was reported.
+		3) If Reverse Mortgage equals 1, then Rate Spread must be NA."""
+		field = "Rate Spread"
+		edit_name = "v657_3"
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.rate_spread!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
 
-v657
-An invalid Rate Spread was reported. Please review the information below and update your file accordingly.
-1) Rate Spread must be a number or NA, and cannot be left blank.
-2) If Action Taken equals 3, 4, 5, 6, or 7, then Rate Spread must be NA.
-3) If Reverse Mortgage equals 1, then Rate Spread must be NA.
 
 v658
 An invalid HOEPA Status was reported. Please review the information below and update your file accordingly.
