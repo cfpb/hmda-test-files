@@ -1301,11 +1301,30 @@ class rules_engine(object):
 		edit_name = "v665_2"
 		fail_df = self.lar_df[~(self.lar_df.co_app_score_name.isin(("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v666_1(self):
+		"""An invalid Credit Score data field was reported.
+		1) If Credit Score of Co-Applicant or Co-Borrower equals 8888 indicating not applicable, then
+		Co- Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 9, and the reverse must be true."""
+		field = "Co-App Credit Score"
+		edit_name = "v666_1"
+		fail_df = self.lar_df[((self.lar_df.co_app_credit_score=="8888")&(self.lar_df.co_app_score_name!="9"))|
+			((self.lar_df.co_app_score_name=="9")&(self.co_app_credit_score!="8888"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v666_2(self):
+		"""An invalid Credit Score data field was reported.
+		2) If Credit Score of Co-Applicant or Co-Borrower equals 9999 indicating no co-applicant, then
+		Co- Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 10, and the reverse must be true."""
+		field = "Co-App Credit Score"
+		edit_name = "v666_2"
+		fail_df = self.lar_df[((self.lar_df.co_app_credit_score=="9999")&(self.lar_df.co_app_score_name!="10"))|
+			((self.lar_df.co_app_score_name=="10")&(self.lar_df.co_app_credit_score!="9999"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 """
-v666
-An invalid Credit Score data field was reported. Please review the information below and update your file accordingly.
-1) If Credit Score of Co-Applicant or Co-Borrower equals 8888 indicating not applicable, then Co- Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 9, and the reverse must be true.
-2) If Credit Score of Co-Applicant or Co-Borrower equals 9999 indicating no co-applicant, then Co- Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 10, and the reverse must be true.
+
+
 
 v667
 An invalid Credit Score data field was reported. Please review the information below and update your file accordingly.
