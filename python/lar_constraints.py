@@ -650,7 +650,7 @@ class lar_constraints(object):
 		if (row["denial_1"] == "9" or row["denial_2"] == "9" or row["denial_3"] == "9" or row["denial_4"]=="9") and row["denial_code_9"] =="":
 			row["denial_code_9"] = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(25))
 		elif row["denial_code_9"] !="" and (row["denial_1"] != "9" and row["denial_2"] !="9" and row["denial_3"]!="9" and row["denial_4"] !="9"):
-			row["denial_4"] = "9"
+			row["denial_code_9"] = ""
 		return row
 
 	def v672_const(self, row):

@@ -1366,17 +1366,41 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4")&(self.lar_df.co_app_credit_score!="8888")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v669_1(self):
+		"""An invalid Reason for Denial data field was reported.
+		1) Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank."""
+		field = "Denial Reason 1"
+		edit_name = "v669_1"
+		fail_df = self.lar_df[(~self.lar_df.denial_1.isin(("1", "2", "3", "4", "5", "6'", "7", "8", "9", "10")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v669_2(self):
+		"""An invalid Reason for Denial data field was reported.
+		2) Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or be left blank."""
+		field = "Denial Reason 2-4"
+		edit_name = "v669_2"
+		denials = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ""]
+		fail_df = self.lar_df[~(self.lar_df.denial_2.isin(denials))|(~self.lar_df.denial_3.isin(denials))|(~self.lar_df.denial_4.isin(denials))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v669_3(self):
+		"""An invalid Reason for Denial data field was reported.
+		3) Each Reason for Denial code can only be reported once."""
+		field = "Denial Reasons 1-4"
+		edit_name = "v669_3"
+		dupe_fields = ["denial_1", "denial_2", "denial_3", "denial_4"]
+		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.check_dupes(x, fields=dupe_fields), axis=1)=="fail")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v669_4(self):
+		"""An invalid Reason for Denial data field was reported.
+		4) If Reason for Denial: 1 equals 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must all be left blank."""
+		field = "Denial Reasons 1-4"
+		edit_name = "v669_4"
+		fail_df = self.lar_df[(self.lar_df.denial_1=="10")&((self.lar_df.denial_2!="")|(self.lar_df.denial_3!="")|(self.lar_df.denial_4!=""))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+		
 """
-
-
-
-v669
-An invalid Reason for Denial data field was reported. Please review the information below and update your file accordingly.
-1) Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank.
-2) Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or be left blank.
-3) Each Reason for Denial code can only be reported once.
-4) If Reason for Denial: 1 equals 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must all be left blank.
-
 v670
 An invalid Reason for Denial data field was reported. Please review the information below and update your file accordingly.
 1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9, and the reverse must be true.
