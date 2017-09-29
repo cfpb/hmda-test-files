@@ -1261,16 +1261,22 @@ class rules_engine(object):
 		and the reverse must be true."""
 		field = "App Score Name"
 		edit_name= "v662_2"
-		fail_df = self.lar_df[((self.lar_df.app_score_name=="8")&(self.lar_df.app_score_code_8==""))|
-		((self.lar_df.app_score_code_8=="")&(self.lar_df.app_score_name!="8"))]
+		fail_df = self.lar_df[((self.lar_df.app_score_name=="8")&(self.lar_df.app_score_code_8==""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v663(self):
+		"""An invalid Credit Score data field was reported.
+		1) If Action Taken equals 4, 5, or 6, then Credit Score of Applicant or Borrower must equal 8888; and
+		Applicant or Borrower, Name and Version of Credit Scoring Model must equal 9; and
+		Applicant or Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank."""
+		field = "App Credit Score"
+		edit_name = "v663"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5", "6")))&((self.lar_df.app_credit_score!="8888")|(self.lar_df.app_score_name!="9")|
+				(self.lar_df.app_score_code_8!=""))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+
 """
-
-v663
-
-An invalid Credit Score data field was reported. Please review the information below and update your file accordingly.
-1) If Action Taken equals 4, 5, or 6, then Credit Score of Applicant or Borrower must equal 8888; and Applicant or Borrower, Name and Version of Credit Scoring Model must equal 9; and Applicant or Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank.
 
 v664
 An invalid Credit Score data field was reported. Please review the information below and update your file accordingly.
