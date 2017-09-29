@@ -1209,10 +1209,15 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&(self.lar_df.hoepa!="3")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v659(self):
+		"""An invalid Lien Status was reported.
+		1) Lien Status must equal 1 or 2, and cannot be left blank."""
+		field = "Lien Status"
+		edit_name = "v659"
+		fail_df = self.lar_df[~(self.lar_df.lien.isin(("1", "2")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
-v659
-An invalid Lien Status was reported. Please review the information below and update your file accordingly.
-1) Lien Status must equal 1 or 2, and cannot be left blank.
+
 
 v660
 An invalid Credit Score data field was reported. Please review the information below and update your file accordingly.
