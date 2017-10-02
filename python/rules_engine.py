@@ -1450,9 +1450,9 @@ class rules_engine(object):
 	def v672_2(self):
 		"""An invalid Total Loan Costs or Total Points and Fees data field was reported.
 		2) If Total Points and Fees is a number greater than or equal to 0, then Total Loan Costs must be NA."""
-		field = "Points and Fees"
+		field = "Loan Costs"
 		edit_name = "v672_2"
-		fail_df = self.lar_df[(self.lar_df.points_fees.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.points_fees!="NA")]
+		fail_df = self.lar_df[(self.lar_df.points_fees.map(lambda x: self.check_number(x, min_val=0))==True)&(self.lar_df.points_fees!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v672_3(self):
@@ -1487,14 +1487,50 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8"))&(self.lar_df.loan_costs!="NA"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v673_1(self):
+		"""An invalid Total Points and Fees was reported.
+		1) Total Points and Fees must be a number greater than or equal to 0 or NA, and cannot be left blank."""
+		field = "Points and Fees"
+		edit_name = "v673_1"
+		fail_df = self.lar_df[(self.lar_df.points_fees.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.points_fees!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v673_2(self):
+		"""An invalid Total Points and Fees was reported.
+		2) If Action Taken equals 2, 3, 4, 5, 6, 7 or 8 then Total Points and Fees must be NA."""
+		field = "Points and Fees"
+		edit_name = "v673_2"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "6", "7", "8")))&(self.lar_df.points_fees!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v673_3(self):
+		"""An invalid Total Points and Fees was reported.
+		3) If Reverse Mortgage equals 1, then Total Points and Fees must be NA."""
+		field = "Points and Fees"
+		edit_name = "v673_3"
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.points_fees!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v673_4(self):
+		"""An invalid Total Points and Fees was reported.
+		4) If Business or Commercial Purpose equals 1, then Total Points and Fees must be NA."""
+		field = "Points and Fees"
+		edit_name = "v673_4"
+		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(self.lar_df.points_fees!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v673_5(self):
+		"""An invalid Total Points and Fees was reported.
+		5) If Total Loan Costs is a number greater than or equal to 0, then Total Points and Fees must be NA."""
+		field = "Points and Fees"
+		edit_name = "v673_5"
+		fail_df = self.lar_df[(self.lar_df.loan_costs.map(lambda x: self.check_number(x, min_val=0))==True)&(self.lar_df.points_fees!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
-v673
-An invalid Total Points and Fees was reported. Please review the information below and update your file accordingly.
-1) Total Points and Fees must be a number greater than or equal to 0 or NA, and cannot be left blank.
-2) If Action Taken equals 2, 3, 4, 5, 6, 7 or 8 then Total Points and Fees must be NA.
-3) If Reverse Mortgage equals 1, then Total Points and Fees must be NA.
-4) If Business or Commercial Purpose equals 1, then Total Points and Fees must be NA.
-5) If Total Loan Costs is a number greater than or equal to 0, then Total Points and Fees must be NA.
+
+
+
+
 
 v674
 An invalid Origination Charges was reported. Please review the information below and update your file accordingly.
