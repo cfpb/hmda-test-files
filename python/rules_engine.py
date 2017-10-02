@@ -1840,13 +1840,24 @@ class rules_engine(object):
 		fail_df = self.lar_df[~(self.lar_df.non_amort_features.isin(("1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v688_1(self):
+		"""An invalid Property Value was reported.
+		1) Property Value must be either a number greater than 0 or NA, and cannot be left blank."""
+		field = "Property Value"
+		edit_name = "v688_1"
+		fail_df = self.lar_df[(self.lar_df.property_value.map(lambda x: self.check_number(x, min_val=1)==False))&(self.lar_df.property_value!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v688_2(self):
+		"""An invalid Property Value was reported.
+		2) If Action Taken equals 4 or 5, then Property Value must be NA."""
+		field = "Property Value"
+		edit_name = "v688_2"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5")))&(self.lar_df.property_value!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+		
 """
 
-v688
-An invalid Property Value was reported. Please review the information below and update your file accordingly.
-1) Property Value must be either a number greater than 0 or NA, and cannot be left blank.
-2) If Action Taken equals 4 or 5, then Property Value must be NA.
 
 v689
 An invalid Manufactured Home Secured Property Type was reported. Please review the information below and update your file accordingly.
