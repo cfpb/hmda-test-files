@@ -97,6 +97,18 @@ class rules_engine(object):
 				return digit #no min value passed
 		except:
 			return False #passed value is not a number
+
+	def compare_nums(self, row, fields=[]):
+		"""Checks if field_1 is greater than field_2"""
+		try:
+			field_1 = float(row[fields[0]])
+			field_2 = float(row[fields[1]])
+			if field_1 > field_2:
+				return True
+			else:
+				return False
+		except:
+			return False
 	#Edit Rules from FIG
 	def s300_1(self):
 		"""1) The first row of your file must begin with a 1;."""
@@ -1663,16 +1675,48 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("3", "4", "5", "7")))&(self.lar_df.interest_rate!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-"""
-v678
-An invalid Prepayment Penalty Term was reported. Please review the information below and update your file accordingly.
-1) Prepayment Penalty Term must be a whole number greater than 0 or NA, and cannot be left blank.
-2) If Action Taken equals 6, then Prepayment Penalty Term must be NA.
-3) If Reverse Mortgage equals 1, then Prepayment Penalty Term must be NA.
-4) If Business or Commercial Purpose equals 1, then Prepayment Penalty Term must be NA.
-5) If both Prepayment Penalty Term and Loan Term are numbers, then Prepayment Penalty Term must be less than or equal to Loan Term.
+	def v678_1(self):
+		"""An invalid Prepayment Penalty Term was reported.
+		1) Prepayment Penalty Term must be a whole number greater than 0 or NA, and cannot be left blank."""
+		field = "Prepayment Term"
+		edit_name = "v678_1"
+		fail_df = self.lar_df[(self.lar_df.prepayment_penalty.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.prepayment_penalty!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-v679
+	def v678_2(self):
+		"""An invalid Prepayment Penalty Term was reported.
+		2) If Action Taken equals 6, then Prepayment Penalty Term must be NA."""
+		field = "Prepayment Term"
+		edit_name = "v678_2"
+		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(self.lar_df.prepayment_penalty!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v678_3(self):
+		"""An invalid Prepayment Penalty Term was reported.
+		3) If Reverse Mortgage equals 1, then Prepayment Penalty Term must be NA."""
+		field = "Prepayment Term"
+		edit_name = "v678_3"
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.prepayment_penalty!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v678_4(self):
+		"""An invalid Prepayment Penalty Term was reported.
+		4) If Business or Commercial Purpose equals 1, then Prepayment Penalty Term must be NA."""
+		field = "Prepayment Term"
+		edit_name = "v678_4"
+		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(self.lar_df.prepayment_penalty!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v678_5(self):
+		"""An invalid Prepayment Penalty Term was reported.
+		5) If both Prepayment Penalty Term and Loan Term are numbers, then Prepayment Penalty Term must be less than or equal to Loan Term."""
+		field = "Prepayment Term"
+		edit_name = "v678_5"
+		fields = ["prepayment_penalty", "loan_term"]
+		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.compare_nums(x, fields=fields), axis=1)==True)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+"""
 An invalid Debt-to-Income Ratio was reported. Please review the information below and update your file accordingly.
 1) Debt-to-Income Ratio must be either a number or NA, and cannot be left blank.
 2) If Action Taken equals 4, 5 or 6, then Debt-to- Income Ratio must be NA.
