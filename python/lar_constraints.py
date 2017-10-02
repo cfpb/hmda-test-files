@@ -616,7 +616,7 @@ class lar_constraints(object):
 		3) Each Reason for Denial code can only be reported once.
 		4) If Reason for Denial: 1 equals 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must all be left blank."""
 		denial_fields = [row["denial_1"], row["denial_2"], row["denial_3"], row["denial_4"]]
-		denial_enums = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+		denial_enums = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 		if row["denial_1"] not in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"):
 			row["denial_1"] = random.choice(("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"))
