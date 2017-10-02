@@ -1832,11 +1832,16 @@ class rules_engine(object):
 		fail_df = self.lar_df[~(self.lar_df.neg_amort.isin(("1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-"""
+	def v687(self):
+		"""An invalid Other Non-amortizing Features was reported.
+		1) Other Non-amortizing Features must equal 1 or 2, and cannot be left blank."""
+		field = "Non-amortizing Features"
+		edit_name = "v687"
+		fail_df = self.lar_df[~(self.lar_df.non_amort_features.isin(("1", "2")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-v687
-An invalid Other Non-amortizing Features was reported. Please review the information below and update your file accordingly.
-1) Other Non-amortizing Features must equal 1 or 2, and cannot be left blank.
+
+"""
 
 v688
 An invalid Property Value was reported. Please review the information below and update your file accordingly.
