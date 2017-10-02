@@ -1800,11 +1800,14 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.loan_term!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v683(self):
+		"""An invalid Introductory Rate Period was reported.
+		1) Introductory Rate Period must be either a whole number greater than zero or NA, and cannot be left blank."""
+		field = "Introductory Rate"
+		edit_name = "v683"
+		fail_df = self.lar_df[(self.lar_df.intro_rate.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.intro_rate!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
-v683
-An invalid Introductory Rate Period was reported. Please review the information below and update your file accordingly.
-1) Introductory Rate Period must be either a whole number greater than zero or NA, and cannot be left blank.
-
 v684
 An invalid Balloon Payment was reported. Please review the information below and update your file accordingly.
 1) Balloon Payment must equal 1 or 2, and cannot be left blank.
