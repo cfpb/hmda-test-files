@@ -1418,3 +1418,92 @@ class rules_engine(object):
 			((self.lar_df.denial_1=="10")&(~self.lar_df.action_taken.isin(("1", "2", "3", "4", "5", "6", "8"))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v671_1(self):
+		"""An invalid Reason for Denial data field was reported.
+		1) Reason for Denial: 1; Reason for Denial: 2; Reason for Denial: 3;
+		or Reason for Denial: 4 was reported Code 9: Other; however,
+		the Reason for Denial: Conditional Free Form Text Field for Code 9 was left blank."""
+		field = "Denail Reasons 1-4"
+		edit_name = "v671_1"
+		fail_df = self.lar_df[((self.lar_df.denial_1=="9")|(self.lar_df.denial_2=="9")|(self.lar_df.denial_3=="9")|(self.lar_df.denial_4=="9"))&
+			(self.lar_df.denial_code_9=="")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v671_2(self):
+		"""An invalid Reason for Denial data field was reported.
+		2) The Reason for Denial: Conditional Free Form Text Field for Code 9 was reported,
+		but Code 9 was not reported in Reason for Denial: 1; Reason for Denial: 2; Reason for Denial: 3; or Reason for Denial: 4."""
+		field = "Denial Reasons 1-4"
+		edit_name = "v671_2"
+		fail_df = self.lar_df[((self.lar_df.denial_1!="9")&(self.lar_df.denial_2!="9")&(self.lar_df.denial_3!="9")&(self.lar_df.denial_4!="9"))&
+			(self.lar_df.denial_code_9!="")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+"""
+v672
+An invalid Total Loan Costs or Total Points and Fees data field was reported. Please review the information below and update your file accordingly.
+1) Total Loan Costs must be a number greater than or equal to 0 or NA, and cannot be left blank.
+2) If Total Points and Fees is a number greater than or equal to 0, then Total Loan Costs must be NA.
+3) If Reverse Mortgage equals 1, then Total Loan Costs must be NA.
+4) If Open-End Line of Credit equals 1, then Total Loan Costs must be NA.
+5) If Business or Commercial Purpose equals 1, then Total Loan Costs must be NA.
+6) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Total Loan Costs must be NA.
+
+v673
+An invalid Total Points and Fees was reported. Please review the information below and update your file accordingly.
+1) Total Points and Fees must be a number greater than or equal to 0 or NA, and cannot be left blank.
+2) If Action Taken equals 2, 3, 4, 5, 6, 7 or 8 then Total Points and Fees must be NA.
+3) If Reverse Mortgage equals 1, then Total Points and Fees must be NA.
+4) If Business or Commercial Purpose equals 1, then Total Points and Fees must be NA.
+5) If Total Loan Costs is a number greater than or equal to 0, then Total Points and Fees must be NA.
+
+v674
+An invalid Origination Charges was reported. Please review the information below and update your file accordingly.
+1) Origination Charges must be a number greater than or equal to 0 or NA, and cannot be left blank.
+2) If Reverse Mortgage equals 1, then Origination Charges must be NA.
+3) If Open-End Line of Credit equals 1, then Origination Charges must be NA.
+4) If Business or Commercial Purpose equals 1, then Origination Charges must be NA.
+5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Origination Charges must be NA.
+
+v675
+An invalid Discount Points was reported. Please review the information below and update your file accordingly.
+1) Discount Points must be a number greater than 0, blank, or NA.
+2) If Reverse Mortgage equals 1, then Discount Points must be NA.
+3) If Open-End Line of Credit equals 1, then Discount Points must be NA.
+4) If Business or Commercial Purpose equals 1, then Discount Points must be NA.
+5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Discount Points must be NA.
+
+v676
+An invalid Lender Credits was reported. Please review the information below and update your file accordingly.
+1) Lender Credits must be a number greater than 0, blank, or NA.
+2) If Reverse Mortgage equals 1, then Lender Credits must be NA.
+3) If Open-End Line of Credit equals 1, then Lender Credits must be NA.
+4) If Business or Commercial Purpose equals 1, then Lender Credits must be NA.
+5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Lender Credits must be NA.
+
+v677
+An invalid Interest Rate was reported. Please review the information below and update your file accordingly.
+1) Interest Rate must be a number greater than 0 or NA, and cannot be left blank.
+2) If Action Taken equals 3, 4, 5, or 7; then Interest Rate must be NA.
+
+v678
+An invalid Prepayment Penalty Term was reported. Please review the information below and update your file accordingly.
+1) Prepayment Penalty Term must be a whole number greater than 0 or NA, and cannot be left blank.
+2) If Action Taken equals 6, then Prepayment Penalty Term must be NA.
+3) If Reverse Mortgage equals 1, then Prepayment Penalty Term must be NA.
+4) If Business or Commercial Purpose equals 1, then Prepayment Penalty Term must be NA.
+5) If both Prepayment Penalty Term and Loan Term are numbers, then Prepayment Penalty Term must be less than or equal to Loan Term.
+
+v679
+An invalid Debt-to-Income Ratio was reported. Please review the information below and update your file accordingly.
+1) Debt-to-Income Ratio must be either a number or NA, and cannot be left blank.
+2) If Action Taken equals 4, 5 or 6, then Debt-to- Income Ratio must be NA.
+3) If Multifamily Affordable Units is a number, then Debt-to-Income Ratio must be NA.
+
+v680
+An invalid Debt-to-Income Ratio was reported. Please review the information below and update your file accordingly.
+1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person; and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower: 1 equals 8; and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or co-borrower, then Debt-to-Income Ratio must be NA.
+2) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person; and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is also a non-natural person, then Debt-to- Income Ratio must be NA.
+
+
+"""
