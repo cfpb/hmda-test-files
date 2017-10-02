@@ -1607,16 +1607,48 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&(self.lar_df.discount_points!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v676_1(self):
+		"""An invalid Lender Credits was reported.
+		1) Lender Credits must be a number greater than 0, blank, or NA."""
+		field = "Lender Credits"
+		edit_name = "v676_1"
+		fail_df = self.lar_df[(self.lar_df.lender_credits.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.lender_credits!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v676_2(self):
+		"""An invalid Lender Credits was reported.
+		2) If Reverse Mortgage equals 1, then Lender Credits must be NA."""
+		field = "Lender Credits"
+		edit_name = "v676_2"
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.lender_credits!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v676_3(self):
+		"""An invalid Lender Credits was reported.
+		3) If Open-End Line of Credit equals 1, then Lender Credits must be NA."""
+		field = "Lender Credits"
+		edit_name = "v676_3"
+		fail_df = self.lar_df[(self.lar_df.open_end_credit=="1")&(self.lar_df.lender_credits!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v676_4(self):
+		"""An invalid Lender Credits was reported.
+		4) If Business or Commercial Purpose equals 1, then Lender Credits must be NA."""
+		field = "Lender Credits"
+		edit_name = "v676_4"
+		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(self.lar_df.lender_credits!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v676_5(self):
+		"""An invalid Lender Credits was reported.
+		5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Lender Credits must be NA."""
+		field = "Lender Credits"
+		edit_name = "v676_5"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&(self.lar_df.lender_credits!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 
 """
-
-v676
-An invalid Lender Credits was reported. Please review the information below and update your file accordingly.
-1) Lender Credits must be a number greater than 0, blank, or NA.
-2) If Reverse Mortgage equals 1, then Lender Credits must be NA.
-3) If Open-End Line of Credit equals 1, then Lender Credits must be NA.
-4) If Business or Commercial Purpose equals 1, then Lender Credits must be NA.
-5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Lender Credits must be NA.
 
 v677
 An invalid Interest Rate was reported. Please review the information below and update your file accordingly.
