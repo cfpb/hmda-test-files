@@ -737,7 +737,7 @@ class rules_engine(object):
 		Race of Applicant or Borrower: Free Form Text Field for Other Asian, or Race of Applicant or Borrower: Free Form Text Field for Other Pacific Islander."""
 		field = "App Race 1"
 		edit_name = "v635_1"
-		fail_df = self.lar_df[(~self.lar_df.app_race_1.isin(("1", "2", "21", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7")))|
+		fail_df = self.lar_df[(~self.lar_df.app_race_1.isin(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7")))|
 		((self.lar_df.app_race_1=="")&((self.lar_df.app_race_native_text=="")&(self.lar_df.app_race_islander_text=="")&(self.lar_df.app_race_asian_text=="")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
@@ -1371,7 +1371,7 @@ class rules_engine(object):
 		1) Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank."""
 		field = "Denial Reason 1"
 		edit_name = "v669_1"
-		fail_df = self.lar_df[(~self.lar_df.denial_1.isin(("1", "2", "3", "4", "5", "6'", "7", "8", "9", "10")))]
+		fail_df = self.lar_df[(~self.lar_df.denial_1.isin(("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v669_2(self):
@@ -1412,9 +1412,9 @@ class rules_engine(object):
 	def v670_2(self):
 		"""An invalid Reason for Denial data field was reported.
 		2) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal 10, and the reverse must be true."""
-		field = "Denail Reason 1"
+		field = "Denial Reason 1"
 		edit_name = "v670_2"
-		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("1", "2", "3", "4", "5", "6", "8")))&(self.lar_df.denial_1!="10"))|
+		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("1", "2", "4", "5", "6", "8")))&(self.lar_df.denial_1!="10"))|
 			((self.lar_df.denial_1=="10")&(~self.lar_df.action_taken.isin(("1", "2", "3", "4", "5", "6", "8"))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
@@ -1567,15 +1567,48 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&(self.lar_df.origination_fee!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-"""
+	def v675_1(self):
+		"""An invalid Discount Points was reported.
+		1) Discount Points must be a number greater than 0, blank, or NA."""
+		field = "Discount Points"
+		edit_name = "v675_1"
+		fail_df = self.lar_df[(self.lar_df.discount_points.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.discount_points!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-v675
-An invalid Discount Points was reported. Please review the information below and update your file accordingly.
-1) Discount Points must be a number greater than 0, blank, or NA.
-2) If Reverse Mortgage equals 1, then Discount Points must be NA.
-3) If Open-End Line of Credit equals 1, then Discount Points must be NA.
-4) If Business or Commercial Purpose equals 1, then Discount Points must be NA.
-5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Discount Points must be NA.
+	def v675_2(self):
+		"""An invalid Discount Points was reported.
+		2) If Reverse Mortgage equals 1, then Discount Points must be NA."""
+		field = "Discount Points"
+		edit_name = "v675_2"
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.discount_points!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v675_3(self):
+		"""An invalid Discount Points was reported.
+		3) If Open-End Line of Credit equals 1, then Discount Points must be NA."""
+		field = "Discount Points"
+		edit_name = "v675_3"
+		fail_df = self.lar_df[(self.lar_df.open_end_credit=="1")&(self.lar_df.discount_points!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v675_4(self):
+		"""An invalid Discount Points was reported.
+		4) If Business or Commercial Purpose equals 1, then Discount Points must be NA."""
+		field = "Discount Points"
+		edit_name = "v675_4"
+		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(self.lar_df.discount_points!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v675_5(self):
+		"""An invalid Discount Points was reported.
+		5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Discount Points must be NA."""
+		field = "Discount Points"
+		edit_name = "v675_5"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&(self.lar_df.discount_points!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+
+"""
 
 v676
 An invalid Lender Credits was reported. Please review the information below and update your file accordingly.
