@@ -1371,7 +1371,7 @@ class rules_engine(object):
 		1) Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank."""
 		field = "Denial Reason 1"
 		edit_name = "v669_1"
-		fail_df = self.lar_df[(~self.lar_df.denial_1.isin(("1", "2", "3", "4", "5", "6'", "7", "8", "9", "10")))]
+		fail_df = self.lar_df[(~self.lar_df.denial_1.isin(("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v669_2(self):
