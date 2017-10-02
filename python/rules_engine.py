@@ -1584,7 +1584,7 @@ class rules_engine(object):
 		1) Discount Points must be a number greater than 0, blank, or NA."""
 		field = "Discount Points"
 		edit_name = "v675_1"
-		fail_df = self.lar_df[(self.lar_df.discount_points.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.discount_points!="NA")]
+		fail_df = self.lar_df[(self.lar_df.discount_points.map(lambda x: self.check_number(x, min_val=1))==False)&(self.lar_df.discount_points!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v675_2(self):
@@ -1624,7 +1624,7 @@ class rules_engine(object):
 		1) Lender Credits must be a number greater than 0, blank, or NA."""
 		field = "Lender Credits"
 		edit_name = "v676_1"
-		fail_df = self.lar_df[(self.lar_df.lender_credits.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.lender_credits!="NA")]
+		fail_df = self.lar_df[(self.lar_df.lender_credits.map(lambda x: self.check_number(x, min_val=1))==False)&(self.lar_df.lender_credits!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v676_2(self):
@@ -1664,7 +1664,7 @@ class rules_engine(object):
 		1) Interest Rate must be a number greater than 0 or NA, and cannot be left blank."""
 		field = "Interest Rate"
 		edit_name = "v677_1"
-		fail_df = self.lar_df[(self.lar_df.interest_rate.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.interest_rate!="NA")]
+		fail_df = self.lar_df[(self.lar_df.interest_rate.map(lambda x: self.check_number(x, min_val=1))==False)&(self.lar_df.interest_rate!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v677_2(self):
@@ -1680,7 +1680,7 @@ class rules_engine(object):
 		1) Prepayment Penalty Term must be a whole number greater than 0 or NA, and cannot be left blank."""
 		field = "Prepayment Term"
 		edit_name = "v678_1"
-		fail_df = self.lar_df[(self.lar_df.prepayment_penalty.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.prepayment_penalty!="NA")]
+		fail_df = self.lar_df[(self.lar_df.prepayment_penalty.map(lambda x: self.check_number(x, min_val=1))==False)&(self.lar_df.prepayment_penalty!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v678_2(self):
@@ -1773,7 +1773,7 @@ class rules_engine(object):
 		1) Combined Loan-to-Value Ratio must be either a number greater than 0 or NA, and cannot be left blank."""
 		field = "CLTV"
 		edit_name = "v681_1"
-		fail_df = self.lar_df[(self.lar_df.cltv.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.cltv!="NA")]
+		fail_df = self.lar_df[(self.lar_df.cltv.map(lambda x: self.check_number(x, min_val=1))==False)&(self.lar_df.cltv!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v681_2(self):
@@ -1783,17 +1783,24 @@ class rules_engine(object):
 		edit_name = "v681_2"
 		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5", "6")))&(self.lar_df.cltv!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-	
+
+	def v682_1(self):
+		"""An invalid Loan Term was reported.
+		1) Loan Term must be either a whole number greater than zero or NA, and cannot be left blank."""
+		field = "Loan Term"
+		edit_name = "v682_1"
+		fail_df = self.lar_df[(self.lar_df.loan_term.map(lambda x: self.check_number(x, min_val=1))==False)&(self.lar_df.loan_term!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v682_2(self):
+		"""An invalid Loan Term was reported.
+		2) If Reverse Mortgage equals 1, then Loan Term must be NA."""
+		field = "Loan Term"
+		edit_name = "v682_2"
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.loan_term!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 """
-
-
-
-v682
-An invalid Loan Term was reported. Please review the information below and update your file accordingly.
-1) Loan Term must be either a whole number greater than zero or NA, and cannot be left blank.
-2) If Reverse Mortgage equals 1, then Loan Term must be NA.
-
 v683
 An invalid Introductory Rate Period was reported. Please review the information below and update your file accordingly.
 1) Introductory Rate Period must be either a whole number greater than zero or NA, and cannot be left blank.
