@@ -1412,9 +1412,9 @@ class rules_engine(object):
 	def v670_2(self):
 		"""An invalid Reason for Denial data field was reported.
 		2) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal 10, and the reverse must be true."""
-		field = "Denail Reason 1"
+		field = "Denial Reason 1"
 		edit_name = "v670_2"
-		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("1", "2", "3", "4", "5", "6", "8")))&(self.lar_df.denial_1!="10"))|
+		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("1", "2", "4", "5", "6", "8")))&(self.lar_df.denial_1!="10"))|
 			((self.lar_df.denial_1=="10")&(~self.lar_df.action_taken.isin(("1", "2", "3", "4", "5", "6", "8"))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
