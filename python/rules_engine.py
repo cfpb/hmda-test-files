@@ -1816,11 +1816,15 @@ class rules_engine(object):
 		fail_df = self.lar_df[~(self.lar_df.balloon.isin(("1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-"""
+	def v685(self):
+		"""An invalid Interest Only Payments was reported.
+		1) Interest Only Payments must equal 1 or 2, and cannot be left blank."""
+		field = "Interest Only Payments"
+		edit_name = "v685"
+		fail_df = self.lar_df[(~self.lar_df.int_only_pmts.isin(("1", "2")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-v685
-An invalid Interest Only Payments was reported. Please review the information below and update your file accordingly.
-1) Interest Only Payments must equal 1 or 2, and cannot be left blank.
+"""
 
 v686
 An invalid Negative Amortization was reported. Please review the information below and update your file accordingly.
