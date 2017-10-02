@@ -1526,19 +1526,48 @@ class rules_engine(object):
 		edit_name = "v673_5"
 		fail_df = self.lar_df[(self.lar_df.loan_costs.map(lambda x: self.check_number(x, min_val=0))==True)&(self.lar_df.points_fees!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v674_1(self):
+		"""An invalid Origination Charges was reported.
+		1) Origination Charges must be a number greater than or equal to 0 or NA, and cannot be left blank."""
+		field = "Origination Charges"
+		edit_name = "v674_1"
+		fail_df = self.lar_df[(self.lar_df.origination_fee.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.origination_fee!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v674_2(self):
+		"""An invalid Origination Charges was reported.
+		2) If Reverse Mortgage equals 1, then Origination Charges must be NA."""
+		field = "Origination Charges"
+		edit_name = "v674_2"
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.origination_fee!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v674_3(self):
+		"""An invalid Origination Charges was reported.
+		3) If Open-End Line of Credit equals 1, then Origination Charges must be NA."""
+		field = "Origination Charges"
+		edit_name = "v674_3"
+		fail_df = self.lar_df[(self.lar_df.open_end_credit=="1")&(self.lar_df.origination_fee!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v674_4(self):
+		"""An invalid Origination Charges was reported.
+		4) If Business or Commercial Purpose equals 1, then Origination Charges must be NA."""
+		field = "Origination Charges"
+		edit_name = "v674_4"
+		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(self.lar_df.origination_fee!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v674_5(self):
+		"""An invalid Origination Charges was reported.
+		5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Origination Charges must be NA."""
+		field = "Origination Charges"
+		edit_name = "v674_5"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&(self.lar_df.origination_fee!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 """
-
-
-
-
-
-v674
-An invalid Origination Charges was reported. Please review the information below and update your file accordingly.
-1) Origination Charges must be a number greater than or equal to 0 or NA, and cannot be left blank.
-2) If Reverse Mortgage equals 1, then Origination Charges must be NA.
-3) If Open-End Line of Credit equals 1, then Origination Charges must be NA.
-4) If Business or Commercial Purpose equals 1, then Origination Charges must be NA.
-5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Origination Charges must be NA.
 
 v675
 An invalid Discount Points was reported. Please review the information below and update your file accordingly.
