@@ -1807,10 +1807,16 @@ class rules_engine(object):
 		edit_name = "v683"
 		fail_df = self.lar_df[(self.lar_df.intro_rate.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.intro_rate!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v684(self):
+		"""An invalid Balloon Payment was reported.
+		1) Balloon Payment must equal 1 or 2, and cannot be left blank."""
+		field = "Balloon Payment"
+		edit_name = "v684"
+		fail_df = self.lar_df[~(self.lar_df.balloon.isin(("1", "2")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 """
-v684
-An invalid Balloon Payment was reported. Please review the information below and update your file accordingly.
-1) Balloon Payment must equal 1 or 2, and cannot be left blank.
 
 v685
 An invalid Interest Only Payments was reported. Please review the information below and update your file accordingly.
