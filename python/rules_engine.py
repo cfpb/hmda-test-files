@@ -1716,12 +1716,30 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.compare_nums(x, fields=fields), axis=1)==True)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-"""
-An invalid Debt-to-Income Ratio was reported. Please review the information below and update your file accordingly.
-1) Debt-to-Income Ratio must be either a number or NA, and cannot be left blank.
-2) If Action Taken equals 4, 5 or 6, then Debt-to- Income Ratio must be NA.
-3) If Multifamily Affordable Units is a number, then Debt-to-Income Ratio must be NA.
+	def v679_1(self):
+		"""An invalid Debt-to-Income Ratio was reported.
+		1) Debt-to-Income Ratio must be either a number or NA, and cannot be left blank."""
+		field = "DTI"
+		edit_name = "v679_1"
+		fail_df = self.lar_df[(self.lar_df.dti.map(lambda x: self.check_number(x))==False)&(self.lar_df.dti!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v679_2(self):
+		"""An invalid Debt-to-Income Ratio was reported.
+		2) If Action Taken equals 4, 5 or 6, then Debt-to- Income Ratio must be NA."""
+		field = "DTI"
+		edit_name = "v679_2"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5", "6")))&(self.lar_df.dti!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v679_3(self):
+		"""An invalid Debt-to-Income Ratio was reported.
+		3) If Multifamily Affordable Units is a number, then Debt-to-Income Ratio must be NA."""
+		field = "DTI"
+		edit_name = "v679_3"
+		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: self.check_number(x))==True)&(self.lar_df.dti!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+"""
 v680
 An invalid Debt-to-Income Ratio was reported. Please review the information below and update your file accordingly.
 1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person; and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower: 1 equals 8; and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or co-borrower, then Debt-to-Income Ratio must be NA.
