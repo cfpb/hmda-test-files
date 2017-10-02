@@ -1767,3 +1767,164 @@ class rules_engine(object):
 			(self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4")&
 			(self.lar_df.dti!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v681_1(self):
+		"""An invalid Combined Loan-to-Value Ratio was reported.
+		1) Combined Loan-to-Value Ratio must be either a number greater than 0 or NA, and cannot be left blank."""
+		field = "CLTV"
+		edit_name = "v681_1"
+		fail_df = self.lar_df[(self.lar_df.cltv.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.cltv!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v681_2(self):
+		"""An invalid Combined Loan-to-Value Ratio was reported.
+		2) If Action Taken equals 4, 5, or 6, then Combined Loan-to-Value ratio must be NA."""
+		field = "CLTV"
+		edit_name = "v681_2"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5", "6")))&(self.lar_df.cltv!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+	
+
+"""
+
+
+
+v682
+An invalid Loan Term was reported. Please review the information below and update your file accordingly.
+1) Loan Term must be either a whole number greater than zero or NA, and cannot be left blank.
+2) If Reverse Mortgage equals 1, then Loan Term must be NA.
+
+v683
+An invalid Introductory Rate Period was reported. Please review the information below and update your file accordingly.
+1) Introductory Rate Period must be either a whole number greater than zero or NA, and cannot be left blank.
+
+v684
+An invalid Balloon Payment was reported. Please review the information below and update your file accordingly.
+1) Balloon Payment must equal 1 or 2, and cannot be left blank.
+
+v685
+An invalid Interest Only Payments was reported. Please review the information below and update your file accordingly.
+1) Interest Only Payments must equal 1 or 2, and cannot be left blank.
+
+v686
+An invalid Negative Amortization was reported. Please review the information below and update your file accordingly.
+1) Negative Amortization must equal 1 or 2, and cannot be left blank.
+
+v687
+An invalid Other Non-amortizing Features was reported. Please review the information below and update your file accordingly.
+1) Other Non-amortizing Features must equal 1 or 2, and cannot be left blank.
+
+v688
+An invalid Property Value was reported. Please review the information below and update your file accordingly.
+1) Property Value must be either a number greater than 0 or NA, and cannot be left blank.
+2) If Action Taken equals 4 or 5, then Property Value must be NA.
+
+v689
+An invalid Manufactured Home Secured Property Type was reported. Please review the information below and update your file accordingly.
+1) Manufactured Home Secured Property Type must equal 1, 2 or 3, and cannot be left blank.
+2) If Multifamily Affordable Units is a number, then Manufactured Home Secured Property Type must equal 3.
+3) If Construction Method equals 1, then Manufactured Home Secured Property Type must equal 3.
+
+v690
+An invalid Manufactured Home Land Property Interest was reported. Please review the information below and update your file accordingly.
+1) Manufactured Home Land Property Interest must equal 1, 2, 3, 4, or 5, and cannot be left blank.
+2 If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal 5.
+3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal 5.
+
+v691
+An invalid Total Units was reported. Please review the information below and update your file accordingly.
+1) Total Units must be a whole number greater than 0, and cannot be left blank.
+
+v692
+An invalid Multifamily Affordable Units was reported. Please review the information below and update your file accordingly.
+1) Multifamily Affordable Units must be either a whole number or NA, and cannot be left blank.
+2) If Total Units is less than 5, then Multifamily Affordable Units must be NA.
+3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or equal to Total Units.
+
+v693
+An invalid Application Channel data field was reported. Please review the information below and update your file accordingly.
+1) Submission of Application must equal 1, 2 or 3, and cannot be left blank.
+2) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true.
+
+v694
+An invalid Application Channel data field was reported. Please review the information below and update your file accordingly.
+1) Initially Payable to Your Institution must equal 1, 2 or 3, and cannot be left blank.
+2) If Action Taken equals 6, then Initially Payable to Your Institution must equal 3.
+3) If Action Taken equals 1, then Initially Payable to Your Institution must equal 1 or 2.
+
+v695
+An invalid NMLSR Identifier was reported. Please review the information below and update your file accordingly.
+1) NMLSR Identifier cannot be left blank.
+
+v696
+An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
+1) Automated Underwriting System: 1 must equal 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; and Automated Underwriting System: 5 must equal 1, 2, 3, 4, 5, or be left blank.
+2) Automated Underwriting System Result: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or 17, and cannot be left blank. Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; and Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or be left blank.
+3) The number of reported Automated Underwriting Systems must equal the number of reported Automated Underwriting System Results.
+
+v697
+An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
+1) If Automated Underwriting System: 1, Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 1, then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, or 7.
+
+v698
+An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
+1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 2, then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5 must equal 8, 9, 10, 11, or 12.
+
+v699
+An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
+1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 5, then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, or 16.
+
+v700
+An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
+1) If Automated Underwriting System: 1 equals 6, then the corresponding Automated Underwriting System Result: 1 must equal 17; and the Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; Automated Underwriting System: 5; Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; and Automated Underwriting System Result: 5 must all be left blank.
+2) If Automated Underwriting System Result: 1
+equals 17, then the corresponding Automated
+Underwriting System: 1 must equal 6; and the
+Automated Underwriting System: 2; Automated
+Underwriting System: 3; Automated Underwriting
+System: 4; Automated Underwriting System: 5;
+Automated Underwriting System Result: 2;
+Automated Underwriting System Result: 3;
+Automated Underwriting System Result: 4; and
+Automated Underwriting System Result: 5 must all be
+left blank.
+
+v701
+An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
+1) If Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 was left blank, then the corresponding reported Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5 must be left blank.
+
+v702
+An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
+1) Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 was reported Code 5: Other. However, the Automated Underwriting System: Conditional Free Form Text Field for Code 5 was left blank; or
+2) The Automated Underwriting System: Conditional Free Form Text Field for Code 5 was reported, but Code 5 was not reported in Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5.
+
+v703
+An invalid Automated Underwriting System Result data field was reported. Please review the information below and update your file accordingly.
+1) Automated Underwriting System Result: 1; Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5 was reported Code 16: Other. However, the Automated Underwriting System Result: Conditional Free Form Text Field for Code 16 was left blank; or
+2) The Automated Underwriting System Result: Conditional Free Form Text Field for Code 16 was reported, but Code 16 was not reported in Automated Underwriting System Result: 1; Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5.
+
+v704
+An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
+1) If Action Taken equals 6, then Automated Underwriting System: 1 must equal 6.
+2) If Action Taken equals 6, then Automated Underwriting System Result: 1 must equal 17.
+
+v705
+An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
+1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person; and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower: 1 equals 8; and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or co- borrower, then Automated Underwriting System: 1 must equal 6; and Automated Underwriting System Result: 1 must equal 17.
+2) If the Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person; and Ethnicity of Co-Applicant or Co- Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co- applicant or co-borrower is also a non-natural person, then Automated Underwriting System: 1 must equal 6;
+and aus result 1 must equal 17
+
+v706
+An invalid Reverse Mortgage was reported. Please review the information below and update your file accordingly.
+1) Reverse Mortgage must equal 1 or 2, and cannot be left blank.
+
+v707
+An invalid Open-End Line of Credit was reported. Please review the information below and update your file accordingly.
+1) Open-End Line of Credit must equal 1 or 2, and cannot be left blank.
+
+v708
+An invalid Business or Commercial Purpose was reported. Please review the information below and update your file accordingly.
+1) Business or Commercial Purpose must equal 1 or 2, and cannot be left blank.
+
+
+"""
