@@ -1739,11 +1739,31 @@ class rules_engine(object):
 		edit_name = "v679_3"
 		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: self.check_number(x))==True)&(self.lar_df.dti!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-"""
-v680
-An invalid Debt-to-Income Ratio was reported. Please review the information below and update your file accordingly.
-1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person; and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower: 1 equals 8; and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or co-borrower, then Debt-to-Income Ratio must be NA.
-2) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person; and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is also a non-natural person, then Debt-to- Income Ratio must be NA.
 
+	def v680_1(self):
+		"""An invalid Debt-to-Income Ratio was reported.
+		1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7;
+		and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person;
+		and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower: 1 equals 8;
+		and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or co-borrower,
+		then Debt-to-Income Ratio must be NA."""
+		field = "DTI"
+		edit_name = "v680_1"
+		fail_df = self.lar_df[(self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4")&
+			(self.lar_df.co_app_eth_1=="5")&(self.lar_df.co_app_race_1=="8")&(self.lar_df.co_app_sex=="5")&
+			(self.lar_df.dti!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-"""
+	def v680_2(self):
+		"""An invalid Debt-to-Income Ratio was reported.
+		2) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7;
+		and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person;
+		and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7;
+		and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is also a non-natural person,
+		then Debt-to- Income Ratio must be NA."""
+		field = "DTI"
+		edit_name = "v680_2"
+		fail_df = self.lar_df[(self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4")&
+			(self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4")&
+			(self.lar_df.dti!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
