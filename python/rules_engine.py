@@ -1824,11 +1824,15 @@ class rules_engine(object):
 		fail_df = self.lar_df[(~self.lar_df.int_only_pmts.isin(("1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-"""
+	def v686(self):
+		"""An invalid Negative Amortization was reported.
+		1) Negative Amortization must equal 1 or 2, and cannot be left blank."""
+		field = "Negative Amortization"
+		edit_name = "v686"
+		fail_df = self.lar_df[~(self.lar_df.neg_amort.isin(("1", "2")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-v686
-An invalid Negative Amortization was reported. Please review the information below and update your file accordingly.
-1) Negative Amortization must equal 1 or 2, and cannot be left blank.
+"""
 
 v687
 An invalid Other Non-amortizing Features was reported. Please review the information below and update your file accordingly.
