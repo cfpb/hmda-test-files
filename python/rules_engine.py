@@ -87,9 +87,9 @@ class rules_engine(object):
 	def check_number(self, field, min_val=None):
 		"""Checks if a passed field contains only digits. Optionally a minimum value can be checked as well"""
 		try:
-			digit = field.isdigit() #check if data field is a digit
+			digit = field.replace(".","").isdigit() #check if data field is a digit
 			if min_val is not None: #min_val was passed
-				if digit == True and int(field) >= min_val:
+				if digit == True and float(field) >= min_val:
 					return True #digit and min_val are True
 				else:
 					return False #digit is True, min_val is False
@@ -1647,14 +1647,23 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&(self.lar_df.lender_credits!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v677_1(self):
+		"""An invalid Interest Rate was reported.
+		1) Interest Rate must be a number greater than 0 or NA, and cannot be left blank."""
+		field = "Interest Rate"
+		edit_name = "v677_1"
+		fail_df = self.lar_df[(self.lar_df.interest_rate.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.interest_rate!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v677_2(self):
+		"""An invalid Interest Rate was reported.
+		2) If Action Taken equals 3, 4, 5, or 7; then Interest Rate must be NA."""
+		field = "Interest Rate"
+		edit_name = "v677_2"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("3", "4", "5", "7")))&(self.lar_df.interest_rate!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 """
-
-v677
-An invalid Interest Rate was reported. Please review the information below and update your file accordingly.
-1) Interest Rate must be a number greater than 0 or NA, and cannot be left blank.
-2) If Action Taken equals 3, 4, 5, or 7; then Interest Rate must be NA.
-
 v678
 An invalid Prepayment Penalty Term was reported. Please review the information below and update your file accordingly.
 1) Prepayment Penalty Term must be a whole number greater than 0 or NA, and cannot be left blank.
