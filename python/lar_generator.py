@@ -18,15 +18,14 @@ class lar_gen(object):
 		self.tract_list = tracts #list of CBSA tracts, dtype string
 		self.state_codes = [] #list of valid state and territory codes (two digit letter)
 
-
 		#Base LAR File range limits
 		self.street_addy = "1234 Hocus Potato Way"
 		self.city = "Tatertown"
 		self.state = "UT"
 		self.zip_code = "84096"
 		self.max_age = 130
-		self.max_amount = 10000
-		self.max_income = 10000
+		self.max_amount = 20000
+		self.max_income = 20000
 		self.max_rs = 100
 		self.max_credit_score = 900
 		self.min_credit_score = 300
@@ -41,10 +40,10 @@ class lar_gen(object):
 		self.cltv = 200
 		self.loan_term = 360
 		self.intro_rate = 36
+		self.max_units = 30
 		self.prop_val_max = 30000
 		self.prop_val_min = 10
-		self.max_units = 100
-		
+
 	#helper functions
 	def check_digit_gen(valid=True, ULI='10Bx939c5543TqA1144M999143X'):
 	    """Generates a check digit for a ULI in accordance with
@@ -271,7 +270,7 @@ class lar_gen(object):
 		valid_lar_row["property_value"] = str(self.random_enum(self.range_and_enum(field="property_value", rng_min=self.prop_val_min, rng_max=self.prop_val_max)))
 		valid_lar_row["manufactured_type"] = str(self.random_enum(self.get_schema_list(field="manufactured_type")))
 		valid_lar_row["manufactured_interest"] = str(self.random_enum(self.get_schema_list(field="manufactured_interest")))
-		valid_lar_row["total_units"] = str(self.random_enum(self.range_and_enum(field="property_value", rng_min=1, rng_max = self.max_units)))
+		valid_lar_row["total_units"] = str(self.random_enum(self.range_and_enum(field="total_units", rng_min=1, rng_max=self.max_units)))
 		valid_lar_row["affordable_units"] = self.random_enum(self.range_and_enum(field="affordable_units", rng_min=0, rng_max=int(valid_lar_row["total_units"])))
 		valid_lar_row["submission_type"] = str(self.random_enum(self.get_schema_list(field="submission_type")))
 		valid_lar_row["initially_payable"] = str(self.random_enum(self.get_schema_list(field="initially_payable")))
