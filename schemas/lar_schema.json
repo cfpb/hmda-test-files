@@ -459,7 +459,7 @@
     "data_type": "alphanumeric",
     "valid_vals": ["NA"]
 }, {
-    "field": "submission_type",
+    "field": "app_submission",
     "dtypes_": ["int"],
     "data_type": "numeric",
     "valid_vals": [1, 2, 3]
