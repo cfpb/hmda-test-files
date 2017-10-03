@@ -2131,12 +2131,30 @@ class rules_engine(object):
 			((self.lar_df.aus_4=="")&(self.lar_df.aus_result_4!=""))|
 			((self.lar_df.aus_5=="")&(self.lar_df.aus_result_5!=""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-"""
 
-v702
-An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
-1) Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 was reported Code 5: Other. However, the Automated Underwriting System: Conditional Free Form Text Field for Code 5 was left blank; or
-2) The Automated Underwriting System: Conditional Free Form Text Field for Code 5 was reported, but Code 5 was not reported in Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5.
+	def v702_1(self):
+		"""An invalid Automated Underwriting System data field was reported.
+		1) Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3;
+		Automated Underwriting System: 4; or Automated Underwriting System: 5 was reported Code 5: Other.
+		However, the Automated Underwriting System: Conditional Free Form Text Field for Code 5 was left blank;"""
+		field = "AUS"
+		edit_name = "v702_1"
+		fail_df = self.lar_df[((self.lar_df.aus_1=="5")|(self.lar_df.aus_2=="5")|(self.lar_df.aus_3=="5")|(self.lar_df.aus_4=="5")|(self.lar_df.aus_5=="5"))&
+			(self.lar_df.aus_code_5=="")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v702_2(self):
+		"""An invalid Automated Underwriting System data field was reported.
+		2) The Automated Underwriting System: Conditional Free Form Text Field for Code 5 was reported,
+		but Code 5 was not reported in Automated Underwriting System: 1; Automated Underwriting System: 2;
+		Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5."""
+		field = "AUS"
+		edit_name = "v702_2"
+		fail_df = self.lar_df[((self.lar_df.aus_1!="5")&(self.lar_df.aus_2!="5")&(self.lar_df.aus_3!="5")&(self.lar_df.aus_4!="5")&(self.lar_df.aus_5!="5"))&
+			(self.lar_df.aus_code_5!="")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+"""
 
 v703
 An invalid Automated Underwriting System Result data field was reported. Please review the information below and update your file accordingly.
