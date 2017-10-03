@@ -2220,13 +2220,15 @@ class rules_engine(object):
 			((self.lar_df.aus_1!="6")|(self.lar_df.aus_result_1!="17"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-
+	def v706(self):
+		"""An invalid Reverse Mortgage was reported.
+		1) Reverse Mortgage must equal 1 or 2, and cannot be left blank."""
+		field = "Reverse Mortgage"
+		edit_name = "v706"
+		fail_df = self.lar_df[~(self.lar_df.reverse_mortgage.isin(("1", "2")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 """
-
-v706
-An invalid Reverse Mortgage was reported. Please review the information below and update your file accordingly.
-1) Reverse Mortgage must equal 1 or 2, and cannot be left blank.
 
 v707
 An invalid Open-End Line of Credit was reported. Please review the information below and update your file accordingly.
