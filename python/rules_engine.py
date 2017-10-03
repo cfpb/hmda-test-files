@@ -1954,13 +1954,31 @@ class rules_engine(object):
 			((self.lar_df.app_submission=="3")&(self.lar_df.action_taken!="6"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-"""
+	def v694_1(self):
+		"""An invalid Application Channel data field was reported.
+		1) Initially Payable to Your Institution must equal 1, 2 or 3, and cannot be left blank."""
+		field = "initially_payable"
+		edit_name = "v694_1"
+		fail_df = self.lar_df[~(self.lar_df.initially_payable.isin(("1", "2", "3")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-v694
-An invalid Application Channel data field was reported. Please review the information below and update your file accordingly.
-1) Initially Payable to Your Institution must equal 1, 2 or 3, and cannot be left blank.
-2) If Action Taken equals 6, then Initially Payable to Your Institution must equal 3.
-3) If Action Taken equals 1, then Initially Payable to Your Institution must equal 1 or 2.
+	def v694_2(self):
+		"""An invalid Application Channel data field was reported.
+		2) If Action Taken equals 6, then Initially Payable to Your Institution must equal 3."""
+		field = "initially_payable"
+		edit_name = "v694_2"
+		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(self.lar_df.initially_payable!="3")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v694_3(self):
+		"""An invalid Application Channel data field was reported.
+		3) If Action Taken equals 1, then Initially Payable to Your Institution must equal 1 or 2."""
+		field = "initially_payable"
+		edit_name = "v694_3"
+		fail_df = self.lar_df[(self.lar_df.action_taken=="1")&(~self.lar_df.initially_payable.isin(("1", "2")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+"""
 
 v695
 An invalid NMLSR Identifier was reported. Please review the information below and update your file accordingly.
