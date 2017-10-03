@@ -1903,12 +1903,18 @@ class rules_engine(object):
 		edit_name = "v690_3"
 		fail_df = self.lar_df[(self.lar_df.const_method=="1")&(self.lar_df.manufactured_interest!="5")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v691(self):
+		"""An invalid Total Units was reported.
+		1) Total Units must be a whole number greater than 0, and cannot be left blank."""
+		field = "Total Units"
+		edit_name = "v691"
+		fail_df = self.lar_df[(self.lar_df.total_units.map(lambda x: self.check_number(x, min_val=1))==False)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 		
 """
 
 v691
-An invalid Total Units was reported. Please review the information below and update your file accordingly.
-1) Total Units must be a whole number greater than 0, and cannot be left blank.
 
 v692
 An invalid Multifamily Affordable Units was reported. Please review the information below and update your file accordingly.

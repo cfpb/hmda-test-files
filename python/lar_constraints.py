@@ -833,7 +833,7 @@ class lar_constraints(object):
 		if row["affordable_units"] != "NA":
 			row["manufactured_interest"] = "5"
 		if row["const_method"] == "1":
-			row["manufactured_type"] = "5"
+			row["manufactured_interest"] = "5"
 		return row
 
 	def v692_const(self, row): 
