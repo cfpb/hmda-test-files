@@ -2154,12 +2154,28 @@ class rules_engine(object):
 			(self.lar_df.aus_code_5!="")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-"""
+	def v703_1(self):
+		"""An invalid Automated Underwriting System Result data field was reported.
+		1) Automated Underwriting System Result: 1; Automated Underwriting System Result: 2; Automated Underwriting System Result: 3;
+		Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5 was reported Code 16: Other.
+		However, the Automated Underwriting System Result: Conditional Free Form Text Field for Code 16 was left blank;"""
+		field = "AUS Results"
+		edit_name = "v703_1"
+		fail_df = self.lar_df[((self.lar_df.aus_result_1=="16")|(self.lar_df.aus_result_2=="16")|(self.lar_df.aus_result_3=="16")|
+			(self.lar_df.aus_result_4=="16")|(self.lar_df.aus_result_5=="16"))&(self.lar_df.aus_code_16=="")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-v703
-An invalid Automated Underwriting System Result data field was reported. Please review the information below and update your file accordingly.
-1) Automated Underwriting System Result: 1; Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5 was reported Code 16: Other. However, the Automated Underwriting System Result: Conditional Free Form Text Field for Code 16 was left blank; or
-2) The Automated Underwriting System Result: Conditional Free Form Text Field for Code 16 was reported, but Code 16 was not reported in Automated Underwriting System Result: 1; Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5.
+	def v703_2(self):
+		"""An invalid Automated Underwriting System Result data field was reported.
+		2) The Automated Underwriting System Result: Conditional Free Form Text Field for Code 16 was reported,
+		but Code 16 was not reported in Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
+		Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5."""
+		field = "AUS Results"
+		edit_name = "v703_2"
+		fail_df = self.lar_df[(self.lar_df.aus_code_16!="")&((self.lar_df.aus_result_1!="16")&(self.lar_df.aus_result_2!="16")&
+			(self.lar_df.aus_result_3!="16")&(self.lar_df.aus_result_4!="16")&(self.lar_df.aus_result_5!="16"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+"""
 
 v704
 An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
