@@ -2074,11 +2074,25 @@ class rules_engine(object):
 			((self.lar_df.aus_4=="2")&(~self.lar_df.aus_result_4.isin(aus_results)))|
 			((self.lar_df.aus_5=="2")&(~self.lar_df.aus_result_5.isin(aus_results)))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-"""
 
-v699
-An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
-1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 5, then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, or 16.
+	def v699(self):
+		"""An invalid Automated Underwriting System data field was reported.
+		1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3;
+		Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 5,
+		then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
+		Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5
+		must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, or 16."""
+		field = "AUS and Results"
+		edit_name = "v699"
+		aus_results = ("1","2","3", "4", "5", "6", "7", "8", "9", "10", "11", "12","13", "14","15", "16")
+		fail_df = self.lar_df[((self.lar_df.aus_1=="3")&(~self.lar_df.aus_result_1.isin(aus_results)))|
+			((self.lar_df.aus_2=="3")&(~self.lar_df.aus_result_2.isin(aus_results)))|
+			((self.lar_df.aus_3=="3")&(~self.lar_df.aus_result_3.isin(aus_results)))|
+			((self.lar_df.aus_4=="3")&(~self.lar_df.aus_result_4.isin(aus_results)))|
+			((self.lar_df.aus_5=="3")&(~self.lar_df.aus_result_5.isin(aus_results)))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+"""
 
 v700
 An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
