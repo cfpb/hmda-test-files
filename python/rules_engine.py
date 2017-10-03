@@ -2175,12 +2175,23 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.aus_code_16!="")&((self.lar_df.aus_result_1!="16")&(self.lar_df.aus_result_2!="16")&
 			(self.lar_df.aus_result_3!="16")&(self.lar_df.aus_result_4!="16")&(self.lar_df.aus_result_5!="16"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-"""
 
-v704
-An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
-1) If Action Taken equals 6, then Automated Underwriting System: 1 must equal 6.
-2) If Action Taken equals 6, then Automated Underwriting System Result: 1 must equal 17.
+	def v704_1(self):
+		"""An invalid Automated Underwriting System data field was reported.
+		1) If Action Taken equals 6, then Automated Underwriting System: 1 must equal 6."""
+		field = "AUS"
+		edit_name = "v704_1"
+		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(self.lar_df.aus_1!="6")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v704_2(self):
+		"""An invalid Automated Underwriting System data field was reported.
+		2) If Action Taken equals 6, then Automated Underwriting System Result: 1 must equal 17."""
+		field = "AUS Result"
+		edit_name = "v704_2"
+		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(self.lar_df.aus_result_1!="17")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+"""
 
 v705
 An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
