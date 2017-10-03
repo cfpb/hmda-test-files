@@ -272,7 +272,7 @@ class lar_gen(object):
 		valid_lar_row["manufactured_interest"] = str(self.random_enum(self.get_schema_list(field="manufactured_interest")))
 		valid_lar_row["total_units"] = str(self.random_enum(self.range_and_enum(field="total_units", rng_min=1, rng_max=self.max_units)))
 		valid_lar_row["affordable_units"] = self.random_enum(self.range_and_enum(field="affordable_units", rng_min=0, rng_max=int(valid_lar_row["total_units"])))
-		valid_lar_row["submission_type"] = str(self.random_enum(self.get_schema_list(field="submission_type")))
+		valid_lar_row["app_submission"] = str(self.random_enum(self.get_schema_list(field="app_submission")))
 		valid_lar_row["initially_payable"] = str(self.random_enum(self.get_schema_list(field="initially_payable")))
 		valid_lar_row["mlo_id"] = self.char_string_gen(random.choice(range(25)))
 		valid_lar_row["aus_1"] = str(self.random_enum(self.get_schema_list(field="aus_1")))

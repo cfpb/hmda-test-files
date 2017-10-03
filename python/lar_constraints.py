@@ -849,8 +849,8 @@ class lar_constraints(object):
 	def v693_const(self, row):
 		"""1) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true."""
 		if row["action_taken"] == "6":
-			row["submission_type"] = "3"
-		if row["submission_type"] == "3":
+			row["app_submission"] = "3"
+		if row["app_submission"] == "3":
 			row["action_taken"] = "6"
 		return row
 
