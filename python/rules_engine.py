@@ -2191,13 +2191,38 @@ class rules_engine(object):
 		edit_name = "v704_2"
 		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(self.lar_df.aus_result_1!="17")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-"""
 
-v705
-An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
-1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person; and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower: 1 equals 8; and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or co- borrower, then Automated Underwriting System: 1 must equal 6; and Automated Underwriting System Result: 1 must equal 17.
-2) If the Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person; and Ethnicity of Co-Applicant or Co- Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7; and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co- applicant or co-borrower is also a non-natural person, then Automated Underwriting System: 1 must equal 6;
-and aus result 1 must equal 17
+	def v705_1(self):
+		"""An invalid Automated Underwriting System data field was reported.
+		1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7;
+		and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person; and
+		the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower: 1 equals 8;
+		and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or co- borrower,
+		then Automated Underwriting System: 1 must equal 6; and Automated Underwriting System Result: 1 must equal 17."""
+		field = "AUS and Results"
+		edit_name = "v705_1"
+		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&
+			((self.lar_df.co_app_eth_1=="5")&(self.lar_df.co_app_race_1=="8")&(self.lar_df.co_app_sex=="5"))&
+			((self.lar_df.aus_1!="6")|(self.lar_df.aus_result_1!="17"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v705_2(self):
+		"""An invalid Automated Underwriting System data field was reported.
+		2) If the Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7;
+		and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person;
+		and Ethnicity of Co-Applicant or Co- Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7;
+		and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co- applicant or co-borrower is also a non-natural person,
+		then Automated Underwriting System: 1 must equal 6; and aus result 1 must equal 17"""
+		field = "AUS and Results"
+		edit_name = "v705_2"
+		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&
+			((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&
+			((self.lar_df.aus_1!="6")|(self.lar_df.aus_result_1!="17"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+
+
+"""
 
 v706
 An invalid Reverse Mortgage was reported. Please review the information below and update your file accordingly.
