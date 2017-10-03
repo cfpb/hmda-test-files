@@ -1978,11 +1978,15 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.action_taken=="1")&(~self.lar_df.initially_payable.isin(("1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-"""
+	def v695(self):
+		"""An invalid NMLSR Identifier was reported.
+		1) NMLSR Identifier cannot be left blank."""
+		field = "NMLS ID"
+		edit_name = "v695"
+		fail_df = self.lar_df[(self.lar_df.mlo_id=="")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-v695
-An invalid NMLSR Identifier was reported. Please review the information below and update your file accordingly.
-1) NMLSR Identifier cannot be left blank.
+"""
 
 v696
 An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
