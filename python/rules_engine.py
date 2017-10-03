@@ -120,7 +120,6 @@ class rules_engine(object):
 		for field in fields_2:
 			if row[field] in vals_2:
 				count_2 +=1
-		print(count_1, count_2)
 		if count_1 == count_2:
 			return True
 		else:
@@ -2042,12 +2041,24 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.check_counts(x, fields_1=fields_1, fields_2=fields_2, vals_1=vals_1, vals_2=vals_2),axis=1)==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	
+	def v697(self):
+		"""An invalid Automated Underwriting System data field was reported.
+		1) If Automated Underwriting System: 1, Automated Underwriting System: 2;
+		Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 1,
+		then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
+		Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
+		Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, or 7."""
+		field = "AUS and Results"
+		edit_name = "v697"
+		aus_results = ("1", "2", "3", "4", "5", "6", "7")
+		fail_df = self.lar_df[((self.lar_df.aus_1=="1")&(~self.lar_df.aus_result_1.isin(aus_results)))|
+			((self.lar_df.aus_2=="1")&(~self.lar_df.aus_result_2.isin(aus_results)))|
+			((self.lar_df.aus_3=="1")&(~self.lar_df.aus_result_3.isin(aus_results)))|
+			((self.lar_df.aus_4=="1")&(~self.lar_df.aus_result_4.isin(aus_results)))|
+			((self.lar_df.aus_5=="1")&(~self.lar_df.aus_result_5.isin(aus_results)))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 """
 
-v697
-An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
-1) If Automated Underwriting System: 1, Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 1, then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, or 7.
 
 v698
 An invalid Automated Underwriting System data field was reported. Please review the information below and update your file accordingly.
