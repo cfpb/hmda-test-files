@@ -1911,16 +1911,33 @@ class rules_engine(object):
 		edit_name = "v691"
 		fail_df = self.lar_df[(self.lar_df.total_units.map(lambda x: self.check_number(x, min_val=1))==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-		
+
+	def v692_1(self):
+		"""An invalid Multifamily Affordable Units was reported.
+		1) Multifamily Affordable Units must be either a whole number or NA, and cannot be left blank."""
+		field = "Affordable Units"
+		edit_name = "v692_1"
+		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: self.check_number(x))==False)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v692_2(self):
+		"""An invalid Multifamily Affordable Units was reported.
+		2) If Total Units is less than 5, then Multifamily Affordable Units must be NA."""
+		field = "Affordable Units"
+		edit_name = "v692_2"
+		fail_df = self.lar_df[(self.lar_df.total_units.map(lambda x: int(x)<5))&(self.lar_df.affordable_units!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v692_3(self):
+		"""An invalid Multifamily Affordable Units was reported.
+		3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or equal to Total Units."""
+		field = "Affordable Units"
+		edit_name = "v692_3"
+		fields = ["affordable_units", "total_units"]
+		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.compare_nums(x, fields=fields), axis=1)==True)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 """
-
-v691
-
-v692
-An invalid Multifamily Affordable Units was reported. Please review the information below and update your file accordingly.
-1) Multifamily Affordable Units must be either a whole number or NA, and cannot be left blank.
-2) If Total Units is less than 5, then Multifamily Affordable Units must be NA.
-3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or equal to Total Units.
 
 v693
 An invalid Application Channel data field was reported. Please review the information below and update your file accordingly.
