@@ -1917,7 +1917,7 @@ class rules_engine(object):
 		1) Multifamily Affordable Units must be either a whole number or NA, and cannot be left blank."""
 		field = "Affordable Units"
 		edit_name = "v692_1"
-		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: self.check_number(x))==False)]
+		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: self.check_number(x))==False)&(self.lar_df.affordable_units!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v692_2(self):
@@ -1937,12 +1937,24 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.compare_nums(x, fields=fields), axis=1)==True)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-"""
+	def v693_1(self):
+		"""An invalid Application Channel data field was reported.
+		1) Submission of Application must equal 1, 2 or 3, and cannot be left blank."""
+		field = "Applicaiton Submission"
+		edit_name = "v693_1"
+		fail_df = self.lar_df[~(self.lar_df.app_submission.isin(("1", "2", "3")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-v693
-An invalid Application Channel data field was reported. Please review the information below and update your file accordingly.
-1) Submission of Application must equal 1, 2 or 3, and cannot be left blank.
-2) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true.
+	def v693_2(self):
+		"""An invalid Application Channel data field was reported.
+		2) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true."""
+		field = "Applicaiton Channel"
+		edit_name = "v693_2"
+		fail_df = self.lar_df[((self.lar_df.action_taken=="6")&(self.lar_df.app_submission!="3"))|
+			((self.lar_df.app_submission=="3")&(self.lar_df.action_taken!="6"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+"""
 
 v694
 An invalid Application Channel data field was reported. Please review the information below and update your file accordingly.
