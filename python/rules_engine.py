@@ -22,35 +22,36 @@ class rules_engine(object):
 		self.state_codes = {'WA':'53', 'WI':'55', 'WV':'54', 'FL':'12', 'WY':'56', 'NH':'33', 'NJ':'34', 'NM':'33', 'NC':'37', 'ND':'38', 'NE':'31', 'NY':'36', 'RI':'44', 'NV':'32', 'CO':'08', 'CA':'06', 'GA':'13', 'CT':'09', 'OK':'40', 'OH':'39',
 							'KS':'20', 'SC':'45', 'KY':'21', 'OR':'41', 'SD':'46', 'DE':'10', 'HI':'15', 'PR':'43', 'TX':'48', 'LA':'22', 'TN':'47', 'PA':'42', 'VA':'51', 'VI':'78', 'AK':'02', 'AL':'01', 'AR':'05', 'VT':'50', 'IL':'17', 'IN':'18',
 							'IA':'19', 'AZ':'04', 'ID':'16', 'ME':'23', 'MD':'24', 'MA':'25', 'UT':'49', 'MO':'29', 'MN':'27', 'MI':'26', 'MT':'30', 'MS':'29', 'DC':'11'}
-		self.results = {}
+		self.results = []
 	#Helper Functions
-	def update_results(self, edit_name="", edit_field_results={},  row_type="", row_ids=None, fail_count=None):
+	def update_results(self, edit_name="", edit_field_results="",  row_type="", fields="", row_ids=None, fail_count=None):
 		"""Updates the results dictionary by adding a sub-dictionary for the edit, any associated fields, and the result of the edit test.
 		edit name is the name of the edit, edit field results is a dict containing field names as keys and pass/fail as values, row type is LAR or TS, 
 		row ids contains a list of all rows failing the test"""
-		self.results[edit_name] = OrderedDict({})
-		self.results[edit_name]["row_type"] = row_type
+		add_result = {}
+		add_result["edit_name"] = edit_name
+		add_result["row_type"] = row_type
+		add_result["status"] = edit_field_results
+		add_result["fields"] = fields
 		if row_ids is not None:
-			self.results[edit_name]["fail_ids"] = row_ids
-		for field in edit_field_results.keys():
-			self.results[edit_name][field] = edit_field_results[field]
-			if fail_count is not None:
-				self.results[edit_name]["fail_count"] = fail_count
+			add_result["row_ids"] = row_ids
+		if fail_count is not None:
+			add_result["fail_count"] = fail_count
+		self.results.append(add_result)
 
 	def results_wrapper(self, fail_df=None, field_name=None, edit_name=None, row_type="LAR"):
 		"""Helper function to create results dictionary/JSON object"""
-		result={}
 		if len(fail_df) > 0:
 			count = len(fail_df)
-			result[field_name] = "failed"
+			result = "failed"
 			if row_type == "LAR":
 				failed_rows = list(fail_df.uli)
-				self.update_results(edit_name=edit_name, edit_field_results=result, row_type=row_type, row_ids=failed_rows, fail_count=count)
+				self.update_results(edit_name=edit_name, edit_field_results=result, row_type=row_type, fields=field_name, row_ids=failed_rows, fail_count=count)
 			else:
-				self.update_results(edit_name=edit_name, edit_field_results=result, row_type=row_type)
+				self.update_results(edit_name=edit_name, edit_field_results=result, row_type=row_type, fields=field_name)
 		else:
-			result[field_name] = "passed"
-			self.update_results(edit_name=edit_name, edit_field_results=result, row_type=row_type)
+			result = "passed"
+			self.update_results(edit_name=edit_name, edit_field_results=result, row_type=row_type, fields=field_name)
 
 	def split_ts_row(self, path="../edits_files/", data_file="passes_all.txt"):
 		"""This function makes a separate data frame for the TS and LAR portions of a file and returns each as a dataframe."""
