@@ -59,9 +59,8 @@ class lar_constraints(object):
 			row["preapproval"] = "1"
 		elif row["action_taken"] in ("3", "4", "5", "6"):
 			row["preapproval"] = "2"
-
-		if row["preapproval"] == "1" and row["action_taken"] not in ("1", "2", "7", "8"):
-			row["action_taken"] = random.choice(("1", "2", "7", "8"))
+		elif row["action_taken"] in ("1", "2", "7", "8") and row["preapproval"] != "1":
+			row["preapproval"] = "1"	
 		return row
 
 	def v614_const(self, row):
