@@ -11,14 +11,16 @@ from lar_generator import lar_gen #used for check digit
 
 class rules_engine(object):
 	"""docstring for ClassName"""
-	def __init__(self, lar_schema=None, ts_schema=None, path="../edits_files/", data_file="passes_all.txt", year="2018", tracts=None, counties=None):
+	def __init__(self, lar_schema=None, ts_schema=None, data_file="../edits_files/passes_all.txt", year="2018", tracts=None, counties=None, data_row=None):
 		#lar and TS field names (load from schema names?)
 		self.year = year
 		self.tracts = tracts #instantiate valid Census tracts
 		self.counties = counties #instantiate valid Census counties
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
-		self.ts_df, self.lar_df= self.split_ts_row(path=path, data_file=data_file)
+		self.ts_df, self.lar_df= self.split_ts_row(data_file=data_file)
+		if data_row:
+			self.lar_df = data_row
 		self.state_codes = {'WA':'53', 'WI':'55', 'WV':'54', 'FL':'12', 'WY':'56', 'NH':'33', 'NJ':'34', 'NM':'33', 'NC':'37', 'ND':'38', 'NE':'31', 'NY':'36', 'RI':'44', 'NV':'32', 'CO':'08', 'CA':'06', 'GA':'13', 'CT':'09', 'OK':'40', 'OH':'39',
 							'KS':'20', 'SC':'45', 'KY':'21', 'OR':'41', 'SD':'46', 'DE':'10', 'HI':'15', 'PR':'43', 'TX':'48', 'LA':'22', 'TN':'47', 'PA':'42', 'VA':'51', 'VI':'78', 'AK':'02', 'AL':'01', 'AR':'05', 'VT':'50', 'IL':'17', 'IN':'18',
 							'IA':'19', 'AZ':'04', 'ID':'16', 'ME':'23', 'MD':'24', 'MA':'25', 'UT':'49', 'MO':'29', 'MN':'27', 'MI':'26', 'MT':'30', 'MS':'29', 'DC':'11'}
@@ -57,9 +59,9 @@ class rules_engine(object):
 		"""Resets results list to blank"""
 		self.results = []
 
-	def split_ts_row(self, path="../edits_files/", data_file="passes_all.txt"):
+	def split_ts_row(self, data_file="../edits_files/passes_all.txt"):
 		"""This function makes a separate data frame for the TS and LAR portions of a file and returns each as a dataframe."""
-		with open(path+data_file, 'r') as infile:
+		with open(data_file, 'r') as infile:
 			ts_row = infile.readline().strip("\n")
 			ts_data = []
 			ts_data.append(ts_row.split("|"))
