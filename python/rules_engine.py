@@ -53,6 +53,10 @@ class rules_engine(object):
 			result = "passed"
 			self.update_results(edit_name=edit_name, edit_field_results=result, row_type=row_type, fields=field_name)
 
+	def reset_results(self):
+		"""Resets results list to blank"""
+		self.results = []
+
 	def split_ts_row(self, path="../edits_files/", data_file="passes_all.txt"):
 		"""This function makes a separate data frame for the TS and LAR portions of a file and returns each as a dataframe."""
 		with open(path+data_file, 'r') as infile:

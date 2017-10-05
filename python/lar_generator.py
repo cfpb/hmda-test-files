@@ -153,7 +153,7 @@ class lar_gen(object):
 				lst.append(i)
 		elif dtype=="float":
 			for i in range(rng_min, rng_max):
-				lst.append(i*.97)
+				lst.append(i*1.01)
 		if empty:
 			lst.append("")
 		return lst
