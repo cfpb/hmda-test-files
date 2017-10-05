@@ -55,12 +55,10 @@ class lar_constraints(object):
 		"""2) If Action Taken equals 7 or 8, then Preapproval must equal 1.
 		   3) If Action Taken equals 3, 4, 5 or 6, then Preapproval must equal 2.
 		   4) If Preapproval equals 1, then Action Taken must equal 1, 2, 7 or 8."""
-		if row["action_taken"] in ("7", "8"):
+		if row["action_taken"] in ("1","2", "7", "8"):
 			row["preapproval"] = "1"
 		elif row["action_taken"] in ("3", "4", "5", "6"):
 			row["preapproval"] = "2"
-		elif row["action_taken"] in ("1", "2", "7", "8") and row["preapproval"] != "1":
-			row["preapproval"] = "1"	
 		return row
 
 	def v614_const(self, row):
@@ -242,7 +240,7 @@ class lar_constraints(object):
 			then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 3 or 4."""
 		if row["co_app_eth_1"] == "4":
 			row["co_app_eth_basis"] = "3"
-		if row["co_app_eth_basis"] == "3":
+		if row["co_app_eth_basis"] == "3" and row["co_app_eth_1"] not in ("3", "4"):
 			row["co_app_eth_1"] = random.choice(("3", "4"))
 		return row
 
