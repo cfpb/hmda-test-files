@@ -51,14 +51,22 @@ class lar_constraints(object):
 			row["loan_purpose"] = "1"
 		return row
 
-	def v613_const(self, row):
-		"""2) If Action Taken equals 7 or 8, then Preapproval must equal 1.
-		   3) If Action Taken equals 3, 4, 5 or 6, then Preapproval must equal 2.
-		   4) If Preapproval equals 1, then Action Taken must equal 1, 2, 7 or 8."""
+	def v613_2_const(self, row):
+		"""2) If Action Taken equals 7 or 8, then Preapproval must equal 1."""
 		if row["action_taken"] in ("1","2", "7", "8"):
 			row["preapproval"] = "1"
+		return row
+
+	def v613_3_const(self, row):
+		"""3) If Action Taken equals 3, 4, 5 or 6, then Preapproval must equal 2."""
 		elif row["action_taken"] in ("3", "4", "5", "6"):
 			row["preapproval"] = "2"
+		return row
+
+	def v613_4_const(self, row):
+		""" 4) If Preapproval equals 1, then Action Taken must equal 1, 2, 7 or 8."""
+		if row["preapproval"] == "1" and row["action_taken"] not in ("1", "2", "7", "8"):
+			row["action_taken"] = random.choice(("1", "7", "8"))
 		return row
 
 	def v614_const(self, row):
