@@ -11,22 +11,32 @@ from lar_generator import lar_gen #used for check digit
 
 class rules_engine(object):
 	"""docstring for ClassName"""
-	def __init__(self, lar_schema=None, ts_schema=None, path="../edits_files/", data_file="passes_all.txt", year="2018", tracts=None, counties=None):
+	def __init__(self, lar_schema=None, ts_schema=None, year="2018", tracts=None, counties=None):
 		#lar and TS field names (load from schema names?)
 		self.year = year
 		self.tracts = tracts #instantiate valid Census tracts
 		self.counties = counties #instantiate valid Census counties
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
-		self.ts_df, self.lar_df= self.split_ts_row(path=path, data_file=data_file)
+		#self.ts_df, self.lar_df= self.split_ts_row(data_file=data_file)
+		#if data_row:
+			#self.lar_df = data_row
 		self.state_codes = {'WA':'53', 'WI':'55', 'WV':'54', 'FL':'12', 'WY':'56', 'NH':'33', 'NJ':'34', 'NM':'33', 'NC':'37', 'ND':'38', 'NE':'31', 'NY':'36', 'RI':'44', 'NV':'32', 'CO':'08', 'CA':'06', 'GA':'13', 'CT':'09', 'OK':'40', 'OH':'39',
 							'KS':'20', 'SC':'45', 'KY':'21', 'OR':'41', 'SD':'46', 'DE':'10', 'HI':'15', 'PR':'43', 'TX':'48', 'LA':'22', 'TN':'47', 'PA':'42', 'VA':'51', 'VI':'78', 'AK':'02', 'AL':'01', 'AR':'05', 'VT':'50', 'IL':'17', 'IN':'18',
 							'IA':'19', 'AZ':'04', 'ID':'16', 'ME':'23', 'MD':'24', 'MA':'25', 'UT':'49', 'MO':'29', 'MN':'27', 'MI':'26', 'MT':'30', 'MS':'29', 'DC':'11'}
 		self.results = []
 	#Helper Functions
+	def load_lar_data(self, lar_df=None):
+		"""Takes a dataframe of LAR data and stores it as a class variable."""
+		self.lar_df = lar_df
+
+	def load_ts_data(self, ts_df=None):
+		"""Takes a dataframe of TS data and stores it as a class variable. TS data must be a single row."""
+		self.ts_df = ts_df
+
 	def update_results(self, edit_name="", edit_field_results="",  row_type="", fields="", row_ids=None, fail_count=None):
 		"""Updates the results dictionary by adding a sub-dictionary for the edit, any associated fields, and the result of the edit test.
-		edit name is the name of the edit, edit field results is a dict containing field names as keys and pass/fail as values, row type is LAR or TS, 
+		edit name is the name of the edit, edit field results is a dict containing field names as keys and pass/fail as values, row type is LAR or TS,
 		row ids contains a list of all rows failing the test"""
 		add_result = {}
 		add_result["edit_name"] = edit_name
@@ -40,7 +50,7 @@ class rules_engine(object):
 		self.results.append(add_result)
 
 	def results_wrapper(self, fail_df=None, field_name=None, edit_name=None, row_type="LAR"):
-		"""Helper function to create results dictionary/JSON object"""
+		"""Helper function to create results dictionary/JSON object."""
 		if len(fail_df) > 0:
 			count = len(fail_df)
 			result = "failed"
@@ -54,12 +64,12 @@ class rules_engine(object):
 			self.update_results(edit_name=edit_name, edit_field_results=result, row_type=row_type, fields=field_name)
 
 	def reset_results(self):
-		"""Resets results list to blank"""
+		"""Resets results list to empty."""
 		self.results = []
 
-	def split_ts_row(self, path="../edits_files/", data_file="passes_all.txt"):
+	def split_ts_row(self, data_file="../edits_files/passes_all.txt"):
 		"""This function makes a separate data frame for the TS and LAR portions of a file and returns each as a dataframe."""
-		with open(path+data_file, 'r') as infile:
+		with open(data_file, 'r') as infile:
 			ts_row = infile.readline().strip("\n")
 			ts_data = []
 			ts_data.append(ts_row.split("|"))
