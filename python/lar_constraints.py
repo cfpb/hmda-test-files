@@ -55,6 +55,7 @@ class lar_constraints(object):
 		"""2) If Action Taken equals 7 or 8, then Preapproval must equal 1."""
 		if row["action_taken"] in ("7", "8") and row["preapproval"] != "1":
 			row["preapproval"] = "1"
+			row["affordable_units"] = "NA"
 		return row
 
 	def v613_3_const(self, row):
@@ -69,18 +70,26 @@ class lar_constraints(object):
 			row["action_taken"] = random.choice(("1", "2", "7", "8"))
 		return row
 
-	def v614_const(self, row):
-		"""1) If Loan Purpose equals 2, 4, 31, 32, or 5, then Preapproval must equal 2.
-		   2) If Multifamily Affordable Units is a number, then Preapproval must equal 2.
-		   3) If Reverse Mortgage equals 1, then Preapproval must equal 2.
-		   4) If Open-End Line of Credit equals 1, then Preapproval must equal 2."""
-
+	def v614_1_const(self, row):
+		"""1) If Loan Purpose equals 2, 4, 31, 32, or 5, then Preapproval must equal 2."""
 		if row["loan_purpose"] in ("2", "4", "31", "32", "5"):
 			row["preapproval"] = "2"
-		if row["affordable_units"] != "NA":
+		return row
+
+	def v614_2_const(self, row):
+		"""2) If Multifamily Affordable Units is a number, then Preapproval must equal 2."""
+		if row["affordable_units"].isdigit() == True:
 			row["preapproval"] = "2"
+		return row
+
+	def v614_3_const(self, row):
+		"""3) If Reverse Mortgage equals 1, then Preapproval must equal 2."""
 		if row["reverse_mortgage"] == "1":
 			row["preapproval"] = "2"
+		return row
+
+	def v614_4_const(self, row):
+		""" 4) If Open-End Line of Credit equals 1, then Preapproval must equal 2."""
 		if row["open_end_credit"] == "1":
 			row["preapproval"] = "2"
 		return row
@@ -182,38 +191,42 @@ class lar_constraints(object):
 			row["app_eth_1"] = random.choice(("3", "4"))
 		return row
 
-	def v631_const(self, row):
+	def v631_1_const(self, row):
 		"""1) Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, 4, or 5, and cannot be
 			left blank, unless an ethnicity is provided in Ethnicity of Co-Applicant or Co-Borrower: Free Form Text
-			Field for Other Hispanic or Latino..
-		2) Ethnicity of Co-Applicant or Co-Borrower: 2; Ethnicity of Co-Applicant or Co-Borrower: 3; Ethnicity
-			of Co-Applicant or Co-Borrower: 4; Ethnicity of CoApplicant or Co-Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank.
-		3) Each Ethnicity of Co-Applicant or Co-Borrower code can only be reported once.
-		4) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 3, 4, or 5; then Ethnicity of Co-Applicant or
-			Co-Borrower: 2; Ethnicity of Co-Applicant or CoBorrower:  3; Ethnicity of Co-Applicant or CoBorrower:
-			4; Ethnicity of Co-Applicant or CoBorrower: 5 must be left blank."""
-		co_app_eth_enums=["1","11", "12", "13", "14", "2", "3", "4", "5"]
+			Field for Other Hispanic or Latino."""
+		if row["co_app_eth_1"] == "" and row["co_app_eth_free"] == "":
+			row["co_app_eth_1"] = random.choice(["1","11", "12", "13", "14", "2", "3", "4", "5"])
+		return row
+
+	def v631_2_const(self, row):
+		"""2) Ethnicity of Co-Applicant or Co-Borrower: 2; Ethnicity of Co-Applicant or Co-Borrower: 3; Ethnicity
+			of Co-Applicant or Co-Borrower: 4; Ethnicity of CoApplicant or Co-Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank."""
+		#this should be done by the lar_generator code
+		return row
+
+	def v631_3_const(self, row):
+		"""3) Each Ethnicity of Co-Applicant or Co-Borrower code can only be reported once."""
+		co_app_eth_enums=["1","11", "12", "13", "14", "2", ""]
 		co_app_eth_fields = [row["co_app_eth_1"], row["co_app_eth_2"], row["co_app_eth_3"], row["co_app_eth_4"], row["co_app_eth_5"]]
-		def v631_a(self, row):
-			#check if app eth 1 is blank and code 14 free text is blank, if so, change app_eth_1
-			if row["co_app_eth_1"] == "" and row["co_app_eth_free"] == "":
-				row["co_app_eth_1"] = random.choice(["1","11", "12", "13", "14", "2", "3", "4", "5"])
-			return row
+		#check for duplicates
+		co_app_eth_vals = set(co_app_eth_fields)
+		print(co_app_eth_vals)
+		print(co_app_eth_fields)
+		if len(co_app_eth_vals) < 5:
+				row["co_app_eth_1"], row["co_app_eth_2"], row["co_app_eth_3"], row["co_app_eth_4"], row["co_app_eth_5"] = \
+				self.no_enum_dupes(fields=co_app_eth_fields,  enum_list=co_app_eth_enums)
+		return row
 
-		def v631_b(self, row):
-			#set app eth 2-5 to blank if app eth 1 in 3,4,5
-			if row["co_app_eth_1"] in ("3", "4", "5"):
-				row["co_app_eth_2"] = ""
-				row["co_app_eth_3"] = ""
-				row["co_app_eth_4"] = ""
-				row["co_app_eth_5"] = ""
-			return row
-
-		v631_a(self,row=row)
-		#check for duplicates in app eth 1-5, change duplicates to blank
-		row["co_app_eth_1"], row["co_app_eth_2"], row["co_app_eth_3"], row["co_app_eth_4"], row["co_app_eth_5"] = \
-		self.no_enum_dupes(fields=co_app_eth_fields,  enum_list=co_app_eth_enums[:-3])
-		v631_b(self,row=row)
+	def v631_4_const(self, row):
+		"""4) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 3, 4, or 5; then Ethnicity of Co-Applicant or
+		Co-Borrower: 2; Ethnicity of Co-Applicant or CoBorrower:  3; Ethnicity of Co-Applicant or CoBorrower:
+		4; Ethnicity of Co-Applicant or CoBorrower: 5 must be left blank."""
+		if row["co_app_eth_1"] in ("3", "4", "5"):
+			row["co_app_eth_2"] = ""
+			row["co_app_eth_3"] = ""
+			row["co_app_eth_4"] = ""
+			row["co_app_eth_5"] = ""
 		return row
 
 	def v632_const(self, row):
