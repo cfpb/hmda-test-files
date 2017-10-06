@@ -875,7 +875,7 @@ class rules_engine(object):
 		Race of Co-Applicant or Co- Borrower: Free Form Text Field for Other Pacific Islander."""
 		field = "Co-Applicant Race 1"
 		edit_name = "v638_1"
-		fail_df = self.lar_df[(~self.lar_df.co_app_race_1.isin(("1", "2", "21", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7", "8")))|
+		fail_df = self.lar_df[(~self.lar_df.co_app_race_1.isin(("1", "2", "21", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7", "8")))&
 			((self.lar_df.co_app_race_1=="")&((self.lar_df.co_app_race_native_text=="")&(self.lar_df.co_app_race_islander_text=="")&
 			(self.lar_df.co_app_race_asian_text=="")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
@@ -1448,8 +1448,8 @@ class rules_engine(object):
 		1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9, and the reverse must be true."""
 		field = "Denial Reason 1"
 		edit_name = "v670_1"
-		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("3","7")))&(~self.lar_df.denial_1.isin(("1", "2", "3'", "4", "5", "6", "7", "8", "9"))))|
-				((self.lar_df.denial_1.isin(("1", "2", "3'", "4", "5", "6", "7", "8", "9")))&(~self.lar_df.action_taken.isin(("3", "7"))))]
+		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("3","7")))&(~self.lar_df.denial_1.isin(("1", "2", "3", "4", "5", "6", "7", "8", "9"))))|
+				((self.lar_df.denial_1.isin(("1", "2", "3", "4", "5", "6", "7", "8", "9")))&(~self.lar_df.action_taken.isin(("3", "7"))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v670_2(self):
@@ -1495,7 +1495,7 @@ class rules_engine(object):
 		2) If Total Points and Fees is a number greater than or equal to 0, then Total Loan Costs must be NA."""
 		field = "Loan Costs"
 		edit_name = "v672_2"
-		fail_df = self.lar_df[(self.lar_df.points_fees.map(lambda x: self.check_number(x, min_val=0))==True)&(self.lar_df.points_fees!="NA")]
+		fail_df = self.lar_df[(self.lar_df.points_fees.map(lambda x: self.check_number(x, min_val=0))==True)&(self.lar_df.loan_costs!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v672_3(self):

@@ -19,10 +19,10 @@ class lar_constraints(object):
 	def no_enum_dupes(self, fields=[], enum_list=None):
 		"""Checks all fields to ensure that no enumeration is repeated. If one repeats it is reassigned from the remaining valid enumerations.
 		enum_list_1 contains values for the first field, enum_list contains values for subsequen fields."""
-		if fields[0] in enum_list:
+		if fields[0] in enum_list and fields[0] != "":
 			enum_list.remove(fields[0])
 		for i in range(1, len(fields)):
-			if fields[i] in enum_list:
+			if fields[i] in enum_list and fields[i] != "":
 				enum_list.remove(fields[i])
 			elif fields[i] not in enum_list:
 				fields[i] = random.choice(enum_list)
@@ -48,13 +48,13 @@ class lar_constraints(object):
 	def v612_const(self, row):
 		"""if preapproval = 1 then loan purpose = 1"""
 		if row["preapproval"] == "1" and row["loan_purpose"] != "1":
-			row["loan_purpose"] = "1"
+			row["preapproval"] = "2"
 		return row
 
 	def v613_2_const(self, row):
 		"""2) If Action Taken equals 7 or 8, then Preapproval must equal 1."""
 		if row["action_taken"] in ("7", "8") and row["preapproval"] != "1":
-			row["preapproval"] = "1"
+			row["action_taken"] = random.choice(("3", "4", "5", "6"))
 			row["affordable_units"] = "NA"
 		return row
 
@@ -67,7 +67,7 @@ class lar_constraints(object):
 	def v613_4_const(self, row):
 		""" 4) If Preapproval equals 1, then Action Taken must equal 1, 2, 7 or 8."""
 		if row["preapproval"] == "1" and row["action_taken"] not in ("1", "2", "7", "8"):
-			row["action_taken"] = random.choice(("1", "2", "7", "8"))
+			row["preapproval"] = "2"
 		return row
 
 	def v614_1_const(self, row):
@@ -133,25 +133,40 @@ class lar_constraints(object):
 			row["county"] = row["tract"][:5]
 		return row
 
-	def v628_const(self, row):
+	def v628_1_const(self, row):
 		"""1) Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, or 4, and cannot be left blank,
 			   unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other
-			   Hispanic or Latino. 
-		   2) Ethnicity of Applicant or Borrower: 2; Ethnicity of Applicant or Borrower: 3; Ethnicity of Applicant or
-		   	Borrower: 4; Ethnicity of Applicant or Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank.
-		   3) Each Ethnicity of Applicant or Borrower code can only be reported once
-		   4) If Ethnicity of Applicant or Borrower: 1 equals 3 or 4; then Ethnicity of Applicant or Borrower: 2; Ethnicity
-		   	of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4; Ethnicity of Applicant or Borrower: 5
-		  	must be left blank."""
-		if row["app_eth_1"] =="" and row["app_eth_free"] =="":
-			row["app_eth_1"] = "1"
-
+			   Hispanic or Latino."""
 		eth_enums = ["1", "11", "12", "13", "14", "2", "3", "4"]
+		if row["app_eth_1"] =="" and row["app_eth_free"] =="":
+			row["app_eth_1"] = random.choice(eth_enums)
+		return row
+
+	def v628_2_const(self, row):
+		"""2) Ethnicity of Applicant or Borrower: 2; Ethnicity of Applicant or Borrower: 3; Ethnicity of Applicant or
+	   	Borrower: 4; Ethnicity of Applicant or Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank."""
+		#this should be handled by lar_generation
+		return row
+
+	def v628_3_const(self, row):
+		"""3) Each Ethnicity of Applicant or Borrower code can only be reported once."""
+		eth_enums = ["1", "11", "12", "13", "14", "2"]
 		eth_fields = [row["app_eth_1"], row["app_eth_2"], row["app_eth_3"], row["app_eth_4"], row["app_eth_5"]]
-		#elminate duplicates from ethnicity choices
-		row["app_eth_1"], row["app_eth_2"], row["app_eth_3"], row["app_eth_4"], row["app_eth_5"] = \
-		self.no_enum_dupes(fields=eth_fields,  enum_list=eth_enums[:-2])
-		#set subsequent fields to blank if app_ethnicity is 3 or 4
+		eth_field_vals = set(eth_fields) #get distinct values
+		eth_field_vals.discard("") #discard blanks
+		blanks = 0
+		for field in eth_fields:
+			if field == "":
+				blanks +=1
+		if len(eth_field_vals) + blanks < 5: #check if total distinct values plust number of blanks is correct
+			row["app_eth_1"], row["app_eth_2"], row["app_eth_3"], row["app_eth_4"], row["app_eth_5"] = \
+			self.no_enum_dupes(fields=eth_fields,  enum_list=eth_enums)
+		return row
+
+	def v628_4_const(self, row):
+		"""4) If Ethnicity of Applicant or Borrower: 1 equals 3 or 4; then Ethnicity of Applicant or Borrower: 2; Ethnicity
+	   	of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4; Ethnicity of Applicant or Borrower: 5
+	  	must be left blank."""
 		if row["app_eth_1"] in ("3", "4"):
 			row["app_eth_2"] = ""
 			row["app_eth_3"] = ""
@@ -159,25 +174,27 @@ class lar_constraints(object):
 			row["app_eth_5"] = ""
 		return row
 
-	def v629_const(self, row):
+	def v629_2_const(self, row):
 		"""2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1,
-         			then Ethnicity of Applicant or Borrower: 1 must equal 1 or 2; 
-         			and Ethnicity of Applicant or Borrower: 2 must equal 1, 2 or be left blank; 
-         			and Ethnicity of Applicant or Borrower: 3; 
+         			then Ethnicity of Applicant or Borrower: 1 must equal 1 or 2;
+         			and Ethnicity of Applicant or Borrower: 2 must equal 1, 2 or be left blank;
+         			and Ethnicity of Applicant or Borrower: 3;
          			Ethnicity of Applicant or Borrower: 4;
-         			and Ethnicity of Applicant or Borrower: 5 must all be left blank.
-  		3) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,
-         			then Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3. """
+         			and Ethnicity of Applicant or Borrower: 5 must all be left blank."""
 		if row["app_eth_basis"] =="1":
-			row["app_eth_1"] = random.choice(("1", "2"))
 			row["app_eth_2"] = ""
 			row["app_eth_3"] = ""
 			row["app_eth_4"] = ""
 			row["app_eth_5"] = ""
+			if row["app_eth_1"] not in ("1", "2"):
+				row["app_eth_1"] = random.choice(("1", "2"))
+		return row
 
-		if row["app_eth_basis"] == "2":
-			if row["app_eth_1"] not in ("1", "11", "12", "13", "14", "2", "3"):
-				row["app_eth_1"] = random.choice(("1", "11", "12", "13", "14", "2", "3"))
+	def v629_3_const(self, row):
+		"""3) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,
+		then Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3. """
+		if row["app_eth_basis"] == "2" and row["app_eth_1"] not in ("1", "11", "12", "13", "14", "2", "3"):
+			row["app_eth_1"] = random.choice(("1", "11", "12", "13", "14", "2", "3"))
 		return row
 
 	def v630_const(self, row):
@@ -209,11 +226,13 @@ class lar_constraints(object):
 		"""3) Each Ethnicity of Co-Applicant or Co-Borrower code can only be reported once."""
 		co_app_eth_enums=["1","11", "12", "13", "14", "2", ""]
 		co_app_eth_fields = [row["co_app_eth_1"], row["co_app_eth_2"], row["co_app_eth_3"], row["co_app_eth_4"], row["co_app_eth_5"]]
-		#check for duplicates
-		co_app_eth_vals = set(co_app_eth_fields)
-		print(co_app_eth_vals)
-		print(co_app_eth_fields)
-		if len(co_app_eth_vals) < 5:
+		co_app_eth_vals = set(co_app_eth_fields) #get distinct values
+		co_app_eth_vals.discard("") #remove blanks
+		blanks = 0
+		for field in co_app_eth_fields:
+			if field == "":
+				blanks +=1
+		if len(co_app_eth_vals) + blanks < 5:#check if blanks count and distinct values is correct
 				row["co_app_eth_1"], row["co_app_eth_2"], row["co_app_eth_3"], row["co_app_eth_4"], row["co_app_eth_5"] = \
 				self.no_enum_dupes(fields=co_app_eth_fields,  enum_list=co_app_eth_enums)
 		return row
@@ -293,8 +312,15 @@ class lar_constraints(object):
 		"""3) Each Race of Applicant or Borrower code can only be reported once."""
 		race_fields = [row["app_race_1"], row["app_race_2"], row["app_race_3"], row["app_race_4"], row["app_race_5"]]
 		race_enums = ["1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5"]
-		row["app_race_1"], row["app_race_2"], row["app_race_3"], row["app_race_4"], row["app_race_5"] = \
-		self.no_enum_dupes(fields=race_fields,  enum_list=race_enums)
+		race_field_vals = set(race_fields) #get distinct values
+		race_field_vals.discard("") #remove blanks
+		blanks = 0
+		for field in race_fields:
+			if field == "":
+				blanks +=1
+		if len(race_field_vals) + blanks < 5: #check if blanks and distinct values is correct 
+			row["app_race_1"], row["app_race_2"], row["app_race_3"], row["app_race_4"], row["app_race_5"] = \
+			self.no_enum_dupes(fields=race_fields,  enum_list=race_enums)
 		return row
 
 	def v635_4_const(self, row):
@@ -359,9 +385,15 @@ class lar_constraints(object):
 		#each code must only be used once
 		race_enums = ["1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7","8"]
 		race_fields = [row["co_app_race_1"], row["co_app_race_2"], row["co_app_race_3"], row["co_app_race_4"], row["co_app_race_5"]]
-
-		row["co_app_race_1"], row["co_app_race_2"], row["co_app_race_3"], row["co_app_race_4"], row["co_app_race_5"] = \
-		self.no_enum_dupes(fields=race_fields,  enum_list=race_enums[:-3])
+		race_field_vals = set(race_fields) #get distinct values
+		race_field_vals.discard("")  #remove blanks
+		blanks = 0
+		for field in race_fields:
+			if field == "":
+				blanks +=1
+		if len(race_field_vals) + blanks < 5: #check if distinct value plus blanks is correct
+			row["co_app_race_1"], row["co_app_race_2"], row["co_app_race_3"], row["co_app_race_4"], row["co_app_race_5"] = \
+			self.no_enum_dupes(fields=race_fields,  enum_list=race_enums[:-3])
 
 		if row["co_app_race_1"] in ("6", "7", "8"):
 			row["co_app_race_2"] = ""
@@ -647,8 +679,16 @@ class lar_constraints(object):
 
 		if row["denial_1"] not in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"):
 			row["denial_1"] = random.choice(("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"))
-		row["denial_1"], row["denial_2"], row["denial_3"], row["denial_4"] = \
-		self.no_enum_dupes(fields=denial_fields, enum_list=denial_enums)
+		denial_vals = set(denial_fields) #get distinct values
+		denial_vals.discard("") #remove blanks
+		blanks = 0
+		for field in denial_fields:
+			if field == "":
+				blanks +=1
+		if len(denial_vals) + blanks < 5: #check if blanks and distinct values are correct
+			row["denial_1"], row["denial_2"], row["denial_3"], row["denial_4"] = \
+			self.no_enum_dupes(fields=denial_fields, enum_list=denial_enums)
+
 		if row["denial_1"] == "10":
 			row["denial_2"] = ""
 			row["denial_3"] = ""
@@ -689,7 +729,7 @@ class lar_constraints(object):
 		6) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Total Loan Costs must be NA."""
 		if row["loan_costs"] !="NA":
 			if float(row["loan_costs"]) <0:
-				row["loan_costs"] = "0"
+				row["loan_costs"] = "10"
 		if row["points_fees"] != "NA":
 			if float(row["points_fees"] )>=0:
 				row["loan_costs"] = "NA"
@@ -889,6 +929,10 @@ class lar_constraints(object):
 			row["initially_payable"] = "3"
 		if row["action_taken"] == "1" and row["initially_payable"] not in ("1", "2"):
 			row["initially_payable"] = random.choice(("1", "2"))
+		return row
+	def v695_const(self, row):
+		"""Adds an MLO ID if necessary"""
+		row["mlo_id"] = "NA"
 		return row
 
 	def v696_const(self, row):
