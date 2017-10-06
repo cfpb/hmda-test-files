@@ -59,7 +59,7 @@ class lar_constraints(object):
 
 	def v613_3_const(self, row):
 		"""3) If Action Taken equals 3, 4, 5 or 6, then Preapproval must equal 2."""
-		elif row["action_taken"] in ("3", "4", "5", "6") and row["preapproval"] != "2":
+		if row["action_taken"] in ("3", "4", "5", "6") and row["preapproval"] != "2":
 			row["preapproval"] = "2"
 		return row
 
@@ -261,7 +261,7 @@ class lar_constraints(object):
 			row["co_app_eth_1"] = "5"
 		return row
 
-	def v635_const(self, row):
+	def v635_1_const(self, row):
 		"""1) Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, or 7,
 			and cannot be left blank, unless a race is provided in Race of Applicant or Borrower: Free Form Text
 			Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of Applicant or Borrower:
