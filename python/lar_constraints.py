@@ -47,26 +47,26 @@ class lar_constraints(object):
 
 	def v612_const(self, row):
 		"""if preapproval = 1 then loan purpose = 1"""
-		if row["preapproval"] == "1":
+		if row["preapproval"] == "1" and row["loan_purpose"] != "1":
 			row["loan_purpose"] = "1"
 		return row
 
 	def v613_2_const(self, row):
 		"""2) If Action Taken equals 7 or 8, then Preapproval must equal 1."""
-		if row["action_taken"] in ("1","2", "7", "8"):
+		if row["action_taken"] in ("7", "8") and row["preapproval"] != "1":
 			row["preapproval"] = "1"
 		return row
 
 	def v613_3_const(self, row):
 		"""3) If Action Taken equals 3, 4, 5 or 6, then Preapproval must equal 2."""
-		elif row["action_taken"] in ("3", "4", "5", "6"):
+		elif row["action_taken"] in ("3", "4", "5", "6") and row["preapproval"] != "2":
 			row["preapproval"] = "2"
 		return row
 
 	def v613_4_const(self, row):
 		""" 4) If Preapproval equals 1, then Action Taken must equal 1, 2, 7 or 8."""
 		if row["preapproval"] == "1" and row["action_taken"] not in ("1", "2", "7", "8"):
-			row["action_taken"] = random.choice(("1", "7", "8"))
+			row["action_taken"] = random.choice(("1", "2", "7", "8"))
 		return row
 
 	def v614_const(self, row):
@@ -262,24 +262,31 @@ class lar_constraints(object):
 		return row
 
 	def v635_const(self, row):
-		"""1) Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, or 7, 
-			and cannot be left blank, unless a race is provided in Race of Applicant or Borrower: Free Form Text 
-			Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of Applicant or Borrower: 
-			Free Form Text Field for Other Asian, or Race of Applicant or Borrower: Free Form Text Field for Other Pacific Islander.
-		2) Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4; 
-			Race of Applicant or Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank.
-		3) Each Race of Applicant or Borrower code can only be reported once.
-		4) If Race of Applicant or Borrower: 1 equals 6 or 7; then Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; 
-			Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must all be left blank."""
+		"""1) Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, or 7,
+			and cannot be left blank, unless a race is provided in Race of Applicant or Borrower: Free Form Text
+			Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of Applicant or Borrower:
+			Free Form Text Field for Other Asian, or Race of Applicant or Borrower: Free Form Text Field for Other Pacific Islander."""
 		if row["app_race_1"] ==  "" and row["app_race_native_text"]== "" and row["app_race_asian_text"]== "" and row["app_race_islander_text"] == "":
 			row["app_race_1"] = random.choice(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7"))
-		#each code must only be used once
-		race_enums = ["1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7"]
+		return row
+
+	def v635_2_const(self, row):
+		"""2) Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3; Race of Applicant or Borrower: 4;
+		Race of Applicant or Borrower: 5 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, or be left blank."""
+		#this should be handled by the lar schema
+		return row
+
+	def v635_3_const(self, row):
+		"""3) Each Race of Applicant or Borrower code can only be reported once."""
 		race_fields = [row["app_race_1"], row["app_race_2"], row["app_race_3"], row["app_race_4"], row["app_race_5"]]
-
+		race_enums = ["1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5"]
 		row["app_race_1"], row["app_race_2"], row["app_race_3"], row["app_race_4"], row["app_race_5"] = \
-		self.no_enum_dupes(fields=race_fields,  enum_list=race_enums[:-2])
+		self.no_enum_dupes(fields=race_fields,  enum_list=race_enums)
+		return row
 
+	def v635_4_const(self, row):
+		"""4) If Race of Applicant or Borrower: 1 equals 6 or 7; then Race of Applicant or Borrower: 2; Race of Applicant or Borrower: 3;
+			Race of Applicant or Borrower: 4; Race of Applicant or Borrower: 5 must all be left blank."""
 		if row["app_race_1"] in ("6", "7"):
 			row["app_race_2"] = ""
 			row["app_race_3"] = ""
