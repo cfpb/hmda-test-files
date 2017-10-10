@@ -4,6 +4,7 @@ import pandas as pd
 import random
 import string
 import time
+import yaml
 
 from collections import OrderedDict
 import utils
@@ -17,32 +18,33 @@ class lar_gen(object):
 		self.county_list = counties #list of CBSA counties, dtype string
 		self.tract_list = tracts #list of CBSA tracts, dtype string
 		self.state_codes = [] #list of valid state and territory codes (two digit letter)
-
+		with open('config.yaml') as f:
+		    # use safe_load instead load
+		    data_map = yaml.safe_load(f)
 		#Base LAR File range limits
-		self.street_addy = "1234 Hocus Potato Way"
-		self.city = "Tatertown"
-		self.state = "UT"
+		self.street_addy = data_map['street_addy']["value"]
+		self.city = data_map["city"]["value"]
 		self.zip_codes = json.load(open("../dependancies/zip_codes.json"))
-		self.max_age = 130
-		self.max_amount = 20000
-		self.max_income = 20000
-		self.max_rs = 100
-		self.max_credit_score = 900
-		self.min_credit_score = 300
-		self.loan_costs = 10000
-		self.points_and_fees = 5000
-		self.orig_charges = 5000
-		self.discount_points = 5000
-		self.lender_credits = 5000
-		self.interest_rate = 25
-		self.penalty_max = 36
-		self.dti = 100
-		self.cltv = 200
-		self.loan_term = 360
-		self.intro_rate = 36
-		self.max_units = 30
-		self.prop_val_max = 30000
-		self.prop_val_min = 10
+		self.max_age = data_map["max_age"]["value"]
+		self.max_amount = data_map["max_amount"]["value"]
+		self.max_income = data_map["max_income"]["value"]
+		self.max_rs = data_map["max_rs"]["value"]
+		self.max_credit_score = data_map["max_credit_score"]["value"]
+		self.min_credit_score = data_map["min_credit_score"]["value"]
+		self.loan_costs = data_map["loan_costs"]["value"]
+		self.points_and_fees = data_map["points_and_fees"]["value"]
+		self.orig_charges = data_map["orig_charges"]["value"]
+		self.discount_points = data_map["discount_points"]["value"]
+		self.lender_credits = data_map["lender_credits"]["value"]
+		self.interest_rate = data_map["interest_rate"]["value"]
+		self.penalty_max = data_map["penalty_max"]["value"]
+		self.dti = data_map["dti"]["value"]
+		self.cltv = data_map["cltv"]["value"]
+		self.loan_term = data_map["loan_term"]["value"]
+		self.intro_rate = data_map["intro_rate"]["value"]
+		self.max_units = data_map["max_units"]["value"]
+		self.prop_val_max = data_map["prop_val_max"]["value"]
+		self.prop_val_min = data_map["prop_val_min"]["value"]
 
 	#helper functions
 	def check_digit_gen(valid=True, ULI='10Bx939c5543TqA1144M999143X'):
