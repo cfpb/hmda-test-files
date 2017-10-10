@@ -6,7 +6,7 @@ import string
 import time
 
 from collections import OrderedDict
-
+import utils
 
 class lar_gen(object):
 	""""""
@@ -22,7 +22,7 @@ class lar_gen(object):
 		self.street_addy = "1234 Hocus Potato Way"
 		self.city = "Tatertown"
 		self.state = "UT"
-		self.zip_code = "84096"
+		self.zip_codes = json.load(open("../dependancies/zip_codes.json"))
 		self.max_age = 130
 		self.max_amount = 20000
 		self.max_income = 20000
@@ -194,8 +194,8 @@ class lar_gen(object):
 		valid_lar_row["action_date"] = str(self.date_gen())
 		valid_lar_row["street_address"] = self.street_addy
 		valid_lar_row["city"] = self.city
-		valid_lar_row["state"] = self.state
-		valid_lar_row["zip_code"] = self.zip_code
+		valid_lar_row["state"] = random.choice(list(utils.state_codes.keys()))
+		valid_lar_row["zip_code"] = random.choice(self.zip_codes)
 		valid_lar_row["county"] = self.random_enum(self.county_list)
 		valid_lar_row["tract"] = self.tract_from_county(valid_lar_row["county"])
 		valid_lar_row["app_eth_1"] = str(self.random_enum(self.get_schema_list(field="app_eth_1", empty=True)))
