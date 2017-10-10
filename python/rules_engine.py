@@ -2,9 +2,11 @@
 #This class should be able to return a list of row fail counts for each S/V edit for each file passed to the class.
 #The return should be JSON formatted data, written to a file?
 #input to the class will be a pandas dataframe
+
 from collections import OrderedDict
-from io import StringIO
 import pandas as pd
+from io import StringIO
+ 
 import time
 
 from lar_generator import lar_gen #used for check digit
@@ -33,6 +35,20 @@ class rules_engine(object):
 	def load_ts_data(self, ts_df=None):
 		"""Takes a dataframe of TS data and stores it as a class variable. TS data must be a single row."""
 		self.ts_df = ts_df
+
+	def read_data_file(self, path, data_file):
+		"""Reads a complete file (includes LAR and TS rows) into a pandas dataframe and stores it as a class object."""
+		with open(path+data_file, 'r') as infile:
+			#split TS row from file
+			ts_row = infile.readline().strip("\n")
+			ts_data = []
+			ts_data.append(ts_row.split("|"))
+			#split LAR rows from file
+			lar_rows = infile.readlines()
+			lar_data = [line.strip("\n").split("|") for line in lar_rows]
+			#create dataframes of TS and LAR data
+			self.ts_df = pd.DataFrame(data=ts_data, dtype=object, columns=self.ts_field_names)
+			self.lar_df  = pd.DataFrame(data=lar_data, dtype=object, columns=self.lar_field_names)
 
 	def update_results(self, edit_name="", edit_field_results="",  row_type="", fields="", row_ids=None, fail_count=None):
 		"""Updates the results dictionary by adding a sub-dictionary for the edit, any associated fields, and the result of the edit test.
