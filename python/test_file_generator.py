@@ -32,7 +32,7 @@ class test_data(object):
 		self.ts_df = ts_df
 		self.lar_df = lar_df
 
-	def write_file(self, edit_name, path, ts_input, lar_input):
+	def write_file(self, edit_name=None, path=None, ts_input=None, lar_input=None):
 		"""Takes a TS row as a dictionary and LAR data as a dataframe. Writes LAR data to file and
 		re-reads it to combine with TS data to make a full file."""
 		#make directories for files if they do not exist
@@ -52,7 +52,7 @@ class test_data(object):
 		with open(parts_dir + "ts_data.txt", "r") as ts_data:
 			ts  = ts_data.readline()
 		with open(path + edit_name, 'w') as final_file:
-			final_file.write(tste)
+			final_file.write(ts)
 			for line in lar:
 				final_file.write("{line}".format(line=line))
 
@@ -60,11 +60,15 @@ class test_data(object):
 	#When possible each file will only fail the condition listed in the file name. There will be cases when test files fail additional edits, these cases will be documented
 	#to the extent possible.
 	def s300_1_file(self):
-		"""The first row of the file must begin with a "1"."""
-		#change to local data
-		s300_1_lar = self.lar_df.copy()
-		s300_1_ts = self.ts_df.copy()
+		"""Sets the first character of the first row of the file to 3."""
+		s300_1_ts = self.ts_df.copy() #change to local data from class data object
 		#modify local data
 		s300_1_ts.record_id = "3"
 		#write local data to file
-		self.write_file(edit_name="s300_1.txt", path="../edits_files/syntax/", ts_input=s300_1_ts, lar_input=s300_1_lar)
+		self.write_file(edit_name="s300_1.txt", path="../edits_files/syntax/", ts_input=s300_1_ts, lar_input=self.lar_df)
+
+	def s300_2_file(self):
+		""""Sets the first character of each LAR row to 3."""
+		s300_lar = self.lar_df.copy() #set to local data from class data object
+		s300_lar.record_id = "3"
+		self.write_file(edit_name="s300_2.txt", path="../edits_files/syntax/", ts_input=self.ts_df, lar_input=s300_lar)
