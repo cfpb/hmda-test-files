@@ -1,0 +1,87 @@
+    street_addy:
+      desc: Property street address
+      type: String
+      value: "1234 Hocus Potato Way"
+    city:
+      desc: Property city
+      type: String
+      value: Tatertown
+    max_age:
+      type: Integer
+      value: 110
+    max_amount:
+      desc: "Maximum loan amount in thousands"
+      type: Integer
+      value: 20000
+    max_income:
+      desc: "Maximum applicant income"
+      type: Integer
+      value: 20000
+    max_rs:
+      desc: "Maximum rate spread"
+      type: Integer
+      value: 100
+    max_credit_score:
+      desc: "Maximum credit score"
+      type: Integer
+      value: 900
+    min_credit_score:
+      desc: "Minimum credit score"
+      type: Integer
+      value: 300
+    loan_costs:
+      desc: "Maximum loan costs"
+      type: Integer
+      value: 10000
+    points_and_fees:
+      desc: "Maximum points and fees"
+      type: Integer
+      value: 5000
+    orig_charges:
+      desc: "Maximum origination charges"
+      type: Integer
+      value: 5000
+    discount_points:
+      desc: "Maximum discount points cost"
+      type: Integer
+      value: 5000
+    lender_credits:
+      desc: "Maximum lender credits"
+      type: Integer
+      value: 5000
+    interest_rate:
+      desc: "Maximum interest rate"
+      type: Integer
+      value: 25
+    penalty_max:
+      desc: "Maximum prepayment penalty term"
+      type: Integer
+      value: 36
+    dti:
+      desc: "Debt to income ratio"
+      type: Integer
+      value: 100
+    cltv:
+      desc: "Combinted loan to value ratio"
+      type: Integer
+      value: 200
+    loan_term:
+      desc: "Maximum loan term"
+      type: Integer
+      value: 360
+    intro_rate:
+      desc: "Maximum introductory rate period"
+      type: Intger
+      value: 36
+    max_units:
+      desc: "Maximum total units"
+      type: Integer
+      value: 30
+    prop_val_max:
+      desc: "Maximum property value in thousands"
+      type: Integer
+      value: 30000
+    prop_val_min:
+      desc: "Minimum property value in thousands"
+      type: Integer
+      value: 10
