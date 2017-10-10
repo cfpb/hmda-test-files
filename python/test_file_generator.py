@@ -52,7 +52,7 @@ class test_data(object):
 		with open(parts_dir + "ts_data.txt", "r") as ts_data:
 			ts  = ts_data.readline()
 		with open(path + edit_name, 'w') as final_file:
-			final_file.write(ts)
+			final_file.write(tste)
 			for line in lar:
 				final_file.write("{line}".format(line=line))
 
