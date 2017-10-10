@@ -18,6 +18,14 @@ class test_data(object):
 		"""Receives dataframes for TS and LAR and writes them as object attributes"""
 		self.ts_df = ts_data
 		self.lar_df = lar_data
+
+	def load_lar_data(self, lar_df=None):
+		"""Takes a dataframe of LAR data and stores it as a class variable."""
+		self.lar_df = lar_df
+
+	def load_ts_data(self, ts_df=None):
+		"""Takes a dataframe of TS data and stores it as a class variable. TS data must be a single row."""
+		self.ts_df = ts_df
 	#edits will be broken out into sub parts as in the rules_engine.py class. This will allow test files to be generated such that they fail conditions inside each edit.
 	#When possible each file will only fail the condition listed in the file name. There will be cases when test files fail additional edits, these cases will be documented
 	#to the extent possible.
