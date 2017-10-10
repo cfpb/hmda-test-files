@@ -1,0 +1,15 @@
+
+name: Test Data Configuration
+
+extract:
+  formats:
+    - id: fmt-nic-bank-attrs
+      name: NIC Attributes 
+      type: xml
+
+    - id: fmt-nic-bank-rels
+      name: NIC Relationships
+      type: xml
+
+    - id: fmt-nic-bank-trans
+      name: NIC Transformations
