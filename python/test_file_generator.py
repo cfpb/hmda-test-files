@@ -193,3 +193,14 @@ class test_data(object):
 		ts.tax_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v608_file(self):
+		"""Changes ULI to be 22 characters or less. Preserves the LEI prefix of ULI to reduce the number of edits failed."""
+		name = "v608.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.uli = lar.uli.map(lambda x: x[:20] + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(2)))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+	
