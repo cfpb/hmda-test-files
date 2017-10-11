@@ -178,7 +178,7 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="LAR")
 
 	def s302(self):
-		""" The reported Calendar Year does not match the filing year indicated at the start of the filing."""
+		"""The reported Calendar Year does not match the filing year indicated at the start of the filing."""
 		field = "calendar_year"
 		edit_name = "s302"
 		fail_df = self.ts_df[self.ts_df.calendar_year != self.year]
@@ -195,8 +195,7 @@ class rules_engine(object):
 
 	def v601_1(self):
 		"""The following data fields are required, and cannot be left blank. A blank value(s) was provided.
-		1) Financial Institution Name;
-		"""
+		1) Financial Institution Name;"""
 		field = "inst_name"
 		edit_name = "v601_1"
 		fail_df = self.ts_df[self.ts_df.inst_name == ""]
