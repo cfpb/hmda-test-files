@@ -203,4 +203,15 @@ class test_data(object):
 		lar.uli = lar.uli.map(lambda x: x[:20] + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(2)))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v609_file(self):
+		"""Change check digit on each row. Ensure that the new check digit fails."""
+		name = "v609.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.uli = lar.uli.map(lambda x: x[:-2] + "xy")
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+	
 	
