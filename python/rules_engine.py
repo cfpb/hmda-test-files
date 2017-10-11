@@ -249,7 +249,7 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	def v604(self):
-		"""V604 An invalid Contact Person's Office State was provided. Please review the information below and update your file accordingly.
+		"""An invalid Contact Person's Office State was provided. Please review the information below and update your file accordingly.
 			1) Contact Person's Office State must be a two letter state code, and cannot be left blank."""
 		field = "office_state"
 		edit_name = "v604"
@@ -258,7 +258,7 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	def v605(self):
-		"""V605 An invalid Contact Person's ZIP Code was provided. Please review the information below and update your file accordingly.
+		"""An invalid Contact Person's ZIP Code was provided. Please review the information below and update your file accordingly.
 			1) The required format for the Contact Person's ZIP Code is 12345-1010 or 12345, and it cannot be left blank."""
 		edit_name = "v605"
 		field = "office_zip"
