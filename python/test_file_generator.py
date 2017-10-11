@@ -153,4 +153,13 @@ class test_data(object):
 		ts.contact_tel = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-		
+
+	def v604_file(self):
+		"""Converts contact person's office state to two digit number."""
+		name = "v604.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		ts.office_state = str(random.randint(10,99))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
