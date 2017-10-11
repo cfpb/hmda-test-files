@@ -37,8 +37,8 @@ class rules_engine(object):
 
 	def load_data_frames(self, ts_data, lar_data):
 		"""Receives dataframes for TS and LAR and writes them as object attributes"""
-		self.ts_data = ts_data
-		self.lar_data = lar_data
+		self.ts_df = ts_data
+		self.lar_df = lar_data
 
 	def update_results(self, edit_name="", edit_field_results="",  row_type="", fields="", row_ids=None, fail_count=None):
 		"""Updates the results dictionary by adding a sub-dictionary for the edit, any associated fields, and the result of the edit test.
