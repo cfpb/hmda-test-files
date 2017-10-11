@@ -83,3 +83,13 @@ class test_data(object):
 		lar.lei = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def s304_file(self):
+		"""Changes the number of entries data so that it does not match the number of LAR rows in the file."""
+		name = "s304.txt"
+		path = self.syntax_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		ts.lar_entries = 0
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
