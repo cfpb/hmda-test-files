@@ -19,8 +19,8 @@ class lar_gen(object):
 		self.tract_list = tracts #list of CBSA tracts, dtype string
 		self.state_codes = [] #list of valid state and territory codes (two digit letter)
 		with open('config.yaml') as f:
-		    # use safe_load instead load
-		    data_map = yaml.safe_load(f)
+			# use safe_load instead load
+			data_map = yaml.safe_load(f)
 		#Base LAR File range limits
 		self.street_addy = data_map['street_addy']["value"]
 		self.city = data_map["city"]["value"]
@@ -48,47 +48,47 @@ class lar_gen(object):
 
 	#helper functions
 	def check_digit_gen(valid=True, ULI='10Bx939c5543TqA1144M999143X'):
-	    """Generates a check digit for a ULI in accordance with
-	    https://www.consumerfinance.gov/eregulations/diff/1003-C/2015-26607_20170101/2015-26607_20180101?from_version=2015-26607_20170101#1003-C-1"""
-	    if ULI is None:
-	        raise ValueError("a ULI must be supplied")
-	    #GENERATING A CHECK DIGIT
-	    #Step 1: Starting with the leftmost character in the string that consists of the combination of the
-	    #Legal Entity Identifier (LEI) pursuant to § 1003.4(a)(1)(i)(A) and the additional characters identifying the
-	    #covered loan or application pursuant to § 1003.4(a)(1)(i)(B), replace each alphabetic character with numbers
-	    #in accordance with Table I below to obtain all numeric values in the string.
-	    
-	    
-	    #1: convert letters to digits
-	    #2: append '00' to right of string
-	    #3:Apply the mathematical function mod=(n, 97) where n= the number obtained in step 2 above and 97 is the divisor.
-	    #3a: Alternatively, to calculate without using the modulus operator, divide the numbers in step 2 above by 97.
-	    #   Truncate the remainder to three digits and multiply it by .97. Round the result to the nearest whole number.
-	    #4: Subtract the result in step 3 from 98. If the result is one digit, add a leading 0 to make it two digits.
-	    #5: The two digits in the result from step 4 is the check digit. Append the resulting check digit to the
-	    #   rightmost position in the combined string of characters described in step 1 above to generate the ULI.
-	    
-	    #digit_vals contains the conversion of numbers to letters
-	    digit_vals = {
-	    'A':10, 'H':17,'O':24,'V':31,'B':11,'I':18,'P':25,'W':32,'C':12,'J':19,'Q':26,'X':33,'D':13,'K':20,'R':27,'Y':34,
-	    'E':14,'L':21,'S':28,'Z':35,'F':15,'M':22,'T':29,'G':16,'N':23,'U':30}
-	    
-	    uli_chars = list(ULI)
-	    mod_uli_chars = []
-	    for char in uli_chars:
-	        if char.upper() in digit_vals.keys():
-	            mod_uli_chars.append(str(digit_vals[char.upper()]))
-	        else:
-	            mod_uli_chars.append(char)
-	    mod_uli_chars.append('00') 
-	    digit_base = int("".join(mod_uli_chars))
-	    digit_modulo = digit_base % 97
-	    check_digit = 98 - digit_modulo
+		"""Generates a check digit for a ULI in accordance with
+		https://www.consumerfinance.gov/eregulations/diff/1003-C/2015-26607_20170101/2015-26607_20180101?from_version=2015-26607_20170101#1003-C-1"""
+		if ULI is None:
+			raise ValueError("a ULI must be supplied")
+		#GENERATING A CHECK DIGIT
+		#Step 1: Starting with the leftmost character in the string that consists of the combination of the
+		#Legal Entity Identifier (LEI) pursuant to § 1003.4(a)(1)(i)(A) and the additional characters identifying the
+		#covered loan or application pursuant to § 1003.4(a)(1)(i)(B), replace each alphabetic character with numbers
+		#in accordance with Table I below to obtain all numeric values in the string.
+		
+		
+		#1: convert letters to digits
+		#2: append '00' to right of string
+		#3:Apply the mathematical function mod=(n, 97) where n= the number obtained in step 2 above and 97 is the divisor.
+		#3a: Alternatively, to calculate without using the modulus operator, divide the numbers in step 2 above by 97.
+		#   Truncate the remainder to three digits and multiply it by .97. Round the result to the nearest whole number.
+		#4: Subtract the result in step 3 from 98. If the result is one digit, add a leading 0 to make it two digits.
+		#5: The two digits in the result from step 4 is the check digit. Append the resulting check digit to the
+		#   rightmost position in the combined string of characters described in step 1 above to generate the ULI.
+		
+		#digit_vals contains the conversion of numbers to letters
+		digit_vals = {
+		'A':10, 'H':17,'O':24,'V':31,'B':11,'I':18,'P':25,'W':32,'C':12,'J':19,'Q':26,'X':33,'D':13,'K':20,'R':27,'Y':34,
+		'E':14,'L':21,'S':28,'Z':35,'F':15,'M':22,'T':29,'G':16,'N':23,'U':30}
+		
+		uli_chars = list(ULI)
+		mod_uli_chars = []
+		for char in uli_chars:
+			if char.upper() in digit_vals.keys():
+				mod_uli_chars.append(str(digit_vals[char.upper()]))
+			else:
+				mod_uli_chars.append(char)
+		mod_uli_chars.append('00') 
+		digit_base = int("".join(mod_uli_chars))
+		digit_modulo = digit_base % 97
+		check_digit = 98 - digit_modulo
 
-	    if valid:
-	        return str(check_digit).zfill(2) #left pad check digit with 0 if length is less than 2
-	    else:
-	        return str(check_digit+6).zfill(2)[:2] #return a bad check digit (used in edit testing)
+		if valid:
+			return str(check_digit).zfill(2) #left pad check digit with 0 if length is less than 2
+		else:
+			return str(check_digit+6).zfill(2)[:2] #return a bad check digit (used in edit testing)
 
 
 	def char_string_gen(self,length):
@@ -172,9 +172,28 @@ class lar_gen(object):
 		"""generates int/string or float/string value lists. this is done to include NA and randomly generated values"""
 		pass
 
-	#this file will have valid values for all column/row entries
-	#some valid value lists contain only "NA", other entries are also valid
-	#all valid values are included in the selection lists. Some of these values are added using helper functions if they are not present in the JSON schema.
+	def make_ts_row(self, file_length, lei):
+		"""Creates a TS row as a dictionary and returns it."""
+		ts_row = OrderedDict()
+		ts_row["record_id"]="1"
+		ts_row["inst_name"]="Ficus Bank"
+		ts_row["calendar_year"]= "2018"
+		ts_row["calendar_quarter"]="4"
+		ts_row["contact_name"]="Mr. Smug Pockets"
+		ts_row["contact_tel"]="555-555-5555"
+		ts_row["contact_email"]="pockets@ficus.com"
+		ts_row["contact_street_address"]="1234 Ficus Lane"
+		ts_row["office_city"]="Ficusville"
+		ts_row["office_state"]="UT"
+		ts_row["office_zip"]="84096"
+		ts_row["federal_agency"]="9"
+		ts_row["lar_entries"]= str(file_length)
+		ts_row["tax_id"]="01-0123456"
+		ts_row["lei"]=str(lei)
+		return ts_row
+
+	#all valid values, including blanks and NAs, are included in the selection lists.
+	#Some of these values are added using helper functions if they are not present in the JSON schema.
 	def make_row(self, lei=None):
 		"""Make num_rows LAR rows and return them as a list of ordered dicts"""
 		valid_lar_row = OrderedDict() 

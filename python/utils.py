@@ -8,14 +8,14 @@ state_codes = {'WA':'53', 'WI':'55', 'WV':'54', 'FL':'12', 'WY':'56', 'NH':'33',
 					'KS':'20', 'SC':'45', 'KY':'21', 'OR':'41', 'SD':'46', 'DE':'10', 'HI':'15', 'PR':'43', 'TX':'48', 'LA':'22', 'TN':'47', 'PA':'42', 'VA':'51', 'VI':'78', 'AK':'02', 'AL':'01', 'AR':'05', 'VT':'50', 'IL':'17', 'IN':'18',
 					'IA':'19', 'AZ':'04', 'ID':'16', 'ME':'23', 'MD':'24', 'MA':'25', 'UT':'49', 'MO':'29', 'MN':'27', 'MI':'26', 'MT':'30', 'MS':'29', 'DC':'11'}
 
-def write_file(edit_name=None, path=None, ts_input=None, lar_input=None):
+def write_file(path=None, ts_input=None, lar_input=None, name="test_file.txt"):
 	"""Takes a TS row and LAR data as dataframes. Writes LAR data to file and
 	re-reads it to combine with TS data to make a full file."""
 	#make directories for files if they do not exist
 	if not os.path.exists(path):
 		os.makedirs(path)
 	#check existence of file parts directory
-	parts_dir = path+"file_parts/"
+	parts_dir ="../edits_files/file_parts/"
 	if not os.path.exists(parts_dir):
 		os.makedirs(parts_dir)
 	#write TS dataframe to file
@@ -27,7 +27,7 @@ def write_file(edit_name=None, path=None, ts_input=None, lar_input=None):
 		lar = lar_data.readlines()
 	with open(parts_dir + "ts_data.txt", "r") as ts_data:
 		ts  = ts_data.readline()
-	with open(path + edit_name, 'w') as final_file:
+	with open(path + name, 'w') as final_file:
 		final_file.write(ts)
 		for line in lar:
 			final_file.write("{line}".format(line=line))

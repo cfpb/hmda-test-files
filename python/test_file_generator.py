@@ -8,9 +8,9 @@ class test_data(object):
 
 	def __init__(self, ts_schema, lar_schema):
 		"""Set initial class variables"""
-		self.clean_file_path = ""
-		self.validity_dir = ""
-		self.syntax_dir = ""
+		self.clean_file_path = "../edits_files/" 
+		self.validity_dir = "../edits_files/validity/"
+		self.syntax_dir = "../edits_files/syntax/"
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 
@@ -32,13 +32,12 @@ class test_data(object):
 	def s300_1_file(self):
 		"""Sets the first character of the first row of the file to 3."""
 		s300_1_ts = self.ts_df.copy() #change to local data from class data object
-		#modify local data
-		s300_1_ts.record_id = "3"
+		s300_1_ts.record_id = "3" #modify local data to fail edit test
 		#write local data to file
-		utils.write_file(edit_name="s300_1.txt", path="../edits_files/syntax/", ts_input=s300_1_ts, lar_input=self.lar_df)
+		utils.write_file(name="s300_1.txt", path="../edits_files/syntax/", ts_input=s300_1_ts, lar_input=self.lar_df)
 
 	def s300_2_file(self):
 		""""Sets the first character of each LAR row to 3."""
 		s300_lar = self.lar_df.copy() #set to local data from class data object
-		s300_lar.record_id = "3"
-		utils.write_file(edit_name="s300_2.txt", path="../edits_files/syntax/", ts_input=self.ts_df, lar_input=s300_lar)
+		s300_lar.record_id = "3" #modify data to fail edit test
+		utils.write_file(name="s300_2.txt", path="../edits_files/syntax/", ts_input=self.ts_df, lar_input=s300_lar)
