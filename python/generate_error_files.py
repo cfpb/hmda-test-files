@@ -5,18 +5,22 @@
 import json
 import os
 import pandas as pd
+import yaml
 
 from test_file_generator import test_data
 import utils
 
+#load config data from yaml file
+with open('config.yaml') as f:
+	# use safe_load instead load
+	data_map = yaml.safe_load(f)
 ts_schema = pd.DataFrame(json.load(open("../schemas/ts_schema.json"))) #load TS schema
 lar_schema = pd.DataFrame(json.load(open("../schemas/lar_schema.json"))) #load LAR schema
 #instantiate test_file_generator.py to modify clean data so that the resulting files fail specific edits
 file_maker = test_data(ts_schema=ts_schema, lar_schema=lar_schema) #instantiate edit file maker
 
-ts_data, lar_data = utils.read_data_file(path="../edits_files/", data_file="test.txt") #load clean data file
+ts_data, lar_data = utils.read_data_file(path="../edits_files/", data_file=data_map["clean_file"]["value"]) #load clean data file
 file_maker.load_data_frames(ts_data, lar_data) #pass clean file data to file maker object
-
 #generate a file for each edit function in file maker
 edits = []
 for func in dir(file_maker): #loop over all data modification functions

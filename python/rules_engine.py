@@ -6,7 +6,6 @@
 from collections import OrderedDict
 import pandas as pd
 from io import StringIO
- 
 import time
 
 from lar_generator import lar_gen #used for check digit
@@ -36,19 +35,10 @@ class rules_engine(object):
 		"""Takes a dataframe of TS data and stores it as a class variable. TS data must be a single row."""
 		self.ts_df = ts_df
 
-	def read_data_file(self, path, data_file):
-		"""Reads a complete file (includes LAR and TS rows) into a pandas dataframe and stores it as a class object."""
-		with open(path+data_file, 'r') as infile:
-			#split TS row from file
-			ts_row = infile.readline().strip("\n")
-			ts_data = []
-			ts_data.append(ts_row.split("|"))
-			#split LAR rows from file
-			lar_rows = infile.readlines()
-			lar_data = [line.strip("\n").split("|") for line in lar_rows]
-			#create dataframes of TS and LAR data
-			self.ts_df = pd.DataFrame(data=ts_data, dtype=object, columns=self.ts_field_names)
-			self.lar_df  = pd.DataFrame(data=lar_data, dtype=object, columns=self.lar_field_names)
+	def load_data_frames(self, ts_data, lar_data):
+		"""Receives dataframes for TS and LAR and writes them as object attributes"""
+		self.ts_data = ts_data
+		self.lar_data = lar_data
 
 	def update_results(self, edit_name="", edit_field_results="",  row_type="", fields="", row_ids=None, fail_count=None):
 		"""Updates the results dictionary by adding a sub-dictionary for the edit, any associated fields, and the result of the edit test.
