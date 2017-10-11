@@ -133,3 +133,13 @@ class test_data(object):
 		ts.contact_street_address = ""
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v602_file(self):
+		"""Changes TS calendar quarter to 5."""
+		name = "v602.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		ts.calendar_quarter = "5"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
