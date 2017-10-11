@@ -270,7 +270,6 @@ class rules_engine(object):
 		1) The required format for the Total Number of Entries Contained in Submission is a whole number that is greater than zero, and it cannot be left blank."""
 		field = "lar_entries"
 		edit_name = "v606"
-		#fail_df = self.ts_df[(self.ts_df.lar_entries=="")|(self.ts_df.lar_entries.map(lambda x: int(x) <1))|(self.ts_df.lar_entries.map(lambda x: x.isdigit()==False))]
 		fail_df = self.ts_df[(self.ts_df.lar_entries.map(lambda x: self.check_number(x, min_val=1))==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
