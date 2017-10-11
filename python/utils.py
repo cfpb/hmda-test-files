@@ -15,7 +15,7 @@ def write_file(path=None, ts_input=None, lar_input=None, name="test_file.txt"):
 	if not os.path.exists(path):
 		os.makedirs(path)
 	#check existence of file parts directory
-	parts_dir = path+"file_parts/"
+	parts_dir ="../edits_files/file_parts/"
 	if not os.path.exists(parts_dir):
 		os.makedirs(parts_dir)
 	#write TS dataframe to file
