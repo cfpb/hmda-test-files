@@ -85,3 +85,10 @@
       desc: "Minimum property value in thousands"
       type: Integer
       value: 10
+    file_length:
+     desc: The number of lines in the clean data file
+     type: Integer
+     value: 15
+    clean_file:
+     type: File
+     value: "clean_file_15_rows.txt"

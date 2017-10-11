@@ -9,7 +9,7 @@ import json
 import os
 import pandas as pd
 import random
-
+import yaml
 #custom imports
 import lar_constraints
 import lar_generator
@@ -64,6 +64,10 @@ def validation(row, ts_row):
 			getattr(rules_check, func)()
 	return rules_check.results
 
+#load configuration data from YAML file
+with open('config.yaml') as f:
+	# use safe_load instead load
+	data_map = yaml.safe_load(f)
 #load tract and county data from the CBSA file
 #tract and county FIPS codes will be used  in geographic data generation
 use_cols = ['name', 'metDivName', 'countyFips', 'geoIdMsa', 'metDivFp', 'smallCounty', 'tracts']
@@ -86,7 +90,7 @@ lar_const = lar_constraints.lar_constraints(counties=counties, tracts=tracts) #l
 lar_validator = rules_engine(lar_schema=lar_schema_df, ts_schema=ts_schema_df, tracts=tracts, counties=counties) #lar validator checks a dataframe and returns a JSON with generate_error_files
 
 #Set parameters for data creation
-file_length = 5 #set number of rows in test file
+file_length = data_map["file_length"]["value"] #set number of rows in test file
 lei = None #Flag for presence of an LEI. Only a single LEI should be used for a file, so if one is present, it will be used.
 first = True #flag for first row of data. The first row is used to create the dataframe, subsequent rows are appended
 
@@ -146,7 +150,7 @@ results_df = pd.DataFrame(validator.results) #convert results json object to dat
 print(results_df[results_df.status=="failed"]) #display dataframe of failed edits. If no rows are present the file is clean of edit rule violations.
 
 #write clean data file to disk
-utils.write_file(ts_input=pd.DataFrame(ts_row, index=[0], columns=validator.ts_field_names), lar_input=lar_frame, path="../edits_files/", 
+utils.write_file(ts_input=pd.DataFrame(ts_row, index=[0], columns=validator.ts_field_names), lar_input=lar_frame, path="../edits_files/",
 	name="clean_file_{n}_rows.txt".format(n=file_length))
 
 
