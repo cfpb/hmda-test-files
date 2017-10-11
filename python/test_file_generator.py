@@ -183,4 +183,13 @@ class test_data(object):
 		ts.lar_entries = "-1.67"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-		
+
+	def v607_file(self):
+		"""Changes tax ID to string of letters."""
+		name = "v607.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		ts.tax_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
