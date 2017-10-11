@@ -10,9 +10,9 @@ class test_data(object):
 
 	def __init__(self, ts_schema, lar_schema):
 		"""Set initial class variables"""
-		self.clean_file_path = "../edits_files/" 
-		self.validity_dir = "../edits_files/validity/"
-		self.syntax_dir = "../edits_files/syntax/"
+		self.clean_file_path = "../edits_files/"
+		self.validity_path = "../edits_files/validity/"
+		self.syntax_path = "../edits_files/syntax/"
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 
@@ -33,30 +33,53 @@ class test_data(object):
 	#to the extent possible.
 	def s300_1_file(self):
 		"""Sets the first character of the first row of the file to 3."""
-		s300_1_ts = self.ts_df.copy() #change to local data from class data object
-		s300_1_ts.record_id = "3" #modify local data to fail edit test
+		name = "s300_1.txt"
+		path = self.syntax_path
+		ts = self.ts_df.copy() #change to local data from class data object
+		lar = self.lar_df.copy()
+		ts.record_id = "3" #modify local data to fail edit test
 		#write local data to file
-		print("writing s300_1.txt")
-		utils.write_file(name="s300_1.txt", path="../edits_files/syntax/", ts_input=s300_1_ts, lar_input=self.lar_df)
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def s300_2_file(self):
 		""""Sets the first character of each LAR row to 3."""
-		s300_lar = self.lar_df.copy() #set to local data from class data object
-		s300_lar.record_id = "3" #modify data to fail edit test
-		print("writing s300_2.txt")
-		utils.write_file(name="s300_2.txt", path="../edits_files/syntax/", ts_input=self.ts_df, lar_input=s300_lar)
+		name = "s300_2_file"
+		path = self.syntax_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy() #set to local data from class data object
+		lar.record_id = "3" #modify data to fail edit test
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def s301(self):
+	def s301_file(self):
 		"""Changes the LEI of a LAR file such that it does not match the TS."""
+		name = "s301.txt"
+		path = self.syntax_path
+		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		while lar.lei[0] == self.ts_df.lei[0]:
 			lar.lei = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
-		print("writing s301.txt")
-		utils.write_file(name="s301.txt", path="../edits_files/syntax/", ts_input=self.ts_df, lar_input=lar)
+		print("writing {name}".format(name=name))
+		utils.write_file(name="s301.txt", path="../edits_files/syntax/", ts_input=ts, lar_input=lar)
 
-	def s302(self):
+	def s302_file(self):
 		"""Sets the year of submission to 2016"""
+		name = "s302.txt"
+		path = self.syntax_path
 		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
 		ts.calendar_year = "2016"
-		print("writing s302.txt")
-		utils.write_file(name="s302.txt", path="../edits_files/syntax/", ts_input=ts, lar_input=self.lar_df)
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v600_file(self):
+		"""Modifies the LEI of TS and LAR so that they do not meed schema requirements"""
+		name = "v600.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		ts.lei = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+		lar.lei = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
