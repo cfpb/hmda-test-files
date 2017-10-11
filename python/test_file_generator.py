@@ -173,3 +173,14 @@ class test_data(object):
 		ts.office_zip = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v606_file(self):
+		"""Convert number of entries to a negative decimal number."""
+		name = "v606.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		ts.lar_entries = "-1.67"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+		
