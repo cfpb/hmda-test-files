@@ -163,3 +163,13 @@ class test_data(object):
 		ts.office_state = str(random.randint(10,99))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v605_file(self):
+		"""Convert contact person's ZIP to string of letters."""
+		name = "v605.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		ts.office_zip = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
