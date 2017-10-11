@@ -5,18 +5,28 @@ This repository contains code used to generate synthetic LAR files. These files 
 - Enable business analysts to test the 2018 HMDA Platform
 - Provide files to check API returns
 - Provide a resource for developers to use while implementing business rules in code
+- Provide synthetic data files meeting the 2018 HMDA schema to be used in training
 
 
 ## Dependancies
 - US Census tract to CBSA data for the most current year
+- A list of US ZIP codes
 - Python 3.5 or greater
 - [Jupyter Notebooks](http://jupyter.org/): pip install jupyter
 - [Pandas](http://pandas.pydata.org/): pip install pandas
 
-## Repository Workflow
-- The [Test file maker](https://github.com/Kibrael/2018_test_files/blob/master/python/2018_test_file_maker.ipynb) uses the classes [lar_generator]() and [lar_constraints]() to first create a Python dictionary of synthetic data, and then apply business rules to ensure that the data are valid for submission.
-- The valid files are then perturbed so that the data is invalid and fails for specific edits. A file will be created for each edit (and possibley each condition specified in an edit). These files will have known fail returns to enable implementation of business rules and then test the rules once implemented. (not finished)
-- A Python rules engine is then used to validate the test files for each edit. Ideally, the files will fail only the edit for which they are named, however, this may not be possible given the large number of rules that implicate multiple fields. (not finished)
+## Generating Clean Files
+Clean files will pass the HMDA edits (business rules for data submission). These files are used as the base for generating files that will fail edits.
+To generate clean files:
+- `python generate_clean_files.py`: running [this script](https://github.com/cfpb/hmda-test-files/blob/master/python/generate_clean_files.py) will create the edits_files directory and a data file that will pass the HMDA edit checks. The file will have a number of rows set in the YAML [configuration file](https://github.com/cfpb/hmda-test-files/blob/master/python/config.yaml).
+
+
+## Generating Test Files
+Test files will fail at least one (and sometimes more than one) edit. These files will be used as a double check for the implementation of the HMDA edits for the 2018 HMDA Platform. 
+
+To generate test files:
+- `python generate_clean_files`: running [this script](https://github.com/cfpb/hmda-test-files/blob/master/python/generate_clean_files.py) creates clean synthetic data file. This data file passes HMDA edit rules. The data ranges used in file creation are configured by making changes to the [configuration file](https://github.com/cfpb/hmda-test-files/blob/master/python/config.yaml) which is written in YAML.
+- `python generate_test_files`: running [this script] (https://github.com/cfpb/hmda-test-files/blob/master/python/generate_error_files.py) produces a file that will fail conditions for each edit (other edits may also fail). These files are written to the appropriate directory based on edit type, such as /edits_files/syntax/s300.txt. The file name indicates which edit the file is designed to test. If an edit has multiple conditions, a file will be made for each condition in the format /edits_files/syntax/s301_1.txt.
 
 ## Repository Structure
 - [Python](https://github.com/Kibrael/2018_test_files/tree/master/python):
@@ -27,7 +37,8 @@ This repository contains code used to generate synthetic LAR files. These files 
 
 - [Dependancies](https://github.com/Kibrael/2018_test_files/tree/master/dependancies)
     - Contains files used in the generation of synthetic LAR data.
-        - Currently contains tract to CBSA data for 2015 (most current year)
+        - Tract to CBSA data for 2015 (most current year)
+        - A file containing a list of US ZIP codes
 
 
 ----
