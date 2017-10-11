@@ -53,3 +53,10 @@ class test_data(object):
 			lar.lei = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
 		print("writing s301.txt")
 		utils.write_file(name="s301.txt", path="../edits_files/syntax/", ts_input=self.ts_df, lar_input=lar)
+
+	def s302(self):
+		"""Sets the year of submission to 2016"""
+		ts = self.ts_df.copy()
+		ts.calendar_year = "2016"
+		print("writing s302.txt")
+		utils.write_file(name="s302.txt", path="../edits_files/syntax/", ts_input=ts, lar_input=self.lar_df)
