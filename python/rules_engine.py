@@ -270,7 +270,8 @@ class rules_engine(object):
 		1) The required format for the Total Number of Entries Contained in Submission is a whole number that is greater than zero, and it cannot be left blank."""
 		field = "lar_entries"
 		edit_name = "v606"
-		fail_df = self.ts_df[(self.ts_df.lar_entries=="")|(self.ts_df.lar_entries.map(lambda x: int(x) <1))|(self.ts_df.lar_entries.map(lambda x: x.isdigit()==False))]
+		#fail_df = self.ts_df[(self.ts_df.lar_entries=="")|(self.ts_df.lar_entries.map(lambda x: int(x) <1))|(self.ts_df.lar_entries.map(lambda x: x.isdigit()==False))]
+		fail_df = self.ts_df[(self.ts_df.lar_entries.map(lambda x: self.check_number(x, min_val=1))==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	def v607(self):
@@ -291,7 +292,7 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v608(self):
-		"""V608 A ULI with an invalid format was provided.
+		"""A ULI with an invalid format was provided.
 		1) The required format for ULI is alphanumeric with at least 23 characters and up to 45 characters, and it cannot be left blank."""
 		edit_name = "v608"
 		field = "ULI"
@@ -311,7 +312,7 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v610_1(self):
-		"""V610 An invalid date field was reported.
+		"""An invalid date field was reported.
 		1) Application Date must be either a valid date using YYYYMMDD format or NA, and cannot be left blank."""
 		edit_name = "v610_1"
 		field = "app_date"
@@ -319,7 +320,7 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v610_2(self):
-		"""V610 An invalid date field was reported.
+		"""An invalid date field was reported.
 		2) If Action Taken equals 6, then Application Date must be NA, and the reverse must be true."""
 		edit_name = "v610_2"
 		field = "app_date"
