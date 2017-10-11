@@ -213,5 +213,24 @@ class test_data(object):
 		lar.uli = lar.uli.map(lambda x: x[:-2] + "xy")
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-	
-	
+
+	def v610_1_file(self):
+		"""Change application date to blank."""
+		name = "v610_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_date = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v610_2_file(self):
+		"""Set each row to action taken = 3 and application date = NA."""
+		name = "v610_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_date = "NA"
+		lar.action_taken = "3"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
