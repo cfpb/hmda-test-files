@@ -1,5 +1,7 @@
 import os
 import pandas as pd
+import random
+import string
 
 import utils
 
@@ -34,10 +36,20 @@ class test_data(object):
 		s300_1_ts = self.ts_df.copy() #change to local data from class data object
 		s300_1_ts.record_id = "3" #modify local data to fail edit test
 		#write local data to file
+		print("writing s300_1.txt")
 		utils.write_file(name="s300_1.txt", path="../edits_files/syntax/", ts_input=s300_1_ts, lar_input=self.lar_df)
 
 	def s300_2_file(self):
 		""""Sets the first character of each LAR row to 3."""
 		s300_lar = self.lar_df.copy() #set to local data from class data object
 		s300_lar.record_id = "3" #modify data to fail edit test
+		print("writing s300_2.txt")
 		utils.write_file(name="s300_2.txt", path="../edits_files/syntax/", ts_input=self.ts_df, lar_input=s300_lar)
+
+	def s301(self):
+		"""Changes the LEI of a LAR file such that it does not match the TS."""
+		lar = self.lar_df.copy()
+		while lar.lei[0] == self.ts_df.lei[0]:
+			lar.lei = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
+		print("writing s301.txt")
+		utils.write_file(name="s301.txt", path="../edits_files/syntax/", ts_input=self.ts_df, lar_input=lar)
