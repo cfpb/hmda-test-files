@@ -561,3 +561,14 @@ class test_data(object):
 		lar.county = "654321"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v627_file(self):
+		"""Set County and Tract to strings of 5 and 11 digit length."""
+		name = "v627.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.county = "654321"
+		lar.tract = "12345678901"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
