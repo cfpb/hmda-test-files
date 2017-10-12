@@ -279,5 +279,45 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def v613_1_file(self):
+		"""Set preapproval to 3 or blank."""
+		name = "v613_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.preapproval = random.choice(("3", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-		
+	def v613_2_file(self):
+		"""Set action to random of 7 or 8, set preapproval to random != 1."""
+		name = "v613_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(("7", "8"))
+		lar.preapproval = "2"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v613_3_file(self):
+		"""Set action to random 3, 4, 5, or 6 and preapproval to 1."""
+		name = "v613_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.preapproval = "1"
+		lar.action_taken = random.choice(("3", "4", "5", "6"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v613_4_file(self):
+		"""Set preapproval to 1 and action taken to random 0, 3, 4, 5, 6."""
+		name = "v613_4.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.preapproval = "1"
+		lar.action_taken = random.choice(("0", "3", "4", "5", "6"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
