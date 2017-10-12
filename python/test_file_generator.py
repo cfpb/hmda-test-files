@@ -543,11 +543,21 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v625_2_file(self):
-		"""Set Census Tract to 12345679012"""
+		"""Set Census Tract to 12345679012."""
 		name = "v625_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.tract = "12345678901"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v626_file(self):
+		"""Set County to 6 digit number."""
+		name = "v626.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.county = "654321"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
