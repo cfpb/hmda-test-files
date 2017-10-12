@@ -418,4 +418,13 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def v618_file(self):
+		"""Set action taken to random 0, NA or blank."""
+		name = "v618.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(("0", "NA", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 		
