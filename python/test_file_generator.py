@@ -235,7 +235,7 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def s305(self):
+	def s305_file(self):
 		"""Copies the first line of the file into all subsequent lines."""
 		name = "s305.txt"
 		path = self.syntax_path
@@ -245,5 +245,15 @@ class test_data(object):
 		lar = line.copy()
 		for i in range(len(lar_start)-1):
 			lar = pd.concat([lar, line])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v611_file(self):
+		"""Sets loan type to 5 or blank."""
+		name = "v611.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.loan_type = random.choice(("5", ""))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
