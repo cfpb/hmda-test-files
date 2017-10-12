@@ -344,3 +344,25 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def v614_3_file(self):
+		"""Set reverse mortgage to 1 and preapproval to 1."""
+		name = "v614_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.preapproval = "1"
+		lar.reverse_mortgage = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v614_4_file(self):
+		"""Set open end credit to 1 and preapproval to 1."""
+		name = "v614_4.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.preapproval = "1"
+		lar.open_end_credit = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
