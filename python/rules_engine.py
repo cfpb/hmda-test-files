@@ -588,8 +588,7 @@ class rules_engine(object):
 
 	def v628_2a(self):
 		"""An invalid Ethnicity data field was reported.
-		2) Ethnicity of Applicant or Borrower: 2; Ethnicity of Applicant or Borrower: 3; Ethnicity of Applicant or Borrower: 4;
-		Ethnicity of Applicant or Borrower: 5 must equal 1, 11, 12, 13, 14, 2, or be left blank."""
+		2) Ethnicity of Applicant or Borrower: 2 must equal 1, 11, 12, 13, 14, 2, or be left blank."""
 		field = "app_eth_2"
 		edit_name = "v628_2a"
 		fail_df = self.lar_df[~(self.lar_df.app_eth_2.isin(("1","11", "12", "13", "14", "2","")))]
@@ -621,7 +620,7 @@ class rules_engine(object):
 
 	def v628_3(self):
 		"""An invalid Ethnicity data field was reported.
-		3) Each Ethnicity of Applicant or Borrower code can only be reported once"""
+		3) Each Ethnicity of Applicant or Borrower code can only be reported once."""
 		field = "applicant ethnicities"
 		edit_name = "v628_3"
 		dupe_fields = ["app_eth_1", "app_eth_2", "app_eth_3", "app_eth_4", "app_eth_5"]
@@ -631,7 +630,7 @@ class rules_engine(object):
 	def v628_4(self):
 		"""An invalid Ethnicity data field was reported.
 		4) If Ethnicity of Applicant or Borrower: 1 equals 3 or 4; then Ethnicity of Applicant or Borrower: 2; Ethnicity of Applicant or Borrower: 3;
-		Ethnicity of Applicant or Borrower: 4; Ethnicity of Applicant or Borrower: 5 must be left blank"""
+		Ethnicity of Applicant or Borrower: 4; Ethnicity of Applicant or Borrower: 5 must be left blank."""
 		field = "applicant ethnicities"
 		edit_name = "v628_4"
 		fail_df = self.lar_df[(self.lar_df.app_eth_1.isin(("3","4")))&((self.lar_df.app_eth_2!="")|(self.lar_df.app_eth_3!="")|(self.lar_df.app_eth_4!="")|(self.lar_df.app_eth_5!=""))]
