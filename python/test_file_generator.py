@@ -478,3 +478,36 @@ class test_data(object):
 		lar.city = ""
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v622_1_file(self):
+		"""Set street address to random string, set City to NA."""
+		name = "v622_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.street_address = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+		lar.city = "NA"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v622_2_file(self):
+		"""Set street address to random string, set State to NA."""
+		name = "v622_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.street_address = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+		lar.state = "NA"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v622_3_file(self):
+		"""Set street address to random string, set ZIP code to NA."""
+		name = "v622_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.street_address = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+		lar.zip_code = "NA"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
