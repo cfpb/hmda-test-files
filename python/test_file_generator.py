@@ -427,4 +427,34 @@ class test_data(object):
 		lar.action_taken = random.choice(("0", "NA", ""))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-		
+
+	def v619_1_file(self):
+		"""Set action taken date to random NA or blank."""
+		name = "v619_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_date = random.choice(("NA", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v619_2_file(self):
+		"""Set action taken date to 20160101."""
+		name = "v619_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_date = "20160101"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v619_3_file(self):
+		"""Set action taken date to 20160101"""
+		name = "v619_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_date = "20160101"
+		lar.app_date = "20181231"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
