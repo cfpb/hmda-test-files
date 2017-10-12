@@ -234,3 +234,16 @@ class test_data(object):
 		lar.action_taken = "3"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def s305(self):
+		"""Copies the first line of the file into all subsequent lines."""
+		name = "s305.txt"
+		path = self.syntax_path
+		ts = self.ts_df.copy()
+		lar_start = self.lar_df.copy()
+		line = pd.DataFrame(lar_start.iloc[0]).transpose()
+		lar = line.copy()
+		for i in range(len(lar_start)-1):
+			lar = pd.concat([lar, line])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
