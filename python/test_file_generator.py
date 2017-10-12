@@ -522,4 +522,12 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	
+	def v624_file(self):
+		"""Set ZIP code to blank or random string of letters."""
+		name = "v624.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.zip_code = random.choice(("", "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
