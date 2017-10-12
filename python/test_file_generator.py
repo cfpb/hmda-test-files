@@ -366,3 +366,35 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def v615_1_file(self):
+		"""Set construction method to random 3 or blank."""
+		name = "v615_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.const_method = random.choice(("3", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v615_2_file(self):
+		"""Set manufactured interest to random 1, 2, 3 or 4 and construction method to 1."""
+		name = "v615_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.manufactured_interest = random.choice(("1", "2", "3", "4"))
+		lar.const_method = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v615_3_file(self):
+		"""Set manufactured type to random 1, 2 and construction method to 1."""
+		name = "v615_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.manufactured_type = random.choice(("1", "2"))
+		lar.const_method = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
