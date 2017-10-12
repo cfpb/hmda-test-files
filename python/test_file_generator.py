@@ -664,3 +664,25 @@ class test_data(object):
 		lar.app_eth_1 = "4"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v630_1_file(self):
+		"""Set applicant ethnicity 1 to 4. Set applicant ethnicity basis to 2."""
+		name = "v630_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_eth_basis = "2"
+		lar.app_eth_1 = "4"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v630_2_file(self):
+		"""Set applicant ethnicity basis to 3. Set applicant ethnicity 1 to 2."""
+		name = "v630_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_eth_basis = "3"
+		lar.app_eth_1 = "2"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
