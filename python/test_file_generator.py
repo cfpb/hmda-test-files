@@ -628,3 +628,39 @@ class test_data(object):
 		lar.app_eth_5 = "1"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v629_1_file(self):
+		"""Set applicant ethnicity basis to 4."""
+		name = "v629_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_eth_basis = "4"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v629_2_file(self):
+		"""Set applicant ethnicity basis to 1. Set applicant ethnicity 1 = 3. Set all other applicant ethnicities to 1."""
+		name = "v629_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_eth_basis = "1"
+		lar.app_eth_1 = "3"
+		lar.app_eth_2 = "1"
+		lar.app_eth_3 = "1"
+		lar.app_eth_4 = "1"
+		lar.app_eth_5 = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v629_3_file(self):
+		"""Set applicant ethnicity basis to 2. Set applicant ethnicity 1 to 4."""
+		name = "v629_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_eth_basis = "2"
+		lar.app_eth_1 = "4"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
