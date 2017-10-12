@@ -511,3 +511,15 @@ class test_data(object):
 		lar.zip_code = "NA"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v623_file(self):
+		"""Set state code to blank or 11."""
+		name = "v623.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.state = random.choice(("", "11"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	
