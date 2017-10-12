@@ -257,3 +257,27 @@ class test_data(object):
 		lar.loan_type = random.choice(("5", ""))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v612_1_file(self):
+		"""Set loan purpose to 3 or blank."""
+		name = "v612_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.loan_purpose = random.choice(("3", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v612_2_file(self):
+		"""Set preapproval to 1 and loan purpose to a random enumeration that is not 1."""
+		name = "v612_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.preapproval = "1"
+		lar.loan_purpose = random.choice(("2", "31", "32", "4", "5"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+
+		
