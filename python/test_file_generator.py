@@ -909,3 +909,25 @@ class test_data(object):
 		lar.app_race_5 = "6"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v637_1_file(self):
+		"""Set app race 1 to 7. Set app race basis to random choice of 1, 2."""
+		name = "v637_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_race_1 = "7"
+		lar.app_race_basis = random.choice(("1", "2"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v637_2_file(self):
+		"""Set app race basis to 3. Set app race 1 to random choice of 1-5."""
+		name = "v637_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_race_basis = "3"
+		lar.app_race_1 = random.choice(("1", "2", "3", "4", "5"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
