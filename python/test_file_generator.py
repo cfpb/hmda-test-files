@@ -1047,3 +1047,14 @@ class test_data(object):
 		lar.co_app_race_1 = random.choice(("1", "2", "3", "4", "5"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v641_file(self):
+		"""Set co-app race 1 = 8. Set co-app race basis to random choice of 1-3."""
+		name = "v641.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_race_basis = random.choice(("1", "2", "3"))
+		lar.co_app_race_1 = "8"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
