@@ -985,3 +985,43 @@ class test_data(object):
 		lar.co_app_race_5 = "1"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v639_1_file(self):
+		"""Set co-applicant race basis to blank."""
+		name = "v639_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_race_basis = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v639_2_file(self):
+		"""Set co_app race basis to 1. Set co-app race 1 to 21. Set co-app races 2-5 to 21."""
+		name = "v639_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_race_basis = "1"
+		lar.co_app_race_1 = "21"
+		lar.co_app_race_2 = "21"
+		lar.co_app_race_3 = "21"
+		lar.co_app_race_4 = "21"
+		lar.co_app_race_5 = "21"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v639_3_file(self):
+		"""Set co-app race basis to 2. Set co-app race 1 to blank. Set co-app races 2-5 to 6."""
+		name = "v639_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_race_basis = "2"
+		lar.co_app_race_1 = "1"
+		lar.co_app_race_2 = "6"
+		lar.co_app_race_3 = "6"
+		lar.co_app_race_4 = "6"
+		lar.co_app_race_5 = "6"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
