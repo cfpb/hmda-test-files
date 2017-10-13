@@ -869,3 +869,43 @@ class test_data(object):
 		lar.app_race_5 = random.choice(("1", "2", "3", "4", "5"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v636_1_file(self):
+		"""Set app race basis to 4."""
+		name = "v636_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_race_basis = "4"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v636_2_file(self):
+		"""Set app race basis to 1. Set app race 1 to blank. Set app races 2-5 to 6."""
+		name = "v636_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_race_basis = "1"
+		lar.app_race_1 = ""
+		lar.app_race_2 = "6"
+		lar.app_race_3 = "6"
+		lar.app_race_4 = "6"
+		lar.app_race_5 = "6"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v636_3_file(self):
+		"""Set app race basis to 2. Set app race 1 to blank. Set app races 2-5 to 6."""
+		name = "v636_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_race_basis = "2"
+		lar.app_race_1 = ""
+		lar.app_race_2 = "6"
+		lar.app_race_3 = "6"
+		lar.app_race_4 = "6"
+		lar.app_race_5 = "6"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
