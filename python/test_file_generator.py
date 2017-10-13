@@ -796,3 +796,24 @@ class test_data(object):
 		lar.co_app_eth_basis = "3"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v634_file(self):
+		"""For the first half of the file:
+		Set co-app ethnicity 1 to 5.
+		Set co-app ethnicity basis to 3
+		For the second half of the file:
+		Set co-app ethnicity 1 to 4.
+		Set co-app ethnicity basis to 4."""
+		name = "v634.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		midpoint = len(lar)/2
+		lar.co_app_eth_1[lar.index <= midpoint] = "5"
+		lar.co_app_eth_basis[lar.index <= midpoint] = "3"
+		lar.co_app_eth_1[lar.index > midpoint] = "4"
+		lar.co_app_eth_basis[lar.index > midpoint] = "4"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+		
+		
