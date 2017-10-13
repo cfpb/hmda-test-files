@@ -1144,3 +1144,23 @@ class test_data(object):
 		lar.app_sex_basis = random.choice(("1", "2"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v646_1_file(self):
+		"""Set co-applicant sex to blank."""
+		name = "v646_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_sex = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v646_2_file(self):
+		"""Set co-applicant sex basis to blank."""
+		name = "v646_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_sex_basis = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
