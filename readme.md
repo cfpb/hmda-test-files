@@ -18,11 +18,11 @@ This repository contains code used to generate synthetic LAR files. These files 
 ## Generating Clean Files
 Clean files will pass the HMDA edits (business rules for data submission). These files are used as the base for generating files that will fail edits.
 To generate clean files:
-- `python generate_clean_files.py`: running [this script](https://github.com/cfpb/hmda-test-files/blob/master/python/generate_clean_files.py) will create the edits_files directory and a data file that will pass the HMDA edit checks. The file will have a number of rows set in the YAML [configuration file](https://github.com/cfpb/hmda-test-files/blob/master/python/config.yaml).
+- `python generate_clean_files.py`: running [this script](https://github.com/cfpb/hmda-test-files/blob/master/python/generate_clean_files.py) will create the edits_files directory and a data file that will pass the HMDA edit checks. The file will have a number of rows set in the YAML [configuration file](https://github.com/cfpb/hmda-test-files/blob/master/python/config.yaml). Other variables, such as data ranges can also be set in this file.
 
 
 ## Generating Test Files
-Test files will fail at least one (and sometimes more than one) edit. These files will be used as a double check for the implementation of the HMDA edits for the 2018 HMDA Platform. 
+Test files will fail at least one (and sometimes more than one) edit. These files will be used as a double check for the implementation of the HMDA edits for the 2018 HMDA Platform. The generation of edit test files requires a clean data file to be present. The clean file is then modified and saved with the name of the edit that it will fail.
 
 To generate test files:
 - `python generate_clean_files`: running [this script](https://github.com/cfpb/hmda-test-files/blob/master/python/generate_clean_files.py) creates clean synthetic data file. This data file passes HMDA edit rules. The data ranges used in file creation are configured by making changes to the [configuration file](https://github.com/cfpb/hmda-test-files/blob/master/python/config.yaml) which is written in YAML.
