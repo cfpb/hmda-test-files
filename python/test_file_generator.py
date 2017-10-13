@@ -686,3 +686,55 @@ class test_data(object):
 		lar.app_eth_1 = "2"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v631_1_file(self):
+		"""Set co-app ethnicity 1 to blank. Set co-app ethnicity free text to blank."""
+		name = "v631_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_eth_1 = ""
+		lar.co_app_eth_free = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v631_2_file(self):
+		"""Set co-app ethnicity 2-5 to 3."""
+		name = "v631_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_eth_2 = "3"
+		lar.co_app_eth_3 = "3"
+		lar.co_app_eth_4 = "3"
+		lar.co_app_eth_5 = "3"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v631_3_file(self):
+		"""Set all co-app ethnicities to 1."""
+		name = "v631_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_eth_1 = "1"
+		lar.co_app_eth_2 = "1"
+		lar.co_app_eth_3 = "1"
+		lar.co_app_eth_4 = "1"
+		lar.co_app_eth_5 = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v631_4_file(self):
+		"""Set co-app ethnicity 1 to random choice of 3, 4, 5. Set co-app ethnicity 2-5 to 1."""
+		name = "v631_4.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_eth_1 = random.choice(("3", "4", "5"))
+		lar.co_app_eth_2 = "1"
+		lar.co_app_eth_3 = "1"
+		lar.co_app_eth_4 = "1"
+		lar.co_app_eth_5 = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
