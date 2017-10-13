@@ -774,3 +774,25 @@ class test_data(object):
 		lar.co_app_eth_basis = "2"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v633_1_file(self):
+		"""Set co-app ethnicity 1 to 4. Set co-app ethnicity basis to 1."""
+		name = "v633_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_eth_1 = "4"
+		lar.co_app_eth_basis = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v633_2_file(self):
+		"""Set co-app ethnicity basis to 3. Set co-app ethnicity 1 to random choice of 3 or 4."""
+		name = "v633_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_eth_1 = random.choice(("1", "2"))
+		lar.co_app_eth_basis = "3"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
