@@ -931,3 +931,57 @@ class test_data(object):
 		lar.app_race_1 = random.choice(("1", "2", "3", "4", "5"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v638_1_file(self):
+		"""Set co-app race 1 to blank. Set all co-app race text fields to blank."""
+		name = "v638_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_race_1 = ""
+		lar.co_app_race_asian_text = ""
+		lar.co_app_race_islander_text = ""
+		lar.co_app_race_native_text = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v638_2_file(self):
+		"""Set co-applicant races 2-5 to 6."""
+		name = "v638_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_race_2 = "6"
+		lar.co_app_race_3 = "6"
+		lar.co_app_race_4 = "6"
+		lar.co_app_race_5 = "6"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v638_3_file(self):
+		"""Set all co-applicant race codes to 1."""
+		name = "v638_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_race_1 = "1"
+		lar.co_app_race_2 = "1"
+		lar.co_app_race_3 = "1"
+		lar.co_app_race_4 = "1"
+		lar.co_app_race_5 = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v638_4_file(self):
+		"""Set co-applicant race 1 to random choice of 6, 7, 8. Set co-applicant races 2-5 to 1."""
+		name = "v638_4.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_race_1 = random.choice(("6","7","8"))
+		lar.co_app_race_2 = "1"
+		lar.co_app_race_3 = "1"
+		lar.co_app_race_4 = "1"
+		lar.co_app_race_5 = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
