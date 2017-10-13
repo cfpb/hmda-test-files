@@ -815,5 +815,57 @@ class test_data(object):
 		lar.co_app_eth_basis[lar.index > midpoint] = "4"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-		
-		
+
+	def v635_1_file(self):
+		"""Set app race 1 to blank. Set all race text fields to blank."""
+		name = "v635_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_race_1 = ""
+		lar.app_race_native_text = ""
+		lar.app_race_islander_text = ""
+		lar.app_race_asian_text = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v635_2_file(self):
+		"""Set app races 2-5 to 6."""
+		name = "v635_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_race_2 = "6"
+		lar.app_race_3 = "6"
+		lar.app_race_4 = "6"
+		lar.app_race_5 = "6"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v635_3_file(self):
+		"""Set all applicant race fields to 1."""
+		name = "v635_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_race_1 = "1"
+		lar.app_race_2 = "1"
+		lar.app_race_3 = "1"
+		lar.app_race_4 = "1"
+		lar.app_race_5 = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v635_4_file(self):
+		"""Set app race to random choice of 6 or 7. Set app races 2-5 to random choice of 1-5."""
+		name = "v635_4.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_race_1 = random.choice(("6", "7"))
+		lar.app_race_2 = random.choice(("1", "2", "3", "4", "5"))
+		lar.app_race_3 = random.choice(("1", "2", "3", "4", "5"))
+		lar.app_race_4 = random.choice(("1", "2", "3", "4", "5"))
+		lar.app_race_5 = random.choice(("1", "2", "3", "4", "5"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
