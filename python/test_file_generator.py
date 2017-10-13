@@ -1025,3 +1025,25 @@ class test_data(object):
 		lar.co_app_race_5 = "6"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v640_1_file(self):
+		"""Set co-app race 1 to 7. Set co-app race basis to random choice of 1, 2."""
+		name = "v640_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_race_basis = random.choice(("1", "2"))
+		lar.co_app_race_1 = "7"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v640_2_file(self):
+		"""Set co-app race basis to 3. Set co-app race 1 to random choice of 1-5."""
+		name = "v640_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_race_basis = "3"
+		lar.co_app_race_1 = random.choice(("1", "2", "3", "4", "5"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
