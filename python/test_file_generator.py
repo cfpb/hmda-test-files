@@ -738,3 +738,39 @@ class test_data(object):
 		lar.co_app_eth_5 = "1"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v632_1_file(self):
+		"""Set co-app ethnicity basis to blank."""
+		name = "v632_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_eth_basis = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v632_2_file(self):
+		"""Set co-app ethnicity basis to 1. Set co-app ethnicity 1 to 3. Set co-app ethnicity 2 to 3. Set co-app ethnicity 3-5 to 1"""
+		name = "v632_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_eth_basis = "1"
+		lar.co_app_eth_1 = "3"
+		lar.co_app_eth_2 = random.choice(("2", "3"))
+		lar.co_app_eth_3 = "1"
+		lar.co_app_eth_4 = "1"
+		lar.co_app_eth_5 = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v632_3_file(self):
+		"""Set co-app ethnicity basis to 2. Set co-app ethnicity 1 to 4."""
+		name = "v632_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_eth_1 = "4"
+		lar.co_app_eth_basis = "2"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
