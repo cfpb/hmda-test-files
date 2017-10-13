@@ -1122,3 +1122,25 @@ class test_data(object):
 		lar.app_sex_basis = "1"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v645_1_file(self):
+		"""Set applicant sex basis to 3. Set applicant sex to random choice of 1, 2."""
+		name = "v645_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_sex_basis = "3"
+		lar.app_sex = random.choice(("1", "2"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v645_2_file(self):
+		"""Set applicant sex to 4. Set applicant sex basis to random choice of 1, 2."""
+		name = "v645_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_sex = "4"
+		lar.app_sex_basis = random.choice(("1", "2"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
