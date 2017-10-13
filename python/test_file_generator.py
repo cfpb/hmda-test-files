@@ -1058,3 +1058,23 @@ class test_data(object):
 		lar.co_app_race_1 = "8"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v642_1_file(self):
+		"""Set applicant sex to blank."""
+		name = "v642_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_sex = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v642_2_file(self):
+		"""Set applicant sex basis to blank."""
+		name = "v642_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_sex_basis = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
