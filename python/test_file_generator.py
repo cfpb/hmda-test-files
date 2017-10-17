@@ -1308,3 +1308,29 @@ class test_data(object):
 		lar.income = "42"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v655_1_file(self):
+		"""Set app ethnicity 1 to 4. Set app race 1 to 7. Set app sex to 4. Set income to 42."""
+		name = "v655_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_eth_1 = "4"
+		lar.app_race_1 = "7"
+		lar.app_sex = "4"
+		lar.income = "42"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v655_2_file(self):
+		"""Set co-app ethnicity 1 to 4. Set co-app race 1 to 7. Set co-app sex to 4. Set income to 42."""
+		name = "v655_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_eth_1 = "4"
+		lar.co_app_race_1 = "7"
+		lar.co_app_sex = "4"
+		lar.income = "42"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
