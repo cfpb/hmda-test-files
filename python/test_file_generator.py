@@ -1287,3 +1287,24 @@ class test_data(object):
 		lar.co_app_age = "42"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v654_1_file(self):
+		"""Set income to random of blank, 1.5."""
+		name = "v654_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.income = random.choice(("1.5", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v654_2_file(self):
+		"""Set affordable units to 5. Set income to 42."""
+		name = "v654_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.affordable_units = "5"
+		lar.income = "42"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
