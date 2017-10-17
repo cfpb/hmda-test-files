@@ -1241,3 +1241,26 @@ class test_data(object):
 		lar.co_app_sex = random.choice(("1", "2", "3", "4"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v651_1_file(self):
+		"""Set app age to random choice of 0 or blank."""
+		name = "v651_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_age = random.choice(("0", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v651_2_file(self):
+		"""Set app ethnicity 1 to 4. Set app race 1 to 7. Set app sex to 4. Set app age to 42."""
+		name = "v651_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_eth_1 = "4"
+		lar.app_race_1 = "7"
+		lar.app_sex = "4"
+		lar.app_age = "42"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
