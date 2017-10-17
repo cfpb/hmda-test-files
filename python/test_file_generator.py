@@ -1186,3 +1186,25 @@ class test_data(object):
 		lar.co_app_sex = random.choice(("1", "2"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v648_1_file(self):
+		"""Set co-app sex basis to 2. Set co-app sex to 4 or 5."""
+		name = "v648_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_sex_basis = "2"
+		lar.co_app_sex = random.choice(("4", "5"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v648_2_file(self):
+		"""Set co-app sex to 6. Set co app sex basis to random choice of 1, 3, 4."""
+		name = "v648_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_sex_basis = random.choice(("1", "3", "4"))
+		lar.co_app_sex = "6"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
