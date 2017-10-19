@@ -1564,3 +1564,29 @@ class test_data(object):
 		lar.co_app_score_code_8 = ""
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v668_1_file(self):
+		"""Set app ethnicity 1 to 4. Set app race 1 to 7. Set app sex to 4. Set app credit score to 700."""
+		name = "v668_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_eth_1 = "4"
+		lar.app_race_1 = "7"
+		lar.app_sex = "4"
+		lar.app_credit_score = "700"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v668_2_file(self):
+		"""Set co-app ethnicity to 4. Set co-app race to 7. Set co-app sex to 4. Set co-app credit score to 700."""
+		name = "v668_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_eth_1 = "4"
+		lar.co_app_race_1 = "7"
+		lar.co_app_sex = "4"
+		lar.co_app_credit_score = "700"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
