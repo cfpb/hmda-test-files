@@ -1408,3 +1408,13 @@ class test_data(object):
 		lar.action_taken = random.choice(("2", "3", "4", "5", "7", "8"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v659_file(self):
+		"""Set lien status to random of 3, blank."""
+		name = "v659.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.lien = random.choice(("3", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
