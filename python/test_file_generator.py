@@ -1418,3 +1418,24 @@ class test_data(object):
 		lar.lien = random.choice(("3", ""))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v660_1_file(self):
+		"""Set app credit score to random of blank or "aaa"."""
+		name = "v660_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_credit_score = random.choice(("aaa", ""))
+		lar.action_taken = random.choice(("2", "3", "4", "5", "7", "8"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v660_2_file(self):
+		"""Set app credit score model to random of blank or 10."""
+		name = "v660_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_score_name = random.choice(("10", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
