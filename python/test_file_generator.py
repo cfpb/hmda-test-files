@@ -1660,3 +1660,31 @@ class test_data(object):
 		lar.action_taken = random.choice(("1", "2", "4", "5", "6", "8"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v671_1_file(self):
+		"""Set denial 1-4 to code 9. Set denial text to blank."""
+		name = "v671_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.denial_1 = "9"
+		lar.denial_2 = "9"
+		lar.denial_3 = "9"
+		lar.denial_4 = "9"
+		lar.denial_code_9 = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v671_2_file(self):
+		"""Set denial 1-4 to random 1-8. Set denial text to random string."""
+		name = "v671_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.denial_1 = random.choice(str(random.randrange(1,9)))
+		lar.denial_2 = random.choice(str(random.randrange(1,9)))
+		lar.denial_3 = random.choice(str(random.randrange(1,9)))
+		lar.denial_4 = random.choice(str(random.randrange(1,9)))
+		lar.denial_code_9 = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
