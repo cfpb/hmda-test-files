@@ -1486,3 +1486,17 @@ class test_data(object):
 		lar.app_score_code_8 = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v664_file(self):
+		"""Set action taken to random of 4, 5, 6. Set co-app score to 700. Set co-app score model to random 1-8.
+		Set co-app score text field to blank."""
+		name = "v664.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(("4", "5", "6"))
+		lar.co_app_credit_score = "700"
+		lar.co_app_score_name = random.choice(("1", "2", "3", "4", "5", "6", "7", "8"))
+		lar.co_app_score_code_8 = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
