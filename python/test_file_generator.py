@@ -1625,3 +1625,38 @@ class test_data(object):
 		lar.denial_4 = "1"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v669_4_file(self):
+		"""Set denial reason 1 to 10. Set denial reasons 2-4 to 2,3,4."""
+		name = "v669_4.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.denial_1 = "10"
+		lar.denial_2 = random.choice(("2", "3", "4"))
+		lar.denial_3 = random.choice(("2", "3", "4"))
+		lar.denial_4 = random.choice(("2", "3", "4"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v670_1_file(self):
+		"""Set action taken to random 3, 7. Set denial reason 1 to 10."""
+		name = "v670_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.denial_1 = "10"
+		lar.action_taken = random.choice(("3", "7"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v670_2_file(self):
+		"""Set action taken to random 1-6, 8. Set denial 1 to random 1-9."""
+		name = "v670_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.denial_1 = random.choice(str(random.randrange(1,10)))
+		lar.action_taken = random.choice(("1", "2", "4", "5", "6", "8"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
