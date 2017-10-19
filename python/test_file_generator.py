@@ -1450,3 +1450,25 @@ class test_data(object):
 		lar.app_score_name = random.choice(("1", "2", "3", "4", "5", "6", "7", "8"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v662_1_file(self):
+		"""Set app credit score model to random of 1-7, 9. Set app score model text field to random string."""
+		name = "v662_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_score_code_8 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
+		lar.app_score_name = random.choice(("1", "2", "3", "4", "5", "6", "7", "9"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v662_2_file(self):
+		"""Set app score model to 8. Set app score model text field to blank."""
+		name = "v662_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_score_code_8 = ""
+		lar.app_score_name = "8"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
