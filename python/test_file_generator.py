@@ -1376,3 +1376,35 @@ class test_data(object):
 		lar.action_taken = random.choice(("3", "4", "5", "7"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v657_3_file(self):
+		"""Set reverse mortgage to 1. Set rate spread to 5.0."""
+		name = "v657_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.rate_spread = "5.0"
+		lar.reverse_mortgage = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v658_1_file(self):
+		"""Set HOEPA status to blank."""
+		name = "v658_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.hoepa = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v658_2_file(self):
+		"""Set action taken to random choice of 2, 3, 4, 5, 7, 8. Set HOEPA to random of 1, 2."""
+		name = "v658_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.hoepa = random.choice(("1", "2"))
+		lar.action_taken = random.choice(("2", "3", "4", "5", "7", "8"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
