@@ -1590,3 +1590,38 @@ class test_data(object):
 		lar.co_app_credit_score = "700"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v669_1_file(self):
+		"""Set denial reason 1 to blank."""
+		name = "v669_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.denial_1 = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v669_2_file(self):
+		"""Set denial reason 2-4 to random of 10 or blank."""
+		name = "v669_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.denial_2 = random.choice(("10", ""))
+		lar.denial_3 = random.choice(("10", ""))
+		lar.denial_4 = random.choice(("10", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v669_3_file(self):
+		"""Set all reasons for denial to 1."""
+		name = "v669_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.denial_1 = "1"
+		lar.denial_2 = "1"
+		lar.denial_3 = "1"
+		lar.denial_4 = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
