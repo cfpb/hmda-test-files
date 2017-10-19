@@ -1542,3 +1542,25 @@ class test_data(object):
 		lar.co_app_credit_score = "9999"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v667_1_file(self):
+		"""Set co-app score name to 1-7, 9, 10. Set co-app score text to random string."""
+		name = "v667_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_score_code_8 = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
+		lar.co_app_score_name = random.choice(("1", "2", "3", "4", "5", "6", "7", "9", "10"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v667_2_file(self):
+		"""Set co-app score name to 8. Set co-app score text to blank."""
+		name = "v667_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_score_name = "8"
+		lar.co_app_score_code_8 = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
