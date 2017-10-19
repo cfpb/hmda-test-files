@@ -1334,3 +1334,24 @@ class test_data(object):
 		lar.income = "42"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v656_1_file(self):
+		"""Set purchaser type to random of blank or 10."""
+		name = "v656_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.purchaser_type = random.choice(("", "10"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v656_2_file(self):
+		"""Set action taken to random choice of 2, 3, 4, 5, 7, 8. Set purchaser type to random 1-9."""
+		name = "v656_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.purchaser_type = random.choice(("1", "2", "3", "4", "5", "6", "7", "8", "9"))
+		lar.action_taken = random.choice(("2", "3", "4", "5", "7", "8"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
