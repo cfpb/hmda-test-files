@@ -1500,3 +1500,23 @@ class test_data(object):
 		lar.co_app_score_code_8 = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v665_1_file(self):
+		"""Set co-app score to random of blank, 'aaa'."""
+		name = "v665_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_credit_score = random.choice(("aaa", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v665_2_file(self):
+		"""Set co-app score name to random of 0, blank."""
+		name = "v665_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_score_name = random.choice(("0", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
