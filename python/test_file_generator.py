@@ -1688,3 +1688,68 @@ class test_data(object):
 		lar.denial_code_9 = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v672_1_file(self):
+		"""Set loan costs to random of -1 or blank."""
+		name = "v672_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.loan_costs = random.choice(("-1", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v672_2_file(self):
+		"""Set points and fees to 1. Set loan costs to 500."""
+		name = "v672_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.points_fees = "1"
+		lar.loan_costs = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v672_3_file(self):
+		"""Set reverse mortgage to 1. Set loan costs to 500."""
+		name = "v672_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.reverse_mortgage = "1"
+		lar.loan_costs = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v672_4_file(self):
+		"""Set open-end-credit to 1. Set loan costs to 500."""
+		name = "v672_4.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.open_end_credit = "1"
+		lar.loan_costs = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v672_5_file(self):
+		"""Set business purpose to 1. Set loan costs to 500."""
+		name = "v672_5.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.business_purpose = "1"
+		lar.loan_costs = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v672_6_file(self):
+		""" Set action taken to random of 2, 3, 4, 5, 7, 8. Set loan costs to 500."""
+		name = "v672_6.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(("2", "3", "4", "5", "7", "8"))
+		lar.loan_costs = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
