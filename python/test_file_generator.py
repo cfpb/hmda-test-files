@@ -2182,3 +2182,13 @@ class test_data(object):
 		lar.int_only_pmts = random.choice(("0", ""))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v686_file(self):
+		"""Set negative amortization to 0 or blank."""
+		name = "v686.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.neg_amort = random.choice(("0", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
