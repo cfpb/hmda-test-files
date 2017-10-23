@@ -2162,3 +2162,13 @@ class test_data(object):
 		lar.intro_rate = random.choice(("0", "-1", ""))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v684_file(self):
+		"""Set balloon payment to NA, blank or 0."""
+		name = "v684.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.balloon = random.choice(("0", "", "NA"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
