@@ -1915,3 +1915,57 @@ class test_data(object):
 		lar.discount_points = "500"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v676_1_file(self):
+		"""Set lender credits to 0 or -1."""
+		name = "v676_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.lender_credits = random.choice(("0", "-1"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v676_2_file(self):
+		"""Set reverse mortgage to 1. Set lender credits to 500."""
+		name = "v676_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.reverse_mortgage = "1"
+		lar.lender_credits = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v676_3_file(self):
+		"""Set open end credit to 1. Set lender credits to 500."""
+		name = "v676_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.open_end_credit = "1"
+		lar.lender_credits = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v676_4_file(self):
+		"""Set business purpose to 1. Set lender credits to 500."""
+		name = "v676_4.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.business_purpose = "1"
+		lar.lender_credits = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v676_5_file(self):
+		"""Set action taken to random of 2, 3, 4, 5, 7 or 8. Set lender credits to 500."""
+		name = "v676_5.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(("2", "3", "4", "5", "7", "8"))
+		lar.lender_credits = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
