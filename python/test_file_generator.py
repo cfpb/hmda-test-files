@@ -2110,3 +2110,24 @@ class test_data(object):
 		lar.dti = "15"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v681_1_file(self):
+		"""Set CLTV to 0, blank or -1."""
+		name = "v681_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.cltv = random.choice(("0", "", "-1"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v681_2_file(self):
+		"""Set action taken to random of 4, 5, 6. Set CLTV to 15."""
+		name = "v681_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(("4", "5", "6"))
+		lar.cltv = "15"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
