@@ -1969,3 +1969,24 @@ class test_data(object):
 		lar.lender_credits = "500"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v677_1_file(self):
+		"""Set interest rate to 0, -1 or blank."""
+		name = "v677_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.interest_rate = random.choice(("0", "-1", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v677_2_file(self):
+		"""Set action taken to 3, 4, 5, or 7. Set interest rate to 10.0."""
+		name = "v677_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(("3", "4", "5", "7"))
+		lar.interest_rate = "10.0"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
