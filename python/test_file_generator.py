@@ -1861,3 +1861,57 @@ class test_data(object):
 		lar.origination_fee = "500"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v675_1_file(self):
+		"""Set discount points to 0."""
+		name = "v675_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.discount_points = "0"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v675_2_file(self):
+		"""Set reverse mortgage to 1. Set discount points to 500."""
+		name = "v675_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.reverse_mortgage = "1"
+		lar.discount_points = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v675_3_file(self):
+		"""Set open end credit to 1. Set discount points to 500."""
+		name = "v675_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.open_end_credit = "1"
+		lar.discount_points = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v675_4_file(self):
+		"""Set business purpose to 1. Set discount points to 500."""
+		name = "v675_4.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.business_purpose = "1"
+		lar.discount_points = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v675_5_file(self):
+		"""Set action taken to random of 2, 3, 4, 5, 7 or 8. Set discount points to 500."""
+		name = "v675_5.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(("2", "3", "4", "5", "7", "8"))
+		lar.discount_points = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
