@@ -1990,3 +1990,57 @@ class test_data(object):
 		lar.interest_rate = "10.0"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v678_1_file(self):
+		"""Set penalty term to 0, -1, or blank."""
+		name = "v678_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.prepayment_penalty = random.choice(("0", "-1", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v678_2_file(self):
+		"""Set action taken to 6. Set penalty term to 30."""
+		name = "v678_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = "6"
+		lar.prepayment_penalty = "30"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v678_3_file(self):
+		"""Set reverse mortgage to 1. Set penalty term to 30."""
+		name = "v678_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.reverse_mortgage = "1"
+		lar.prepayment_penalty= "30"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v678_4_file(self):
+		"""Set business purpose to 1. Set penalty term to 30."""
+		name = "v678_4.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.business_purpose = "1"
+		lar.prepayment_penalty = "30"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v678_5_file(self):
+		"""Set penalty term to 360. Set loan term to 30."""
+		name = "v678_5.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.prepayment_penalty = "360"
+		lar.loan_term = "30"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
