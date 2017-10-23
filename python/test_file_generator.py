@@ -2131,3 +2131,24 @@ class test_data(object):
 		lar.cltv = "15"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v682_1_file(self):
+		"""Set loan term to 0 or blank."""
+		name = "v682_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.loan_term = random.choice(("0", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v682_2_file(self):
+		"""Set reverse mortgage to 1. Set loan term to 30."""
+		name = "v682_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.reverse_mortgage = "1"
+		lar.loan_term = "30"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
