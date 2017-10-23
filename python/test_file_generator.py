@@ -2044,3 +2044,35 @@ class test_data(object):
 		lar.loan_term = "30"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v679_1_file(self):
+		"""Set DTI to blank or aa."""
+		name = "v679_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.dti = random.choice(("", "aa"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v679_2_file(self):
+		"""Set action taken to random of 4, 5, 6. Set DTI to 15."""
+		name = "v679_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(("4", "5", "6"))
+		lar.dti = "15"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v679_3_file(self):
+		"""Set affordable units to 1. Set DTI to 15 or blank."""
+		name = "v679_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.affordable_units = "1"
+		lar.dti= "15"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
