@@ -2152,3 +2152,13 @@ class test_data(object):
 		lar.loan_term = "30"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v683_file(self):
+		"""Set introductory rate period to 0, blank or -1."""
+		name = "v683.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.intro_rate = random.choice(("0", "-1", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
