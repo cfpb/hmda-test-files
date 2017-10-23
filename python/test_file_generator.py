@@ -2202,3 +2202,24 @@ class test_data(object):
 		lar.non_amort_features = random.choice(("0", ""))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v688_1_file(self):
+		"""Set property value to 0 or blank."""
+		name = "v688_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.property_value = random.choice(("0", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v688_2_file(self):
+		"""Set action taken to 4 or 5. Set property value to 1."""
+		name = "v688_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(("4", "5"))
+		lar.property_value = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
