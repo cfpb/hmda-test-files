@@ -657,7 +657,7 @@ class rules_engine(object):
 
 	def v629_3(self):
 		"""An invalid Ethnicity data field was reported. 
-        3) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,	+		v"""
+        3) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2 then Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3."""
 -		then Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3.
 		v"""
 		field = "app ethnicity basis"
