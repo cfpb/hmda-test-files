@@ -656,7 +656,9 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v629_3(self):
-		"""An invalid Ethnicity data field was reported.
+		"""An invalid Ethnicity data field was reported. 
+        3) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,	+		v"""
+-		then Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2 or 3.
 		v"""
 		field = "app ethnicity basis"
 		edit_name = "v629_3"
