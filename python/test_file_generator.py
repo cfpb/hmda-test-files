@@ -2291,3 +2291,13 @@ class test_data(object):
 		lar.manufactured_interest = random.choice(("1", "2", "3", "4"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v691(self):
+		"""Set total units to 0 or blank."""
+		name = "v691.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.total_units = random.choice(("0", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
