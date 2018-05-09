@@ -2553,3 +2553,25 @@ class test_data(object):
 		lar.aus_result_5 = str(random.choice(range(15))+1)
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v704_1(self):
+		"""Set action taken = 6 and set AUS 1 to 1-5."""
+		name = "v704_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = "6"
+		lar.aus_1 = str(random.choice(range(5))+1)
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v704_2(self):
+		"""Set action taken = 6 and set AUS Result 1 to 1-16."""
+		name = "v704_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = "6"
+		lar.aus_result_1 = str(random.choice(range(16))+1)
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
