@@ -2526,4 +2526,30 @@ class test_data(object):
 		lar.aus_code_5 = "HMDA"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v703_1(self):
+		"""Set AUS Result 1 to 16 and set AUS Result free form text to blank."""
+		name = "v703_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_result_1 = "16"
+		lar.aus_code_16 = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 		
+	def v703_2(self):
+		"""Set AUS Result free form text to non-empty string 
+		   and set AUS Result 1-5 != 16."""
+		name = "v703_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_code_16 = "HMDA"
+		lar.aus_result_1 = str(random.choice(range(15))+1)
+		lar.aus_result_2 = str(random.choice(range(15))+1)
+		lar.aus_result_3 = str(random.choice(range(15))+1)
+		lar.aus_result_4 = str(random.choice(range(15))+1)
+		lar.aus_result_5 = str(random.choice(range(15))+1)
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
