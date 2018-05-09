@@ -2400,3 +2400,51 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def v696_1(self):
+		"""Set AUS 1 to blank or set AUS 2-5 to 6."""
+		name = "v696_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_1 = ""
+		lar.aus_2 = "6"
+		lar.aus_3 = "6"
+		lar.aus_4 = "6"
+		lar.aus_5 = "6"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v696_2(self):
+		"""Set AUS result 1 to blank and set AUS 2-5 to 17."""
+		name = "v696_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_result_1 = ""
+		lar.aus_result_2 = "17"
+		lar.aus_result_3 = "17"
+		lar.aus_result_4 = "17"
+		lar.aus_result_5 = "17"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v696_3(self):
+		"""Set AUS 1 to 1 and AUS 2-5 to blank.
+		   Set AUS result 1-5 to blank."""
+		name = "v696_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_1 = "1"
+		lar.aus_2 = ""
+		lar.aus_3 = ""
+		lar.aus_4 = ""
+		lar.aus_5 = ""
+		lar.aus_result_1 = ""
+		lar.aus_result_2 = ""
+		lar.aus_result_3 = ""
+		lar.aus_result_4 = ""
+		lar.aus_result_5 = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
