@@ -2459,4 +2459,34 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 		
-
+	def v700_1(self):
+		"""Set AUS 1 to 6 and AUS Result 1-5 to 1-16."""
+		name = "v700_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_1 = "6"
+		lar.aus_result_1 = str(random.choice(range(16))+1)
+		lar.aus_result_2 = str(random.choice(range(16))+1)
+		lar.aus_result_3 = str(random.choice(range(16))+1)
+		lar.aus_result_4 = str(random.choice(range(16))+1)
+		lar.aus_result_5 = str(random.choice(range(16))+1)
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+		
+	def v700_2(self):
+		"""Set AUS Result 1 to 17 and set AUS 1 to 1-5.
+		   Set AUS Result 2-5 to 1-16."""
+		name = "v700_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_result_1 = "17"
+		lar.aus_1 = str(random.choice(range(5))+1)
+		lar.aus_result_2 = str(random.choice(range(16))+1)
+		lar.aus_result_3 = str(random.choice(range(16))+1)
+		lar.aus_result_4 = str(random.choice(range(16))+1)
+		lar.aus_result_5 = str(random.choice(range(16))+1)
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+		
