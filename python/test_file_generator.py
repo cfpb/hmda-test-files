@@ -2500,4 +2500,30 @@ class test_data(object):
 		lar.aus_result_2 = str(random.choice(range(16))+1)
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v702_1(self):
+		"""Set AUS 1 to 5 and set AUS: conditional text to blank."""
+		name = "v702_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_1 = "5"
+		lar.aus_code_5 = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v702_2(self):
+		"""Set AUS conditional text to a non-empty string and set AUS 1-5 != 5."""
+		name = "v702_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_1 = random.choice(("1", "2", "3", "4"))
+		lar.aus_2 = random.choice(("1", "2", "3", "4"))
+		lar.aus_3 = random.choice(("1", "2", "3", "4"))
+		lar.aus_4 = random.choice(("1", "2", "3", "4"))
+		lar.aus_5 = random.choice(("1", "2", "3", "4"))
+		lar.aus_code_5 = "HMDA"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 		
