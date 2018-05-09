@@ -2614,3 +2614,13 @@ class test_data(object):
 		lar.aus_result_1 = str(random.choice(range(16))+1)
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v706(self):
+		"""Set reverse mortgage to 0 or blank."""
+		name = "v706.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.reverse_mortgage = random.choice(("0", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
