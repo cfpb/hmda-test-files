@@ -2357,3 +2357,35 @@ class test_data(object):
 		lar.app_submission = random.choice(("1", "2"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v694_1(self):
+		"""Set initially payable to blank or 0."""
+		name = "v694_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.initially_payable = random.choice(("0", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v694_2(self):
+		"""Set action taken to 6 and initially payable to 1 or 2."""
+		name = "v694_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = "6"
+		lar.initially_payable = random.choice(("1", "2"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v694_3(self):
+		"""Set action taken to 1 and initially payable to 3."""
+		name = "v694_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = "1"
+		lar.initially_payable = "3"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
