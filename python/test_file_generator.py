@@ -2335,3 +2335,25 @@ class test_data(object):
 		lar.affordable_units = "7"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v693_1(self):
+		"""Set app submission to 0 or blank."""
+		name = "V693_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_submission = random.choice(("0",""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v693_2(self):
+		"""Set action taken to 6.
+		   Set app submission to 1 or 2."""
+		name = "V693_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = "6"
+		lar.app_submission = random.choice(("1", "2"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
