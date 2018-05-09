@@ -2389,3 +2389,14 @@ class test_data(object):
 		lar.initially_payable = "3"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v695(self):
+		"""Set NMLSR ID to blank."""
+		name = "v695.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.mlo_id = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
