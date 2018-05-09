@@ -2490,3 +2490,14 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 		
+	def v701(self):
+		"""Set AUS 2 to blank and set AUS Result 2 to 1-16."""
+		name = "v701.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_2 = ""
+		lar.aus_result_2 = str(random.choice(range(16))+1)
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+		
