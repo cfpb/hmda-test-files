@@ -2223,3 +2223,37 @@ class test_data(object):
 		lar.property_value = "1"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v689_1(self):
+		"""Set manufactured type to 0 or blank."""
+		name = "v689_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.manufactured_type = random.choice(("", "0"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v689_2(self):
+		"""Set affordable units to 1.
+			Set manufactured type to random of 1, 2."""
+		name = "v689_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.affordable_units = "1"
+		lar.manufactured_type = random.choice(("1", "2"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v689_3(self):
+		"""Set construction method to 1.
+			Set manufactured type to 3."""
+		name = "v689_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.const_method = "1"
+		lar.manufactured_type = random.choice(("1", "2"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
