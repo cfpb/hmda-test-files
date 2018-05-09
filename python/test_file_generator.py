@@ -2624,3 +2624,13 @@ class test_data(object):
 		lar.reverse_mortgage = random.choice(("0", ""))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v707(self):
+		"""Set Open-End Line of Credit to 0 or blank."""
+		name = "v707.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.open_end_credit = random.choice(("0", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
