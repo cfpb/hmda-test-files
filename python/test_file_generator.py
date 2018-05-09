@@ -2575,3 +2575,42 @@ class test_data(object):
 		lar.aus_result_1 = str(random.choice(range(16))+1)
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v705_1(self):
+		"""Set app ethnicity 1 = 4 and app race 1 = 7 and app sex = 4 (non-natural person).
+			Set co-app ethnicity 1 = 5 and co app race 1 = 8 and co app sex = 5.
+			Set AUS 1 to 1-5.
+			Set AUS Result 1 to 1-16."""
+		name = "v705_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_eth_1 = "4"
+		lar.app_race_1 = "7"
+		lar.app_sex = "4"
+		lar.co_app_eth_1 = "5"
+		lar.co_app_race_1 = "8"
+		lar.co_app_sex = "5"
+		lar.aus_1 = str(random.choice(range(5))+1)
+		lar.aus_result_1 = str(random.choice(range(16))+1)
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v705_2(self):
+		"""Set app ethnicity 1 = 4 and app race 1 = 7 and app sex = 4.
+			Set co-app ethnicity 1 = 5 and co app race 1 = 8 and co app sex = 5.
+			Set AUS 1 = 1-5 and AUS Result 1 = 1-16."""
+		name = "v705_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_eth_1 = "4"
+		lar.app_race_1 = "7"
+		lar.app_sex = "4"
+		lar.co_app_eth_1 = "4"
+		lar.co_app_race_1 = "7"
+		lar.co_app_sex = "4"
+		lar.aus_1 = str(random.choice(range(5))+1)
+		lar.aus_result_1 = str(random.choice(range(16))+1)
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
