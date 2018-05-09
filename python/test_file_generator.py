@@ -2301,3 +2301,37 @@ class test_data(object):
 		lar.total_units = random.choice(("0", ""))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v692_1(self):
+		"""Set affordable units to blank."""
+		name = "v692_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.affordable_units = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v692_2(self):
+		"""Set total units to random 1-4.
+		   Set affordable units to 0, or blank."""
+		name = "v692_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.total_units = random.choice(("1", "2", "3", "4"))
+		lar.affordable_units = random.choice(("0", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+	
+	def v692_3(self):
+		"""Set total units to 6.
+		   Set affordable units to 7."""
+		name = "v692_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.total_units = "6"
+		lar.affordable_units = "7"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
