@@ -2448,3 +2448,15 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def v699(self):
+		"""Set AUS 1 to 5, set AUS Result 1 to 17."""
+		name = "v699.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_1 = "5"
+		lar.aus_result_1 = "17"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+		
+
