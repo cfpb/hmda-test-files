@@ -26,7 +26,7 @@ Creating test files is a two step process. The generation of edit test files req
 
 To generate test files:
 - `python generate_clean_files.py`: running [this script](https://github.com/cfpb/hmda-test-files/blob/master/python/generate_clean_files.py) creates clean synthetic data file. This data file passes HMDA edit rules. The data ranges used in file creation are configured by making changes to the [configuration file](https://github.com/cfpb/hmda-test-files/blob/master/python/config.yaml) which is written in YAML.
-- `python generate_test_files`: running [this script] (https://github.com/cfpb/hmda-test-files/blob/master/python/generate_error_files.py) produces a file that will fail conditions for each edit (other edits may also fail). These files are written to the appropriate directory based on edit type, such as /edits_files/syntax/s300.txt. The file name indicates which edit the file is designed to test. If an edit has multiple conditions, a file will be made for each condition in the format /edits_files/syntax/s301_1.txt.
+- `python generate_error_files`: running [this script](https://github.com/cfpb/hmda-test-files/blob/master/python/generate_error_files.py) produces a file that will fail conditions for each edit (other edits may also fail). These files are written to the appropriate directory based on edit type, such as /edits_files/syntax/s300.txt. The file name indicates which edit the file is designed to test. If an edit has multiple conditions, a file will be made for each condition in the format /edits_files/syntax/s301_1.txt.
 
 ## Repository Structure
 - [Python](https://github.com/Kibrael/2018_test_files/tree/master/python):

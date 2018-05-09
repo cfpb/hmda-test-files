@@ -3,9 +3,9 @@
       type: String
       value: "1234 Hocus Potato Way"
     city:
-      desc: Property city
+      desc: "Property city"
       type: String
-      value: Tatertown
+      value: "Tatertown"
     max_age:
       type: Integer
       value: 110
@@ -58,7 +58,7 @@
       type: Integer
       value: 36
     dti:
-      desc: "Debt to income ratio"
+      desc: "Maximum debt to income ratio"
       type: Integer
       value: 100
     cltv:
@@ -86,7 +86,7 @@
       type: Integer
       value: 10
     file_length:
-     desc: The number of lines in the clean data file
+     desc: "The number of lines in the clean data file"
      type: Integer
      value: 15
     clean_file:
