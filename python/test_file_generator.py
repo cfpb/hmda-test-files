@@ -2236,7 +2236,7 @@ class test_data(object):
 
 	def v689_2(self):
 		"""Set affordable units to 1.
-			Set manufactured type to random of 1, 2."""
+		   Set manufactured type to random of 1, 2."""
 		name = "v689_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
@@ -2248,12 +2248,46 @@ class test_data(object):
 
 	def v689_3(self):
 		"""Set construction method to 1.
-			Set manufactured type to 3."""
+		   Set manufactured type to 3."""
 		name = "v689_3.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.const_method = "1"
 		lar.manufactured_type = random.choice(("1", "2"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v690_1(self):
+		"""Set manufactured interest to random of 0 or blank."""
+		name = "v690_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.manufactured_interest = random.choice(("0", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v690_2(self):
+		"""Set affordable units to 1.
+		   Set manufactured interest to random 1-4."""
+		name = "v690_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.affordable_units = "1"
+		lar.manufactured_interest = random.choice(("1", "2", "3", "4"))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v690_3(self):
+		"""Set construction method to 1.
+		   Set manufactured interest to random 1-4."""
+		name = "v690_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.const_method = "1"
+		lar.manufactured_interest = random.choice(("1", "2", "3", "4"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
