@@ -73,7 +73,7 @@ with open('config.yaml') as f:
 use_cols = ['name', 'metDivName', 'countyFips', 'geoIdMsa', 'metDivFp', 'smallCounty', 'tracts']
 cbsa_cols = ['name', 'metDivName', 'state', 'countyFips', 'county', 'tracts','geoIdMsa', 'metDivFp', 'smallCounty', 
 			 'stateCode', 'tractDecimal']
-cbsas = pd.read_csv('../dependancies/tract_to_cbsa_2015.txt', usecols=use_cols, delimiter='|', 
+cbsas = pd.read_csv('../dependencies/tract_to_cbsa_2015.txt', usecols=use_cols, delimiter='|', 
 					header=None, names=cbsa_cols, dtype=str) #load tract to CBSA data from platform file
 cbsas["tractFips"] = cbsas.countyFips + cbsas.tracts
 counties = list(cbsas.countyFips)

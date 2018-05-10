@@ -44,7 +44,7 @@ class test_data(object):
 
 	def s300_2_file(self):
 		""""Sets the first character of each LAR row to 3."""
-		name = "s300_2_file"
+		name = "s300_2.txt"
 		path = self.syntax_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy() #set to local data from class data object
