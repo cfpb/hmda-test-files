@@ -24,6 +24,6 @@ file_maker.load_data_frames(ts_data, lar_data) #pass clean file data to file mak
 #generate a file for each edit function in file maker
 edits = []
 for func in dir(file_maker): #loop over all data modification functions
-	if func[:1] in ("s", "v") and func[1:4].isdigit()==True: #check if function is a numbered syntax or validity edit
+	if func[:1] in ("s", "v", "q") and func[1:4].isdigit()==True: #check if function is a numbered syntax or validity edit
 		print("applying:", func)
 		getattr(file_maker, func)() #apply data modification functions and produce files

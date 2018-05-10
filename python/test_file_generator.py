@@ -13,6 +13,7 @@ class test_data(object):
 		self.clean_file_path = "../edits_files/"
 		self.validity_path = "../edits_files/validity/"
 		self.syntax_path = "../edits_files/syntax/"
+		self.quality_path = "../edits_files/quality/"
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 
@@ -2644,3 +2645,15 @@ class test_data(object):
 		lar.business_purpose = random.choice(("0", ""))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q600(self):
+		"""Set all ULIs to same value."""
+		name = "q600.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		uli = lar.uli.iloc[0]
+		lar.uli = uli
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
