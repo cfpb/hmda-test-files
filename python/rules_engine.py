@@ -2240,3 +2240,10 @@ class rules_engine(object):
 		edit_name = "v708"
 		fail_df = self.lar_df[~(self.lar_df.business_purpose.isin(("1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q600(self):
+		"""1) A duplicate ULI was reported. """
+		field = "ULI"
+		edit_name = "q600"
+		fail_df = self.lar_df[~(self.lar_df.duplicated(keep=False, subset='uli'))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
