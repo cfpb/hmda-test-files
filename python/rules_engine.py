@@ -586,38 +586,17 @@ class rules_engine(object):
 		fail_df = self.lar_df[~(self.lar_df.app_eth_1.isin(("1","11", "12", "13", "14", "2", "3","4")))|((self.lar_df.app_eth_free=="")&(self.lar_df.app_eth_1==""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v628_2a(self):
+	def v628_2(self):
 		"""An invalid Ethnicity data field was reported.
 		2) Ethnicity of Applicant or Borrower: 2 must equal 1, 11, 12, 13, 14, 2, or be left blank."""
-		field = "app_eth_2"
-		edit_name = "v628_2a"
-		fail_df = self.lar_df[~(self.lar_df.app_eth_2.isin(("1","11", "12", "13", "14", "2","")))]
+		field = "app ethnicities 2-4"
+		edit_name = "v628_2"
+		fail_df = self.lar_df[~(self.lar_df.app_eth_2.isin(("1","11", "12", "13", "14", "2","")))|
+							  ~(self.lar_df.app_eth_3.isin(("1","11", "12", "13", "14", "2","")))|
+							  ~(self.lar_df.app_eth_4.isin(("1","11", "12", "13", "14", "2","")))|
+							  ~(self.lar_df.app_eth_5.isin(("1","11", "12", "13", "14", "2","")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
-	def v628_2b(self):
-		"""An invalid Ethnicity data field was reported.
-		2) Ethnicity of Applicant or Borrower: 3  must equal 1, 11, 12, 13, 14, 2, or be left blank."""
-		field = "app_eth_3"
-		edit_name = "v628_2b"
-		fail_df = self.lar_df[~(self.lar_df.app_eth_3.isin(("1","11", "12", "13", "14", "2","")))]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
-	def v628_2c(self):
-		"""An invalid Ethnicity data field was reported.
-		2) Ethnicity of Applicant or Borrower: 4  must equal 1, 11, 12, 13, 14, 2, or be left blank."""
-		field = "app_eth_4"
-		edit_name = "v628_2c"
-		fail_df = self.lar_df[~(self.lar_df.app_eth_4.isin(("1","11", "12", "13", "14", "2","")))]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
-	def v628_2d(self):
-		"""An invalid Ethnicity data field was reported.
-		2) Ethnicity of Applicant or Borrower: 5  must equal 1, 11, 12, 13, 14, 2, or be left blank."""
-		field = "app_eth_5"
-		edit_name = "v628_2d"
-		fail_df = self.lar_df[~(self.lar_df.app_eth_5.isin(("1","11", "12", "13", "14", "2","")))]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
+	
 	def v628_3(self):
 		"""An invalid Ethnicity data field was reported.
 		3) Each Ethnicity of Applicant or Borrower code can only be reported once."""
