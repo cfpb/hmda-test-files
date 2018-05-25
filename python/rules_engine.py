@@ -166,7 +166,8 @@ class rules_engine(object):
 		field="LEI"
 		edit_name = "s301"
 		#get dataframe of LAR row fails
-		fail_df = self.lar_df[self.lar_df.lei != self.ts_df.get_value(0, "lei")]
+		#fail_df = self.lar_df[self.lar_df.lei != self.ts_df.get_value(0, "lei")]
+		fail_df = self.lar_df[self.lar_df.lei!=self.ts_df.at[0,"lei"]]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	def v600(self):
@@ -187,7 +188,8 @@ class rules_engine(object):
 	def s304(self):
 		"""The reported Total Number of Entries Contained in Submission does not match the total number of LARs in the HMDA file."""
 		result={}
-		if self.ts_df.get_value(0, "lar_entries") != str(len(self.lar_df)):
+		#if self.ts_df.get_value(0, "lar_entries") != str(len(self.lar_df)):
+		if self.ts_df.at[0,"lar_entries"]!=str(len(self.lar_df)):
 			result["lar_entries"] = "failed"
 		else:
 			result["lar_entries"] = "passed"
