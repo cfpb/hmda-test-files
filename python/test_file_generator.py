@@ -2657,3 +2657,24 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def q601(self):
+		"""Set all application dates to 2 or more years prior to action taken date."""
+		name = "q601.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_date = "20150101"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q602(self):
+		"""Set street address to NA. Set city and zip code to not NA"""
+		name = "q602.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.street_address = "NA"
+		lar.city = "tatertown"
+		lar.zip_code = "55555"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
