@@ -2254,5 +2254,14 @@ class rules_engine(object):
 		"""1) Application Date occurs more than two years prior to Action Taken Date. """
 		field = "Application Date"
 		edit_name = "q601"
-		fail_df = self.lar_df[(self.lar_df.app_date.apply(lambda x: int(x[:4])<2016))]
+		fail_df = self.lar_df[self.lar_df.app_date!="NA"].copy()
+		fail_df = fail_df[(fail_df.app_date.apply(lambda x: int(x[:4])<2016))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q602(self):
+		"""Street Address was reported NA, however City, State and Zip Code were provided. """
+		field = "Street Address"
+		edit_name = "q602"
+		fail_df = self.lar_df[(self.lar_df.street_address=="NA")&
+			(self.lar_df.city!="NA")&(self.lar_df.state!="NA")&(self.lar_df.zip_code!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
