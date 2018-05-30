@@ -2249,3 +2249,10 @@ class rules_engine(object):
 		edit_name = "q600"
 		fail_df = self.lar_df[~(self.lar_df.duplicated(keep=False, subset='uli'))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q601(self):
+		"""1) Application Date occurs more than two years prior to Action Taken Date. """
+		field = "Application Date"
+		edit_name = "q601"
+		fail_df = self.lar_df[(self.lar_df.app_date.apply(lambda x: int(x[:4])<2016))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
