@@ -12,11 +12,12 @@ from lar_generator import lar_gen #used for check digit
 
 class rules_engine(object):
 	"""docstring for ClassName"""
-	def __init__(self, lar_schema=None, ts_schema=None, year="2018", tracts=None, counties=None):
+	def __init__(self, lar_schema=None, ts_schema=None, year="2018", tracts=None, counties=None, small_counties=None):
 		#lar and TS field names (load from schema names?)
 		self.year = year
 		self.tracts = tracts #instantiate valid Census tracts
 		self.counties = counties #instantiate valid Census counties
+		self.small_counties = small_counties #instantiate list of small counties
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 		#self.ts_df, self.lar_df= self.split_ts_row(data_file=data_file)
@@ -2264,4 +2265,16 @@ class rules_engine(object):
 		edit_name = "q602"
 		fail_df = self.lar_df[(self.lar_df.street_address=="NA")&
 			(self.lar_df.city!="NA")&(self.lar_df.state!="NA")&(self.lar_df.zip_code!="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q603(self):
+		"""1) The County has a population of greater than 30,000
+			according to the most recent decennial census and
+			was not reported NA; however Census Tract was reported NA"""
+		field = "County/Census Tract"
+		edit_name = "q603"
+		#load cbsa data
+		#get list of small counties and tracts
+		#use ~isin()
+		fail_df = self.lar_df[(self.lar_df.tract=="NA")&(~self.lar_df.county.isin(self.small_counties))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
