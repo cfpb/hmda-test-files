@@ -17,6 +17,13 @@ class test_data(object):
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 
+		#load CBSA data for geography testing edits
+		use_cols = ['name', 'metDivName', 'countyFips', 'geoIdMsa', 'metDivFp', 'smallCounty', 'tracts']
+		cbsa_cols = ['name', 'metDivName', 'state', 'countyFips', 'county', 'tracts','geoIdMsa', 'metDivFp', 'smallCounty', 
+			 'stateCode', 'tractDecimal']
+		self.cbsa_data = pd.read_csv('../dependencies/tract_to_cbsa_2015.txt', usecols=use_cols, delimiter='|', 
+					header=None, names=cbsa_cols, dtype=object) #load tract to CBSA data from platform file
+	
 	def load_data_frames(self, ts_data, lar_data):
 		"""Receives dataframes for TS and LAR and writes them as object attributes"""
 		self.ts_df = ts_data
@@ -2676,5 +2683,18 @@ class test_data(object):
 		lar.street_address = "NA"
 		lar.city = "tatertown"
 		lar.zip_code = "55555"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q603(self):
+		"""Set county to non-small county.
+			Set census tract = NA."""
+		name = "q603.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.tract = "NA"
+		big_counties = list(self.cbsa_data.countyFips[self.cbsa_data.smallCounty!="1"])
+		lar.county = random.choice(big_counties)
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)

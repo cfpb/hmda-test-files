@@ -78,6 +78,7 @@ cbsas = pd.read_csv('../dependencies/tract_to_cbsa_2015.txt', usecols=use_cols, 
 cbsas["tractFips"] = cbsas.countyFips + cbsas.tracts
 counties = list(cbsas.countyFips)
 tracts = list(cbsas.tractFips)
+small_counties = list(cbsas.countyFips[cbsas.smallCounty=="1"])
 
 #load schemas for LAR and transmittal sheet
 #schemas contain valid enumerations, including NA values, for each field in the dataset
@@ -87,7 +88,8 @@ ts_schema_df = pd.DataFrame(json.load(open("../schemas/ts_schema.json", "r")))
 #instantiate class objects
 lar_gen = lar_generator.lar_gen(lar_schema_df, ts_schema_df, counties=counties, tracts=tracts) #lar gen is responsible for generating data according to the schema
 lar_const = lar_constraints.lar_constraints(counties=counties, tracts=tracts) #lar constrains is responsible for modifying generated data so that the resulting file passes edits
-lar_validator = rules_engine(lar_schema=lar_schema_df, ts_schema=ts_schema_df, tracts=tracts, counties=counties) #lar validator checks a dataframe and returns a JSON with generate_error_files
+lar_validator = rules_engine(lar_schema=lar_schema_df, ts_schema=ts_schema_df, 
+			tracts=tracts, counties=counties, small_counties=small_counties) #lar validator checks a dataframe and returns a JSON with generate_error_files
 
 #Set parameters for data creation
 file_length = data_map["file_length"]["value"] #set number of rows in test file
