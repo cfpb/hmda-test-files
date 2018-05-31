@@ -2274,9 +2274,6 @@ class rules_engine(object):
 			was not reported NA; however Census Tract was reported NA"""
 		field = "County/Census Tract"
 		edit_name = "q603"
-		#load cbsa data
-		#get list of small counties and tracts
-		#use ~isin()
 		fail_df = self.lar_df[(self.lar_df.tract=="NA")&(~self.lar_df.county.isin(self.small_counties))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
@@ -2294,3 +2291,21 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.fail_flag=="1")]
 		fail_df.drop("fail_flag", inplace=True, axis=1)
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q605_1(self):
+		"""If Type of Purchaser equals 1 or 3, then Loan Type generally should equal 1."""
+		field = "Purchaser Type"
+		edit_name = "q605_1"
+		fail_df = self.lar_df[(self.lar_df.purchaser_type.isin(["1","3"]))&(self.lar_df.loan_type!="1")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q605_2(self):
+		"""If Type of Purchaser equals 2, then Loan Type generally should equal 2, 3 or 4."""
+		field = "Purhaser Type"
+		edit_name = "q605_2"
+		fail_df = self.lar_df[(self.lar_df.purchaser_type=="2")&(~self.lar_df.loan_type.isin(["2", "3", "4"]))].copy()
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+
+
+
