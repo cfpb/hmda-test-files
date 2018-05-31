@@ -2306,6 +2306,12 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.purchaser_type=="2")&(~self.lar_df.loan_type.isin(["2", "3", "4"]))].copy()
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def q606(self):
+		"""If Income is a number, then it generally should be less than $3 million (entered as 3000)."""
+		field = "Income"
+		edit_name = "q606"
+		fail_df = self.lar_df[(self.lar_df.income!="NA")&(self.lar_df.income.apply(lambda x: int(x)>=3000))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 
 
