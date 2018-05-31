@@ -2329,3 +2329,11 @@ class rules_engine(object):
 		edit_name = "q608"
 		fail_df = self.lar_df[(self.lar_df.action_taken=="1")&(self.lar_df.action_date<self.lar_df.app_date)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q609(self):
+		"""If Type of Purchaser equals 1, 2, 3 or 4, then Rate Spread generally should be less than or equal to 10% or be NA."""
+		field = "Purchaser Type/Rate Spread"
+		edit_name = "q609"
+		fail_df = self.lar_df[self.lar_df.rate_spread!="NA"].copy()
+		fail_df = fail_df[fail_df.purchaser_type.isin(["1","2","3","4"])&(fail_df.rate_spread.apply(lambda x: float(x)>10))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)		
