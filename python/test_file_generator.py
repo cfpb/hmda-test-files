@@ -2713,3 +2713,28 @@ class test_data(object):
 			row["county"] = random.choice(list(self.cbsa_data.countyFips[self.cbsa_data.stateCode!=row["state"]]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q605_1(self):
+		"""Set purchaser to 1 or 3.
+		Set loan type != 1."""
+		name = "q605_1.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.purchaser_type = random.choice(["1", "3"])
+		lar.loan_type = random.choice(["2", "3", "4"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q605_2(self):
+		"""Set purchaser to 2.
+		Set loan type to 1."""
+		name = "q605_2.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.purchaser_type = "2"
+		lar.loan_type = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
