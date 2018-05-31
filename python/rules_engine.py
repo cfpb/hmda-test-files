@@ -12,14 +12,15 @@ from lar_generator import lar_gen #used for check digit
 
 class rules_engine(object):
 	"""docstring for ClassName"""
-	def __init__(self, lar_schema=None, ts_schema=None, year="2018", tracts=None, counties=None, small_counties=None):
+	def __init__(self, lar_schema=None, ts_schema=None, year="2018", cbsa_data=None):#tracts=None, counties=None, small_counties=None):
 		#lar and TS field names (load from schema names?)
 		self.year = year
-		self.tracts = tracts #instantiate valid Census tracts
-		self.counties = counties #instantiate valid Census counties
-		self.small_counties = small_counties #instantiate list of small counties
+		self.tracts = list(cbsa_data.tractFips)#tracts #instantiate valid Census tracts
+		self.counties = list(cbsa_data.countyFips) #instantiate valid Census counties
+		self.small_counties = cbsa_data[cbsa_data.smallCounty=="1"]#small_counties #instantiate list of small counties
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
+		self.cbsa_data = cbsa_data
 		#self.ts_df, self.lar_df= self.split_ts_row(data_file=data_file)
 		#if data_row:
 			#self.lar_df = data_row
@@ -2277,4 +2278,19 @@ class rules_engine(object):
 		#get list of small counties and tracts
 		#use ~isin()
 		fail_df = self.lar_df[(self.lar_df.tract=="NA")&(~self.lar_df.county.isin(self.small_counties))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q604(self):
+		"""The reported State and County are not a valid combination. 
+		If neither State nor County were reported NA, then the County must be located within the State."""
+		field = "State/County"
+		edit_name = "q604"
+		self.lar_df['fail_flag'] = "" #set flag to filter lar_df by fail rows
+		#iterate over lar to match state code with list of counties inside the state
+		for index, row in self.lar_df.iterrows():
+			county_list = list(self.cbsa_data.countyFips[self.cbsa_data.stateCode==row["state"]])
+			if row["county"] not in county_list:
+				self.lar_df.at[index,'fail_flag'] = "1"
+		fail_df = self.lar_df[(self.lar_df.fail_flag=="1")]
+		fail_df.drop("fail_flag", inplace=True, axis=1)
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)

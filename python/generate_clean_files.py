@@ -54,8 +54,8 @@ def validation(row, ts_row):
 	""""""
 	lar_data = pd.DataFrame(row, index=[1])
 	ts_data = pd.DataFrame(ts_row, index=[0])
-	rules_check = rules_engine(lar_schema=lar_schema_df, ts_schema=ts_schema_df, tracts=tracts, 
-							 counties=counties) #instantiate edits rules engine
+	rules_check = rules_engine(lar_schema=lar_schema_df, ts_schema=ts_schema_df, cbsa_data=cbsas)
+		#tracts=tracts, counties=counties) #instantiate edits rules engine
 	rules_check.load_lar_data(lar_data)
 	rules_check.load_ts_data(ts_data)
 	for func in dir(rules_check):
@@ -70,7 +70,7 @@ with open('config.yaml') as f:
 	data_map = yaml.safe_load(f)
 #load tract and county data from the CBSA file
 #tract and county FIPS codes will be used  in geographic data generation
-use_cols = ['name', 'metDivName', 'countyFips', 'geoIdMsa', 'metDivFp', 'smallCounty', 'tracts']
+use_cols = ['name', 'metDivName', 'countyFips', 'geoIdMsa', 'metDivFp', 'smallCounty', 'tracts', 'stateCode']
 cbsa_cols = ['name', 'metDivName', 'state', 'countyFips', 'county', 'tracts','geoIdMsa', 'metDivFp', 'smallCounty', 
 			 'stateCode', 'tractDecimal']
 cbsas = pd.read_csv('../dependencies/tract_to_cbsa_2015.txt', usecols=use_cols, delimiter='|', 
@@ -88,8 +88,8 @@ ts_schema_df = pd.DataFrame(json.load(open("../schemas/ts_schema.json", "r")))
 #instantiate class objects
 lar_gen = lar_generator.lar_gen(lar_schema_df, ts_schema_df, counties=counties, tracts=tracts) #lar gen is responsible for generating data according to the schema
 lar_const = lar_constraints.lar_constraints(counties=counties, tracts=tracts) #lar constrains is responsible for modifying generated data so that the resulting file passes edits
-lar_validator = rules_engine(lar_schema=lar_schema_df, ts_schema=ts_schema_df, 
-			tracts=tracts, counties=counties, small_counties=small_counties) #lar validator checks a dataframe and returns a JSON with generate_error_files
+lar_validator = rules_engine(lar_schema=lar_schema_df, ts_schema=ts_schema_df, cbsa_data=cbsas)
+			#tracts=tracts, counties=counties, small_counties=small_counties) #lar validator checks a dataframe and returns a JSON with generate_error_files
 
 #Set parameters for data creation
 file_length = data_map["file_length"]["value"] #set number of rows in test file
@@ -136,7 +136,7 @@ print("LAR dataframe complete") #file generation is complete
 
 #check validity and syntax of data using rules_engine
 #instantiate edits rules engine to check validity of file.
-validator = rules_engine(lar_schema=lar_schema_df, ts_schema=ts_schema_df, tracts=tracts, counties=counties)
+validator = rules_engine(lar_schema=lar_schema_df, ts_schema=ts_schema_df, cbsa_data=cbsas)#tracts=tracts, counties=counties)
 
 validator.load_lar_data(lar_frame) #load data to validator engine
 validator.load_ts_data(pd.DataFrame(ts_row, index=[0], columns=validator.ts_field_names)) #pass a TS dataframe to the rules engine
