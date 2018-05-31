@@ -2738,3 +2738,37 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def q606(self):
+		"""Set income to 4000."""
+		name = "q606.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.income = "4000"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q607(self):
+		"""Set lien status = 2.
+		Set loan amount to 300,000."""
+		name = "q607.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.lien = "2"
+		lar.loan_amount = "300"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q608(self):
+		"""Set action taken to 1.
+		Set action taken date before application date."""
+		name = "q608.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = "1"
+		lar.action_date = "20161231"
+		lar.app_date = "20181231"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)

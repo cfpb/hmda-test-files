@@ -2323,3 +2323,9 @@ class rules_engine(object):
 		fail_df = fail_df[(fail_df.lien=="2")&(fail_df.loan_amount.apply(lambda x: int(x)>250))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def q608(self):
+		"""If Action Taken equals 1, then the Action Taken Date generally should occur after the Application Date."""
+		field = "Action Taken/Action Taken Date/Application Date"
+		edit_name = "q608"
+		fail_df = self.lar_df[(self.lar_df.action_taken=="1")&(self.lar_df.action_date<self.lar_df.app_date)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
