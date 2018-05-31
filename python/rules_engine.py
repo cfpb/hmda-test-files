@@ -2310,8 +2310,16 @@ class rules_engine(object):
 		"""If Income is a number, then it generally should be less than $3 million (entered as 3000)."""
 		field = "Income"
 		edit_name = "q606"
-		fail_df = self.lar_df[(self.lar_df.income!="NA")&(self.lar_df.income.apply(lambda x: int(x)>=3000))]
+		fail_df = self.lar_df[(self.lar_df.income!="NA")].copy()
+		fail_df = fail_df[(fail_df.income.apply(lambda x: int(x)>=3000))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-
+	def q607(self):
+		"""If Lien Status equals 2, 
+		then Loan Amount generally should be less than or equal to $250 thousand (entered as 250000)."""
+		field = "Loan Amount/Lien Status"
+		edit_name = "q607"
+		fail_df = self.lar_df[(self.lar_df.loan_amount!="NA")].copy()
+		fail_df = fail_df[(fail_df.lien=="2")&(fail_df.loan_amount.apply(lambda x: int(x)>250))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
