@@ -2346,4 +2346,14 @@ class rules_engine(object):
 		fail_df = self.lar_df[self.lar_df.rate_spread !="NA"].copy()
 		fail_df = fail_df[(fail_df.action_taken=="1")&(fail_df.lien=="1")&
 			(fail_df.rate_spread.apply(lambda x: float(x)>6.5))&(fail_df.hoepa!="1")]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)			
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q611(self):
+		"""If Action Taken equals 1, Lien Status equals 2, and Rate Spread is greater than 8.5%, 
+		then HOEPA Status generally should be 1."""	
+		field = "Action Taken/Lien Status/Rate Spread/HOEPA Status"
+		edit_name = "q611"
+		fail_df = self.lar_df[self.lar_df.rate_spread!="NA"]
+		fail_df = fail_df[(fail_df.action_taken=="1")&(fail_df.lien=="2")&(fail_df.hoepa!="1")&
+			(fail_df.rate_spread.apply(lambda x: float(x)>8.5))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
