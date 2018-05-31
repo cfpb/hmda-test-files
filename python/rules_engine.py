@@ -2365,3 +2365,9 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.purchaser_type.isin(["1", "3"]))&(~self.lar_df.hoepa.isin(["2","3'"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 		
+	def q613(self):
+		"""If Business or Commercial Purpose equals 1, then Loan Purpose generally should equal 1, 2, 31, 32, or 5."""
+		field = "Business or Commercial Purpose/Loan Purpose"
+		edit_name = "q613"
+		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(~self.lar_df.loan_purpose.isin(["1","2","31","32","5"]))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
