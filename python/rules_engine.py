@@ -2450,3 +2450,10 @@ class rules_engine(object):
 		edit_name = "q619"
 		fail_df = self.lar_df[(self.lar_df.const_method=="2")&(self.lar_df.manufactured_interest=="5")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q620(self):
+		"""If Business or Commercial Purpose equals 2, then NMLSR ID generally should not be NA."""
+		field = "Business or Commercial Purpose; NMLSR ID"
+		edit_name = "q620"
+		fail_df = self.lar_df[(self.lar_df.business_purpose=="2")&(self.lar_df.mlo_id=="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
