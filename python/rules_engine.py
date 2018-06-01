@@ -2371,3 +2371,13 @@ class rules_engine(object):
 		edit_name = "q613"
 		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(~self.lar_df.loan_purpose.isin(["1","2","31","32","5"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q614(self):
+		"""The Age of Applicant or Borrower generally should be between 18 and 100 
+		unless the Age of Applicant or Borrower is reported 8888 indicating NA. 
+		Your data indicates a number outside of this range."""
+		field = "Age of Applicant or Borrower"
+		edit_name = "q614"
+		fail_df = self.lar_df[self.lar_df.app_age!="NA"].copy()
+		fail_df = fail_df[~(fail_df.app_age.apply(lambda x: 17 <= int(x) <= 101))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
