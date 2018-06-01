@@ -2425,3 +2425,14 @@ class rules_engine(object):
 		fail_df = fail_df[(fail_df.discount_points>fail_df.points_fees)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 		
+	def q617(self):
+		"""If Combined Loan-to-Value Ratio and Property Value are not reported NA, 
+		then the Combined Loan-to Value Ratio generally should be greater than or equal to the Loan-to-Value Ratio 
+		(calculated as Loan Amount divided by the Property Value)."""
+		field = "Combined Loanto-Value Ratio, Loan Amount, and Property Value"
+		edit_name = "q617"
+		fail_df = self.lar_df[(self.lar_df.cltv!="NA")&(self.lar_df.property_value!="NA")].copy()
+		fail_df.cltv = fail_df.cltv.apply(lambda x: float(x))
+		fail_df["ltv"] = (fail_df.loan_amount.apply(lambda x: float(x)) / fail_df.property_value.apply(lambda x: float(x))) *100
+		fail_df = fail_df[fail_df.cltv < fail_df.ltv]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
