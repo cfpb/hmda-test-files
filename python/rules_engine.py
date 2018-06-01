@@ -2381,3 +2381,24 @@ class rules_engine(object):
 		fail_df = self.lar_df[self.lar_df.app_age!="NA"].copy()
 		fail_df = fail_df[~(fail_df.app_age.apply(lambda x: 17 <= int(x) <= 101))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q615_1(self):
+		"""If Total Loan Costs and Origination Charges are not reported NA, 
+		then Total Loan Costs generally should be greater than Origination Charges."""
+		field = "Origination Charges/Total Loan Costs/Total Points and Fees"
+		edit_name = "q615_1"
+		fail_df = self.lar_df[(self.lar_df.origination_fee!="NA")&(self.lar_df.loan_costs!="NA")].copy()
+		fail_df = fail_df[(fail_df.loan_costs<fail_df.origination_fee)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q615_2(self):
+		"""If Total Points and Fees and Origination Charges are not reported NA, 
+		then Total Points and Fees generally should be greater than Origination Charges."""
+		field = "Origination Charges/Total Loan Costs/Total Points and Fees"
+		edit_name = "q615_2"
+		fail_df = self.lar_df[(self.lar_df.origination_fee!="NA")&(self.lar_df.points_fees!="NA")]
+		fail_df.origination_fee = fail_df.origination_fee.apply(lambda x: float(x))
+		fail_df.points_fees = fail_df.points_fees.apply(lambda x: float(x))
+		fail_df = fail_df[fail_df.points_fees < fail_df.origination_fee]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
