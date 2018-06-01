@@ -2443,3 +2443,10 @@ class rules_engine(object):
 		edit_name = "q618"
 		fail_df = self.lar_df[(self.lar_df.const_method=="2")&(self.lar_df.manufactured_type=="3")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q619(self):
+		"""If Construction Method equals 2, then Manufactured Home Land Property Interest generally should not be 5."""
+		field = "Construction Method; Manufactured Home Land Property Interest"
+		edit_name = "q619"
+		fail_df = self.lar_df[(self.lar_df.const_method=="2")&(self.lar_df.manufactured_interest=="5")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
