@@ -2436,3 +2436,10 @@ class rules_engine(object):
 		fail_df["ltv"] = (fail_df.loan_amount.apply(lambda x: float(x)) / fail_df.property_value.apply(lambda x: float(x))) *100
 		fail_df = fail_df[fail_df.cltv < fail_df.ltv]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q618(self):
+		"""If Construction Method equals 2, then Manufactured Home Secured Property Type generally should not be 3."""
+		field = "Manufactured Home Secured Property Type"
+		edit_name = "q618"
+		fail_df = self.lar_df[(self.lar_df.const_method=="2")&(self.lar_df.manufactured_type=="3")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
