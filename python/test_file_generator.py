@@ -2772,3 +2772,169 @@ class test_data(object):
 		lar.app_date = "20181231"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q609(self):
+		"""Set purchaser to 1-4.
+		Set rate spread to 15%."""
+		name = "q609.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.purchaser_type = random.choice(["1", "2", "3", "4"])
+		lar.rate_spread = "15.59"		
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q610(self):
+		"""Set action taken to 1.
+		Set lien status to 1.
+		Set rate spread to 8%.
+		Set HOEPA to 2 or 3."""
+		name = "q610.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.lien = "1"
+		lar.rate_spread = "8.00"
+		lar.hoepa = random.choice(["2", "3"])
+		lar.action_taken = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q611(self):
+		"""Set action taken to 1.
+		Set lien status to 2.
+		Set rate spread to 10%.
+		Set HOEPA to 2 or 3."""
+		name = "q611.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.lien = "2"
+		lar.rate_spread = "10.124"
+		lar.hoepa = random.choice(["2","3"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)		
+
+	def q612(self):
+		"""Set purchaser to 1 or 3.
+		Set HOEPA Status to 1."""
+		name = "q612.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.purchaser_type = random.choice(["1","3"])
+		lar.hoepa = "1"		
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q613(self):
+		"""Set business purpose to 1.
+		Set loan purpose to 4."""
+		name = "q613.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.business_purpose = "1"				
+		lar.loan_purpose = "4'"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q614(self):
+		"""Set borrower age to 240"""
+		name = "q614.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_age = "240"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q615_1(self):
+		"""Set total loan costs to 1000 and origination charges to 500."""
+		name = "q615_1.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.loan_costs = "1000"
+		lar.origination_fee = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q615_2(self):
+		"""Set origination charges to 1000 and points and fees to 500."""
+		name = "q615_2.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.origination_fee = "1000"		
+		lar.points_fees = "500"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q616_1(self):
+		"""Set total loan costs lower than discount points."""
+		name = "q616_1.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.loan_costs = "10000"
+		lar.discount_points = "50000"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q616_2(self):
+		"""Set total points and fees lower than discount points."""
+		name = "q616_2.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.points_fees = "100"
+		lar.discount_points = "5000"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q617(self):
+		"""Set CLTV lower than LTV (using loan_amount/property_value)."""
+		name = "q617.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.cltv = "1.0"
+		lar.loan_amount = "240000"
+		lar.property_value = "240000"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q618(self):
+		"""Set construction method to 2 and manufactured home secured property type to 3."""
+		name = "q618.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.const_method = "2"
+		lar.manufactured_type = "3"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q619(self):
+		"""Set construction method to 2 and manufactured home land property interest to 5"""
+		name = "q619.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.const_method = "2"
+		lar.manufactured_interest = "5"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q620(self):
+		"""Set business or commercial purpose to 2 and NMLSR ID to not NA."""
+		name = "q620.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.business_purpose = "2"
+		lar.mlo_id = "NA"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
