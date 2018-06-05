@@ -2680,3 +2680,17 @@ class rules_engine(object):
 		else:
 			fail_df = []
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q640(self):
+		"""No more than 20% of the loans in the file should report Income less than $10 thousand (entered as 10). 
+		Your file indicates a percentage outside of this range."""
+		field = "Income; Total Number of Entries Contained in Submission"
+		edit_name = "q640"
+		income_less_10k = self.lar_df[self.lar_df.income!="NA"].copy()
+		income_less_10k_ct = len(income_less_10k[income_less_10k.income.apply(lambda x: int(x)<10)])
+		denom_count = len(self.lar_df)
+		if (income_less_10k_ct * 1.0) / denom_count > .20:
+			fail_df = income_less_10k
+		else:
+			fail_df = []
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)

@@ -3191,3 +3191,13 @@ class test_data(object):
 		lar.action_taken = random.choice(["1","2","3","4","5","6"])
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q640(self):
+		"""Set income to 9."""
+		name = "q640.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.income = "9"		
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
