@@ -2963,3 +2963,17 @@ class test_data(object):
 		lar.reverse_mortgage = "1"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q623(self):
+		"""Set total units to <= 4.
+		Set income to <200.
+		Set loan amount to 3,000,000."""
+		name = "q623.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.total_units = random.choice(["1", "2", "3", "4"])
+		lar.income = "150"
+		lar.loan_amount = "3000000"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
