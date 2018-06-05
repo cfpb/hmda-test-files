@@ -2581,3 +2581,22 @@ class rules_engine(object):
 			((self.lar_df.aus_4=="3")&(~self.lar_df.aus_result_4.isin(["8","13"])))|
 			((self.lar_df.aus_5=="3")&(~self.lar_df.aus_result_5.isin(["8","13"])))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q633(self):
+		"""If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; 
+		Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 4,
+		then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2; 
+		Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or 
+		Automated Underwriting System Result: 5 should equal 5, 8, 10, 13, 14, 15, or 16"""
+		field = """Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; 
+				Automated Underwriting System: 4; Automated Underwriting System: 5; Automated Underwriting System Result: 1; 
+				Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; 
+				Automated Underwriting System Result: 4; Automated Underwriting System Result: 5"""
+		edit_name = "q633"
+		fail_df = self.lar_df[
+			((self.lar_df.aus_1=="4")&(~self.lar_df.aus_result_1.isin(["5","8","10","13","14","15","16"])))|
+			((self.lar_df.aus_2=="4")&(~self.lar_df.aus_result_2.isin(["5","8","10","13","14","15","16"])))|
+			((self.lar_df.aus_3=="4")&(~self.lar_df.aus_result_3.isin(["5","8","10","13","14","15","16"])))|
+			((self.lar_df.aus_4=="4")&(~self.lar_df.aus_result_4.isin(["5","8","10","13","14","15","16"])))|
+			((self.lar_df.aus_5=="4")&(~self.lar_df.aus_result_5.isin(["5","8","10","13","14","15","16"])))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
