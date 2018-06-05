@@ -3019,3 +3019,15 @@ class test_data(object):
 		lar.loan_amount = "3000000"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q627(self):
+		"""Set total units to >=5.
+		Set loan amount to random of 90000 and 11000000."""
+		name = "q627.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.total_units = "5"
+		lar.loan_amount = random.choice(["90000", "11000000"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
