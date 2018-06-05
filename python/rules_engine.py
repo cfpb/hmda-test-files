@@ -2467,3 +2467,12 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.mlo_id.apply(lambda x: len(x)>12))|
 			(self.lar_df.mlo_id.apply(lambda x: any(char in invalid_chars for char in x)==True))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q622(self):
+		"""If Reverse Mortgage equals 1, 
+		then the Age of Applicant or Borrower generally should be greater than or equal to 62. 
+		Your data indicates a number outside this range."""
+		field = "Reverse Mortgage; Age of Applicant or Borrower"
+		edit_name = "q621"
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.app_age.apply(lambda x: int(x)<62))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
