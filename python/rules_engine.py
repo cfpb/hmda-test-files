@@ -2545,3 +2545,11 @@ class rules_engine(object):
 			(self.lar_df.total_units.apply(lambda x: int(x)<=4))&(self.lar_df.loan_purpose.isin(["1","2","4"]))&
 			(self.lar_df.income=="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q630(self):
+		"""If Total Units is greater than or equal to 5, then HOEPA Status generally should equal 3."""
+		field = "Total Units; HOEPA Status"
+		edit_name = "q630"
+		fail_df = self.lar_df[(self.lar_df.total_units.apply(lambda x: int(x)>=5))&
+			(self.lar_df.hoepa!="3")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)

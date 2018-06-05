@@ -3061,3 +3061,15 @@ class test_data(object):
 		lar.income = "NA"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q630(self):
+		"""Set total units to 5 or more.
+		Set HOEPA status to 1 or 2."""
+		name = "q630.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.total_units = "6"
+		lar.hoepa = random.choice(["1","2"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
