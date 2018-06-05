@@ -2952,3 +2952,14 @@ class test_data(object):
 		lar['mlo_id'][lar.index>int(file_length/2)] = lar['mlo_id'].apply(lambda x: x.replace("!","1")+"1")
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q622(self):
+		"""Set reverse mortgage to 1 and age to 15."""
+		name = "q622.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_age = "15"
+		lar.reverse_mortgage = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
