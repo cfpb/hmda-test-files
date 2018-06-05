@@ -2609,12 +2609,21 @@ class rules_engine(object):
 		edit_name = "q634"
 		action_1 = len(self.lar_df[(self.lar_df.action_taken=="1")&(self.lar_df.loan_purpose=="1")])
 		denom_count = len(self.lar_df)
-		if (action_1 * 1.0) / denom_count > .95:
-			fail_df = True
-		else:
-			fail_df = False
-		if fail_df:
+		if (action_1 * 1.0) / denom_count > .95 and len(self.lar_df)>25:
 			fail_df = self.lar_df[(self.lar_df.action_taken=="1")&(self.lar_df.loan_purpose=="1")]
+		else:
+			fail_df = fail_df = []
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q635(self):
+		"""No more than 15% of the loans in the file should report Action Taken equals 2. 
+		Your data indicates a percentage outside of this range."""
+		field = "Action Taken; Total Number of Entries Contained in Submission"
+		edit_name = "q635"
+		action_2 = len(self.lar_df[self.lar_df.action_taken=="2"])
+		denom_count = len(self.lar_df)
+		if (action_2 * 1.0) / denom_count > .15:
+			fail_df = self.lar_df[(self.lar_df.action_taken=="2")]
 		else:
 			fail_df = []
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
