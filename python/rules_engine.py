@@ -2535,3 +2535,13 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.loan_purpose=="1")&(self.lar_df.total_units.apply(lambda x: int(x)<=4))&
 			(self.lar_df.loan_amount.apply(lambda x: int(x)<=10000))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q629(self):
+		"""If Action Taken equals 1, 2, 3, 4, 5, 7, or 8, and Total Units is less than or equal to 4, 
+		and Loan Purpose equals 1, 2 or 4, then Income generally should not be NA."""
+		field = "Action Taken; Total Units; Loan Purpose; Income"
+		edit_name = "q629"
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(["1","2","3","4","5","7","8"]))&
+			(self.lar_df.total_units.apply(lambda x: int(x)<=4))&(self.lar_df.loan_purpose.isin(["1","2","4"]))&
+			(self.lar_df.income=="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
