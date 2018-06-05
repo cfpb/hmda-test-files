@@ -3178,3 +3178,16 @@ class test_data(object):
 		lar.action_taken = 	"2"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q639(self):
+		"""Set preapproval = 1.
+		Set action taken to 1-6.
+		Note: this edit will only trigger for files with 1000 or more records (in addition to the preapproval condition)."""
+		name = "q639.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.preapproval = "1"
+		lar.action_taken = random.choice(["1","2","3","4","5","6"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
