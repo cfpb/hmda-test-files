@@ -2667,3 +2667,16 @@ class rules_engine(object):
 		else:
 			fail_df = []
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q639(self):
+		"""If more than 1000 loans were reported with Preapproval equals 1, 
+		then there should be at least 1 loan reported with Action Taken equals 7. 
+		Your data indicates a number outside of this range."""
+		field = "Action Taken; Preapproval"
+		edit_name = "q639"
+		preapprovals = len(self.lar_df[self.lar_df.preapproval=="1"])
+		if preapprovals > 1000 and len(self.lar_df[self.lar_df.action_taken=="7"])<1:
+			fail_df = self.lar_df[self.lar_df.preapproval=="1"]
+		else:
+			fail_df = []
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
