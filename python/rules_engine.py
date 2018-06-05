@@ -2553,3 +2553,11 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.total_units.apply(lambda x: int(x)>=5))&
 			(self.lar_df.hoepa!="3")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q631(self):
+		"""If Loan Type equals 2, 3 or 4, then Total Units generally should be less than or equal to 4."""
+		field = "Loan Type; Total Units"
+		edit_name = "q631"
+		fail_df = self.lar_df[(self.lar_df.loan_type.isin(["2","3","4"]))&
+			(self.lar_df.total_units.apply(lambda x: int(x)>4))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
