@@ -6,6 +6,7 @@
 from collections import OrderedDict
 import pandas as pd
 from io import StringIO
+import string
 import time
 
 from lar_generator import lar_gen #used for check digit
@@ -2456,4 +2457,13 @@ class rules_engine(object):
 		field = "Business or Commercial Purpose; NMLSR ID"
 		edit_name = "q620"
 		fail_df = self.lar_df[(self.lar_df.business_purpose=="2")&(self.lar_df.mlo_id=="NA")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q621(self):
+		"""The NMLSR ID should be alphanumeric up to 12 characters. Your data indicates a number outside of this range."""
+		field = "NMLSR ID"
+		edit_name = "q621"
+		invalid_chars = set(string.punctuation)
+		fail_df = self.lar_df[(self.lar_df.mlo_id.apply(lambda x: len(x)>12))|
+			(self.lar_df.mlo_id.apply(lambda x: any(char in invalid_chars for char in x)==True))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)

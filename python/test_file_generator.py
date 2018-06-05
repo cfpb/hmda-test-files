@@ -2938,3 +2938,17 @@ class test_data(object):
 		lar.mlo_id = "NA"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q621(self):
+		"""Set NMLSR to length > 12 characters (1/2 file)
+		Set NMLSR to 12 characters with special characters (1/2 file)"""
+		name = "q621.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		file_length = len(lar)
+		mlo_id = "12345abcde!!"
+		lar['mlo_id'] = mlo_id
+		lar['mlo_id'][lar.index>int(file_length/2)] = lar['mlo_id'].apply(lambda x: x.replace("!","1")+"1")
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
