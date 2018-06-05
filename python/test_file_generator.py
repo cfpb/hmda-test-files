@@ -3125,3 +3125,16 @@ class test_data(object):
 		lar.aus_result_5 = random.choice(["1","2","3","4","6","7","11","12"])
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q634(self):
+		"""Set action taken to 1.
+		Set loan purpose to 1.
+		Note: this edit will only trigger for file sizes >= 25."""
+		name = "q634.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = "1"
+		lar.loan_purpose = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)

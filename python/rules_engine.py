@@ -2600,3 +2600,21 @@ class rules_engine(object):
 			((self.lar_df.aus_4=="4")&(~self.lar_df.aus_result_4.isin(["5","8","10","13","14","15","16"])))|
 			((self.lar_df.aus_5=="4")&(~self.lar_df.aus_result_5.isin(["5","8","10","13","14","15","16"])))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q634(self):
+		"""If more than 25 loans reported Action Taken equals 1 and Loan Purpose equals 1, 
+		then the number of these loans should be less than or equal to 95% of the loans reported with Loan Purpose equals 1. 
+		Your data indicates a percentage outside of this range."""
+		field = "Action Taken; Loan Purpose"
+		edit_name = "q634"
+		action_1 = len(self.lar_df[(self.lar_df.action_taken=="1")&(self.lar_df.loan_purpose=="1")])
+		denom_count = len(self.lar_df)
+		if (action_1 * 1.0) / denom_count > .95:
+			fail_df = True
+		else:
+			fail_df = False
+		if fail_df:
+			fail_df = self.lar_df[(self.lar_df.action_taken=="1")&(self.lar_df.loan_purpose=="1")]
+		else:
+			fail_df = []
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
