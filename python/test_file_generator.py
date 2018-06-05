@@ -3005,3 +3005,17 @@ class test_data(object):
 		lar.loan_amount = "1200000"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q626(self):
+		"""Set purchaser to 1-4.
+		Set total units to <= 4.
+		Set loan amount to 3,000,000."""
+		name = "q626.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.purchaser_type = random.choice(["1", "2","3","4"])
+		lar.total_units = random.choice(["1", "2","3","4"])
+		lar.loan_amount = "3000000"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)

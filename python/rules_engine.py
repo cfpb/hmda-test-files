@@ -2506,3 +2506,13 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.loan_type=="3")&(self.lar_df.total_units.apply(lambda x: int(x)<=4))&
 		(self.lar_df.loan_amount.apply(lambda x: int(x)>1050000))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q626(self):
+		"""If Type of Purchaser equals 1, 2, 3, or 4, and Total Units is less than or equal to 4, 
+		then Loan Amount generally should be less than or equal to $1,225,000 (reported as 1225000)."""
+		field = "Type of Purchaser; Total Units; Loan Amount"
+		edit_name = "q626"
+		fail_df = self.lar_df[(self.lar_df.purchaser_type.isin(["1","2","3","4"]))&
+			(self.lar_df.total_units.apply(lambda x: int(x)<=4))&
+			(self.lar_df.loan_amount.apply(lambda x: int(x)>1225000))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
