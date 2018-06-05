@@ -3045,3 +3045,19 @@ class test_data(object):
 		lar.loan_amount = "5000"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q629(self):
+		"""Set action taken to random choice of 1,2,3,4,5,7,8.
+		Set total units <=4.
+		Set loan purpose to random choice of 1, 2, 4.
+		Set income to NA."""
+		name = "q629.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(["1","2","3","4"])
+		lar.total_units = random.choice(["1","2","3","4"])
+		lar.loan_purpose = random.choice(["1","2","4"])
+		lar.income = "NA"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
