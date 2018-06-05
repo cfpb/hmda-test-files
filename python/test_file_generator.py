@@ -3085,3 +3085,23 @@ class test_data(object):
 		lar.total_units = "5"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q632(self):
+		"""Set all AUS systems to 5.
+		Set all AUS results to 1-7."""
+		name = "q632.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_1 = "3"
+		lar.aus_2 = "3"
+		lar.aus_3 = "3"
+		lar.aus_4 = "3"
+		lar.aus_5 = "3"
+		lar.aus_result_1 = random.choice(["1","2","3","4","5","6","7"])
+		lar.aus_result_2 = random.choice(["1","2","3","4","5","6","7"])
+		lar.aus_result_3 = random.choice(["1","2","3","4","5","6","7"])
+		lar.aus_result_4 = random.choice(["1","2","3","4","5","6","7"])
+		lar.aus_result_5 = random.choice(["1","2","3","4","5","6","7"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
