@@ -2473,6 +2473,18 @@ class rules_engine(object):
 		then the Age of Applicant or Borrower generally should be greater than or equal to 62. 
 		Your data indicates a number outside this range."""
 		field = "Reverse Mortgage; Age of Applicant or Borrower"
-		edit_name = "q621"
+		edit_name = "q622"
 		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.app_age.apply(lambda x: int(x)<62))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df) 
+
+	def q623(self):
+		"""If Total Units is less than or equal to 4, and Income is less than or equal to $200,000 (reported as 200), 
+		then Loan Amount generally should be less than $2,000,000 (reported as 2000000)."""
+		field = "Loan Amount; Total Units; Income"
+		edit_name = "q623"
+		#income
+		fail_df = self.lar_df[self.lar_df.income!="NA"]
+		fail_df = fail_df[(fail_df.total_units.apply(lambda x: int(x)<=4))&
+			(fail_df.income.apply(lambda x: int(x) <=200))&
+				(fail_df.loan_amount.apply(lambda x: int(x)>=2000000))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
