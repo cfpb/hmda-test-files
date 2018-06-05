@@ -2627,3 +2627,16 @@ class rules_engine(object):
 		else:
 			fail_df = []
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q636(self):
+		"""No more than 30% of the loans in the file should report Action Taken equals 4. 
+		Your data indicates a percentage outside of this range."""
+		field = "Action Taken; Total Number of Entries Contained in Submission"
+		edit_name = "q636"
+		action_4 = len(self.lar_df[self.lar_df.action_taken=="4"])
+		denom_count = len(self.lar_df)
+		if (action_4 * 1.0) / denom_count > .30:
+			fail_df = self.lar_df[self.lar_df.action_taken=="4"]
+		else:
+			fail_df = []
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
