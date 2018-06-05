@@ -2526,3 +2526,12 @@ class rules_engine(object):
 			(self.lar_df.loan_amount.apply(lambda x: int(x)<=100000))|
 			(self.lar_df.loan_amount.apply(lambda x: int(x)>=10000000))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q628(self):
+		"""If Loan Purpose equals 1, and Total Units is less than or equal to 4, 
+		then Loan Amount generally should be greater than $10,000 (reported as 10000)."""
+		field = "Loan Purpose; Loan Amount; Total Units"
+		edit_name = "q628"
+		fail_df = self.lar_df[(self.lar_df.loan_purpose=="1")&(self.lar_df.total_units.apply(lambda x: int(x)<=4))&
+			(self.lar_df.loan_amount.apply(lambda x: int(x)<=10000))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
