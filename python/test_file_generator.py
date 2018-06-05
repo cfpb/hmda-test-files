@@ -2977,3 +2977,17 @@ class test_data(object):
 		lar.loan_amount = "3000000"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q624(self):
+		"""Set loan type to 2.
+		Set total units to 1.
+		Set amount to 700,000."""
+		name = "q624.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.loan_type = "2"
+		lar.total_units = "1"
+		lar.loan_amount = "700000"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)

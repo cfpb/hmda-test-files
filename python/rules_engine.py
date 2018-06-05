@@ -2488,3 +2488,12 @@ class rules_engine(object):
 			(fail_df.income.apply(lambda x: int(x) <=200))&
 				(fail_df.loan_amount.apply(lambda x: int(x)>=2000000))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q624(self):
+		"""If Loan Type equals 2, and Total Units equals 1, 
+		then Loan Amount generally should be less than or equal to $637,000 (reported as 637000)."""
+		field = "Loan Type; Total Units; Loan Amount"
+		edit_name = "q624"
+		fail_df = self.lar_df[(self.lar_df.loan_type=="2")&(self.lar_df.total_units=="1")&
+			(self.lar_df.loan_amount.apply(lambda x: int(x)>637000))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
