@@ -3201,3 +3201,28 @@ class test_data(object):
 		lar.income = "9"		
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q642_1(self):
+		"""Set borrower credit score to 7777.
+		Set borrower score model to 1-6."""
+		name = "q642_1.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_credit_score = "7777"
+		lar.app_score_name = random.choice(["1","2","3","4","5","6"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q642_2(self):
+		"""Set co-borrower credit score to 7777.
+		Set co-orrower score model to 1-6."""
+		name = "q642_2.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_credit_score = "7777"
+		lar.co_app_score_name = random.choice(["1","2","3","4","5","6"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
