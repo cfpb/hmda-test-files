@@ -2694,3 +2694,21 @@ class rules_engine(object):
 		else:
 			fail_df = []
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q642_1(self):
+		"""1) If Credit Score of Applicant or Borrower equals 7777 indicating a credit score that is not a number, 
+		then Applicant or Borrower, Name and Version of Credit Scoring Model should equal 7 or 8. """
+		field = """Credit Score of Applicant or Borrower; Applicant or Borrower, Name and Version of Credit Scoring Model; 
+		Credit Score of CoApplicant or CoBorrower; CoApplicant or CoBorrower, Name and Version of Credit Scoring Model"""
+		edit_name = "q642_1"
+		fail_df = self.lar_df[(self.lar_df.app_credit_score=="7777")&(~self.lar_df.app_score_name.isin(["7","8"]))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q642_2(self):
+		"""If Credit Score of Co-Applicant or Co-Borrower equals 7777 indicating a credit score that is not a number, 
+		then Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model should equal 7 or 8."""
+		field = """Credit Score of Applicant or Borrower; Applicant or Borrower, Name and Version of Credit Scoring Model; 
+		Credit Score of CoApplicant or CoBorrower; CoApplicant or CoBorrower, Name and Version of Credit Scoring Model"""
+		edit_name = "q642_2"
+		fail_df = self.lar_df[(self.lar_df.co_app_credit_score=="7777")&(~self.lar_df.co_app_score_name.isin(["7","8"]))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
