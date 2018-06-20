@@ -10,13 +10,13 @@
       type: Integer
       value: 110
     max_amount:
-      desc: "Maximum loan amount in thousands"
+      desc: "Maximum loan amount in dollars"
       type: Integer
-      value: 20000
+      value: 467000
     max_income:
-      desc: "Maximum applicant income"
+      desc: "Maximum applicant income in thousands"
       type: Integer
-      value: 20000
+      value: 300
     max_rs:
       desc: "Maximum rate spread"
       type: Integer
@@ -24,11 +24,11 @@
     max_credit_score:
       desc: "Maximum credit score"
       type: Integer
-      value: 900
+      value: 840
     min_credit_score:
       desc: "Minimum credit score"
       type: Integer
-      value: 300
+      value: 650
     loan_costs:
       desc: "Maximum loan costs"
       type: Integer
@@ -36,19 +36,19 @@
     points_and_fees:
       desc: "Maximum points and fees"
       type: Integer
-      value: 5000
+      value: 10000
     orig_charges:
       desc: "Maximum origination charges"
       type: Integer
-      value: 5000
+      value: 10000
     discount_points:
       desc: "Maximum discount points cost"
       type: Integer
-      value: 5000
+      value: 10000
     lender_credits:
       desc: "Maximum lender credits"
       type: Integer
-      value: 5000
+      value: 10000
     interest_rate:
       desc: "Maximum interest rate"
       type: Integer
@@ -64,7 +64,7 @@
     cltv:
       desc: "Combinted loan to value ratio"
       type: Integer
-      value: 200
+      value: 120
     loan_term:
       desc: "Maximum loan term"
       type: Integer
@@ -78,17 +78,17 @@
       type: Integer
       value: 30
     prop_val_max:
-      desc: "Maximum property value in thousands"
+      desc: "Maximum property value in dollars"
       type: Integer
-      value: 30000
+      value: 1000000
     prop_val_min:
-      desc: "Minimum property value in thousands"
+      desc: "Minimum property value in dollars"
       type: Integer
-      value: 10
+      value: 100000
     file_length:
      desc: "The number of lines in the clean data file"
      type: Integer
-     value: 100
+     value: 10
     clean_file:
      type: File
-     value: "clean_file_100_rows.txt"
+     value: "clean_file_10_rows.txt"
