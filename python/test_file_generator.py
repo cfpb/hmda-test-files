@@ -203,12 +203,25 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v608_file(self):
-		"""Changes ULI to be 22 characters or less. Preserves the LEI prefix of ULI to reduce the number of edits failed."""
+		"""For rows with a ULI: changes ULI to be 22 characters or less or more than 45 characters. 
+		   For rows with a loan ID: changes loan ID (listed as ULI) to be blank or longer than 22 characters.
+		Preserves the LEI prefix of ULI to reduce the number of edits failed."""
 		name = "v608.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.uli = lar.uli.map(lambda x: x[:20] + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(2)))
+		mid_point = int(len(lar)/2)
+		lar_uli_fail = lar[lar.index<=mid_point].copy()
+		lar_loan_id_fail = lar[lar.index>mid_point].copy()
+		#fail condition for ULI
+		lar_uli_fail.uli = lar_uli_fail.lei.map(lambda x: x + ''.join(random.choice(string.ascii_uppercase + string.digits) 
+			for _ in range(30)))
+		lar_uli_fail.uli = lar_uli_fail.uli.apply(lambda x: random.choice([x, x[:21]]))
+		#fail condition for loan id
+		lar_loan_id_fail.uli = lar_loan_id_fail.uli.map(lambda x: ''.join(random.choice(string.ascii_uppercase + string.digits)
+			for _ in random.choice([range(0), range(30)])))
+		#recombine fail data
+		lar = pd.concat([lar_uli_fail, lar_loan_id_fail])
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 

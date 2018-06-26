@@ -204,6 +204,7 @@ class lar_gen(object):
 			valid_lar_row["lei"] = lei
 		valid_lar_row["uli"] = valid_lar_row['lei'] + self.char_string_gen(23)
 		valid_lar_row["uli"] = valid_lar_row["uli"] + self.check_digit_gen(ULI=valid_lar_row["uli"])
+		valid_lar_row["uli"] = random.choice([valid_lar_row["uli"], self.char_string_gen(22)])
 		valid_lar_row["app_date"] = str(self.date_gen())
 		valid_lar_row["loan_type"] = str(self.random_enum(self.get_schema_list(field="loan_type")))
 		valid_lar_row["loan_purpose"] = str(self.random_enum(self.get_schema_list(field="loan_purpose")))
