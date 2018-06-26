@@ -297,22 +297,43 @@ class rules_engine(object):
 
 	def v608(self):
 		"""A ULI with an invalid format was provided.
-		1) The required format for ULI is alphanumeric with at least 23 characters and up to 45 characters, and it cannot be left blank."""
+		1) The required format for ULI is alphanumeric with at least 23 characters and up to 45 characters, 
+		and it cannot be left blank.
+		Exempt Filers:
+		If your institution is reporting a Loan/Application Number, the required format for Loan/Application Number 
+		is alphanumeric with at least 1 character and no more than 22 characters, and it cannot be left blank."""
+
 		edit_name = "v608"
 		field = "ULI"
 		#if length not between 23 and 45 or if ULI is blank
 		#get subset of LAR dataframe that fails ULI conditions
-		fail_df = self.lar_df[((self.lar_df.uli.map(lambda x: len(x))!=23)&(self.lar_df.uli.map(lambda x: len(x))!=45))|(self.lar_df.uli=="")]
+		#check if LEI present as first 20 digits of ULI
+		lei = self.lar_df.lei.iloc[0]
+		#get seperate dataframes for ULI and Loan ID 
+		uli_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]==lei))].copy()
+		loan_id_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]!=lei))].copy()
+		#filter each df for failures
+		uli_fail_df = uli_check_df[(uli_check_df.uli.map(lambda x: len(x)<23))|
+			(uli_check_df.uli.map(lambda x: len(x))>45)|(uli_check_df.uli=="")].copy()
+
+		loan_id_fail_df = loan_id_check_df[(loan_id_check_df.uli=="")|
+			(loan_id_check_df.uli.apply(lambda x: len(x)>22))].copy()
+		#recombine dfs
+		fail_df = pd.concat([uli_fail_df, loan_id_fail_df])
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v609(self):
 		"""An invalid ULI was reported. Please review the information below and update your file accordingly.
-		1) Based on the check digit calculation, the ULI contains a transcription error."""
+		1) Based on the check digit calculation, the ULI contains a transcription error.
+		This check exempts rows where the first 20 digits of the ULI are not the reported LEI."""
 		edit_name = "v609"
 		field = "ULI"
 		check_digit = lar_gen.check_digit_gen #establish check digit function alias
+
+		#limit check digit checking to records with a ULI
+		fail_df = self.lar_df[self.lar_df.uli.apply(lambda x: x[:20]==self.lar_df.lei.iloc[0])]
 		#get dataframe of check digit failures
-		fail_df = self.lar_df[self.lar_df.uli.map(lambda x: str(x)[-2:]) != self.lar_df.uli.map(lambda x: check_digit(ULI=x[:-2]))]
+		fail_df = fail_df[fail_df.uli.map(lambda x: str(x)[-2:]) != fail_df.uli.map(lambda x: check_digit(ULI=str(x)[:-2]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v610_1(self):
