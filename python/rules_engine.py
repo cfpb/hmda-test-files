@@ -1305,7 +1305,7 @@ class rules_engine(object):
 		2) Applicant or Borrower, Name and Version of Credit Scoring Model must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9."""
 		field = "App Credit Score"
 		edit_name = "v660_2"
-		fail_df = self.lar_df[(~self.lar_df.app_score_name.isin(("1", "2", "3", "4", "5", "6", "7", "8", "9")))]
+		fail_df = self.lar_df[(~self.lar_df.app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v661(self):

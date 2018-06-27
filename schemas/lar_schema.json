@@ -317,7 +317,7 @@
     "field": "app_score_name",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    "valid_vals": [-1, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 }, {
     "field": "app_score_code_8",
     "dtypes_": ["string"],
