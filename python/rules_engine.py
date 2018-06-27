@@ -325,7 +325,10 @@ class rules_engine(object):
 	def v609(self):
 		"""An invalid ULI was reported. Please review the information below and update your file accordingly.
 		1) Based on the check digit calculation, the ULI contains a transcription error.
-		This check exempts rows where the first 20 digits of the ULI are not the reported LEI."""
+		This check exempts rows where the first 20 digits of the ULI are not the reported LEI.
+
+		If ULI is not required, institution may report a loan id (similar to 2017). 
+		In that situation, this edit is not applicable."""
 		edit_name = "v609"
 		field = "ULI"
 		check_digit = lar_gen.check_digit_gen #establish check digit function alias
@@ -531,18 +534,24 @@ class rules_engine(object):
 
 	def v622_1(self):
 		"""An invalid City, State and/or Zip Code were provided.
-		1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA."""
+		1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA.
+
+		Impact of S2155: Update to: 1) If Street Address was not reported NA or Exempt, 
+		then City, State and Zip Code must be provided, and not reported NA."""
 		field = "city"
 		edit_name = "v622_1"
-		fail_df = self.lar_df[(self.lar_df.street_address!="NA")&(self.lar_df.city=="NA")]
+		fail_df = self.lar_df[~(self.lar_df.street_address.isin(["NA", "Exempt"]))&(self.lar_df.city=="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v622_2(self):
 		"""An invalid City, State and/or Zip Code were provided.
-		1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA."""
+		1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA.
+
+		Impact of S2155: Update to: 1) If Street Address was not reported NA or Exempt, 
+		then City, State and Zip Code must be provided, and not reported NA."""
 		field = "state"
 		edit_name = "v622_2"
-		fail_df = self.lar_df[(self.lar_df.street_address!="NA")&(self.lar_df.state=="NA")]
+		fail_df = self.lar_df[~(self.lar_df.street_address.isin(["NA", "Exempt"]))&(self.lar_df.state=="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v622_3(self):
@@ -550,7 +559,7 @@ class rules_engine(object):
 		1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA."""
 		field = "zip_code"
 		edit_name = "v622_3"
-		fail_df = self.lar_df[(self.lar_df.street_address!="NA")&(self.lar_df.zip_code=="NA")]
+		fail_df = self.lar_df[~(self.lar_df.street_address.isin(["NA", "Exempt"]))&(self.lar_df.zip_code=="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v623(self):
