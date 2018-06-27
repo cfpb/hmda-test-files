@@ -1367,19 +1367,26 @@ class rules_engine(object):
 		field = "App Credit Score"
 		edit_name = "v663"
 		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5", "6")))&
-			((~self.lar_df.app_credit_score.isin(["8888", "Exempt"]))
-			|(self.lar_df.app_score_name!="9")|(self.lar_df.app_score_code_8!=""))]
+			((~self.lar_df.app_credit_score.isin(["8888", "Exempt"]))|
+			(~self.lar_df.app_score_name.isin(["9", "Exempt"]))|
+			(self.lar_df.app_score_code_8!=""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v664(self):
 		"""An invalid Credit Score data field was reported.
 		1) If Action Taken equals 4, 5, or 6, then Credit Score of Co-Applicant or Co-Borrower must equal 8888; and
 		Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 9; and
-		Co- Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank"""
+		Co- Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank
+
+		Impact of S2155: Update to: 
+		1) If Action Taken equals 4, 5, or 6, then Credit Score of Co-Applicant or Co-Borrower must equal 8888 or Exempt; 
+		and Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 9 or Exempt; 
+		and Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model: 
+			Conditional Free Form Text Field for Code 8 must be left blank."""
 		field = "Co-App Credit Score"
 		edit_name = "v664"
-		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5", "6")))&((self.lar_df.co_app_credit_score!="8888")|
-			(self.lar_df.co_app_score_name!="9")|(self.lar_df.co_app_score_code_8!=""))]
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5", "6")))&((~self.lar_df.co_app_credit_score.isin(["8888", "Exempt"]))|
+			(~self.lar_df.co_app_score_name.isin(["9", "Exempt"]))|(self.lar_df.co_app_score_code_8!=""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v665_1(self):
