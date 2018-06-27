@@ -546,7 +546,10 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v624_file(self):
-		"""Set ZIP code to blank or random string of letters."""
+		"""Set ZIP code to blank or random string of letters.
+
+		Impact of S2155: Update to 1) The required format for Zip Code is 12345-1010, 12345, Exempt, or NA, 
+		and it cannot be left blank."""
 		name = "v624.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()

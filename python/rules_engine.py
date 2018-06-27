@@ -556,7 +556,10 @@ class rules_engine(object):
 
 	def v622_3(self):
 		"""An invalid City, State and/or Zip Code were provided.
-		1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA."""
+		1) If Street Address was not reported NA, then City, State, and Zip Code must be provided, and not reported NA.
+
+		Impact of S2155: Update to: 1) If Street Address was not reported NA or Exempt, 
+		then City, State and Zip Code must be provided, and not reported NA."""
 		field = "zip_code"
 		edit_name = "v622_3"
 		fail_df = self.lar_df[~(self.lar_df.street_address.isin(["NA", "Exempt"]))&(self.lar_df.zip_code=="NA")]
@@ -1236,25 +1239,33 @@ class rules_engine(object):
 	def v657_1(self):
 		"""An invalid Rate Spread was reported.
 		1) Rate Spread must be a number or NA, and cannot be left blank."""
+
 		field = "Rate Spread"
 		edit_name = "v657_1"
-		fail_df = self.lar_df[(self.lar_df.rate_spread!="NA")&(self.lar_df.rate_spread.map(lambda x: self.check_number(x))==False)]
+		fail_df = self.lar_df[~(self.lar_df.rate_spread.isin(["NA", "Exempt"]))&
+			(self.lar_df.rate_spread.map(lambda x: self.check_number(x))==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v657_2(self):
 		"""An invalid Rate Spread was reported.
-		2) If Action Taken equals 3, 4, 5, 6, or 7, then Rate Spread must be NA."""
+		2) If Action Taken equals 3, 4, 5, 6, or 7, then Rate Spread must be NA.
+		Impact of S2155: Update to: 
+		2) If Action Taken equals 3, 4, 5, 6, or 7, then Rate Spread must be Exempt or NA. 
+		"""
 		field = "Rate Spread"
 		edit_name = "v657_2"
-		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("3", "4", "5", "6", "7")))&(self.lar_df.rate_spread!="NA")]
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("3", "4", "5", "6", "7")))&
+			(~self.lar_df.rate_spread.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v657_3(self):
 		"""An invalid Rate Spread was reported.
-		3) If Reverse Mortgage equals 1, then Rate Spread must be NA."""
+		3) If Reverse Mortgage equals 1, then Rate Spread must be NA.
+		Impact of S2155: Update to: 
+		3) If Reverse Mortgage equals 1, then Rate Spread must be Exempt or NA."""
 		field = "Rate Spread"
 		edit_name = "v657_3"
-		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.rate_spread!="NA")]
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(~self.lar_df.rate_spread.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v658_1(self):
@@ -2366,10 +2377,11 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q609(self):
-		"""If Type of Purchaser equals 1, 2, 3 or 4, then Rate Spread generally should be less than or equal to 10% or be NA."""
+		"""If Type of Purchaser equals 1, 2, 3 or 4, 
+		then Rate Spread generally should be less than or equal to 10% or be NA."""
 		field = "Purchaser Type/Rate Spread"
 		edit_name = "q609"
-		fail_df = self.lar_df[self.lar_df.rate_spread!="NA"].copy()
+		fail_df = self.lar_df[(~self.lar_df.rate_spread.isin(["NA", "Exempt",""]))].copy()
 		fail_df = fail_df[fail_df.purchaser_type.isin(["1","2","3","4"])&(fail_df.rate_spread.apply(lambda x: float(x)>10))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)	
 
@@ -2378,7 +2390,7 @@ class rules_engine(object):
 		then HOEPA Status generally should be 1."""
 		field = "Action Taken/Lien Status/Rate Spread/HOEPA Status"
 		edit_name = "q610"
-		fail_df = self.lar_df[self.lar_df.rate_spread !="NA"].copy()
+		fail_df = self.lar_df[~self.lar_df.rate_spread.isin(["NA", "Exempt", ""])].copy()
 		fail_df = fail_df[(fail_df.action_taken=="1")&(fail_df.lien=="1")&
 			(fail_df.rate_spread.apply(lambda x: float(x)>6.5))&(fail_df.hoepa!="1")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
@@ -2388,7 +2400,7 @@ class rules_engine(object):
 		then HOEPA Status generally should be 1."""	
 		field = "Action Taken/Lien Status/Rate Spread/HOEPA Status"
 		edit_name = "q611"
-		fail_df = self.lar_df[self.lar_df.rate_spread!="NA"]
+		fail_df = self.lar_df[~self.lar_df.rate_spread.isin(["NA", "Exempt", ""])]
 		fail_df = fail_df[(fail_df.action_taken=="1")&(fail_df.lien=="2")&(fail_df.hoepa!="1")&
 			(fail_df.rate_spread.apply(lambda x: float(x)>8.5))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
