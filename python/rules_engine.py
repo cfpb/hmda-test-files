@@ -1469,10 +1469,16 @@ class rules_engine(object):
 		"""An invalid Credit Score data point was reported.
 		1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7;
 		and Sex of Applicant or Borrower equals 4 indicating the applicant is a non-natural person then
-		Credit Score of Applicant or Borrower must equal 8888 indicating not applicable."""
+		Credit Score of Applicant or Borrower must equal 8888 indicating not applicable.
+
+		Impact of S2155: Update to: 
+		1) If Ethnicity of Applicant or Borrower: 1 equals 4; and Race of Applicant or Borrower: 1 equals 7; 
+		and Sex of Applicant or Borrower equals 4 indicating the applicant is a non-natural person 
+		then Credit Score of Applicant or Borrower must equal 8888, indicating not applicable, or Exempt. """
 		field = "App Credit Score"
 		edit_name = "v668_1"
-		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&(self.lar_df.app_credit_score!="8888")]
+		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&
+		(~self.lar_df.app_credit_score.isin(["8888", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v668_2(self):
@@ -1480,10 +1486,16 @@ class rules_engine(object):
 		2) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and
 		Race of Co-Applicant or Co-Borrower: 1 equals 7;
 		and Sex of Co-Applicant or Co-Borrower equals 4 indicating that the co-applicant is a non- natural person,
-		then Credit Score of Co-Applicant or Co-Borrower must equal 8888 indicating not applicable."""
+		then Credit Score of Co-Applicant or Co-Borrower must equal 8888 indicating not applicable.
+
+		Impact of S2155: Update to: 		
+		2) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7; 
+		and Sex of Co-Applicant or Co-Borrower equals 4 indicating that the co-applicant is a non-natural person, 
+		then Credit Score of Co-Applicant or Co-Borrower must equal 8888, indicating not applicable, or Exempt."""
 		field = "Co-App Credit Score"
 		edit_name = "v668_2"
-		fail_df = self.lar_df[(self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4")&(self.lar_df.co_app_credit_score!="8888")]
+		fail_df = self.lar_df[(self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4")&
+		(~self.lar_df.co_app_credit_score.isin(["8888", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v669_1(self):
