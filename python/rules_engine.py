@@ -1399,10 +1399,17 @@ class rules_engine(object):
 
 	def v665_2(self):
 		"""An invalid Credit Score data field was reported.
-		2) Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank."""
+		2) Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, 
+		and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Credit Score of Co-Applicant or Co-Borrower must be a number, and cannot be left blank. 
+
+		2) Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, 
+		and cannot be left blank."""
 		field = "Co-App Score Name"
 		edit_name = "v665_2"
-		fail_df = self.lar_df[~(self.lar_df.co_app_score_name.isin(("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
+		fail_df = self.lar_df[~(self.lar_df.co_app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v666_1(self):
