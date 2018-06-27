@@ -572,11 +572,15 @@ class rules_engine(object):
 
 	def v624(self):
 		"""An invalid Zip Code was provided.
-		1) The required format for Zip Code is 12345-1010 or 12345 or NA, and it cannot be left blank."""
+		1) The required format for Zip Code is 12345-1010 or 12345 or NA, and it cannot be left blank.
+
+		Impact of S2155: Update to 1) The required format for Zip Code is 12345-1010, 12345, 
+		Exempt, or NA, and it cannot be left blank."""
 		field = "zip_code"
 		edit_name = "v624"
-		fail_df = self.lar_df[((self.lar_df.zip_code.map(lambda x: len(x) not in (10, 5)))|(self.lar_df.zip_code.map(lambda x: x.replace("-","").isdigit())==False))
-		&(self.lar_df.zip_code!="NA")]
+		fail_df = self.lar_df[((self.lar_df.zip_code.map(lambda x: len(x) 
+			not in (10, 5)))|(self.lar_df.zip_code.map(lambda x: x.replace("-","").isdigit())==False))
+		&(~self.lar_df.zip_code.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v625_1(self):
