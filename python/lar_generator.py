@@ -25,6 +25,7 @@ class lar_gen(object):
 		self.street_addy = data_map['street_addy']["value"]
 		self.city = data_map["city"]["value"]
 		self.zip_codes = json.load(open("../dependencies/zip_codes.json"))
+		self.lar_zips = self.zip_codes.append("Exempt")
 		self.max_age = data_map["max_age"]["value"]
 		self.max_amount = data_map["max_amount"]["value"]
 		self.max_income = data_map["max_income"]["value"]
