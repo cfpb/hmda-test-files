@@ -1436,18 +1436,29 @@ class rules_engine(object):
 		"""An invalid Credit Score data field was reported.
 		1) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals 1, 2, 3, 4, 5, 6, 7, 9, or 10, then
 		Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must be left blank,
-		and the reverse must be true."""
+		and the reverse must be true.
+
+		Impact of S2155: Update to: 
+		1) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals -1, 1, 2, 3, 4, 5, 6, 7, 9, or 10, 
+		then Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 
+		must be left blank, and the reverse must be true. """
 		field = "Co-App Credit Score Text"
 		edit_name = "v667_1"
-		fail_df = self.lar_df[((self.lar_df.co_app_score_name.isin(("1", "2", "3", "4", "5", "6", "7", "9", "10")))&(self.lar_df.co_app_score_code_8!=""))|
-			((self.lar_df.co_app_score_code_8=="")&(~self.lar_df.co_app_score_name.isin(("1", "2", "3", "4", "5", "6", "7", "9", "10"))))]
+		fail_df = self.lar_df[((self.lar_df.co_app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "9", "10")))&
+			(self.lar_df.co_app_score_code_8!=""))|
+			((self.lar_df.co_app_score_code_8=="")&(~self.lar_df.co_app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "9", "10"))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v667_2(self):
 		"""An invalid Credit Score data field was reported.
 		2) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals 8, then
 		Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 must not be left blank,
-		and the reverse must be true."""
+		and the reverse must be true.
+
+		Impact of S2155: Update to: 
+		2) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals 8, 
+		then Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 
+		must not be left blank, and the reverse must be true."""
 		field = "Co-App Credit Score Text"
 		edit_name = "v667_2"
 		fail_df = self.lar_df[((self.lar_df.co_app_score_name=="8")&(self.lar_df.co_app_score_code_8==""))|
