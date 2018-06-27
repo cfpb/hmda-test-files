@@ -1485,7 +1485,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.app_score_code_8 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
-		lar.app_score_name = random.choice(("1", "2", "3", "4", "5", "6", "7", "9"))
+		lar.app_score_name = random.choice(("-1", "1", "2", "3", "4", "5", "6", "7", "9"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
