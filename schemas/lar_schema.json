@@ -306,13 +306,13 @@
 }, {
     "field": "app_credit_score",
     "dtypes_": ["int"],
-    "data_type": "numeric",
-    "valid_vals": [7777, 8888]
+    "data_type": "alphanumeric",
+    "valid_vals": [7777, 8888, "Exempt"]
 }, {
     "field": "co_app_credit_score",
     "dtypes_": ["int"],
-    "data_type": "numeric",
-    "valid_vals": [7777, 8888, 9999]
+    "data_type": "aplhanumeric",
+    "valid_vals": [7777, 8888, 9999, "Exempt"]
 }, {
     "field": "app_score_name",
     "dtypes_": ["int"],
