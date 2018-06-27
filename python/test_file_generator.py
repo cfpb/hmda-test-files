@@ -231,7 +231,8 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.uli = lar.uli.map(lambda x: x[:-2] + "xy")
+		#lar.uli = lar.uli.map(lambda x: x[:-2] + "xy")
+		lar.uli = lar.lei.map(lambda x: x + ''.join(random.choice(string.ascii_uppercase+string.digits) for _ in range(10)))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
