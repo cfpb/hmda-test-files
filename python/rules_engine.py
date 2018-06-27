@@ -1500,10 +1500,13 @@ class rules_engine(object):
 
 	def v669_1(self):
 		"""An invalid Reason for Denial data field was reported.
-		1) Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank."""
+		1) Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Reason for Denial: 1 must equal -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank. """
 		field = "Denial Reason 1"
 		edit_name = "v669_1"
-		fail_df = self.lar_df[(~self.lar_df.denial_1.isin(("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
+		fail_df = self.lar_df[(~self.lar_df.denial_1.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v669_2(self):
@@ -1526,10 +1529,15 @@ class rules_engine(object):
 
 	def v669_4(self):
 		"""An invalid Reason for Denial data field was reported.
-		4) If Reason for Denial: 1 equals 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must all be left blank."""
+		4) If Reason for Denial: 1 equals 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must all be left blank.
+		
+		Impact of S2155: Update to: 
+		4) If Reason for Denial: 1 equals -1 or 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 
+		must all be left blank."""
 		field = "Denial Reasons 1-4"
 		edit_name = "v669_4"
-		fail_df = self.lar_df[(self.lar_df.denial_1=="10")&((self.lar_df.denial_2!="")|(self.lar_df.denial_3!="")|(self.lar_df.denial_4!=""))]
+		fail_df = self.lar_df[(self.lar_df.denial_1.isin(["-1", "10"]))&
+		((self.lar_df.denial_2!="")|(self.lar_df.denial_3!="")|(self.lar_df.denial_4!=""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v670_1(self):
