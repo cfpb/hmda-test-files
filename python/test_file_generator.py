@@ -529,7 +529,8 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.street_address = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+		street_addy = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+		lar.street_address = random.choice([street_addy, street_addy, "Exempt"])
 		lar.zip_code = "NA"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
