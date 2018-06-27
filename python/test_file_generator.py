@@ -551,7 +551,8 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.zip_code = random.choice(("", "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))))
+		lar.zip_code = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
+		lar.zip_code = random.choice([lar.zip_code, ""])
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
