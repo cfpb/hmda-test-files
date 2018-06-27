@@ -214,7 +214,7 @@ class lar_gen(object):
 		valid_lar_row["loan_amount"] = str(self.random_enum(range(1,self.max_amount)))
 		valid_lar_row["action_taken"] = str(self.random_enum(self.get_schema_list(field='action_taken')))
 		valid_lar_row["action_date"] = str(self.date_gen())
-		valid_lar_row["street_address"] = self.street_addy
+		valid_lar_row["street_address"] = random.choice([self.street_addy, self.street_addy, "Exempt"])
 		valid_lar_row["city"] = self.city
 		valid_lar_row["state"] = random.choice(list(utils.state_codes.keys()))
 		valid_lar_row["zip_code"] = random.choice(self.zip_codes)
