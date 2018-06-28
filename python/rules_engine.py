@@ -1537,25 +1537,34 @@ class rules_engine(object):
 		field = "Denial Reasons 1-4"
 		edit_name = "v669_4"
 		fail_df = self.lar_df[(self.lar_df.denial_1.isin(["-1", "10"]))&
-		((self.lar_df.denial_2!="")|(self.lar_df.denial_3!="")|(self.lar_df.denial_4!=""))]
+			((self.lar_df.denial_2!="")|(self.lar_df.denial_3!="")|(self.lar_df.denial_4!=""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v670_1(self):
 		"""An invalid Reason for Denial data field was reported.
-		1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9, and the reverse must be true."""
+		1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9, and the reverse must be true.
+
+		Impact of S2155: Update to: 
+		1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal -1, 1, 2, 3, 4, 5, 6, 7, 8, or 9. 
+		2) If Reason for Denial: 1 equals 1, 2, 3, 4, 5, 6, 7, 8, or 9, then Action Taken must equal 3 or 7."""
 		field = "Denial Reason 1"
 		edit_name = "v670_1"
-		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("3","7")))&(~self.lar_df.denial_1.isin(("1", "2", "3", "4", "5", "6", "7", "8", "9"))))|
-				((self.lar_df.denial_1.isin(("1", "2", "3", "4", "5", "6", "7", "8", "9")))&(~self.lar_df.action_taken.isin(("3", "7"))))]
+		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("3","7")))&
+			(~self.lar_df.denial_1.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9"))))|
+			((self.lar_df.denial_1.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9")))&(~self.lar_df.action_taken.isin(("3", "7"))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v670_2(self):
 		"""An invalid Reason for Denial data field was reported.
-		2) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal 10, and the reverse must be true."""
+		2) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal 10, and the reverse must be true.
+		
+		Impact of S2155: Update to: 
+		3) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal -1 or 10. 
+		4) If Reason for Denial: 1 equals 10, then Action Taken must equal 1, 2, 4, 5, 6, or 8."""
 		field = "Denial Reason 1"
 		edit_name = "v670_2"
-		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("1", "2", "4", "5", "6", "8")))&(self.lar_df.denial_1!="10"))|
-			((self.lar_df.denial_1=="10")&(~self.lar_df.action_taken.isin(("1", "2", "3", "4", "5", "6", "8"))))]
+		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("1", "2", "4", "5", "6", "8")))&(~self.lar_df.denial_1.isin(["-1", "10"])))|
+			((self.lar_df.denial_1.isin(["-1","10"]))&(~self.lar_df.action_taken.isin(("1", "2", "3", "4", "5", "6", "8"))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v671_1(self):

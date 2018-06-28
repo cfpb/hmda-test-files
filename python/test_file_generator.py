@@ -1683,7 +1683,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.denial_1 = random.choice(str(random.randrange(1,10)))
+		lar.denial_1 = random.choice(str([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, -1]))
 		lar.action_taken = random.choice(("1", "2", "4", "5", "6", "8"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
