@@ -1432,7 +1432,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.hoepa = lar.hoepa.map(lambda x: random.choice(("1", "2")))
-		lar.action_taken = random.choice(("2", "3", "4", "5", "7", "8"))
+		lar.action_taken = lar.action_taken.map(lambda x: random.choice(("2", "3", "4", "5", "7", "8")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2078,7 +2078,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.dti = random.choice(("", "aa"))
+		lar.dti = lar.dti.map(lambda x: random.choice(("", "aa")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2619,7 +2619,7 @@ class test_data(object):
 		lar.co_app_race_1 = "8"
 		lar.co_app_sex = "5"
 		lar.aus_1 = lar.aus_1.map(lambda x: str(random.choice(range(5))+1))
-		lar.aus_result_1 = str(random.choice(range(16))+1)
+		lar.aus_result_1 = lar.aus_result_1.map(lambda x: str(random.choice(range(16))+1))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
