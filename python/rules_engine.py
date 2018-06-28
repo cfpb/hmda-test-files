@@ -1714,42 +1714,58 @@ class rules_engine(object):
 
 	def v674_1(self):
 		"""An invalid Origination Charges was reported.
-		1) Origination Charges must be a number greater than or equal to 0 or NA, and cannot be left blank."""
+		1) Origination Charges must be a number greater than or equal to 0 or NA, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Origination Charges must be a number greater than or equal to 0, Exempt, or NA, and cannot be left blank. """
 		field = "Origination Charges"
 		edit_name = "v674_1"
-		fail_df = self.lar_df[(self.lar_df.origination_fee.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.origination_fee!="NA")]
+		fail_df = self.lar_df[(self.lar_df.origination_fee.map(lambda x: self.check_number(x, min_val=0))==False)&
+			(~self.lar_df.origination_fee.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v674_2(self):
 		"""An invalid Origination Charges was reported.
-		2) If Reverse Mortgage equals 1, then Origination Charges must be NA."""
+		2) If Reverse Mortgage equals 1, then Origination Charges must be NA.
+
+		Impact of S2155: Update to: 
+		2) If Reverse Mortgage equals 1, then Origination Charges must be Exempt or NA. """
 		field = "Origination Charges"
 		edit_name = "v674_2"
-		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.origination_fee!="NA")]
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(~self.lar_df.origination_fee.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v674_3(self):
 		"""An invalid Origination Charges was reported.
-		3) If Open-End Line of Credit equals 1, then Origination Charges must be NA."""
+		3) If Open-End Line of Credit equals 1, then Origination Charges must be NA.
+
+		Impact of S2155: Update to: 
+		3) If Open-End Line of Credit equals 1, then Origination Charges must be Exempt or NA. """
 		field = "Origination Charges"
 		edit_name = "v674_3"
-		fail_df = self.lar_df[(self.lar_df.open_end_credit=="1")&(self.lar_df.origination_fee!="NA")]
+		fail_df = self.lar_df[(self.lar_df.open_end_credit=="1")&(~self.lar_df.origination_fee.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v674_4(self):
 		"""An invalid Origination Charges was reported.
-		4) If Business or Commercial Purpose equals 1, then Origination Charges must be NA."""
+		4) If Business or Commercial Purpose equals 1, then Origination Charges must be NA.
+
+		Impact of S2155: Update to: 
+		4) If Business or Commercial Purpose equals 1, then Origination Charges must be Exempt or NA. """
 		field = "Origination Charges"
 		edit_name = "v674_4"
-		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(self.lar_df.origination_fee!="NA")]
+		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(~self.lar_df.origination_fee.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v674_5(self):
 		"""An invalid Origination Charges was reported.
-		5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Origination Charges must be NA."""
+		5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Origination Charges must be NA.
+
+		Impact of S2155: Update to: 
+		5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Origination Charges must be Exempt or NA."""
 		field = "Origination Charges"
 		edit_name = "v674_5"
-		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&(self.lar_df.origination_fee!="NA")]
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&(~self.lar_df.origination_fee.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v675_1(self):
@@ -2553,7 +2569,7 @@ class rules_engine(object):
 		then Total Points and Fees generally should be greater than Origination Charges."""
 		field = "Origination Charges/Total Loan Costs/Total Points and Fees"
 		edit_name = "q615_2"
-		fail_df = self.lar_df[(self.lar_df.origination_fee!="NA")&(self.lar_df.points_fees!="NA")]
+		fail_df = self.lar_df[(~self.lar_df.origination_fee.isin(["NA", "Exempt", ""]))&(~self.lar_df.points_fees.isin(["NA", "Exempt"]))]
 		fail_df.origination_fee = fail_df.origination_fee.apply(lambda x: float(x))
 		fail_df.points_fees = fail_df.points_fees.apply(lambda x: float(x))
 		fail_df = fail_df[fail_df.points_fees < fail_df.origination_fee]
