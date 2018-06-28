@@ -1776,7 +1776,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.action_taken = random.choice(("2", "3", "4", "5", "7", "8"))
+		lar.action_taken = lar.action_taken.map(lambda x: random.choice(("2", "3", "4", "5", "7", "8")))
 		lar.loan_costs = "500"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)

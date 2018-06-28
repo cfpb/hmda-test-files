@@ -1590,10 +1590,14 @@ class rules_engine(object):
 
 	def v672_1(self):
 		"""An invalid Total Loan Costs or Total Points and Fees data field was reported.
-		1) Total Loan Costs must be a number greater than or equal to 0 or NA, and cannot be left blank."""
+		1) Total Loan Costs must be a number greater than or equal to 0 or NA, and cannot be left blank.
+		
+		Impact of S2155: Update to: 
+		1) Total Loan Costs must be a number greater than or equal to 0, Exempt, or NA, and cannot be left blank. """
 		field = "Loan Costs"
 		edit_name = "v672_1"
-		fail_df = self.lar_df[(self.lar_df.loan_costs.map(lambda x: self.check_number(x, min_val=0))==False)&(self.lar_df.loan_costs!="NA")]
+		fail_df = self.lar_df[(self.lar_df.loan_costs.map(lambda x: 
+			self.check_number(x, min_val=0))==False)&(~self.lar_df.loan_costs.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v672_2(self):
@@ -1606,34 +1610,46 @@ class rules_engine(object):
 
 	def v672_3(self):
 		"""An invalid Total Loan Costs or Total Points and Fees data field was reported.
-		3) If Reverse Mortgage equals 1, then Total Loan Costs must be NA."""
+		3) If Reverse Mortgage equals 1, then Total Loan Costs must be NA.
+
+		Impact of S2155: Update to:
+		3) If Reverse Mortgage equals 1, then Total Loan Costs must be Exempt or NA."""
 		field = "Loan Costs"
 		edit_name = "v672_3"
-		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.loan_costs!="NA")]
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(~self.lar_df.loan_costs.isin(["NA","Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v672_4(self):
 		"""An invalid Total Loan Costs or Total Points and Fees data field was reported.
-		4) If Open-End Line of Credit equals 1, then Total Loan Costs must be NA."""
+		4) If Open-End Line of Credit equals 1, then Total Loan Costs must be NA.
+		
+		Impact of S2155: Update to:
+		4) If Open-End Line of Credit equals 1, then Total Loan Costs must be Exempt or NA. """
 		field = "Loan Costs"
 		edit_name = "v672_4"
-		fail_df = self.lar_df[(self.lar_df.open_end_credit=="1")&(self.lar_df.loan_costs!="NA")]
+		fail_df = self.lar_df[(self.lar_df.open_end_credit=="1")&(~self.lar_df.loan_costs.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v672_5(self):
 		"""An invalid Total Loan Costs or Total Points and Fees data field was reported.
-		5) If Business or Commercial Purpose equals 1, then Total Loan Costs must be NA."""
+		5) If Business or Commercial Purpose equals 1, then Total Loan Costs must be NA.
+
+		Impact of S2155: Update to:
+		5) If Business or Commercial Purpose equals 1, then Total Loan Costs must be Exempt or NA. """
 		field = "Loan Costs"
 		edit_name = "v672_5"
-		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(self.lar_df.loan_costs!="NA")]
+		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(~self.lar_df.loan_costs.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v672_6(self):
 		"""An invalid Total Loan Costs or Total Points and Fees data field was reported.
-		6) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Total Loan Costs must be NA."""
+		6) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Total Loan Costs must be NA.
+
+		Impact of S2155: Update to:
+		6) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Total Loan Costs must be Exempt or NA."""
 		field = "Loan Costs"
 		edit_name = "v672_6"
-		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8"))&(self.lar_df.loan_costs!="NA"))]
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8"))&(~self.lar_df.loan_costs.isin(["NA", "Exempt"])))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v673_1(self):

@@ -362,7 +362,7 @@
     "field": "loan_costs",
     "dtypes_": ["float", "string"],
     "data_type": "alphanumeric",
-    "valid_vals": ["NA"]
+    "valid_vals": ["NA", "Exempt"]
 }, {
     "field": "points_fees",
     "dtypes_": ["float", "string"],
