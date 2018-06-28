@@ -1884,18 +1884,25 @@ class rules_engine(object):
 
 	def v677_1(self):
 		"""An invalid Interest Rate was reported.
-		1) Interest Rate must be a number greater than 0 or NA, and cannot be left blank."""
+		1) Interest Rate must be a number greater than 0 or NA, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Interest Rate must be a number greater than 0, Exempt or NA, and cannot be left blank."""
 		field = "Interest Rate"
 		edit_name = "v677_1"
-		fail_df = self.lar_df[(self.lar_df.interest_rate.map(lambda x: self.check_number(x, min_val=1))==False)&(self.lar_df.interest_rate!="NA")]
+		fail_df = self.lar_df[(self.lar_df.interest_rate.map(lambda x: self.check_number(x, min_val=1))==False)&
+			(~self.lar_df.interest_rate.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v677_2(self):
 		"""An invalid Interest Rate was reported.
-		2) If Action Taken equals 3, 4, 5, or 7; then Interest Rate must be NA."""
+		2) If Action Taken equals 3, 4, 5, or 7; then Interest Rate must be NA.
+		
+		Impact of S2155: Update to: 
+		2) If Action Taken equals 3, 4, 5, or 7; then Interest Rate must be Exempt or NA."""
 		field = "Interest Rate"
 		edit_name = "v677_2"
-		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("3", "4", "5", "7")))&(self.lar_df.interest_rate!="NA")]
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("3", "4", "5", "7")))&(~self.lar_df.interest_rate.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v678_1(self):
