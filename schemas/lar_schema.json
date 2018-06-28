@@ -372,7 +372,7 @@
     "field": "origination_fee",
     "dtypes_": ["float", "string"],
     "data_type": "alphanumeric",
-    "valid_vals": ["NA"]
+    "valid_vals": ["NA", "Exempt"]
 }, {
     "field": "discount_points",
     "dtypes_": ["float", "string"],
