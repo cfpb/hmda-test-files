@@ -1770,42 +1770,59 @@ class rules_engine(object):
 
 	def v675_1(self):
 		"""An invalid Discount Points was reported.
-		1) Discount Points must be a number greater than 0, blank, or NA."""
+		1) Discount Points must be a number greater than 0, blank, or NA.
+
+		Impact of S2155: Update to: 
+		1) Discount Points must be a number greater than 0, blank, Exempt, or NA."""
 		field = "Discount Points"
 		edit_name = "v675_1"
-		fail_df = self.lar_df[(self.lar_df.discount_points.map(lambda x: self.check_number(x, min_val=1))==False)&(self.lar_df.discount_points!="NA")]
+		fail_df = self.lar_df[(self.lar_df.discount_points.map(lambda x: 
+			self.check_number(x, min_val=1))==False)&(~self.lar_df.discount_points.isin(["NA", "Exempt", ""]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v675_2(self):
 		"""An invalid Discount Points was reported.
-		2) If Reverse Mortgage equals 1, then Discount Points must be NA."""
+		2) If Reverse Mortgage equals 1, then Discount Points must be NA.
+
+		Impact of S2155: Update to: 
+		2) If Reverse Mortgage equals 1, then Discount Points must be Exempt or NA. """
 		field = "Discount Points"
 		edit_name = "v675_2"
-		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.discount_points!="NA")]
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(~self.lar_df.discount_points.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v675_3(self):
 		"""An invalid Discount Points was reported.
-		3) If Open-End Line of Credit equals 1, then Discount Points must be NA."""
+		3) If Open-End Line of Credit equals 1, then Discount Points must be NA.
+
+		Impact of S2155: Update to: 
+		3) If Open-End Line of Credit equals 1, then Discount Points must be Exempt or NA."""
 		field = "Discount Points"
 		edit_name = "v675_3"
-		fail_df = self.lar_df[(self.lar_df.open_end_credit=="1")&(self.lar_df.discount_points!="NA")]
+		fail_df = self.lar_df[(self.lar_df.open_end_credit=="1")&(~self.lar_df.discount_points.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v675_4(self):
 		"""An invalid Discount Points was reported.
-		4) If Business or Commercial Purpose equals 1, then Discount Points must be NA."""
+		4) If Business or Commercial Purpose equals 1, then Discount Points must be NA.
+
+		Impact of S2155: Update to: 
+		4) If Business or Commercial Purpose equals 1, then Discount Points must be Exempt or NA."""
 		field = "Discount Points"
 		edit_name = "v675_4"
-		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(self.lar_df.discount_points!="NA")]
+		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(~self.lar_df.discount_points.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v675_5(self):
 		"""An invalid Discount Points was reported.
-		5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Discount Points must be NA."""
+		5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Discount Points must be NA.
+
+		Impact of S2155: Update to: 
+		5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Discount Points must be Exempt or NA."""
 		field = "Discount Points"
 		edit_name = "v675_5"
-		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&(self.lar_df.discount_points!="NA")]
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&
+			(~self.lar_df.discount_points.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v676_1(self):
