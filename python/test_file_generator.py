@@ -1798,7 +1798,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.points_fees = "500"
-		lar.action_taken = random.choice(("2", "3", "4", "5", "6", "7", "8"))
+		lar.action_taken = lar.action_taken.map(lambda x: random.choice(("2", "3", "4", "5", "6", "7", "8")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
