@@ -2059,18 +2059,25 @@ class rules_engine(object):
 
 	def v682_1(self):
 		"""An invalid Loan Term was reported.
-		1) Loan Term must be either a whole number greater than zero or NA, and cannot be left blank."""
+		1) Loan Term must be either a whole number greater than zero or NA, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Loan Term must be either a whole number greater than zero, Exempt, or NA, and cannot be left blank. """
 		field = "Loan Term"
 		edit_name = "v682_1"
-		fail_df = self.lar_df[(self.lar_df.loan_term.map(lambda x: self.check_number(x, min_val=1))==False)&(self.lar_df.loan_term!="NA")]
+		fail_df = self.lar_df[(self.lar_df.loan_term.map(lambda x: self.check_number(x, min_val=1))==False)&
+			(~self.lar_df.loan_term.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v682_2(self):
 		"""An invalid Loan Term was reported.
-		2) If Reverse Mortgage equals 1, then Loan Term must be NA."""
+		2) If Reverse Mortgage equals 1, then Loan Term must be NA.
+
+		Impact of S2155: Update to: 
+		2) If Reverse Mortgage equals 1, then Loan Term must be Exempt or NA."""
 		field = "Loan Term"
 		edit_name = "v682_2"
-		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.loan_term!="NA")]
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(~self.lar_df.loan_term.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v683(self):
