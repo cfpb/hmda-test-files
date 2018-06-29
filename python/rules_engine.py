@@ -2162,26 +2162,36 @@ class rules_engine(object):
 
 	def v689_1(self):
 		"""An invalid Manufactured Home Secured Property Type was reported.
-		1) Manufactured Home Secured Property Type must equal 1, 2 or 3, and cannot be left blank."""
+		1) Manufactured Home Secured Property Type must equal 1, 2 or 3, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Manufactured Home Secured Property Type must equal -1, 1, 2 or 3, and cannot be left blank. """
 		field = "Manufactured Property Type"
 		edit_name = "v689_1"
-		fail_df = self.lar_df[~(self.lar_df.manufactured_type.isin(("1", "2", "3")))]
+		fail_df = self.lar_df[~(self.lar_df.manufactured_type.isin(("-1", "1", "2", "3")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v689_2(self):
 		"""An invalid Manufactured Home Secured Property Type was reported.
-		2) If Multifamily Affordable Units is a number, then Manufactured Home Secured Property Type must equal 3."""
+		2) If Multifamily Affordable Units is a number, then Manufactured Home Secured Property Type must equal 3.
+
+		Impact of S2155: Update to: 
+		2) If Multifamily Affordable Units is a number, then Manufactured Home Secured Property Type must equal -1 or 3. """
 		field = "Manufactured Property Type"
 		edit_name = "v689_2"
-		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: x.isdigit())==True)&(self.lar_df.manufactured_type!="3")]
+		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: x.isdigit())==True)&
+			(~self.lar_df.manufactured_type.isin(["-1", "3"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v689_3(self):
 		"""An invalid Manufactured Home Secured Property Type was reported.
-		3) If Construction Method equals 1, then Manufactured Home Secured Property Type must equal 3."""
+		3) If Construction Method equals 1, then Manufactured Home Secured Property Type must equal 3.
+
+		Impact of S2155: Update to: 
+		3) If Construction Method equals 1, then Manufactured Home Secured Property Type must equal -1 or 3."""
 		field = "Manufactured Property Type"
 		edit_name = "v689_3"
-		fail_df = self.lar_df[(self.lar_df.const_method=="1")&(self.lar_df.manufactured_type!="3")]
+		fail_df = self.lar_df[(self.lar_df.const_method=="1")&(~self.lar_df.manufactured_type.isin(["3", "-1"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v690_1(self):
