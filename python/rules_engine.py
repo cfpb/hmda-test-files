@@ -2138,18 +2138,26 @@ class rules_engine(object):
 
 	def v688_1(self):
 		"""An invalid Property Value was reported.
-		1) Property Value must be either a number greater than 0 or NA, and cannot be left blank."""
+		1) Property Value must be either a number greater than 0 or NA, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Property Value must be either a number greater than 0, Exempt, or NA, and cannot be left blank."""
 		field = "Property Value"
 		edit_name = "v688_1"
-		fail_df = self.lar_df[(self.lar_df.property_value.map(lambda x: self.check_number(x, min_val=1)==False))&(self.lar_df.property_value!="NA")]
+		fail_df = self.lar_df[(self.lar_df.property_value.map(lambda x: self.check_number(x, min_val=1)==False))&
+			(~self.lar_df.property_value.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v688_2(self):
 		"""An invalid Property Value was reported.
-		2) If Action Taken equals 4 or 5, then Property Value must be NA."""
+		2) If Action Taken equals 4 or 5, then Property Value must be NA.
+
+		Impact of S2155: Update to: 
+		2) If Action Taken equals 4 or 5, then Property Value must be Exempt or NA."""
 		field = "Property Value"
 		edit_name = "v688_2"
-		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5")))&(self.lar_df.property_value!="NA")]
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5")))&
+			(~self.lar_df.property_value.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v689_1(self):
@@ -2711,7 +2719,7 @@ class rules_engine(object):
 		(calculated as Loan Amount divided by the Property Value)."""
 		field = "Combined Loanto-Value Ratio, Loan Amount, and Property Value"
 		edit_name = "q617"
-		fail_df = self.lar_df[(~self.lar_df.cltv.isin(["NA", "Exempt", ""]))&(~self.lar_df.property_value.isin(["NA"]))].copy()
+		fail_df = self.lar_df[(~self.lar_df.cltv.isin(["NA", "Exempt", ""]))&(~self.lar_df.property_value.isin(["NA", "Exempt",""]))].copy()
 		fail_df.cltv = fail_df.cltv.apply(lambda x: float(x))
 		fail_df["ltv"] = (fail_df.loan_amount.apply(lambda x: float(x)) / fail_df.property_value.apply(lambda x: float(x))) *100
 		fail_df = fail_df[fail_df.cltv < fail_df.ltv]
