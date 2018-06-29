@@ -2116,10 +2116,13 @@ class rules_engine(object):
 
 	def v686(self):
 		"""An invalid Negative Amortization was reported.
-		1) Negative Amortization must equal 1 or 2, and cannot be left blank."""
+		1) Negative Amortization must equal 1 or 2, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Negative Amortization must equal -1, 1 or 2, and cannot be left blank."""
 		field = "Negative Amortization"
 		edit_name = "v686"
-		fail_df = self.lar_df[~(self.lar_df.neg_amort.isin(("1", "2")))]
+		fail_df = self.lar_df[~(self.lar_df.neg_amort.isin(("-1", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v687(self):
