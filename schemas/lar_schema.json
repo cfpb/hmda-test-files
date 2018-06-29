@@ -427,7 +427,7 @@
     "field": "neg_amort",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [1, 2]
+    "valid_vals": [-1, 1, 2]
 }, {
     "field": "non_amort_features",
     "dtypes_": ["int"],
