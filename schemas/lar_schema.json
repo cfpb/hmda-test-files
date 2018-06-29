@@ -437,7 +437,7 @@
     "field": "property_value",
     "dtypes_": ["int", "string"],
     "data_type": "alphanumeric",
-    "valid_vals": ["NA"]
+    "valid_vals": ["NA", "Exempt"]
 }, {
     "field": "manufactured_type",
     "dtypes_": ["int"],
