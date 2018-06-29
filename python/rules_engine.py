@@ -1961,26 +1961,35 @@ class rules_engine(object):
 
 	def v679_1(self):
 		"""An invalid Debt-to-Income Ratio was reported.
-		1) Debt-to-Income Ratio must be either a number or NA, and cannot be left blank."""
+		1) Debt-to-Income Ratio must be either a number or NA, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Debt-to-Income Ratio must be either a number, Exempt or NA, and cannot be left blank. """
 		field = "DTI"
 		edit_name = "v679_1"
-		fail_df = self.lar_df[(self.lar_df.dti.map(lambda x: self.check_number(x))==False)&(self.lar_df.dti!="NA")]
+		fail_df = self.lar_df[(self.lar_df.dti.map(lambda x: self.check_number(x))==False)&(~self.lar_df.dti.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v679_2(self):
 		"""An invalid Debt-to-Income Ratio was reported.
-		2) If Action Taken equals 4, 5 or 6, then Debt-to- Income Ratio must be NA."""
+		2) If Action Taken equals 4, 5 or 6, then Debt-to- Income Ratio must be NA.
+
+		Impact of S2155: Update to: 
+		2) If Action Taken equals 4, 5 or 6, then Debt-to-Income Ratio must be Exempt or NA. """
 		field = "DTI"
 		edit_name = "v679_2"
-		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5", "6")))&(self.lar_df.dti!="NA")]
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5", "6")))&(~self.lar_df.dti.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v679_3(self):
 		"""An invalid Debt-to-Income Ratio was reported.
-		3) If Multifamily Affordable Units is a number, then Debt-to-Income Ratio must be NA."""
+		3) If Multifamily Affordable Units is a number, then Debt-to-Income Ratio must be NA.
+
+		Impact of S2155: Update to: 
+		3) If Multifamily Affordable Units is a number, then Debt-to-Income Ratio must be Exempt or NA."""
 		field = "DTI"
 		edit_name = "v679_3"
-		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: self.check_number(x))==True)&(self.lar_df.dti!="NA")]
+		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: self.check_number(x))==True)&(~self.lar_df.dti.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v680_1(self):

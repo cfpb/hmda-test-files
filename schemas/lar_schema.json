@@ -397,7 +397,7 @@
     "field": "dti",
     "dtypes_": ["float", "string"],
     "data_type": "alphanumeric",
-    "valid_vals": ["NA"]
+    "valid_vals": ["NA", "Exempt"]
 }, {
     "field": "cltv",
     "dtypes_": ["float", "string"],
