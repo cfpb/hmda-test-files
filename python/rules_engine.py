@@ -2127,10 +2127,13 @@ class rules_engine(object):
 
 	def v687(self):
 		"""An invalid Other Non-amortizing Features was reported.
-		1) Other Non-amortizing Features must equal 1 or 2, and cannot be left blank."""
+		1) Other Non-amortizing Features must equal 1 or 2, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Other Non-amortizing Features must equal -1, 1 or 2, and cannot be left blank."""
 		field = "Non-amortizing Features"
 		edit_name = "v687"
-		fail_df = self.lar_df[~(self.lar_df.non_amort_features.isin(("1", "2")))]
+		fail_df = self.lar_df[~(self.lar_df.non_amort_features.isin(("-1", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v688_1(self):
