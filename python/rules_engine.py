@@ -1907,34 +1907,47 @@ class rules_engine(object):
 
 	def v678_1(self):
 		"""An invalid Prepayment Penalty Term was reported.
-		1) Prepayment Penalty Term must be a whole number greater than 0 or NA, and cannot be left blank."""
+		1) Prepayment Penalty Term must be a whole number greater than 0 or NA, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Prepayment Penalty Term must be a whole number greater than 0, Exempt, or NA, and cannot be left blank."""
 		field = "Prepayment Term"
 		edit_name = "v678_1"
-		fail_df = self.lar_df[(self.lar_df.prepayment_penalty.map(lambda x: self.check_number(x, min_val=1))==False)&(self.lar_df.prepayment_penalty!="NA")]
+		fail_df = self.lar_df[(self.lar_df.prepayment_penalty.map(lambda x: self.check_number(x, min_val=1))==False)&
+			(~self.lar_df.prepayment_penalty.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v678_2(self):
 		"""An invalid Prepayment Penalty Term was reported.
-		2) If Action Taken equals 6, then Prepayment Penalty Term must be NA."""
+		2) If Action Taken equals 6, then Prepayment Penalty Term must be NA.
+
+		Impact of S2155: Update to: 
+		2) If Action Taken equals 6, then Prepayment Penalty Term must be Exempt or NA. """
 		field = "Prepayment Term"
 		edit_name = "v678_2"
-		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(self.lar_df.prepayment_penalty!="NA")]
+		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(~self.lar_df.prepayment_penalty.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v678_3(self):
 		"""An invalid Prepayment Penalty Term was reported.
-		3) If Reverse Mortgage equals 1, then Prepayment Penalty Term must be NA."""
+		3) If Reverse Mortgage equals 1, then Prepayment Penalty Term must be NA.
+
+		Impact of S2155: Update to:
+		3) If Reverse Mortgage equals 1, then Prepayment Penalty Term must be Exempt or NA.  """
 		field = "Prepayment Term"
 		edit_name = "v678_3"
-		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(self.lar_df.prepayment_penalty!="NA")]
+		fail_df = self.lar_df[(self.lar_df.reverse_mortgage=="1")&(~self.lar_df.prepayment_penalty.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v678_4(self):
 		"""An invalid Prepayment Penalty Term was reported.
-		4) If Business or Commercial Purpose equals 1, then Prepayment Penalty Term must be NA."""
+		4) If Business or Commercial Purpose equals 1, then Prepayment Penalty Term must be NA.
+
+		Impact of S2155: Update to:
+		4) If Business or Commercial Purpose equals 1, then Prepayment Penalty Term must be Exempt or NA. """
 		field = "Prepayment Term"
 		edit_name = "v678_4"
-		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(self.lar_df.prepayment_penalty!="NA")]
+		fail_df = self.lar_df[(self.lar_df.business_purpose=="1")&(~self.lar_df.prepayment_penalty.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v678_5(self):
