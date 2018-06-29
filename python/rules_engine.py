@@ -2036,18 +2036,25 @@ class rules_engine(object):
 
 	def v681_1(self):
 		"""An invalid Combined Loan-to-Value Ratio was reported.
-		1) Combined Loan-to-Value Ratio must be either a number greater than 0 or NA, and cannot be left blank."""
+		1) Combined Loan-to-Value Ratio must be either a number greater than 0 or NA, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Combined Loan-to-Value Ratio must be either a number greater than 0, Exempt or NA, and cannot be left blank."""
 		field = "CLTV"
 		edit_name = "v681_1"
-		fail_df = self.lar_df[(self.lar_df.cltv.map(lambda x: self.check_number(x, min_val=1))==False)&(self.lar_df.cltv!="NA")]
+		fail_df = self.lar_df[(self.lar_df.cltv.map(lambda x: self.check_number(x, min_val=1))==False)&
+			(~self.lar_df.cltv.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v681_2(self):
 		"""An invalid Combined Loan-to-Value Ratio was reported.
-		2) If Action Taken equals 4, 5, or 6, then Combined Loan-to-Value ratio must be NA."""
+		2) If Action Taken equals 4, 5, or 6, then Combined Loan-to-Value ratio must be NA.
+		
+		Impact of S2155: Update to: 
+		2) If Action Taken equals 4, 5, or 6, then Combined Loan-to-Value ratio must be Exempt or NA."""
 		field = "CLTV"
 		edit_name = "v681_2"
-		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5", "6")))&(self.lar_df.cltv!="NA")]
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("4", "5", "6")))&(~self.lar_df.cltv.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v682_1(self):
@@ -2681,7 +2688,7 @@ class rules_engine(object):
 		(calculated as Loan Amount divided by the Property Value)."""
 		field = "Combined Loanto-Value Ratio, Loan Amount, and Property Value"
 		edit_name = "q617"
-		fail_df = self.lar_df[(self.lar_df.cltv!="NA")&(self.lar_df.property_value!="NA")].copy()
+		fail_df = self.lar_df[(~self.lar_df.cltv.isin(["NA", "Exempt", ""]))&(~self.lar_df.property_value.isin(["NA"]))].copy()
 		fail_df.cltv = fail_df.cltv.apply(lambda x: float(x))
 		fail_df["ltv"] = (fail_df.loan_amount.apply(lambda x: float(x)) / fail_df.property_value.apply(lambda x: float(x))) *100
 		fail_df = fail_df[fail_df.cltv < fail_df.ltv]
