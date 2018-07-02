@@ -2630,10 +2630,13 @@ class rules_engine(object):
 
 	def v708(self):
 		"""An invalid Business or Commercial Purpose was reported.
-		1) Business or Commercial Purpose must equal 1 or 2, and cannot be left blank."""
+		1) Business or Commercial Purpose must equal 1 or 2, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Business or Commercial Purpose must equal -1, 1 or 2, and cannot be left blank."""
 		field = "Business Purpose"
 		edit_name = "v708"
-		fail_df = self.lar_df[~(self.lar_df.business_purpose.isin(("1", "2")))]
+		fail_df = self.lar_df[~(self.lar_df.business_purpose.isin(("-1", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q600(self):
