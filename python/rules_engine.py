@@ -2608,10 +2608,13 @@ class rules_engine(object):
 
 	def v706(self):
 		"""An invalid Reverse Mortgage was reported.
-		1) Reverse Mortgage must equal 1 or 2, and cannot be left blank."""
+		1) Reverse Mortgage must equal 1 or 2, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Reverse Mortgage must equal -1, 1 or 2, and cannot be left blank."""
 		field = "Reverse Mortgage"
 		edit_name = "v706"
-		fail_df = self.lar_df[~(self.lar_df.reverse_mortgage.isin(("1", "2")))]
+		fail_df = self.lar_df[~(self.lar_df.reverse_mortgage.isin(("-1", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v707(self):
