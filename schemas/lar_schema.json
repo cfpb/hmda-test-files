@@ -447,7 +447,7 @@
     "field": "manufactured_interest",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [1, 2, 3, 4, 5]
+    "valid_vals": [-1, 1, 2, 3, 4, 5]
 }, {
     "field": "total_units",
     "dtypes_": ["int"],

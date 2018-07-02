@@ -1765,7 +1765,8 @@ class rules_engine(object):
 		5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Origination Charges must be Exempt or NA."""
 		field = "Origination Charges"
 		edit_name = "v674_5"
-		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&(~self.lar_df.origination_fee.isin(["NA", "Exempt"]))]
+		fail_df = self.lar_df[(self.lar_df.action_taken.isin(("2", "3", "4", "5", "7", "8")))&
+			(~self.lar_df.origination_fee.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v675_1(self):
@@ -2196,26 +2197,37 @@ class rules_engine(object):
 
 	def v690_1(self):
 		"""An invalid Manufactured Home Land Property Interest was reported.
-		1) Manufactured Home Land Property Interest must equal 1, 2, 3, 4, or 5, and cannot be left blank."""
+		1) Manufactured Home Land Property Interest must equal 1, 2, 3, 4, or 5, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Manufactured Home Land Property Interest must equal -1, 1, 2, 3, 4, or 5, and cannot be left blank. """
+
 		field = "Manufactured Land Interest"
 		edit_name = "v690_1"
-		fail_df = self.lar_df[~(self.lar_df.manufactured_interest.isin(("1", "2", "3", "4", "5")))]
+		fail_df = self.lar_df[~(self.lar_df.manufactured_interest.isin(("-1", "1", "2", "3", "4", "5")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v690_2(self):
 		"""An invalid Manufactured Home Land Property Interest was reported.
-		2 If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal 5."""
+		2 If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal 5.
+
+		Impact of S2155: Update to: 
+		2) If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal -1 or 5. """
 		field = "Manufactured Land Interest"
 		edit_name = "v690_2"
-		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: x.isdigit())==True)&(self.lar_df.manufactured_interest!="5")]
+		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: x.isdigit())==True)&
+			(~self.lar_df.manufactured_interest.isin(["5", "-1"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v690_3(self):
 		"""An invalid Manufactured Home Land Property Interest was reported.
-		3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal 5."""
+		3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal 5.
+
+		Impact of S2155: Update to: 
+		3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal -1 or 5."""
 		field = "Manufactured Land Interest"
 		edit_name = "v690_3"
-		fail_df = self.lar_df[(self.lar_df.const_method=="1")&(self.lar_df.manufactured_interest!="5")]
+		fail_df = self.lar_df[(self.lar_df.const_method=="1")&(~self.lar_df.manufactured_interest.isin(["5", "-1"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v691(self):
