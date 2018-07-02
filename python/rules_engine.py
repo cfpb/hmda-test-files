@@ -2306,26 +2306,35 @@ class rules_engine(object):
 
 	def v694_1(self):
 		"""An invalid Application Channel data field was reported.
-		1) Initially Payable to Your Institution must equal 1, 2 or 3, and cannot be left blank."""
+		1) Initially Payable to Your Institution must equal 1, 2 or 3, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Initially Payable to Your Institution must equal -1, 1, 2 or 3, and cannot be left blank. """
 		field = "initially_payable"
 		edit_name = "v694_1"
-		fail_df = self.lar_df[~(self.lar_df.initially_payable.isin(("1", "2", "3")))]
+		fail_df = self.lar_df[~(self.lar_df.initially_payable.isin(("-1", "1", "2", "3")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v694_2(self):
 		"""An invalid Application Channel data field was reported.
-		2) If Action Taken equals 6, then Initially Payable to Your Institution must equal 3."""
+		2) If Action Taken equals 6, then Initially Payable to Your Institution must equal 3.
+
+		Impact of S2155: Update to: 
+		2) If Action Taken equals 6, then Initially Payable to Your Institution must equal -1 or 3. """
 		field = "initially_payable"
 		edit_name = "v694_2"
-		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(self.lar_df.initially_payable!="3")]
+		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(~self.lar_df.initially_payable.isin(["-1", "3"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v694_3(self):
 		"""An invalid Application Channel data field was reported.
-		3) If Action Taken equals 1, then Initially Payable to Your Institution must equal 1 or 2."""
+		3) If Action Taken equals 1, then Initially Payable to Your Institution must equal 1 or 2.
+
+		Impact of S2155: Update to: 
+		3) If Action Taken equals 1, then Initially Payable to Your Institution must equal -1, 1 or 2."""
 		field = "initially_payable"
 		edit_name = "v694_3"
-		fail_df = self.lar_df[(self.lar_df.action_taken=="1")&(~self.lar_df.initially_payable.isin(("1", "2")))]
+		fail_df = self.lar_df[(self.lar_df.action_taken=="1")&(~self.lar_df.initially_payable.isin(("-1", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v695(self):
