@@ -477,7 +477,7 @@
     "field": "aus_1",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [1, 2, 3, 4, 5, 6]
+    "valid_vals": [-1, 1, 2, 3, 4, 5, 6]
 }, {
     "field": "aus_2",
     "dtypes_": ["int"],
@@ -507,7 +507,7 @@
     "field": "aus_result_1",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    "valid_vals": [-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
 }, {
     "field": "aus_result_2",
     "dtypes_": ["int"],

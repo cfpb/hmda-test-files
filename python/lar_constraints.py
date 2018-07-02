@@ -887,17 +887,17 @@ class lar_constraints(object):
 		"""1) Manufactured Home Secured Property Type must equal 1, 2 or 3, and cannot be left blank.
 		2) If Multifamily Affordable Units is a number, then Manufactured Home Secured Property Type must equal 3.
 		3) If Construction Method equals 1, then Manufactured Home Secured Property Type must equal 3."""
-		if row["affordable_units"] != "NA":
+		if row["affordable_units"] not in  ["NA", "Exempt"]:
 			row["manufactured_type"] = "3"
 		if row["const_method"] == "1":
-			row["manufactured_interest"] = "3"
+			row["manufactured_type"] = "3"
 		return row
 
 	def v690_const(self, row): 
 		"""1) Manufactured Home Land Property Interest must equal 1, 2, 3, 4, or 5, and cannot be left blank.
 		2) If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal 5.
 		3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal 5."""
-		if row["affordable_units"] != "NA":
+		if row["affordable_units"] not in  ["NA", "Exempt"]:
 			row["manufactured_interest"] = "5"
 		if row["const_method"] == "1":
 			row["manufactured_interest"] = "5"
@@ -908,8 +908,8 @@ class lar_constraints(object):
 		3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or
 		equal to Total Units. """
 		if int(row["total_units"]) < 5:
-			row["affordable_units"] = "NA"
-		if row["affordable_units"] !="NA" and int(row["affordable_units"]) > int(row["total_units"]):
+			row["affordable_units"] = random.choice(["NA", "Exempt"])
+		if row["affordable_units"] not in ["NA", "Exempt"] and int(row["affordable_units"]) > int(row["total_units"]):
 			row["affordable_units"] = row["total_units"]
 		return row
 
@@ -959,6 +959,19 @@ class lar_constraints(object):
 		if row["aus_5"] == "":
 			row["aus_result_5"] =""
 
+		#Ensure AUS system and AUS result are both exempt if either is exempt and that all other AUS or results fields are blank
+		if row["aus_1"] == "-1" or row["aus_result_1"] == "-1":
+			row["aus_result_1"] = "-1"
+			row["aus_result_2"] = ""
+			row["aus_result_3"] = ""
+			row["aus_result_4"] = ""
+			row["aus_result_5"] = ""
+
+			row["aus_1"] = "-1"
+			row["aus_2"] = ""
+			row["aus_3"] = ""
+			row["aus_4"] = ""
+			row["aus_5"] = ""
 		#Ensure code 5 free form text is marked if the text field is populated
 		if (row["aus_1"]  != "5" and row["aus_2"] != "5" and row["aus_3"] != "5" and row["aus_4"] != "5" and row["aus_5"] != "5") and \
 		row["aus_code_5"] != "":
@@ -967,8 +980,8 @@ class lar_constraints(object):
 		if row["aus_result_1"] != "16" and row["aus_result_2"] != "16" and row["aus_result_3"] != "16" and row["aus_result_4"] !="16" \
 		and row["aus_result_5"] != "16" and row["aus_code_16"] !="":
 			row["aus_code_16"] = ""
-		#number of reported systems must match the number of reported results
 
+		#number of reported systems must match the number of reported results
 		result_enums = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14","15", "16")
 		for i in range(1, len(aus_sys)):
 			if aus_sys[i] in ("1", "2", "3", "4", "5") and aus_results[i] not in result_enums:

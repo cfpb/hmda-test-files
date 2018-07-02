@@ -113,7 +113,7 @@ class rules_engine(object):
 		try:
 			digit = field.replace(".","").isdigit() #check if data field is a digit
 			if min_val is not None: #min_val was passed
-				if digit == True and float(field) >= min_val:
+				if digit == True and float(field) > min_val:
 					return True #digit and min_val are True
 				else:
 					return False #digit is True, min_val is False
@@ -272,10 +272,11 @@ class rules_engine(object):
 
 	def v606(self):
 		"""The reported Total Number of Entries Contained in Submission is not in the valid format.
-		1) The required format for the Total Number of Entries Contained in Submission is a whole number that is greater than zero, and it cannot be left blank."""
+		1) The required format for the Total Number of Entries Contained in Submission is a whole number that is greater than zero, 
+		and it cannot be left blank."""
 		field = "lar_entries"
 		edit_name = "v606"
-		fail_df = self.ts_df[(self.ts_df.lar_entries.map(lambda x: self.check_number(x, min_val=1))==False)]
+		fail_df = self.ts_df[(self.ts_df.lar_entries.map(lambda x: self.check_number(x, min_val=0))==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	def v607(self):
@@ -1155,7 +1156,7 @@ class rules_engine(object):
 		1) Age of Applicant or Borrower must be a whole number greater than zero, and cannot be left blank."""
 		field = "Applicant Age"
 		edit_name = "v651_1"
-		fail_df = self.lar_df[(self.lar_df.app_age.map(lambda x: self.check_number(field=x, min_val=1))==False)]
+		fail_df = self.lar_df[(self.lar_df.app_age.map(lambda x: self.check_number(field=x, min_val=0))==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v651_2(self):
@@ -1173,7 +1174,7 @@ class rules_engine(object):
 		1) Age of Co-Applicant or Co-Borrower must be a whole number greater than zero, and cannot be left blank."""
 		field = "Co-Applicant Age"
 		edit_name = "v652_1"
-		fail_df = self.lar_df[(self.lar_df.co_app_age.map(lambda x: self.check_number(field=x, min_val=1))==False)]
+		fail_df = self.lar_df[(self.lar_df.co_app_age.map(lambda x: self.check_number(field=x, min_val=0))==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v652_2(self):
@@ -1914,7 +1915,7 @@ class rules_engine(object):
 		1) Prepayment Penalty Term must be a whole number greater than 0, Exempt, or NA, and cannot be left blank."""
 		field = "Prepayment Term"
 		edit_name = "v678_1"
-		fail_df = self.lar_df[(self.lar_df.prepayment_penalty.map(lambda x: self.check_number(x, min_val=1))==False)&
+		fail_df = self.lar_df[(self.lar_df.prepayment_penalty.map(lambda x: self.check_number(x, min_val=0))==False)&
 			(~self.lar_df.prepayment_penalty.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
@@ -2043,7 +2044,7 @@ class rules_engine(object):
 		1) Combined Loan-to-Value Ratio must be either a number greater than 0, Exempt or NA, and cannot be left blank."""
 		field = "CLTV"
 		edit_name = "v681_1"
-		fail_df = self.lar_df[(self.lar_df.cltv.map(lambda x: self.check_number(x, min_val=1))==False)&
+		fail_df = self.lar_df[(self.lar_df.cltv.map(lambda x: self.check_number(x, min_val=0))==False)&
 			(~self.lar_df.cltv.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
@@ -2066,7 +2067,7 @@ class rules_engine(object):
 		1) Loan Term must be either a whole number greater than zero, Exempt, or NA, and cannot be left blank. """
 		field = "Loan Term"
 		edit_name = "v682_1"
-		fail_df = self.lar_df[(self.lar_df.loan_term.map(lambda x: self.check_number(x, min_val=1))==False)&
+		fail_df = self.lar_df[(self.lar_df.loan_term.map(lambda x: self.check_number(x, min_val=0))==False)&
 			(~self.lar_df.loan_term.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
@@ -2089,7 +2090,7 @@ class rules_engine(object):
 		1) Introductory Rate Period must be either a whole number greater than zero, Exempt, or NA, and cannot be left blank."""
 		field = "Introductory Rate"
 		edit_name = "v683"
-		fail_df = self.lar_df[(self.lar_df.intro_rate.map(lambda x: self.check_number(x, min_val=1))==False)&
+		fail_df = self.lar_df[(self.lar_df.intro_rate.map(lambda x: self.check_number(x, min_val=0))==False)&
 			(~self.lar_df.intro_rate.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
@@ -2145,7 +2146,7 @@ class rules_engine(object):
 		1) Property Value must be either a number greater than 0, Exempt, or NA, and cannot be left blank."""
 		field = "Property Value"
 		edit_name = "v688_1"
-		fail_df = self.lar_df[(self.lar_df.property_value.map(lambda x: self.check_number(x, min_val=1)==False))&
+		fail_df = self.lar_df[(self.lar_df.property_value.map(lambda x: self.check_number(x, min_val=0)==False))&
 			(~self.lar_df.property_value.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
@@ -2235,7 +2236,7 @@ class rules_engine(object):
 		1) Total Units must be a whole number greater than 0, and cannot be left blank."""
 		field = "Total Units"
 		edit_name = "v691"
-		fail_df = self.lar_df[(self.lar_df.total_units.map(lambda x: self.check_number(x, min_val=1))==False)]
+		fail_df = self.lar_df[(self.lar_df.total_units.map(lambda x: self.check_number(x, min_val=0))==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v692_1(self):
@@ -2243,7 +2244,7 @@ class rules_engine(object):
 		1) Multifamily Affordable Units must be either a whole number or NA, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Multifamily Affordable Units must be either a whole number, Exempt, or NA, and cannot be left blank. """
+		1) Multifamily Affordable Units must be either a whole number, Exempt, or NA, and cannot be left blank."""
 		field = "Affordable Units"
 		edit_name = "v692_1"
 		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: self.check_number(x))==False)&
@@ -2255,10 +2256,10 @@ class rules_engine(object):
 		2) If Total Units is less than 5, then Multifamily Affordable Units must be NA.
 
 		Impact of S2155: Update to:
-		2) If Total Units is less than 5, then Multifamily Affordable Units must be NA.  """
+		2) If Total Units is less than 5, then Multifamily Affordable Units must be Exempt or NA. """
 		field = "Affordable Units"
 		edit_name = "v692_2"
-		fail_df = self.lar_df[(self.lar_df.total_units.map(lambda x: int(x)<5))&(self.lar_df.affordable_units!="NA")]
+		fail_df = self.lar_df[(self.lar_df.total_units.map(lambda x: int(x)<5))&(~self.lar_df.affordable_units.isin(["NA", "Exempt"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v692_3(self):
@@ -2266,11 +2267,15 @@ class rules_engine(object):
 		3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or equal to Total Units.
 
 		Impact of S2155: Update to: 
-		3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or equal to Total Units or NA."""
+		3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be 
+		less than or equal to Total Units, Exempt or NA """
 		field = "Affordable Units"
 		edit_name = "v692_3"
 		fields = ["affordable_units", "total_units"]
-		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.compare_nums(x, fields=fields), axis=1)==True)]
+		#fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.compare_nums(x, fields=fields), axis=1)==True)&
+		#	(~self.lar_df.affordable_units.isin(["NA", "Exempt"]))]
+		fail_df = self.lar_df[~self.lar_df.affordable_units.isin(["Exempt", "NA"])]
+		fail_df = fail_df[fail_df.apply(lambda x: self.compare_nums(x, fields=fields), axis=1)==True]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v693_1(self):
@@ -2349,10 +2354,19 @@ class rules_engine(object):
 		"""An invalid Automated Underwriting System data field was reported.
 		1) Automated Underwriting System: 1 must equal 1, 2, 3, 4, 5, or 6, and cannot be left blank.
 		Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4;
-		and Automated Underwriting System: 5 must equal 1, 2, 3, 4, 5, or be left blank."""
+		and Automated Underwriting System: 5 must equal 1, 2, 3, 4, 5, or be left blank.
+
+
+		Impact of S2155: Update to: 
+		1) Automated Underwriting System: 1 must equal -1, 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated Underwriting System: 2; 
+		Automated Underwriting System: 3; Automated Underwriting System: 4; and Automated Underwriting System: 5 
+		must equal 1, 2, 3, 4, 5, or be left blank. 
+
+	
+"""
 		field = "AUS 1-5"
 		edit_name = "v696_1"
-		fail_df = self.lar_df[~(self.lar_df.aus_1.isin(("1", "2", "3", "4", "5", "6")))|
+		fail_df = self.lar_df[~(self.lar_df.aus_1.isin(("-1", "1", "2", "3", "4", "5", "6")))|
 			(~self.lar_df.aus_2.isin(("1", "2", "3", "4", "5","")))|(~self.lar_df.aus_3.isin(("1", "2", "3", "4", "5","")))|
 			(~self.lar_df.aus_4.isin(("1", "2", "3", "4", "5","")))|(~self.lar_df.aus_5.isin(("1", "2", "3", "4", "5","")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
@@ -2363,10 +2377,16 @@ class rules_engine(object):
 		and cannot be left blank.
 		Automated Underwriting System Result: 2; Automated Underwriting System Result: 3;
 		Automated Underwriting System Result: 4; and Automated Underwriting System Result: 5
-		must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or be left blank."""
+		must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or be left blank.
+
+		Impact of S2155: Update to: 
+		2) Automated Underwriting System Result: 1 must equal -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or 17, 
+		and cannot be left blank. 
+		Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; 
+		and Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or be left blank. """
 		field = "AUS 1-5 Result"
 		edit_name = "v696_2"
-		aus_1_results = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"]
+		aus_1_results = ["-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"]
 		aus_n_results = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", ""]
 		fail_df = self.lar_df[~(self.lar_df.aus_result_1.isin(aus_1_results))|(~self.lar_df.aus_result_2.isin(aus_n_results))|(~self.lar_df.aus_result_3.isin(aus_n_results))
 		|(~self.lar_df.aus_result_4.isin(aus_n_results))|(~self.lar_df.aus_result_5.isin(aus_n_results))]
@@ -2381,7 +2401,8 @@ class rules_engine(object):
 		fields_2 = ["aus_result_1", "aus_result_2", "aus_result_3", "aus_result_4", "aus_result_5"]
 		vals_1 = ("1", "2", "3", "4", "5")
 		vals_2 = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
-		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.check_counts(x, fields_1=fields_1, fields_2=fields_2, vals_1=vals_1, vals_2=vals_2),axis=1)==False)]
+		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.check_counts(x, fields_1=fields_1, fields_2=fields_2, vals_1=vals_1, 
+			vals_2=vals_2),axis=1)==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v697(self):
