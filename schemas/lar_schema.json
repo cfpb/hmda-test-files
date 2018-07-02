@@ -467,7 +467,7 @@
     "field": "initially_payable",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [1, 2, 3]
+    "valid_vals": [-1, 1, 2, 3]
 }, {
     "field": "mlo_id",
     "dtypes_": ["string"],
