@@ -547,5 +547,5 @@
     "field": "business_purpose",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [1, 2]
+    "valid_vals": [-1, 1, 2]
 }]
