@@ -2811,10 +2811,14 @@ class rules_engine(object):
 
 	def q616_1(self):
 		"""If Total Loan Costs and Discount Points are not reported NA, 
+		then Total Loan Costs generally should be greater than Discount Points.
+
+		Impact of S2155: Update to: 
+		1) If Total Loan Costs and Discount Points are not reported Exempt or NA, 
 		then Total Loan Costs generally should be greater than Discount Points."""
 		field = "Discount Points; Total Loan Costs; Total Points and Fees"
 		edit_name = "q616_1"
-		fail_df = self.lar_df[(self.lar_df.loan_costs!="NA")&(self.lar_df.discount_points!="NA")].copy()
+		fail_df = self.lar_df[(~self.lar_df.loan_costs.isin(["NA", "Exempt"]))&(~self.lar_df.discount_points.isin(["NA", "Exempt"]))].copy()
 		fail_df.loan_costs = fail_df.loan_costs.apply(lambda x: float(x))
 		fail_df.discount_points = fail_df.discount_points.apply(lambda x: float(x))
 		fail_df = fail_df[(fail_df.loan_costs<fail_df.discount_points)]
@@ -2823,10 +2827,14 @@ class rules_engine(object):
 	def q616_2(self):
 		"""If Total Points and Fees and Discount Points are not
 		reported NA, then Total Points and Fees generally 
-		should be greater than Discount Points."""
+		should be greater than Discount Points.
+
+		Impact of S2155: Update to: 
+		2) If Total Points and Fees and Discount Points are not reported Exempt or NA, 
+		then Total Points and Fees generally should be greater than Discount Points."""
 		field = "Discount Points; Total Loan Costs; Total Points and Fees"
 		edit_name = "q616_2"
-		fail_df = self.lar_df[(self.lar_df.points_fees!="NA")&(self.lar_df.discount_points!="NA")]
+		fail_df = self.lar_df[(~self.lar_df.points_fees.isin(["Exempt", "NA"]))&(~self.lar_df.discount_points.isin(["NA", "Exempt"]))]
 		fail_df.points_fees = fail_df.points_fees.apply(lambda x: float(x))
 		fail_df.discount_points = fail_df.discount_points.apply(lambda x: float(x))
 		fail_df = fail_df[(fail_df.discount_points>fail_df.points_fees)]
