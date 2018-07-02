@@ -2619,10 +2619,13 @@ class rules_engine(object):
 
 	def v707(self):
 		"""An invalid Open-End Line of Credit was reported.
-		1) Open-End Line of Credit must equal 1 or 2, and cannot be left blank."""
+		1) Open-End Line of Credit must equal 1 or 2, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Open-End Line of Credit must equal -1, 1, or 2, and cannot be left blank."""
 		field = "Open End Credit"
 		edit_name = "v707"
-		fail_df = self.lar_df[~(self.lar_df.open_end_credit.isin(("1", "2")))]
+		fail_df = self.lar_df[~(self.lar_df.open_end_credit.isin(("-1", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v708(self):
