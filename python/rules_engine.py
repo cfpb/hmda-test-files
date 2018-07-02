@@ -2843,6 +2843,11 @@ class rules_engine(object):
 	def q617(self):
 		"""If Combined Loan-to-Value Ratio and Property Value are not reported NA, 
 		then the Combined Loan-to Value Ratio generally should be greater than or equal to the Loan-to-Value Ratio 
+		(calculated as Loan Amount divided by the Property Value).
+
+		Impact of S2155: Update to: 
+		1) If Combined Loan-to-Value Ratio and Property Value are not reported Exempt or NA, 
+		then the Combined Loan-to Value Ratio generally should be greater than or equal to the Loan-to-Value Ratio 
 		(calculated as Loan Amount divided by the Property Value)."""
 		field = "Combined Loanto-Value Ratio, Loan Amount, and Property Value"
 		edit_name = "q617"
