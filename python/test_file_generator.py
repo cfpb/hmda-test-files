@@ -2385,6 +2385,17 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def v693_3(self):
+		"""Set app submission to 3 and action taken to != 6"""
+		name = "V693_3.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_submission = "3"
+		lar.action_taken = lar.action_taken.map(lambda x: random.choice(["1", "2", "3", "4", "5"]))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+		
 	def v694_1(self):
 		"""Set initially payable to blank or 0."""
 		name = "v694_1.txt"

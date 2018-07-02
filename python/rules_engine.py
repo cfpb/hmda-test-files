@@ -2275,19 +2275,33 @@ class rules_engine(object):
 
 	def v693_1(self):
 		"""An invalid Application Channel data field was reported.
-		1) Submission of Application must equal 1, 2 or 3, and cannot be left blank."""
+		1) Submission of Application must equal 1, 2 or 3, and cannot be left blank.
+
+		Impact of S2155: Update to: 
+		1) Submission of Application must equal -1, 1, 2 or 3, and cannot be left blank. """
 		field = "Applicaiton Submission"
 		edit_name = "v693_1"
-		fail_df = self.lar_df[~(self.lar_df.app_submission.isin(("1", "2", "3")))]
+		fail_df = self.lar_df[~(self.lar_df.app_submission.isin(("-1", "1", "2", "3")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v693_2(self):
 		"""An invalid Application Channel data field was reported.
-		2) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true."""
+		2) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true.
+
+		Impact of S2155: Update to: 
+		2) If Action Taken equals 6, then Submission of Application must equal -1 or 3."""
 		field = "Applicaiton Channel"
 		edit_name = "v693_2"
-		fail_df = self.lar_df[((self.lar_df.action_taken=="6")&(self.lar_df.app_submission!="3"))|
-			((self.lar_df.app_submission=="3")&(self.lar_df.action_taken!="6"))]
+		fail_df = self.lar_df[((self.lar_df.action_taken=="6")&(~self.lar_df.app_submission.isin(["3", "-1"])))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v693_3(self):
+		"""
+		Impact of S2155: Update to: 
+		3) If Submission of Application equals 3, then Action Taken must equal 6."""
+		field = "Application Channel"
+		edit_name = "v693_3"
+		fail_df = self.lar_df[((self.lar_df.app_submission=="3")&(self.lar_df.action_taken!="6"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v694_1(self):
