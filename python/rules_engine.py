@@ -2726,7 +2726,11 @@ class rules_engine(object):
 
 	def q609(self):
 		"""If Type of Purchaser equals 1, 2, 3 or 4, 
-		then Rate Spread generally should be less than or equal to 10% or be NA."""
+		then Rate Spread generally should be less than or equal to 10% or be NA.
+
+		Impact of S2155: Update to: 
+		1) If Type of Purchaser equals 1, 2, 3 or 4, 
+		then Rate Spread generally should be less than or equal to 10%, Exempt, or NA."""
 		field = "Purchaser Type/Rate Spread"
 		edit_name = "q609"
 		fail_df = self.lar_df[(~self.lar_df.rate_spread.isin(["NA", "Exempt",""]))].copy()
@@ -2779,15 +2783,23 @@ class rules_engine(object):
 
 	def q615_1(self):
 		"""If Total Loan Costs and Origination Charges are not reported NA, 
-		then Total Loan Costs generally should be greater than Origination Charges."""
+		then Total Loan Costs generally should be greater than Origination Charges.
+
+		Impact of S2155: Update to: 
+		1) If Total Loan Costs and Origination Charges are not reported Exempt or NA, 
+		then Total Loan Costs generally should be greater than Origination Charges. """
 		field = "Origination Charges/Total Loan Costs/Total Points and Fees"
 		edit_name = "q615_1"
-		fail_df = self.lar_df[(self.lar_df.origination_fee!="NA")&(self.lar_df.loan_costs!="NA")].copy()
+		fail_df = self.lar_df[(~self.lar_df.origination_fee.isin(["NA", "Exempt"]))&(~self.lar_df.loan_costs.isin(["NA", "Exempt"]))].copy()
 		fail_df = fail_df[(fail_df.loan_costs<fail_df.origination_fee)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q615_2(self):
 		"""If Total Points and Fees and Origination Charges are not reported NA, 
+		then Total Points and Fees generally should be greater than Origination Charges.
+
+		Impact of S2155: Update to: 
+		2) If Total Points and Fees and Origination Charges are not reported Exempt or NA, 
 		then Total Points and Fees generally should be greater than Origination Charges."""
 		field = "Origination Charges/Total Loan Costs/Total Points and Fees"
 		edit_name = "q615_2"
