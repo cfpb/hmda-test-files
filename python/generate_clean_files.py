@@ -93,7 +93,7 @@ lar_validator = rules_engine(lar_schema=lar_schema_df, ts_schema=ts_schema_df, c
 
 #Set parameters for data creation
 file_length = data_map["file_length"]["value"] #set number of rows in test file
-lei = None #Flag for presence of an LEI. Only a single LEI should be used for a file, so if one is present, it will be used.
+lei = data_map["lei"]["value"]#None #Flag for presence of an LEI. Only a single LEI should be used for a file, so if one is present, it will be used.
 first = True #flag for first row of data. The first row is used to create the dataframe, subsequent rows are appended
 
 #Data generation loop

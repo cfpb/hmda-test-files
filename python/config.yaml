@@ -88,7 +88,10 @@
     file_length:
      desc: "The number of lines in the clean data file"
      type: Integer
-     value: 100
+     value: 500
     clean_file:
      type: File
      value: "clean_file_100_rows.txt"
+    lei:
+     type: String
+     value: "B90YWS6AFX2LGWOXJ1LD"
