@@ -40,6 +40,15 @@ To generate test files:
         - Tract to CBSA data for 2015 (most current year)
         - A file containing a list of US ZIP codes
 
+## Data Generation Notes:
+These values must be changed manually in the config.yaml file
+- Name: Bank0
+- LEI: B90YWS6AFX2LGWOXJ1LD
+- Tax ID: 01-0123456
+
+- Name: Bank1
+- LEI: BANK1LEIFORTEST12345
+- Tax ID: 02-1234567
 
 ----
 ## Open source licensing info

@@ -21,9 +21,11 @@ class lar_gen(object):
 		with open('config.yaml') as f:
 			# use safe_load instead load
 			data_map = yaml.safe_load(f)
-		#Base LAR File range limits
+		#load TS data
 		self.street_addy = data_map['street_addy']["value"]
 		self.city = data_map["city"]["value"]
+		self.bank_name = data_map["name"]["value"]
+		#Base LAR File range limits
 		self.zip_codes = json.load(open("../dependencies/zip_codes.json"))
 		self.lar_zips = self.zip_codes.append("Exempt")
 		self.max_age = data_map["max_age"]["value"]
@@ -48,7 +50,7 @@ class lar_gen(object):
 		self.prop_val_min = data_map["prop_val_min"]["value"]
 
 	#helper functions
-	def check_digit_gen(valid=True, ULI='10Bx939c5543TqA1144M999143X'):
+	def check_digit_gen(valid=True, ULI=None):
 		"""Generates a check digit for a ULI in accordance with
 		https://www.consumerfinance.gov/eregulations/diff/1003-C/2015-26607_20170101/2015-26607_20180101?from_version=2015-26607_20170101#1003-C-1"""
 		if ULI is None:
@@ -173,24 +175,24 @@ class lar_gen(object):
 		"""generates int/string or float/string value lists. this is done to include NA and randomly generated values"""
 		pass
 
-	def make_ts_row(self, file_length, lei):
+	def make_ts_row(self, data_map):
 		"""Creates a TS row as a dictionary and returns it."""
 		ts_row = OrderedDict()
-		ts_row["record_id"]="1"
-		ts_row["inst_name"]="Ficus Bank"
-		ts_row["calendar_year"]= "2018"
-		ts_row["calendar_quarter"]="4"
-		ts_row["contact_name"]="Mr. Smug Pockets"
-		ts_row["contact_tel"]="555-555-5555"
-		ts_row["contact_email"]="pockets@ficus.com"
-		ts_row["contact_street_address"]="1234 Ficus Lane"
-		ts_row["office_city"]="Ficusville"
-		ts_row["office_state"]="UT"
-		ts_row["office_zip"]="84096"
-		ts_row["federal_agency"]="9"
-		ts_row["lar_entries"]= str(file_length)
-		ts_row["tax_id"]="01-0123456"
-		ts_row["lei"]=str(lei)
+		ts_row["record_id"] ="1"
+		ts_row["inst_name"] = data_map["name"]["value"]
+		ts_row["calendar_year"] = data_map["calendar_year"]["value"]
+		ts_row["calendar_quarter"] = data_map["calendar_quarter"]["value"]
+		ts_row["contact_name"] = data_map["contact_name"]["value"]
+		ts_row["contact_tel"] = data_map["contact_tel"]["value"]
+		ts_row["contact_email"] = data_map["contact_email"]["value"]
+		ts_row["contact_street_address"] = data_map["street_addy"]["value"]
+		ts_row["office_city"] = data_map["city"]["value"]
+		ts_row["office_state"] = data_map["state"]["value"]
+		ts_row["office_zip"] = data_map["zip_code"]["value"]
+		ts_row["federal_agency"] = data_map["agency_code"]["value"]
+		ts_row["lar_entries"]= str(data_map["file_length"]["value"])
+		ts_row["tax_id"] = data_map["tax_id"]["value"]
+		ts_row["lei"] = data_map["lei"]["value"]
 		return ts_row
 
 	#all valid values, including blanks and NAs, are included in the selection lists.
@@ -198,11 +200,8 @@ class lar_gen(object):
 	def make_row(self, lei=None):
 		"""Make num_rows LAR rows and return them as a list of ordered dicts"""
 		valid_lar_row = OrderedDict() 
-		valid_lar_row["record_id"] = str(self.LAR_df.valid_vals[self.LAR_df.field=="record_id"].iloc[0][0])
-		if not lei:
-			valid_lar_row["lei"] = self.char_string_gen(20)
-		else:
-			valid_lar_row["lei"] = lei
+		valid_lar_row["record_id"] = str(self.LAR_df.valid_vals[self.LAR_df.field=="record_id"].iloc[0][0])	
+		valid_lar_row["lei"] = lei
 		valid_lar_row["uli"] = valid_lar_row['lei'] + self.char_string_gen(23)
 		valid_lar_row["uli"] = valid_lar_row["uli"] + self.check_digit_gen(ULI=valid_lar_row["uli"])
 		valid_lar_row["uli"] = random.choice([valid_lar_row["uli"], self.char_string_gen(22)])
