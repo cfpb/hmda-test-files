@@ -111,7 +111,7 @@ for i in range(0, file_length): #loop over file length
 
 	lei = row["lei"] #copy LEI from previous row
 	iters = 1 #start iteration count for checking diff time. This is used for troubleshooting.
-	ts_row = lar_gen.make_ts_row(file_length, lei) #create dictionary of TS row fields
+	ts_row = lar_gen.make_ts_row(data_map) #create dictionary of TS row fields
 	#flag for starting the LAR dataframe
 	while stop == False:
 		row_base = row.copy() #copy row to enable diff
@@ -153,6 +153,6 @@ print(results_df[results_df.status=="failed"]) #display dataframe of failed edit
 
 #write clean data file to disk
 utils.write_file(ts_input=pd.DataFrame(ts_row, index=[0], columns=validator.ts_field_names), lar_input=lar_frame, path="../edits_files/",
-	name="clean_file_{n}_rows.txt".format(n=file_length))
+	name="clean_file_{n}_rows_{name}.txt".format(n=file_length, name=data_map["name"]["value"]))
 
 
