@@ -13,7 +13,7 @@ from lar_generator import lar_gen #used for check digit
 
 class rules_engine(object):
 	"""docstring for ClassName"""
-	def __init__(self, lar_schema=None, ts_schema=None, year="2018", cbsa_data=None):#tracts=None, counties=None, small_counties=None):
+	def __init__(self, lar_schema=None, ts_schema=None, year=2018, cbsa_data=None):#tracts=None, counties=None, small_counties=None):
 		#lar and TS field names (load from schema names?)
 		self.year = year
 		self.tracts = list(cbsa_data.tractFips)#tracts #instantiate valid Census tracts
@@ -242,7 +242,7 @@ class rules_engine(object):
 		"""An invalid Calendar Quarter was reported. 1) Calendar Quarter must equal 4, and cannot be left blank."""
 		field = "calendar_quarter"
 		edit_name = "v602"
-		fail_df = self.ts_df[self.ts_df.calendar_quarter!="4"]
+		fail_df = self.ts_df[self.ts_df.calendar_quarter!=4]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	def v603(self):
@@ -506,7 +506,7 @@ class rules_engine(object):
 		2) The Action Taken Date must be in the reporting year."""
 		field = "action_date"
 		edit_name = "v619_2"
-		fail_df = self.lar_df[(self.lar_df.action_date.map(lambda x: str(x)[:4])!=self.year)]
+		fail_df = self.lar_df[(self.lar_df.action_date.map(lambda x: str(x)[:4])!=str(self.year))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v619_3(self):
