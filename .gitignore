@@ -1,5 +1,5 @@
 #gitignore
-
+.DS_Store
 ###
 #ignore TS row files
 ts_medium.txt
