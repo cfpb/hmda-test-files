@@ -1306,7 +1306,7 @@ class rules_engine(object):
 		2) Applicant or Borrower, Name and Version of Credit Scoring Model must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9."""
 		field = "App Credit Score"
 		edit_name = "v660_2"
-		fail_df = self.lar_df[(~self.lar_df.app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9")))]
+		fail_df = self.lar_df[(~self.lar_df.app_score_name.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "8", "9")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v661(self):
@@ -1326,13 +1326,13 @@ class rules_engine(object):
 		must be left blank, and the reverse must be true.
 
 		Impact of S2155: Update to: 
-		1) If Applicant or Borrower, Name and Version of Credit Scoring Model equals -1, 1, 2, 3, 4, 5, 6, 7, or 9, 
+		1) If Applicant or Borrower, Name and Version of Credit Scoring Model equals 1111, 1, 2, 3, 4, 5, 6, 7, or 9, 
 		then Applicant or Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 
 		must be left blank, and the reverse must be true. 
 """
 		field = "App Score Name"
 		edit_name = "v662_1"
-		fail_df = self.lar_df[((self.lar_df.app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "9")))&
+		fail_df = self.lar_df[((self.lar_df.app_score_name.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "9")))&
 			(self.lar_df.app_score_code_8!=""))|
 			((self.lar_df.app_score_code_8=="")&
 				(~self.lar_df.app_score_name.isin(("1", "2", "3", "4", "5", "6", "7", "9"))))]
@@ -1406,11 +1406,11 @@ class rules_engine(object):
 		Impact of S2155: Update to: 
 		1) Credit Score of Co-Applicant or Co-Borrower must be a number, and cannot be left blank. 
 
-		2) Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, 
+		2) Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, 
 		and cannot be left blank."""
 		field = "Co-App Score Name"
 		edit_name = "v665_2"
-		fail_df = self.lar_df[~(self.lar_df.co_app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
+		fail_df = self.lar_df[~(self.lar_df.co_app_score_name.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v666_1(self):
@@ -1440,14 +1440,14 @@ class rules_engine(object):
 		and the reverse must be true.
 
 		Impact of S2155: Update to: 
-		1) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals -1, 1, 2, 3, 4, 5, 6, 7, 9, or 10, 
+		1) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals 1111, 1, 2, 3, 4, 5, 6, 7, 9, or 10, 
 		then Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 
 		must be left blank, and the reverse must be true. """
 		field = "Co-App Credit Score Text"
 		edit_name = "v667_1"
-		fail_df = self.lar_df[((self.lar_df.co_app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "9", "10")))&
+		fail_df = self.lar_df[((self.lar_df.co_app_score_name.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "9", "10")))&
 			(self.lar_df.co_app_score_code_8!=""))|
-			((self.lar_df.co_app_score_code_8=="")&(~self.lar_df.co_app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "9", "10"))))]
+			((self.lar_df.co_app_score_code_8=="")&(~self.lar_df.co_app_score_name.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "9", "10"))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v667_2(self):
@@ -1504,7 +1504,7 @@ class rules_engine(object):
 		1) Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Reason for Denial: 1 must equal -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank. """
+		1) Reason for Denial: 1 must equal 1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank. """
 		field = "Denial Reason 1"
 		edit_name = "v669_1"
 		fail_df = self.lar_df[(~self.lar_df.denial_1.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
