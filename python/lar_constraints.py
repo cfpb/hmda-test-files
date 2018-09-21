@@ -960,14 +960,14 @@ class lar_constraints(object):
 			row["aus_result_5"] =""
 
 		#Ensure AUS system and AUS result are both exempt if either is exempt and that all other AUS or results fields are blank
-		if row["aus_1"] == "-1" or row["aus_result_1"] == "-1":
-			row["aus_result_1"] = "-1"
+		if row["aus_1"] == "1111" or row["aus_result_1"] == "1111":
+			row["aus_result_1"] = "1111"
 			row["aus_result_2"] = ""
 			row["aus_result_3"] = ""
 			row["aus_result_4"] = ""
 			row["aus_result_5"] = ""
 
-			row["aus_1"] = "-1"
+			row["aus_1"] = "1111"
 			row["aus_2"] = ""
 			row["aus_3"] = ""
 			row["aus_4"] = ""
