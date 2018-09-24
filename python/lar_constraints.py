@@ -828,7 +828,8 @@ class lar_constraints(object):
 			row["prepayment_penalty"] = "NA"
 		if row["business_purpose"] == "1":
 			row["prepayment_penalty"] = "NA"
-		if row["loan_term"] != "NA" and row["prepayment_penalty"] !="NA":
+		if row["loan_term"] != "NA" and row["loan_term"] != "Exempt" and row["prepayment_penalty"] !="NA" \
+			and row["prepayment_penalty"] != "Exempt":
 			if int(row["loan_term"]) >=0 and int(row["prepayment_penalty"]) > int(row["loan_term"]):
 				row["prepayment_penalty"] = row["loan_term"]
 		return row

@@ -1835,6 +1835,7 @@ class rules_engine(object):
 		1) Lender Credits must be a number greater than 0, blank, Exempt, or NA. """
 		field = "Lender Credits"
 		edit_name = "v676_1"
+		print(self.lar_df["lender_credits"])
 		fail_df = self.lar_df[(self.lar_df.lender_credits.map(lambda x: 
 			self.check_number(x, min_val=1))==False)&(~self.lar_df.lender_credits.isin(["NA", "Exempt", ""]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
