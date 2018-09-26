@@ -1166,7 +1166,8 @@ class rules_engine(object):
 		then Age of Applicant or Borrower must equal 8888."""
 		field = "Applicant Age"
 		edit_name = "v651_2"
-		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&(self.lar_df.app_age!="8888")]
+		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&
+					(self.lar_df.app_age!="8888")&(self.lar_df.action_taken!="6")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v652_1(self):
@@ -1184,7 +1185,8 @@ class rules_engine(object):
 		then Age of Co- Applicant or Co-Borrower must equal 8888."""
 		field = "Co-Applicant Age"
 		edit_name = "v652_2"
-		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&(self.lar_df.co_app_age!="8888")]
+		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&
+					(self.lar_df.co_app_age!="8888")&(self.lar_df.action_taken!="6")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v654_1(self):
@@ -1209,7 +1211,8 @@ class rules_engine(object):
 		Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person, then Income must be NA."""
 		field = "Income"
 		edit_name = "v655_1"
-		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&(self.lar_df.income!="NA")]
+		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&
+					(self.lar_df.income!="NA")&(self.lar_df.action_taken!="6")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v655_2(self):
@@ -1218,7 +1221,8 @@ class rules_engine(object):
 		and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is a non-natural person, then Income must be NA"""
 		field = "Income"
 		edit_name = "v655_2"
-		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&(self.lar_df.income!="NA")]
+		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&
+					(self.lar_df.income!="NA")&(self.lar_df.action_taken!="6")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v656_1(self):
@@ -1306,7 +1310,7 @@ class rules_engine(object):
 		2) Applicant or Borrower, Name and Version of Credit Scoring Model must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9."""
 		field = "App Credit Score"
 		edit_name = "v660_2"
-		fail_df = self.lar_df[(~self.lar_df.app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9")))]
+		fail_df = self.lar_df[(~self.lar_df.app_score_name.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "8", "9")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v661(self):
@@ -1326,13 +1330,13 @@ class rules_engine(object):
 		must be left blank, and the reverse must be true.
 
 		Impact of S2155: Update to: 
-		1) If Applicant or Borrower, Name and Version of Credit Scoring Model equals -1, 1, 2, 3, 4, 5, 6, 7, or 9, 
+		1) If Applicant or Borrower, Name and Version of Credit Scoring Model equals 1111, 1, 2, 3, 4, 5, 6, 7, or 9, 
 		then Applicant or Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 
 		must be left blank, and the reverse must be true. 
 """
 		field = "App Score Name"
 		edit_name = "v662_1"
-		fail_df = self.lar_df[((self.lar_df.app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "9")))&
+		fail_df = self.lar_df[((self.lar_df.app_score_name.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "9")))&
 			(self.lar_df.app_score_code_8!=""))|
 			((self.lar_df.app_score_code_8=="")&
 				(~self.lar_df.app_score_name.isin(("1", "2", "3", "4", "5", "6", "7", "9"))))]
@@ -1406,11 +1410,11 @@ class rules_engine(object):
 		Impact of S2155: Update to: 
 		1) Credit Score of Co-Applicant or Co-Borrower must be a number, and cannot be left blank. 
 
-		2) Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, 
+		2) Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model must equal 1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, 
 		and cannot be left blank."""
 		field = "Co-App Score Name"
 		edit_name = "v665_2"
-		fail_df = self.lar_df[~(self.lar_df.co_app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
+		fail_df = self.lar_df[~(self.lar_df.co_app_score_name.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v666_1(self):
@@ -1440,14 +1444,14 @@ class rules_engine(object):
 		and the reverse must be true.
 
 		Impact of S2155: Update to: 
-		1) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals -1, 1, 2, 3, 4, 5, 6, 7, 9, or 10, 
+		1) If Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model equals 1111, 1, 2, 3, 4, 5, 6, 7, 9, or 10, 
 		then Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model: Conditional Free Form Text Field for Code 8 
 		must be left blank, and the reverse must be true. """
 		field = "Co-App Credit Score Text"
 		edit_name = "v667_1"
-		fail_df = self.lar_df[((self.lar_df.co_app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "9", "10")))&
+		fail_df = self.lar_df[((self.lar_df.co_app_score_name.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "9", "10")))&
 			(self.lar_df.co_app_score_code_8!=""))|
-			((self.lar_df.co_app_score_code_8=="")&(~self.lar_df.co_app_score_name.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "9", "10"))))]
+			((self.lar_df.co_app_score_code_8=="")&(~self.lar_df.co_app_score_name.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "9", "10"))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v667_2(self):
@@ -1504,10 +1508,10 @@ class rules_engine(object):
 		1) Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Reason for Denial: 1 must equal -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank. """
+		1) Reason for Denial: 1 must equal 1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10, and cannot be left blank. """
 		field = "Denial Reason 1"
 		edit_name = "v669_1"
-		fail_df = self.lar_df[(~self.lar_df.denial_1.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
+		fail_df = self.lar_df[(~self.lar_df.denial_1.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v669_2(self):
@@ -1533,11 +1537,11 @@ class rules_engine(object):
 		4) If Reason for Denial: 1 equals 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 must all be left blank.
 		
 		Impact of S2155: Update to: 
-		4) If Reason for Denial: 1 equals -1 or 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 
+		4) If Reason for Denial: 1 equals 1111 or 10, then Reason for Denial: 2; Reason for Denial: 3; and Reason for Denial: 4 
 		must all be left blank."""
 		field = "Denial Reasons 1-4"
 		edit_name = "v669_4"
-		fail_df = self.lar_df[(self.lar_df.denial_1.isin(["-1", "10"]))&
+		fail_df = self.lar_df[(self.lar_df.denial_1.isin(["1111", "10"]))&
 			((self.lar_df.denial_2!="")|(self.lar_df.denial_3!="")|(self.lar_df.denial_4!=""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
@@ -1546,13 +1550,13 @@ class rules_engine(object):
 		1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, or 9, and the reverse must be true.
 
 		Impact of S2155: Update to: 
-		1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal -1, 1, 2, 3, 4, 5, 6, 7, 8, or 9. 
+		1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal 1111, 1, 2, 3, 4, 5, 6, 7, 8, or 9. 
 		2) If Reason for Denial: 1 equals 1, 2, 3, 4, 5, 6, 7, 8, or 9, then Action Taken must equal 3 or 7."""
 		field = "Denial Reason 1"
 		edit_name = "v670_1"
 		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("3","7")))&
-			(~self.lar_df.denial_1.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9"))))|
-			((self.lar_df.denial_1.isin(("-1", "1", "2", "3", "4", "5", "6", "7", "8", "9")))&(~self.lar_df.action_taken.isin(("3", "7"))))]
+			(~self.lar_df.denial_1.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "8", "9"))))|
+			((self.lar_df.denial_1.isin(("1111", "1", "2", "3", "4", "5", "6", "7", "8", "9")))&(~self.lar_df.action_taken.isin(("3", "7"))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v670_2(self):
@@ -1560,12 +1564,12 @@ class rules_engine(object):
 		2) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal 10, and the reverse must be true.
 		
 		Impact of S2155: Update to: 
-		3) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal -1 or 10. 
+		3) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal 1111 or 10. 
 		4) If Reason for Denial: 1 equals 10, then Action Taken must equal 1, 2, 4, 5, 6, or 8."""
 		field = "Denial Reason 1"
 		edit_name = "v670_2"
-		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("1", "2", "4", "5", "6", "8")))&(~self.lar_df.denial_1.isin(["-1", "10"])))|
-			((self.lar_df.denial_1.isin(["-1","10"]))&(~self.lar_df.action_taken.isin(("1", "2", "3", "4", "5", "6", "8"))))]
+		fail_df = self.lar_df[((self.lar_df.action_taken.isin(("1", "2", "4", "5", "6", "8")))&(~self.lar_df.denial_1.isin(["1111", "10"])))|
+			((self.lar_df.denial_1.isin(["1111","10"]))&(~self.lar_df.action_taken.isin(("1", "2", "3", "4", "5", "6", "8"))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v671_1(self):
@@ -1835,6 +1839,7 @@ class rules_engine(object):
 		1) Lender Credits must be a number greater than 0, blank, Exempt, or NA. """
 		field = "Lender Credits"
 		edit_name = "v676_1"
+		print(self.lar_df["lender_credits"])
 		fail_df = self.lar_df[(self.lar_df.lender_credits.map(lambda x: 
 			self.check_number(x, min_val=1))==False)&(~self.lar_df.lender_credits.isin(["NA", "Exempt", ""]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
@@ -2099,10 +2104,10 @@ class rules_engine(object):
 		1) Balloon Payment must equal 1 or 2, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Balloon Payment must equal -1, 1 or 2, and cannot be left blank."""
+		1) Balloon Payment must equal 1111, 1 or 2, and cannot be left blank."""
 		field = "Balloon Payment"
 		edit_name = "v684"
-		fail_df = self.lar_df[~(self.lar_df.balloon.isin(("-1", "1", "2")))]
+		fail_df = self.lar_df[~(self.lar_df.balloon.isin(("1111", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v685(self):
@@ -2110,10 +2115,10 @@ class rules_engine(object):
 		1) Interest Only Payments must equal 1 or 2, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Interest Only Payments must equal -1, 1 or 2, and cannot be left blank."""
+		1) Interest Only Payments must equal 1111, 1 or 2, and cannot be left blank."""
 		field = "Interest Only Payments"
 		edit_name = "v685"
-		fail_df = self.lar_df[(~self.lar_df.int_only_pmts.isin(("-1", "1", "2")))]
+		fail_df = self.lar_df[(~self.lar_df.int_only_pmts.isin(("1111", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v686(self):
@@ -2121,10 +2126,10 @@ class rules_engine(object):
 		1) Negative Amortization must equal 1 or 2, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Negative Amortization must equal -1, 1 or 2, and cannot be left blank."""
+		1) Negative Amortization must equal 1111, 1 or 2, and cannot be left blank."""
 		field = "Negative Amortization"
 		edit_name = "v686"
-		fail_df = self.lar_df[~(self.lar_df.neg_amort.isin(("-1", "1", "2")))]
+		fail_df = self.lar_df[~(self.lar_df.neg_amort.isin(("1111", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v687(self):
@@ -2132,10 +2137,10 @@ class rules_engine(object):
 		1) Other Non-amortizing Features must equal 1 or 2, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Other Non-amortizing Features must equal -1, 1 or 2, and cannot be left blank."""
+		1) Other Non-amortizing Features must equal 1111, 1 or 2, and cannot be left blank."""
 		field = "Non-amortizing Features"
 		edit_name = "v687"
-		fail_df = self.lar_df[~(self.lar_df.non_amort_features.isin(("-1", "1", "2")))]
+		fail_df = self.lar_df[~(self.lar_df.non_amort_features.isin(("1111", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v688_1(self):
@@ -2167,10 +2172,10 @@ class rules_engine(object):
 		1) Manufactured Home Secured Property Type must equal 1, 2 or 3, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Manufactured Home Secured Property Type must equal -1, 1, 2 or 3, and cannot be left blank. """
+		1) Manufactured Home Secured Property Type must equal 1111, 1, 2 or 3, and cannot be left blank. """
 		field = "Manufactured Property Type"
 		edit_name = "v689_1"
-		fail_df = self.lar_df[~(self.lar_df.manufactured_type.isin(("-1", "1", "2", "3")))]
+		fail_df = self.lar_df[~(self.lar_df.manufactured_type.isin(("1111", "1", "2", "3")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v689_2(self):
@@ -2178,11 +2183,11 @@ class rules_engine(object):
 		2) If Multifamily Affordable Units is a number, then Manufactured Home Secured Property Type must equal 3.
 
 		Impact of S2155: Update to: 
-		2) If Multifamily Affordable Units is a number, then Manufactured Home Secured Property Type must equal -1 or 3. """
+		2) If Multifamily Affordable Units is a number, then Manufactured Home Secured Property Type must equal 1111 or 3. """
 		field = "Manufactured Property Type"
 		edit_name = "v689_2"
 		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: x.isdigit())==True)&
-			(~self.lar_df.manufactured_type.isin(["-1", "3"]))]
+			(~self.lar_df.manufactured_type.isin(["1111", "3"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v689_3(self):
@@ -2190,10 +2195,10 @@ class rules_engine(object):
 		3) If Construction Method equals 1, then Manufactured Home Secured Property Type must equal 3.
 
 		Impact of S2155: Update to: 
-		3) If Construction Method equals 1, then Manufactured Home Secured Property Type must equal -1 or 3."""
+		3) If Construction Method equals 1, then Manufactured Home Secured Property Type must equal 1111 or 3."""
 		field = "Manufactured Property Type"
 		edit_name = "v689_3"
-		fail_df = self.lar_df[(self.lar_df.const_method=="1")&(~self.lar_df.manufactured_type.isin(["3", "-1"]))]
+		fail_df = self.lar_df[(self.lar_df.const_method=="1")&(~self.lar_df.manufactured_type.isin(["3", "1111"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v690_1(self):
@@ -2201,11 +2206,11 @@ class rules_engine(object):
 		1) Manufactured Home Land Property Interest must equal 1, 2, 3, 4, or 5, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Manufactured Home Land Property Interest must equal -1, 1, 2, 3, 4, or 5, and cannot be left blank. """
+		1) Manufactured Home Land Property Interest must equal 1111, 1, 2, 3, 4, or 5, and cannot be left blank. """
 
 		field = "Manufactured Land Interest"
 		edit_name = "v690_1"
-		fail_df = self.lar_df[~(self.lar_df.manufactured_interest.isin(("-1", "1", "2", "3", "4", "5")))]
+		fail_df = self.lar_df[~(self.lar_df.manufactured_interest.isin(("1111", "1", "2", "3", "4", "5")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v690_2(self):
@@ -2213,11 +2218,11 @@ class rules_engine(object):
 		2 If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal 5.
 
 		Impact of S2155: Update to: 
-		2) If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal -1 or 5. """
+		2) If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal 1111 or 5. """
 		field = "Manufactured Land Interest"
 		edit_name = "v690_2"
 		fail_df = self.lar_df[(self.lar_df.affordable_units.map(lambda x: x.isdigit())==True)&
-			(~self.lar_df.manufactured_interest.isin(["5", "-1"]))]
+			(~self.lar_df.manufactured_interest.isin(["5", "1111"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v690_3(self):
@@ -2225,10 +2230,10 @@ class rules_engine(object):
 		3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal 5.
 
 		Impact of S2155: Update to: 
-		3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal -1 or 5."""
+		3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal 1111 or 5."""
 		field = "Manufactured Land Interest"
 		edit_name = "v690_3"
-		fail_df = self.lar_df[(self.lar_df.const_method=="1")&(~self.lar_df.manufactured_interest.isin(["5", "-1"]))]
+		fail_df = self.lar_df[(self.lar_df.const_method=="1")&(~self.lar_df.manufactured_interest.isin(["5", "1111"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v691(self):
@@ -2283,10 +2288,10 @@ class rules_engine(object):
 		1) Submission of Application must equal 1, 2 or 3, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Submission of Application must equal -1, 1, 2 or 3, and cannot be left blank. """
+		1) Submission of Application must equal 1111, 1, 2 or 3, and cannot be left blank. """
 		field = "Applicaiton Submission"
 		edit_name = "v693_1"
-		fail_df = self.lar_df[~(self.lar_df.app_submission.isin(("-1", "1", "2", "3")))]
+		fail_df = self.lar_df[~(self.lar_df.app_submission.isin(("1111", "1", "2", "3")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v693_2(self):
@@ -2294,10 +2299,10 @@ class rules_engine(object):
 		2) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true.
 
 		Impact of S2155: Update to: 
-		2) If Action Taken equals 6, then Submission of Application must equal -1 or 3."""
+		2) If Action Taken equals 6, then Submission of Application must equal 1111 or 3."""
 		field = "Applicaiton Channel"
 		edit_name = "v693_2"
-		fail_df = self.lar_df[((self.lar_df.action_taken=="6")&(~self.lar_df.app_submission.isin(["3", "-1"])))]
+		fail_df = self.lar_df[((self.lar_df.action_taken=="6")&(~self.lar_df.app_submission.isin(["3", "1111"])))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v693_3(self):
@@ -2314,10 +2319,10 @@ class rules_engine(object):
 		1) Initially Payable to Your Institution must equal 1, 2 or 3, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Initially Payable to Your Institution must equal -1, 1, 2 or 3, and cannot be left blank. """
+		1) Initially Payable to Your Institution must equal 1111, 1, 2 or 3, and cannot be left blank. """
 		field = "initially_payable"
 		edit_name = "v694_1"
-		fail_df = self.lar_df[~(self.lar_df.initially_payable.isin(("-1", "1", "2", "3")))]
+		fail_df = self.lar_df[~(self.lar_df.initially_payable.isin(("1111", "1", "2", "3")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v694_2(self):
@@ -2325,10 +2330,10 @@ class rules_engine(object):
 		2) If Action Taken equals 6, then Initially Payable to Your Institution must equal 3.
 
 		Impact of S2155: Update to: 
-		2) If Action Taken equals 6, then Initially Payable to Your Institution must equal -1 or 3. """
+		2) If Action Taken equals 6, then Initially Payable to Your Institution must equal 1111 or 3. """
 		field = "initially_payable"
 		edit_name = "v694_2"
-		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(~self.lar_df.initially_payable.isin(["-1", "3"]))]
+		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(~self.lar_df.initially_payable.isin(["1111", "3"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v694_3(self):
@@ -2336,10 +2341,10 @@ class rules_engine(object):
 		3) If Action Taken equals 1, then Initially Payable to Your Institution must equal 1 or 2.
 
 		Impact of S2155: Update to: 
-		3) If Action Taken equals 1, then Initially Payable to Your Institution must equal -1, 1 or 2."""
+		3) If Action Taken equals 1, then Initially Payable to Your Institution must equal 1111, 1 or 2."""
 		field = "initially_payable"
 		edit_name = "v694_3"
-		fail_df = self.lar_df[(self.lar_df.action_taken=="1")&(~self.lar_df.initially_payable.isin(("-1", "1", "2")))]
+		fail_df = self.lar_df[(self.lar_df.action_taken=="1")&(~self.lar_df.initially_payable.isin(("1111", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v695(self):
@@ -2358,7 +2363,7 @@ class rules_engine(object):
 
 
 		Impact of S2155: Update to: 
-		1) Automated Underwriting System: 1 must equal -1, 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated Underwriting System: 2; 
+		1) Automated Underwriting System: 1 must equal 1111, 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated Underwriting System: 2; 
 		Automated Underwriting System: 3; Automated Underwriting System: 4; and Automated Underwriting System: 5 
 		must equal 1, 2, 3, 4, 5, or be left blank. 
 
@@ -2366,7 +2371,7 @@ class rules_engine(object):
 """
 		field = "AUS 1-5"
 		edit_name = "v696_1"
-		fail_df = self.lar_df[~(self.lar_df.aus_1.isin(("-1", "1", "2", "3", "4", "5", "6")))|
+		fail_df = self.lar_df[~(self.lar_df.aus_1.isin(("1111", "1", "2", "3", "4", "5", "6")))|
 			(~self.lar_df.aus_2.isin(("1", "2", "3", "4", "5","")))|(~self.lar_df.aus_3.isin(("1", "2", "3", "4", "5","")))|
 			(~self.lar_df.aus_4.isin(("1", "2", "3", "4", "5","")))|(~self.lar_df.aus_5.isin(("1", "2", "3", "4", "5","")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
@@ -2380,13 +2385,13 @@ class rules_engine(object):
 		must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or be left blank.
 
 		Impact of S2155: Update to: 
-		2) Automated Underwriting System Result: 1 must equal -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or 17, 
+		2) Automated Underwriting System Result: 1 must equal 1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or 17, 
 		and cannot be left blank. 
 		Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; 
 		and Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or be left blank. """
 		field = "AUS 1-5 Result"
 		edit_name = "v696_2"
-		aus_1_results = ["-1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"]
+		aus_1_results = ["1111", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"]
 		aus_n_results = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", ""]
 		fail_df = self.lar_df[~(self.lar_df.aus_result_1.isin(aus_1_results))|(~self.lar_df.aus_result_2.isin(aus_n_results))|(~self.lar_df.aus_result_3.isin(aus_n_results))
 		|(~self.lar_df.aus_result_4.isin(aus_n_results))|(~self.lar_df.aus_result_5.isin(aus_n_results))]
@@ -2545,10 +2550,10 @@ class rules_engine(object):
 		1) If Action Taken equals 6, then Automated Underwriting System: 1 must equal 6.
 
 		Impact of S2155: Update to: 
-		1) If Action Taken equals 6, then Automated Underwriting System: 1 must equal -1 or 6. """
+		1) If Action Taken equals 6, then Automated Underwriting System: 1 must equal 1111 or 6. """
 		field = "AUS"
 		edit_name = "v704_1"
-		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(~self.lar_df.aus_1.isin(["6", "-1"]))]
+		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(~self.lar_df.aus_1.isin(["6", "1111"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v704_2(self):
@@ -2556,10 +2561,10 @@ class rules_engine(object):
 		2) If Action Taken equals 6, then Automated Underwriting System Result: 1 must equal 17.
 
 		Impact of S2155: Update to: 
-		2) If Action Taken equals 6, then Automated Underwriting System Result: 1 must equal -1 or 17."""
+		2) If Action Taken equals 6, then Automated Underwriting System Result: 1 must equal 1111 or 17."""
 		field = "AUS Result"
 		edit_name = "v704_2"
-		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(~self.lar_df.aus_result_1.isin(["17", "-1"]))]
+		fail_df = self.lar_df[(self.lar_df.action_taken=="6")&(~self.lar_df.aus_result_1.isin(["17", "1111"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v705_1(self):
@@ -2576,13 +2581,13 @@ class rules_engine(object):
 		and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person; 
 		and the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 5; and Race of Co-Applicant or Co-Borrower: 1 equals 8; 
 		and Sex of Co-Applicant or Co-Borrower: 1 equals 5 indicating that there is no co-applicant or co-borrower, 
-		then Automated Underwriting System: 1 must equal -1 or 6; 
-		and Automated Underwriting System Result: 1 must equal -1 or 17. """
+		then Automated Underwriting System: 1 must equal 1111 or 6; 
+		and Automated Underwriting System Result: 1 must equal 1111 or 17. """
 		field = "AUS and Results"
 		edit_name = "v705_1"
 		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&
 			((self.lar_df.co_app_eth_1=="5")&(self.lar_df.co_app_race_1=="8")&(self.lar_df.co_app_sex=="5"))&
-			((~self.lar_df.aus_1.isin(["-1","6"]))|(~self.lar_df.aus_result_1.isin(["17", "-1"])))]
+			((~self.lar_df.aus_1.isin(["1111","6"]))|(~self.lar_df.aus_result_1.isin(["17", "1111"])))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v705_2(self):
@@ -2598,12 +2603,12 @@ class rules_engine(object):
 		and Sex of Applicant or Borrower: 1 equals 4 indicating the applicant or borrower is a non-natural person; 
 		and Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7; 
 		and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co-borrower is also a non-natural person, 
-		then Automated Underwriting System: 1 must equal -1 or 6; and Automated Underwriting System Result: 1 must equal -1 or 17."""
+		then Automated Underwriting System: 1 must equal 1111 or 6; and Automated Underwriting System Result: 1 must equal 1111 or 17."""
 		field = "AUS and Results"
 		edit_name = "v705_2"
 		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&
 			((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&
-			((~self.lar_df.aus_1.isin(["6", "-1"]))|(~self.lar_df.aus_result_1.isin(["17","-1"])))]
+			((~self.lar_df.aus_1.isin(["6", "1111"]))|(~self.lar_df.aus_result_1.isin(["17","1111"])))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v706(self):
@@ -2611,10 +2616,10 @@ class rules_engine(object):
 		1) Reverse Mortgage must equal 1 or 2, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Reverse Mortgage must equal -1, 1 or 2, and cannot be left blank."""
+		1) Reverse Mortgage must equal 1111, 1 or 2, and cannot be left blank."""
 		field = "Reverse Mortgage"
 		edit_name = "v706"
-		fail_df = self.lar_df[~(self.lar_df.reverse_mortgage.isin(("-1", "1", "2")))]
+		fail_df = self.lar_df[~(self.lar_df.reverse_mortgage.isin(("1111", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v707(self):
@@ -2622,10 +2627,10 @@ class rules_engine(object):
 		1) Open-End Line of Credit must equal 1 or 2, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Open-End Line of Credit must equal -1, 1, or 2, and cannot be left blank."""
+		1) Open-End Line of Credit must equal 1111, 1, or 2, and cannot be left blank."""
 		field = "Open End Credit"
 		edit_name = "v707"
-		fail_df = self.lar_df[~(self.lar_df.open_end_credit.isin(("-1", "1", "2")))]
+		fail_df = self.lar_df[~(self.lar_df.open_end_credit.isin(("1111", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v708(self):
@@ -2633,10 +2638,10 @@ class rules_engine(object):
 		1) Business or Commercial Purpose must equal 1 or 2, and cannot be left blank.
 
 		Impact of S2155: Update to: 
-		1) Business or Commercial Purpose must equal -1, 1 or 2, and cannot be left blank."""
+		1) Business or Commercial Purpose must equal 1111, 1 or 2, and cannot be left blank."""
 		field = "Business Purpose"
 		edit_name = "v708"
-		fail_df = self.lar_df[~(self.lar_df.business_purpose.isin(("-1", "1", "2")))]
+		fail_df = self.lar_df[~(self.lar_df.business_purpose.isin(("1111", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q600(self):

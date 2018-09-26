@@ -62,12 +62,12 @@
     "field": "street_address",
     "dtypes_": ["string"],
     "data_type": "alphanumeric",
-    "valid_vals": []
+    "valid_vals": ["Exempt"]
 }, {
     "field": "city",
     "dtypes_": ["string"],
     "data_type": "alphanumeric",
-    "valid_vals": []
+    "valid_vals": ["Exempt"]
 }, {
     "field": "state",
     "dtypes_": ["string"],
@@ -77,7 +77,7 @@
     "field": "zip_code",
     "dtypes_": ["string"],
     "data_type": "alphanumeric",
-    "valid_vals": []
+    "valid_vals": ["Exempt"]
 }, {
     "field": "county",
     "dtypes_": ["string"],
@@ -307,17 +307,17 @@
     "field": "app_credit_score",
     "dtypes_": ["int"],
     "data_type": "alphanumeric",
-    "valid_vals": [7777, 8888, "Exempt"]
+    "valid_vals": [7777, 8888, 1111]
 }, {
     "field": "co_app_credit_score",
     "dtypes_": ["int"],
     "data_type": "aplhanumeric",
-    "valid_vals": [7777, 8888, 9999, "Exempt"]
+    "valid_vals": [7777, 8888, 9999, 1111]
 }, {
     "field": "app_score_name",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    "valid_vals": [1111, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 }, {
     "field": "app_score_code_8",
     "dtypes_": ["string"],
@@ -327,7 +327,7 @@
     "field": "co_app_score_name",
     "dtypes_": ["int"],
     "data_type": "alphanumeric",
-    "valid_vals": [-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    "valid_vals": [1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 }, {
     "field": "co_app_score_code_8",
     "dtypes_": ["string"],
@@ -337,7 +337,7 @@
     "field": "denial_1",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    "valid_vals": [1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 }, {
     "field": "denial_2",
     "dtypes_": ["int"],
@@ -417,22 +417,22 @@
     "field": "balloon",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2]
+    "valid_vals": [1111, 1, 2]
 }, {
     "field": "int_only_pmts",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2]
+    "valid_vals": [1111, 1, 2]
 }, {
     "field": "neg_amort",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2]
+    "valid_vals": [1111, 1, 2]
 }, {
     "field": "non_amort_features",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2]
+    "valid_vals": [1111, 1, 2]
 }, {
     "field": "property_value",
     "dtypes_": ["int", "string"],
@@ -442,12 +442,12 @@
     "field": "manufactured_type",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2, 3]
+    "valid_vals": [1111, 1, 2, 3]
 }, {
     "field": "manufactured_interest",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2, 3, 4, 5]
+    "valid_vals": [1111, 1, 2, 3, 4, 5]
 }, {
     "field": "total_units",
     "dtypes_": ["int"],
@@ -462,12 +462,12 @@
     "field": "app_submission",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2, 3]
+    "valid_vals": [1111, 1, 2, 3]
 }, {
     "field": "initially_payable",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2, 3]
+    "valid_vals": [1111, 1, 2, 3]
 }, {
     "field": "mlo_id",
     "dtypes_": ["string"],
@@ -477,7 +477,7 @@
     "field": "aus_1",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2, 3, 4, 5, 6]
+    "valid_vals": [1111, 1, 2, 3, 4, 5, 6]
 }, {
     "field": "aus_2",
     "dtypes_": ["int"],
@@ -507,7 +507,7 @@
     "field": "aus_result_1",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    "valid_vals": [1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
 }, {
     "field": "aus_result_2",
     "dtypes_": ["int"],
@@ -537,15 +537,15 @@
     "field": "reverse_mortgage",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2]
+    "valid_vals": [1111, 1, 2]
 }, {
     "field": "open_end_credit",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1,1, 2]
+    "valid_vals": [1111,1, 2]
 }, {
     "field": "business_purpose",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [-1, 1, 2]
+    "valid_vals": [1111, 1, 2]
 }]
