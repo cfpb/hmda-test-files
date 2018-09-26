@@ -1166,7 +1166,8 @@ class rules_engine(object):
 		then Age of Applicant or Borrower must equal 8888."""
 		field = "Applicant Age"
 		edit_name = "v651_2"
-		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&(self.lar_df.app_age!="8888")]
+		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&
+					(self.lar_df.app_age!="8888")&(self.lar_df.action_taken!="6")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v652_1(self):
@@ -1184,7 +1185,8 @@ class rules_engine(object):
 		then Age of Co- Applicant or Co-Borrower must equal 8888."""
 		field = "Co-Applicant Age"
 		edit_name = "v652_2"
-		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&(self.lar_df.co_app_age!="8888")]
+		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&
+					(self.lar_df.co_app_age!="8888")&(self.lar_df.action_taken!="6")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v654_1(self):
@@ -1209,7 +1211,8 @@ class rules_engine(object):
 		Sex of Applicant or Borrower: 1 equals 4 indicating the applicant is a non-natural person, then Income must be NA."""
 		field = "Income"
 		edit_name = "v655_1"
-		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&(self.lar_df.income!="NA")]
+		fail_df = self.lar_df[((self.lar_df.app_eth_1=="4")&(self.lar_df.app_race_1=="7")&(self.lar_df.app_sex=="4"))&
+					(self.lar_df.income!="NA")&(self.lar_df.action_taken!="6")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v655_2(self):
@@ -1218,7 +1221,8 @@ class rules_engine(object):
 		and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is a non-natural person, then Income must be NA"""
 		field = "Income"
 		edit_name = "v655_2"
-		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&(self.lar_df.income!="NA")]
+		fail_df = self.lar_df[((self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_sex=="4"))&
+					(self.lar_df.income!="NA")&(self.lar_df.action_taken!="6")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v656_1(self):
