@@ -5,11 +5,10 @@
 # 
 # This notebook demonstrates a function for creating large HMDA submission test files using 1000 row clean files for bank 1 and bank 0. The function concatenates the files together, creates unique Universal Loan Identifiers (ULIs) with a check digit, and generates a submission file with a specified number of LAR rows. 
 
-# In[280]:
+# In[39]:
 
 
 #The following code imports the required packages.
-
 import json
 import os
 import pandas as pd
@@ -17,10 +16,12 @@ import random
 import string
 import time
 import yaml
-import numpy as np
+
+from python import lar_generator
+lar_gen = lar_generator.lar_gen(lar_schema_df, ts_schema_df, counties=counties, tracts=tracts)
 
 
-# In[281]:
+# In[ ]:
 
 
 #The function below generates a random character string with a given length to create loan identifiers.
@@ -90,7 +91,7 @@ def uli_check(df=None):
     else: 
         statement = "Unique Values: Failed"
     print(statement)
-    return df.drop('unique', axis = 1) #Drops the unique values column. 
+    return df.drop('unique', axis=1) #Drops the unique values column. 
     print(df)
 
 
@@ -98,22 +99,23 @@ def uli_check(df=None):
 # 
 # The following defines a function that creates clean test files. The function uses 1000 row clean test files located in the repository for Bank 0 and Bank 1 to duplicate LAR data to produce data with a desired number of rows, and provide unique ULI's for each row. Test files may be created with rows as multiples of 1000. 
 
-# In[299]:
+# In[22]:
 
 
-def large_clean_test_files(bank=None, file=file, count=None):
+def large_clean_test_files(bank=None, file=None, row_count=None):
     
     """
-    Creates clean HMDA submission test files in multiples of 1000, specified by the count variable. 
-    The function requires a count, and a specification for the test bank, either '0' or '1.'
+    Creates clean HMDA submission test files in multiples of 1000, specified by the row count variable. 
+    The function requires a row count, and a specification for the test bank, either Bank 0 or Bank 1.
     
-    The function replicates LAR data from two clean test files in the repository.
+    The function replicates rows in existing clean test files for Bank 0 and Bank 1 to create files 
+    with a larger number of rows.
     """
-   #Checks whether the count is a multiple of 1000.  
-    if (count % 1000) != 0:
-        statement = "Please specify a count in a multiple of 1000"
+   #Checks whether the row count is a multiple of 1000.  
+    if (row_count % 1000) != 0:
+        statement = "Please specify a row count in a multiple of 1000"
         return print(statement)
-    #Establishes the case for bank = 0. 
+    #Establishes the case for Bank = 0. 
     if bank == 0:
         file = "clean_file_1000_rows_Bank0.txt" 
         with open(file, 'r+' ) as f: #Opens the 1000 row file for Bank 0. 
@@ -129,44 +131,44 @@ def large_clean_test_files(bank=None, file=file, count=None):
 
         #Reads in the LAR data as a dataframe, as object values without converting NA values to 
         #Not a Number Values. 
-        df = pd.read_csv('edits_files/lar_rows.txt', delimiter = "|", header = None, dtype = 'object',
+        df = pd.read_csv('edits_files/lar_rows.txt', delimiter="|", header=None, dtype='object',
                          keep_default_na=False)
         df.columns = data['field'] #Takes the field names from the LAR schema as column names. 
         
         #Concatenates data to produce the desired number of rows in a new LAR dataframe. 
-        df = pd.concat([df]*int((count/1000)), ignore_index = True) 
+        df = pd.concat([df]*int((row_count/1000)), ignore_index=True) 
         
         #Creates a list of unique ULI's for Bank 0, and checks to determine that ULI's are unique.
-        uli_1 = {'uli':list(['B90YWS6AFX2LGWOXJ1LD']*int((count)))}
-        df1 = pd.DataFrame(uli_1)
-        df1["uli"] = df1.apply(lambda x: x.uli + char_string_gen(23), axis = 1)
-        df1['uli'] = df1.apply(lambda x: x.uli + check_digit_gen(ULI = x.uli), axis = 1)
+        unique_uli_bank_0 = {'uli':list(['B90YWS6AFX2LGWOXJ1LD']*int((row_count)))}
+        df1 = pd.DataFrame(unique_uli_bank_0)
+        df1["uli"] = df1.apply(lambda x: x.uli + char_string_gen(23), axis=1)
+        df1['uli'] = df1.apply(lambda x: x.uli + check_digit_gen(ULI=x.uli), axis=1)
         uli_check(df1)
 
         #Replaces ULI's in the new LAR dataframe with the unique ULI's.  
         df['uli'] = df1['uli']
         
         #Creates a new LAR csv file with the new LAR data with unique ULI's. 
-        df.to_csv("lar_" + str(count) + ".txt", sep = "|", index = False, header= None)
+        df.to_csv("lar_" + str(row_count) + ".txt", sep="|", index=False, header=None)
         
         #The following appends the new LAR data into the TS file created earlier. 
-        #The new file is renamed "clean_file_(count)_row_Bank0.txt."
+        #The new file is renamed "clean_file_(row_count)_row_Bank0.txt."
         #New clean files are placed in the "edits_files/clean_files/bank0/" directory.
         filepath = "edits_files/clean_files/bank0/"
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         
-        with open("lar_" + str(count) + ".txt", 'r' ) as f:
+        with open("lar_" + str(row_count) + ".txt", 'r' ) as f:
             lar_count = f.readlines()
 
         with open("edits_files/ts_row.txt", 'a') as append_lar:
             append_lar.writelines(lar_count)
 
-        os.remove("lar_" + str(count) + ".txt")
+        os.remove("lar_" + str(row_count) + ".txt")
         os.rename("edits_files/ts_row.txt", "edits_files/clean_files/bank0/clean_file_" + 
-                         str(count) + "_rows_Bank0.txt")
-        return print(str("{:,}".format(count)) + " Row File Created for Bank " + str(bank))
+                         str(row_count) + "_rows_Bank0.txt")
+        return print(str("{:,}".format(row_count)) + " Row File Created for Bank " + str(bank))
 
-    #Establishes the case for bank = 1.
+    #Establishes the case for Bank = 1.
     elif bank == 1:
         file = "clean_file_1000_rows_Bank1.txt" #Opens the 1000 row file for Bank 1. 
         with open(file, 'r' ) as f:
@@ -182,43 +184,43 @@ def large_clean_test_files(bank=None, file=file, count=None):
 
         #Reads in the LAR data as a dataframe, as object values without converting NA values to 
         #Not a Number Values. 
-        df = pd.read_csv('edits_files/lar_rows.txt', delimiter = "|", header = None, dtype = 'object',
+        df = pd.read_csv('edits_files/lar_rows.txt', delimiter="|", header=None, dtype='object',
                          keep_default_na=False)
         df.columns = data['field']
         
         #Concatenates data to produce the desired number of rows in a new LAR dataframe. 
-        df = pd.concat([df]*int((count/1000)), ignore_index = True)  
+        df = pd.concat([df]*int((row_count/1000)), ignore_index=True)  
 
         #Creates a list of unique ULI's for Bank 1, and checks to determine that ULI's are unique.
-        uli_1 = {'uli':list(['BANK1LEIFORTEST12345']*int((count)))}
-        df1 = pd.DataFrame(uli_1)
-        df1["uli"] = df1.apply(lambda x: x.uli + char_string_gen(23), axis = 1)
-        df1['uli'] = df1.apply(lambda x: x.uli + check_digit_gen(ULI = x.uli), axis = 1)
+        unique_uli_bank_1 = {'uli':list(['BANK1LEIFORTEST12345']*int((row_count)))}
+        df1 = pd.DataFrame(unique_uli_bank_1)
+        df1["uli"] = df1.apply(lambda x: x.uli + char_string_gen(23), axis=1)
+        df1['uli'] = df1.apply(lambda x: x.uli + check_digit_gen(ULI=x.uli), axis=1)
         uli_check(df1)
         
         #Replaces ULI's in the new LAR dataframe with the unique ULI's.  
         df['uli'] = df1['uli']
         
         #Creates a new LAR csv file with the new LAR data with unique ULI's. 
-        df.to_csv("lar_" + str(count) + ".txt", sep = "|", index = False, header= None)
+        df.to_csv("lar_" + str(row_count) + ".txt", sep="|", index=False, header=None)
 
         #The following appends the new LAR data into the TS file created earlier. 
-        #The new file is renamed "clean_file_(count)_row_Bank1.txt."
+        #The new file is renamed "clean_file_(row_count)_row_Bank1.txt."
         #New clean files are placed in the "edits_files/clean_files/bank1/" directory.
         
         filepath = "edits_files/clean_files/bank1/"
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         
-        with open("lar_" + str(count) + ".txt", 'r' ) as f:
+        with open("lar_" + str(row_count) + ".txt", 'r' ) as f:
             lar_count = f.readlines()
 
         with open("edits_files/ts_row.txt", 'a') as append_lar:
             append_lar.writelines(lar_count)
 
-        os.remove("lar_" + str(count) + ".txt")
+        os.remove("lar_" + str(row_count) + ".txt")
         os.rename("edits_files/ts_row.txt", "edits_files/clean_files/bank1/clean_file_" + 
-                         str(count) + "_rows_Bank1.txt")
-        return print(str("{:,}".format(count)) + " Row File Created for Bank " + str(bank))
+                         str(row_count) + "_rows_Bank1.txt")
+        return print(str("{:,}".format(row_count)) + " Row File Created for Bank " + str(bank))
 
     else:
         statement = "Please list bank as '0' or '1'"
@@ -227,29 +229,29 @@ def large_clean_test_files(bank=None, file=file, count=None):
     
 
 
-# In[300]:
+# In[23]:
 
 
-large_clean_test_files(bank = 1, count = 3000)
+large_clean_test_files(bank=1, row_count=3000)
 
 
 # ### Creating Clean Test Files With Specified Counts in a List
 # A loop may be used to create clean large test files with the counts in a list. 
 
-# In[303]:
+# In[ ]:
 
 
 counts = [1000, 5000, 10000, 50000, 100000]
 
 for count in counts:
-    large_clean_test_files(bank = 0, count = count)
+    large_clean_test_files(bank=0, count=count)
 
 
-# In[304]:
+# In[ ]:
 
 
 counts = [1000, 5000, 10000, 50000, 100000]
 
 for count in counts:
-    large_clean_test_files(bank = 1, count = count)
+    large_clean_test_files(bank=1, count=count)
 
