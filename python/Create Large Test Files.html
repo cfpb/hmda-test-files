@@ -13116,18 +13116,18 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Creating-Large-HMDA-Submission-Test-Files">Creating Large HMDA Submission Test Files<a class="anchor-link" href="#Creating-Large-HMDA-Submission-Test-Files">&#182;</a></h1><p>This notebook demonstrates a function for creating large HMDA submission test files using 1000 row clean files for bank 1 and bank 0. The function concatenates the files together, creates unique Universal Loan Identifiers (ULIs) with a check digit, and generates a submission file with a specified number of LAR rows.</p>
+<h1 id="Creating-Large-HMDA-Submission-Test-Files">Creating Large HMDA Submission Test Files<a class="anchor-link" href="#Creating-Large-HMDA-Submission-Test-Files">&#182;</a></h1><p>This notebook demonstrates a class for creating large HMDA submission test files.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[280]:</div>
+<div class="prompt input_prompt">In&nbsp;[148]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#The following code imports the required packages.</span>
-
+<span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -13135,88 +13135,10 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-</pre></div>
+<span class="kn">import</span> <span class="nn">shutil</span> <span class="k">as</span> <span class="nn">sh</span>
 
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[281]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#The function below generates a random character string with a given length to create loan identifiers.</span>
-<span class="k">def</span> <span class="nf">char_string_gen</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
-
-<span class="c1">#This function returns a check digit for a given character string. </span>
-<span class="k">def</span> <span class="nf">check_digit_gen</span><span class="p">(</span><span class="n">valid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ULI</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;Generates a check digit for a ULI in accordance with</span>
-<span class="sd">		https://www.consumerfinance.gov/eregulations/diff/1003-C/2015-26607_20170101/2015-26607_20180101?from_version=2015-26607_20170101#1003-C-1&quot;&quot;&quot;</span>
-		<span class="k">if</span> <span class="n">ULI</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;a ULI must be supplied&quot;</span><span class="p">)</span>
-		<span class="c1">#GENERATING A CHECK DIGIT</span>
-		<span class="c1">#Step 1: Starting with the leftmost character in the string that consists of the combination of the</span>
-		<span class="c1">#Legal Entity Identifier (LEI) pursuant to § 1003.4(a)(1)(i)(A) and the additional characters identifying the</span>
-		<span class="c1">#covered loan or application pursuant to § 1003.4(a)(1)(i)(B), replace each alphabetic character with numbers</span>
-		<span class="c1">#in accordance with Table I below to obtain all numeric values in the string.</span>
-		
-		
-		<span class="c1">#1: convert letters to digits</span>
-		<span class="c1">#2: append &#39;00&#39; to right of string</span>
-		<span class="c1">#3:Apply the mathematical function mod=(n, 97) where n= the number obtained in step 2 above and 97 is the divisor.</span>
-		<span class="c1">#3a: Alternatively, to calculate without using the modulus operator, divide the numbers in step 2 above by 97.</span>
-		<span class="c1">#   Truncate the remainder to three digits and multiply it by .97. Round the result to the nearest whole number.</span>
-		<span class="c1">#4: Subtract the result in step 3 from 98. If the result is one digit, add a leading 0 to make it two digits.</span>
-		<span class="c1">#5: The two digits in the result from step 4 is the check digit. Append the resulting check digit to the</span>
-		<span class="c1">#   rightmost position in the combined string of characters described in step 1 above to generate the ULI.</span>
-		
-		<span class="c1">#digit_vals contains the conversion of numbers to letters</span>
-		<span class="n">digit_vals</span> <span class="o">=</span> <span class="p">{</span>
-		<span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">:</span><span class="mi">17</span><span class="p">,</span><span class="s1">&#39;O&#39;</span><span class="p">:</span><span class="mi">24</span><span class="p">,</span><span class="s1">&#39;V&#39;</span><span class="p">:</span><span class="mi">31</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="s1">&#39;I&#39;</span><span class="p">:</span><span class="mi">18</span><span class="p">,</span><span class="s1">&#39;P&#39;</span><span class="p">:</span><span class="mi">25</span><span class="p">,</span><span class="s1">&#39;W&#39;</span><span class="p">:</span><span class="mi">32</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span><span class="s1">&#39;J&#39;</span><span class="p">:</span><span class="mi">19</span><span class="p">,</span><span class="s1">&#39;Q&#39;</span><span class="p">:</span><span class="mi">26</span><span class="p">,</span><span class="s1">&#39;X&#39;</span><span class="p">:</span><span class="mi">33</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">:</span><span class="mi">13</span><span class="p">,</span><span class="s1">&#39;K&#39;</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span><span class="s1">&#39;R&#39;</span><span class="p">:</span><span class="mi">27</span><span class="p">,</span><span class="s1">&#39;Y&#39;</span><span class="p">:</span><span class="mi">34</span><span class="p">,</span>
-		<span class="s1">&#39;E&#39;</span><span class="p">:</span><span class="mi">14</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">:</span><span class="mi">21</span><span class="p">,</span><span class="s1">&#39;S&#39;</span><span class="p">:</span><span class="mi">28</span><span class="p">,</span><span class="s1">&#39;Z&#39;</span><span class="p">:</span><span class="mi">35</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">:</span><span class="mi">15</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">:</span><span class="mi">22</span><span class="p">,</span><span class="s1">&#39;T&#39;</span><span class="p">:</span><span class="mi">29</span><span class="p">,</span><span class="s1">&#39;G&#39;</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span><span class="s1">&#39;N&#39;</span><span class="p">:</span><span class="mi">23</span><span class="p">,</span><span class="s1">&#39;U&#39;</span><span class="p">:</span><span class="mi">30</span><span class="p">}</span>
-		
-		<span class="n">uli_chars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ULI</span><span class="p">)</span>
-		<span class="n">mod_uli_chars</span> <span class="o">=</span> <span class="p">[]</span>
-		<span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">uli_chars</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">char</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="n">digit_vals</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-				<span class="n">mod_uli_chars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">digit_vals</span><span class="p">[</span><span class="n">char</span><span class="o">.</span><span class="n">upper</span><span class="p">()]))</span>
-			<span class="k">else</span><span class="p">:</span>
-				<span class="n">mod_uli_chars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">char</span><span class="p">)</span>
-		<span class="n">mod_uli_chars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;00&#39;</span><span class="p">)</span> 
-		<span class="n">digit_base</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mod_uli_chars</span><span class="p">))</span>
-		<span class="n">digit_modulo</span> <span class="o">=</span> <span class="n">digit_base</span> <span class="o">%</span> <span class="mi">97</span>
-		<span class="n">check_digit</span> <span class="o">=</span> <span class="mi">98</span> <span class="o">-</span> <span class="n">digit_modulo</span>
-
-		<span class="k">if</span> <span class="n">valid</span><span class="p">:</span>
-			<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">check_digit</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1">#left pad check digit with 0 if length is less than 2</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">check_digit</span><span class="o">+</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span> <span class="c1">#return a bad check digit (used in edit testing)</span>
-
-<span class="c1">#This function checks whether character strings in a column are unique to each other. </span>
-<span class="c1">#When column strings are unique, the function returns a &quot;Passed&quot; statement.</span>
-<span class="c1">#If they are not, it returns a &quot;Failed&quot; statement. </span>
-<span class="k">def</span> <span class="nf">uli_check</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function passes in a single column dataframe to determine whether values within the column</span>
-<span class="sd">    are unique. </span>
-<span class="sd">    </span>
-<span class="sd">    The function returns a &quot;Passed&quot; statement if they are, and returns a &quot;Failed&quot; statement if the values</span>
-<span class="sd">    are not unique. </span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;unique&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;unique&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">):</span> <span class="c1">#Checks whether column values are unique. </span>
-        <span class="n">statement</span> <span class="o">=</span> <span class="s2">&quot;Unique Values: Passed&quot;</span>
-    <span class="k">else</span><span class="p">:</span> 
-        <span class="n">statement</span> <span class="o">=</span> <span class="s2">&quot;Unique Values: Failed&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">statement</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;unique&#39;</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">#Drops the unique values column. </span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">lar_generator</span> <span class="k">import</span> <span class="n">lar_gen</span> <span class="c1">#Imports lar_gen class. </span>
+<span class="n">lg</span> <span class="o">=</span> <span class="n">lar_gen</span><span class="p">()</span> <span class="c1">#Instantiates lar_gen class as lg. </span>
 </pre></div>
 
     </div>
@@ -13227,153 +13149,18 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Creating-Clean-Test-Files">Creating Clean Test Files<a class="anchor-link" href="#Creating-Clean-Test-Files">&#182;</a></h3><p>The following defines a function that creates clean test files. The function uses 1000 row clean test files located in the repository for Bank 0 and Bank 1 to duplicate LAR data to produce data with a desired number of rows, and provide unique ULI's for each row. Test files may be created with rows as multiples of 1000.</p>
+<h3 id="Creating-Clean-Test-Files">Creating Clean Test Files<a class="anchor-link" href="#Creating-Clean-Test-Files">&#182;</a></h3><p>The following defines a function that creates clean test files. It uses an existing clean file to create a new clean file of any row count. This set of functions is from the Clean_Files class defined below. An existing clean test file can be separated into its Transmittal Sheet and LAR components, using the Clean_Files class function separate_lar_ts.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[299]:</div>
+<div class="prompt input_prompt">In&nbsp;[143]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">large_clean_test_files</span><span class="p">(</span><span class="n">bank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates clean HMDA submission test files in multiples of 1000, specified by the count variable. </span>
-<span class="sd">    The function requires a count, and a specification for the test bank, either &#39;0&#39; or &#39;1.&#39;</span>
-<span class="sd">    </span>
-<span class="sd">    The function replicates LAR data from two clean test files in the repository.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-   <span class="c1">#Checks whether the count is a multiple of 1000.  </span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">count</span> <span class="o">%</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">statement</span> <span class="o">=</span> <span class="s2">&quot;Please specify a count in a multiple of 1000&quot;</span>
-        <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="n">statement</span><span class="p">)</span>
-    <span class="c1">#Establishes the case for bank = 0. </span>
-    <span class="k">if</span> <span class="n">bank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;clean_file_1000_rows_Bank0.txt&quot;</span> 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> <span class="c1">#Opens the 1000 row file for Bank 0. </span>
-            <span class="n">ts_row</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span> <span class="c1">#Reading in the first row as the Transmittal Sheet submission. </span>
-            <span class="n">lar_rows</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span> <span class="c1">#Reading in the other rows as the LAR submission.  </span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;edits_files/lar_rows.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_lar</span><span class="p">:</span> <span class="c1">#Writes a file of LAR data. </span>
-            <span class="n">out_lar</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lar_rows</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;edits_files/ts_row.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_ts</span><span class="p">:</span> <span class="c1">#Writes a file of TS data. </span>
-            <span class="n">out_ts</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">ts_row</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;schemas/lar_schema.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span> <span class="c1">#Loads in the schema for the LAR file as a dataframe. </span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-
-        <span class="c1">#Reads in the LAR data as a dataframe, as object values without converting NA values to </span>
-        <span class="c1">#Not a Number Values. </span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;edits_files/lar_rows.txt&#39;</span><span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-                         <span class="n">keep_default_na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span> <span class="c1">#Takes the field names from the LAR schema as column names. </span>
-        
-        <span class="c1">#Concatenates data to produce the desired number of rows in a new LAR dataframe. </span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">]</span><span class="o">*</span><span class="nb">int</span><span class="p">((</span><span class="n">count</span><span class="o">/</span><span class="mi">1000</span><span class="p">)),</span> <span class="n">ignore_index</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> 
-        
-        <span class="c1">#Creates a list of unique ULI&#39;s for Bank 0, and checks to determine that ULI&#39;s are unique.</span>
-        <span class="n">uli_1</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;uli&#39;</span><span class="p">:</span><span class="nb">list</span><span class="p">([</span><span class="s1">&#39;B90YWS6AFX2LGWOXJ1LD&#39;</span><span class="p">]</span><span class="o">*</span><span class="nb">int</span><span class="p">((</span><span class="n">count</span><span class="p">)))}</span>
-        <span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">uli_1</span><span class="p">)</span>
-        <span class="n">df1</span><span class="p">[</span><span class="s2">&quot;uli&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">uli</span> <span class="o">+</span> <span class="n">char_string_gen</span><span class="p">(</span><span class="mi">23</span><span class="p">),</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">df1</span><span class="p">[</span><span class="s1">&#39;uli&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">uli</span> <span class="o">+</span> <span class="n">check_digit_gen</span><span class="p">(</span><span class="n">ULI</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">uli</span><span class="p">),</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">uli_check</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
-
-        <span class="c1">#Replaces ULI&#39;s in the new LAR dataframe with the unique ULI&#39;s.  </span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;uli&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="p">[</span><span class="s1">&#39;uli&#39;</span><span class="p">]</span>
-        
-        <span class="c1">#Creates a new LAR csv file with the new LAR data with unique ULI&#39;s. </span>
-        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;lar_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
-        
-        <span class="c1">#The following appends the new LAR data into the TS file created earlier. </span>
-        <span class="c1">#The new file is renamed &quot;clean_file_(count)_row_Bank0.txt.&quot;</span>
-        <span class="c1">#New clean files are placed in the &quot;edits_files/clean_files/bank0/&quot; directory.</span>
-        <span class="n">filepath</span> <span class="o">=</span> <span class="s2">&quot;edits_files/clean_files/bank0/&quot;</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;lar_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">lar_count</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;edits_files/ts_row.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">append_lar</span><span class="p">:</span>
-            <span class="n">append_lar</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lar_count</span><span class="p">)</span>
-
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;lar_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;edits_files/ts_row.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;edits_files/clean_files/bank0/clean_file_&quot;</span> <span class="o">+</span> 
-                         <span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_rows_Bank0.txt&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:,}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; Row File Created for Bank &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">bank</span><span class="p">))</span>
-
-    <span class="c1">#Establishes the case for bank = 1.</span>
-    <span class="k">elif</span> <span class="n">bank</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;clean_file_1000_rows_Bank1.txt&quot;</span> <span class="c1">#Opens the 1000 row file for Bank 1. </span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">ts_row</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span> <span class="c1">#Reading in the first row as the Transmittal Sheet submission. </span>
-            <span class="n">lar_rows</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span> <span class="c1">#Reading in the other rows as the LAR submission.</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;edits_files/lar_rows.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_lar</span><span class="p">:</span> <span class="c1">#Writes a file of LAR data.</span>
-            <span class="n">out_lar</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lar_rows</span><span class="p">)</span> 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;edits_files/ts_row.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_ts</span><span class="p">:</span> <span class="c1">#Writes a file of TS data. </span>
-            <span class="n">out_ts</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">ts_row</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;schemas/lar_schema.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span> <span class="c1">#Loads in the schema for the LAR file as a dataframe.</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-
-        <span class="c1">#Reads in the LAR data as a dataframe, as object values without converting NA values to </span>
-        <span class="c1">#Not a Number Values. </span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;edits_files/lar_rows.txt&#39;</span><span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-                         <span class="n">keep_default_na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span>
-        
-        <span class="c1">#Concatenates data to produce the desired number of rows in a new LAR dataframe. </span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">]</span><span class="o">*</span><span class="nb">int</span><span class="p">((</span><span class="n">count</span><span class="o">/</span><span class="mi">1000</span><span class="p">)),</span> <span class="n">ignore_index</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>  
-
-        <span class="c1">#Creates a list of unique ULI&#39;s for Bank 1, and checks to determine that ULI&#39;s are unique.</span>
-        <span class="n">uli_1</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;uli&#39;</span><span class="p">:</span><span class="nb">list</span><span class="p">([</span><span class="s1">&#39;BANK1LEIFORTEST12345&#39;</span><span class="p">]</span><span class="o">*</span><span class="nb">int</span><span class="p">((</span><span class="n">count</span><span class="p">)))}</span>
-        <span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">uli_1</span><span class="p">)</span>
-        <span class="n">df1</span><span class="p">[</span><span class="s2">&quot;uli&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">uli</span> <span class="o">+</span> <span class="n">char_string_gen</span><span class="p">(</span><span class="mi">23</span><span class="p">),</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">df1</span><span class="p">[</span><span class="s1">&#39;uli&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">uli</span> <span class="o">+</span> <span class="n">check_digit_gen</span><span class="p">(</span><span class="n">ULI</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">uli</span><span class="p">),</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">uli_check</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
-        
-        <span class="c1">#Replaces ULI&#39;s in the new LAR dataframe with the unique ULI&#39;s.  </span>
-        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;uli&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="p">[</span><span class="s1">&#39;uli&#39;</span><span class="p">]</span>
-        
-        <span class="c1">#Creates a new LAR csv file with the new LAR data with unique ULI&#39;s. </span>
-        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;lar_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="c1">#The following appends the new LAR data into the TS file created earlier. </span>
-        <span class="c1">#The new file is renamed &quot;clean_file_(count)_row_Bank1.txt.&quot;</span>
-        <span class="c1">#New clean files are placed in the &quot;edits_files/clean_files/bank1/&quot; directory.</span>
-        
-        <span class="n">filepath</span> <span class="o">=</span> <span class="s2">&quot;edits_files/clean_files/bank1/&quot;</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;lar_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">lar_count</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;edits_files/ts_row.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">append_lar</span><span class="p">:</span>
-            <span class="n">append_lar</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lar_count</span><span class="p">)</span>
-
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;lar_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;edits_files/ts_row.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;edits_files/clean_files/bank1/clean_file_&quot;</span> <span class="o">+</span> 
-                         <span class="nb">str</span><span class="p">(</span><span class="n">count</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_rows_Bank1.txt&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:,}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; Row File Created for Bank &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">bank</span><span class="p">))</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">statement</span> <span class="o">=</span> <span class="s2">&quot;Please list bank as &#39;0&#39; or &#39;1&#39;&quot;</span>
-        <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="n">statement</span><span class="p">)</span>
-        
-    
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[300]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">large_clean_test_files</span><span class="p">(</span><span class="n">bank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cf</span> <span class="o">=</span> <span class="n">Clean_Files</span><span class="p">()</span>
+<span class="n">cf</span><span class="o">.</span><span class="n">separate_lar_ts</span><span class="p">(</span><span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;../edits_files/file_parts/clean_file_1000_rows_Bank1.txt&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13390,8 +13177,10 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Unique Values: Passed
-3,000 Row File Created for Bank 1
+<pre>
+           LAR file saved as: &#34;../edits_files/file_parts/lar_data.txt&#34;, 
+           TS  file saved as: &#34;../edits_files/file_parts/ts_data.txt&#34; 
+           
 </pre>
 </div>
 </div>
@@ -13410,13 +13199,17 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[303]:</div>
+<div class="prompt input_prompt">In&nbsp;[147]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">50000</span><span class="p">,</span> <span class="mi">100000</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">rows</span> <span class="o">=</span> <span class="p">[</span><span class="mi">297</span><span class="p">]</span>
 
-<span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
-    <span class="n">large_clean_test_files</span><span class="p">(</span><span class="n">bank</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="n">count</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+    <span class="n">ts_file</span> <span class="o">=</span> <span class="s2">&quot;../edits_files/file_parts/ts_data.txt&quot;</span> <span class="c1">#Stores the file path for TS data as ts_file. </span>
+    <span class="n">lar_file</span> <span class="o">=</span> <span class="s2">&quot;../edits_files/file_parts/lar_data.txt&quot;</span> <span class="c1">#Stores the file path for LAR data as lar_file.</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">get_rows</span><span class="p">(</span><span class="n">lar_file</span> <span class="o">=</span> <span class="n">lar_file</span><span class="p">,</span> <span class="n">row_count</span> <span class="o">=</span> <span class="n">row</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">assign_uli</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">ts_file</span> <span class="o">=</span> <span class="n">ts_file</span><span class="p">)</span>
+    <span class="n">cf</span><span class="o">.</span><span class="n">lar_to_hmda_file</span><span class="p">(</span><span class="n">ts_file</span><span class="o">=</span><span class="n">ts_file</span><span class="p">,</span> <span class="n">lar_rows_df</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13433,16 +13226,9 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Unique Values: Passed
-1,000 Row File Created for Bank 0
-Unique Values: Passed
-5,000 Row File Created for Bank 0
-Unique Values: Passed
-10,000 Row File Created for Bank 0
-Unique Values: Passed
-50,000 Row File Created for Bank 0
-Unique Values: Passed
-100,000 Row File Created for Bank 0
+<pre>Unique ULIs Assigned for Bank1
+297 Row File Created for Bank1
+File Path: ../edits_files/clean_files/Bank1/clean_file_297_rows_Bank1.txt
 </pre>
 </div>
 </div>
@@ -13453,43 +13239,164 @@ Unique Values: Passed
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[304]:</div>
+<div class="prompt input_prompt">In&nbsp;[136]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">50000</span><span class="p">,</span> <span class="mi">100000</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">Clean_Files</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">separate_lar_ts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Separates a clean file into Transmittal Sheet (TS) and Loan Application Register (LAR) data.</span>
+<span class="sd">         Saves the LAR data and TS data as text files in the /edits_files/file_parts/ directory. </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span> <span class="c1">#Opening the submission file. </span>
+            <span class="n">ts_row</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span> <span class="c1">#Reading in the first row as the TS submission. </span>
+            <span class="n">lar_rows</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span> <span class="c1">#Reading in the other rows as the LAR submission.  </span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;../edits_files/file_parts/lar_data.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_lar</span><span class="p">:</span> <span class="c1">#Writes a file of LAR data. </span>
+            <span class="n">out_lar</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lar_rows</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;../edits_files/file_parts/ts_data.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_ts</span><span class="p">:</span> <span class="c1">#Writes a file of TS data. </span>
+            <span class="n">out_ts</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">ts_row</span><span class="p">)</span>
+        
+        <span class="c1">#Prints the location of each data file. </span>
+        <span class="n">statement</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">           LAR file saved as: &quot;../edits_files/file_parts/lar_data.txt&quot;, </span>
+<span class="s2">           TS  file saved as: &quot;../edits_files/file_parts/ts_data.txt&quot; </span>
+<span class="s2">           &quot;&quot;&quot;</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="n">statement</span><span class="p">)</span>
+        <span class="k">return</span>
+            
+    
+    <span class="k">def</span> <span class="nf">get_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lar_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">row_count</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a data frame of LAR data with a specified number of rows.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../schemas/lar_schema.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span> <span class="c1">#Loads in the schema for the LAR file as a dataframe. </span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
+        <span class="c1">#Reads in the data from lar_file. </span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">lar_file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;object&#39;</span><span class="p">,</span>
+                         <span class="n">keep_default_na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+        
+        <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span> <span class="c1">#Takes the field names from the LAR schema as column names.</span>
+         
+        <span class="n">current_row</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="c1">#Number of rows currently in the dataframe. </span>
 
-<span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
-    <span class="n">large_clean_test_files</span><span class="p">(</span><span class="n">bank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="n">count</span><span class="p">)</span>
+        <span class="c1">#Calculates a multiplier taking the ceiling function of desired row count over current row count. </span>
+        <span class="n">multiplier</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">row_count</span><span class="o">/</span><span class="n">current_row</span><span class="p">)</span>
+        
+        <span class="c1">#Concatenates data to produce the number of rows by the multiplier in a new LAR dataframe. </span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">]</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">multiplier</span><span class="p">))</span>
+        
+        <span class="c1">#Drops the number of rows to the row count specified. </span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">row_count</span><span class="o">%</span><span class="k">current_row</span>) == 0:
+            <span class="k">return</span> <span class="n">df</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">drop_rows</span> <span class="o">=</span> <span class="n">current_row</span> <span class="o">-</span> <span class="p">(</span><span class="n">row_count</span><span class="o">%</span><span class="k">current_row</span>)
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:</span><span class="o">-</span><span class="p">(</span><span class="n">drop_rows</span><span class="p">)]</span>
+            <span class="k">return</span> <span class="n">df</span>
+         
+    
+    <span class="k">def</span> <span class="nf">assign_uli</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ts_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assigns new ULI&#39;s to a dataframe of lar rows, based on the bank number in the TS file. </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#Reads in ts_file.</span>
+        <span class="n">ts_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ts_file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;object&#39;</span><span class="p">,</span>
+                         <span class="n">keep_default_na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="c1">#Stores the second column of the TS file as &#39;bank&#39;. </span>
+        <span class="n">bank</span> <span class="o">=</span> <span class="n">ts_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        
+        <span class="c1">#Assigns the number of rows in the dataframe to row_count. </span>
+        <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">row_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="c1">#Creates a new list of LEI&#39;s for the ULI column by bank.</span>
+        <span class="k">if</span> <span class="n">bank</span> <span class="o">==</span> <span class="s1">&#39;Bank0&#39;</span><span class="p">:</span> 
+            <span class="n">unique_lei_for_uli</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;uli&#39;</span><span class="p">:</span><span class="nb">list</span><span class="p">([</span><span class="s1">&#39;B90YWS6AFX2LGWOXJ1LD&#39;</span><span class="p">]</span><span class="o">*</span><span class="nb">int</span><span class="p">((</span><span class="n">row_count</span><span class="p">)))}</span>
+        
+        <span class="k">if</span> <span class="n">bank</span> <span class="o">==</span> <span class="s1">&#39;Bank1&#39;</span><span class="p">:</span>
+            <span class="n">unique_lei_for_uli</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;uli&#39;</span><span class="p">:</span><span class="nb">list</span><span class="p">([</span><span class="s1">&#39;BANK1LEIFORTEST12345&#39;</span><span class="p">]</span><span class="o">*</span><span class="nb">int</span><span class="p">((</span><span class="n">row_count</span><span class="p">)))}</span>
+        
+        <span class="n">uli_col</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">unique_lei_for_uli</span><span class="p">)</span> <span class="c1">#Creates a dataframe of new ULI&#39;s.</span>
+        <span class="c1">#Amends the ULI&#39;s by adding up to 23 additional characters. </span>
+        <span class="n">uli_col</span><span class="p">[</span><span class="s1">&#39;uli&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">uli_col</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">uli</span> <span class="o">+</span> <span class="n">lg</span><span class="o">.</span><span class="n">char_string_gen</span><span class="p">(</span><span class="n">length</span> <span class="o">=</span> <span class="mi">23</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1">#Adds a checkdigit to the end of the ULI. </span>
+        <span class="n">uli_col</span><span class="p">[</span><span class="s1">&#39;uli&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">uli_col</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">uli</span> <span class="o">+</span> <span class="n">lg</span><span class="o">.</span><span class="n">check_digit_gen</span><span class="p">(</span><span class="n">ULI</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">uli</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1">#Checks whether ULI&#39;s are unique using the uli_check function. </span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uli_check</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="n">uli_col</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;uli&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">uli_col</span><span class="p">[</span><span class="s1">&#39;uli&#39;</span><span class="p">]</span> <span class="c1">#If unique, ULI&#39;s in the dataframe are replaced. </span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unique ULIs Assigned for &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">bank</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">df</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="c1">#If not unique, the assign_uli function is re-run.</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Re-Running&quot;</span><span class="p">)</span>
+            <span class="n">assign_uli</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts_file</span><span class="o">=</span><span class="n">ts_file</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>  
+    
+    <span class="k">def</span> <span class="nf">uli_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Passes in a single column dataframe to determine whether values within the column</span>
+<span class="sd">        are unique. </span>
+<span class="sd">        </span>
+<span class="sd">        Returns a True statement if they are, and returns a False statement if not. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">col</span><span class="p">[</span><span class="s1">&#39;unique&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">col</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">col</span><span class="p">[</span><span class="s1">&#39;unique&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">index</span><span class="p">):</span> <span class="c1">#Checks whether column values are unique. </span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="kc">False</span>
+        
+    <span class="k">def</span> <span class="nf">lar_to_hmda_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lar_rows_df</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ts_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a HMDA submission file, passing in a dataframe of LAR rows, and the TS file. </span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1">#Store the number of rows in the lar_rows dataframe. </span>
+        <span class="n">row_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lar_rows_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        
+        <span class="c1">#Replaces the lar_data text file with the lar_rows dataframe.</span>
+        <span class="n">lar_rows_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;../edits_files/file_parts/lar_data.txt&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+
+        <span class="c1">#Reads in TS file.</span>
+        <span class="n">ts_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">ts_file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;object&#39;</span><span class="p">,</span>
+                         <span class="n">keep_default_na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="c1">#Stores the second column of the TS file as &#39;bank&#39;. </span>
+        <span class="n">bank</span> <span class="o">=</span> <span class="n">ts_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        
+        <span class="c1">#Creates a new file path to place the new HMDA submission file. </span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="s2">&quot;../edits_files/clean_files/&quot;</span> <span class="o">+</span> <span class="n">bank</span> <span class="o">+</span> <span class="s2">&quot;/clean_file_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">row_count</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_rows_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">bank</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="c1">#Copies the TS text file into the filepath above and renames it. </span>
+        <span class="n">sh</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">ts_file</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>
+        
+        <span class="c1">#Reads in lar_data text file and appends it to the Transmittal Sheet row in the new file. </span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;../edits_files/file_parts/lar_data.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">new_lars</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">append_lar</span><span class="p">:</span>
+            <span class="n">append_lar</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">new_lars</span><span class="p">)</span>
+
+        
+        <span class="c1">#Prints out a statement with the number of rows created, and the location of the new file. </span>
+        <span class="n">statement1</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:,}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">row_count</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; Row File Created for &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">bank</span><span class="p">)</span>
+        <span class="n">statement2</span> <span class="o">=</span> <span class="s2">&quot;File Path: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+    
+        <span class="nb">print</span><span class="p">(</span><span class="n">statement1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">statement2</span><span class="p">)</span>
+        
+        <span class="k">return</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Unique Values: Passed
-1,000 Row File Created for Bank 1
-Unique Values: Passed
-5,000 Row File Created for Bank 1
-Unique Values: Passed
-10,000 Row File Created for Bank 1
-Unique Values: Passed
-50,000 Row File Created for Bank 1
-Unique Values: Passed
-100,000 Row File Created for Bank 1
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
