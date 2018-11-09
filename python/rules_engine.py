@@ -2763,7 +2763,9 @@ class rules_engine(object):
 		field = "Non-Amortizing Features"
 		edit_name = "v715"
 		fail_df = self.lar_df[(self.lar_df.non_amort_features=="1111") & ((~self.lar_df.balloon=="1111") 
-			& (~self.lar_df.int_only_pmts="1111") & (~self.lar_df.neg_amort="1111") & (~self.lar_df.non_amort_features="1111"))]
+			& (~self.lar_df.int_only_pmts=="1111") 
+			& (~self.lar_df.neg_amort=="1111") 
+			& (~self.lar_df.non_amort_features=="1111"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q600(self):
