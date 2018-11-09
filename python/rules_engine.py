@@ -2644,6 +2644,128 @@ class rules_engine(object):
 		fail_df = self.lar_df[~(self.lar_df.business_purpose.isin(("1111", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def v709(self):
+		"""An invalid Property Address was reported. Please
+		review the information below and update your file
+		accordingly.
+		1) If Street Address, City, and Zip Code is reported
+		Exempt, then all three must be reported Exempt. """
+
+		field = "Property Address"
+		edit_name = "v709"
+		fail_df = self.lar_df[((self.lar_df.street_address=="Exempt")&(self.lar_df.city=="Exempt")&(self.lar_df.zip_code == "Exempt"))&
+			((~self.lar_df.street_address=="Exempt") & (~self.lar_df.city =="Exempt") & (~self.lar_df.zip_code== "Exempt"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v710_1(self):
+		"""If the Credit Score exemption election is taken,
+			1) Credit Score of Applicant or Borrower, Credit
+			Score of Co-Applicant or Co-Borrower, Applicant or
+			Borrower, Name and Version of Credit Scoring
+			Model, and Co-Applicant or Co-Borrower, Name and
+			Version of Credit Scoring Model must be reported
+			1111.""" 
+		field = "Credit Score"
+		edit_name = "v710_1"
+		fail_df = self.lar_df[(self.lar_df.app_credit_score=="1111")&((~self.lar_df.co_app_credit_score=="1111")& 
+				(~self.lar_df.app_score_name=="1111")&(~self.lar_df.co_app_score_name=="1111"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+	
+	def v710_2(self):
+		"""If the Credit Score exemption election is taken,
+			2) Applicant or Borrower, Name and Version of
+				Credit Scoring Model: Conditional Free Form Text
+				Field for Code 8 and Co-Applicant or Co-Borrower,
+				Name and Version of Credit Scoring Model:
+				Conditional Free Form Text Field for Code 8 must be
+				left blank."""
+		field = "Credit Score"
+		edit_name = "v710_2"
+		fail_df = self.lar_df[(self.lar_df.app_credit_score=="1111")&((~self.lar_df.app_score_name=="")& 
+				(~self.lar_df.app_score_code_8=="")&(~self.lar_df.co_app_score_name=="")&(~self.lar_df.co_app_score_code_8==""))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v711_1(self):
+		"""1) If the Reason for Denial exemption election is
+			taken, Reason for Denial: 1 must be reported 1111;"""
+		field = "Reason for Denial"
+		edit_name = "v711_1"
+		fail_df = self.lar_df[(self.lar_df.denial_1=="1111")&(~self.lar_df.denial_1=="1111")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v711_2(self):
+		"""2)If the Reason for Denial exemption election is
+			taken, 
+			Reason for Denial: 2, Reason for Denial: 3,
+			Reason for Denial: 4, and Reason for Denial:
+			Conditional Free Form Text Field for Code 9 must be
+			left blank."""
+		field = "Reason for Denial"
+		edit_name = "v711_2"
+		fail_df = self.lar_df[(self.lar_df.denial_1=="1111")&((~self.lar_df.denial_2=="")&(~self.lar_df.denial_3=="")
+					&(~self.lar_df.denial_4=="")&(~self.lar_df.denial_code_9==""))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v712(self):
+		"""1) If the Total Loan Costs or Total Points and Fees
+				exemption election is taken, Total Loan Costs and
+				Total Points and Fees must be reported Exempt."""
+		field = "Total Loan Costs/Points and Fees"
+		edit_name = "v712"
+		fail_df = self.lar_df[((self.lar_df.loan_costs=="Exempt")|(self.lar_df.points_fees=="Exempt")) & ((~self.lar_df.loan_costs=="Exempt")
+					& (~self.lar_df.points_fees=="Exempt"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+	def v713_1(self):
+		"""If the Automated Underwriting System exemption
+			election is taken,
+			1) Automated Underwriting System: 1 and
+			Automated Underwriting System Result: 1 must be
+			reported 1111; and"""
+		field = "Automated Underwriting System"
+		edit_name = "v713_1"
+		fail_df = self.lar_df[(self.lar_df.aus_1=="1111") & ((~self.lar_df.aus_1=="1111") & (~self.lar_df.aus_result_1=="1111"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+	
+	def v713_2(self):
+		"""If the Automated Underwriting System exemption
+			election is taken,
+			2) Automated Underwriting System: 2, Automated
+			Underwriting System: 3, Automated Underwriting
+			System: 4, Automated Underwriting System: 5,
+			Automated Underwriting System: Conditional Free
+			Form Text Field for Code 5, Automated Underwriting
+			System Result: 2, Automated Underwriting System
+			Result: 3, Automated Underwriting System Result: 4,
+			Automated Underwriting System Result: 5, and
+			Automated Underwriting System Result: Conditional
+			Free Form Text Field for Code 16 must be left blank."""
+		field = "Automated Underwriting System"
+		edit_name = "v713_2"
+		fail_df = self.lar_df[(self.lar_df.aus_1=="1111") & ((~self.lar_df.aus_2=="") & (~self.lar_df.aus_3=="") & (~self.lar_df.aus_4=="") & 
+			(~self.lar_df.aus_5=="") & (~self.lar_df.aus_code_5=="") & (~self.lar_df.aus_result_2=="") & (~self.lar_df.aus_result_3=="") 
+			& (~self.lar_df.aus_result_4=="") & (~self.lar_df.aus_result_5=="") & (~self.lar_df.aus_code_16==""))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v714(self):
+		"""1) If the Application Channel exemption election is
+			taken, Submission of Application and Initially Payable
+			to Your Institution must be reported 1111."""
+		field = "Application Channel"
+		edit_name = "v714"
+		fail_df = self.lar_df[(self.lar_df.app_submission=="1111") & ((~self.lar_df.app_submission=="1111") & (~self.lar_df.initially_payable=="1111"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+	
+	def v715(self):
+		"""1) If the Non-Amortizing Features exemption election
+			is taken, Balloon Payment, Interest-Only Payments,
+			Negative Amortization and Other Non-amortizing
+			Features must be reported 1111."""
+		field = "Non-Amortizing Features"
+		edit_name = "v715"
+		fail_df = self.lar_df[(self.lar_df.non_amort_features=="1111") & ((~self.lar_df.balloon=="1111") 
+			& (~self.lar_df.int_only_pmts="1111") & (~self.lar_df.neg_amort="1111") & (~self.lar_df.non_amort_features="1111"))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 	def q600(self):
 		"""1) A duplicate ULI was reported. """
 		field = "ULI"
