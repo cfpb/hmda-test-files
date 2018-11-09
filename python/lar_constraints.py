@@ -1205,11 +1205,11 @@ class lar_constraints(object):
 		"""1) If the Total Loan Costs or Total Points and Fees
 			  exemption election is taken, Total Loan Costs and
 			  Total Points and Fees must be reported Exempt."""
-	    if (row["loan_costs"]=="Exempt" or row["points_fees"]=="Exempt"):
-	     row["loan_costs"]= "Exempt"
-		 row["points_fees"]= "Exempt"
+		if (row["loan_costs"]=="Exempt" or row["points_fees"]=="Exempt"):
+			row["loan_costs"]= "Exempt"
+			row["points_fees"]= "Exempt"
 
-		return row
+			return row
 
 	def v713_const(self, row):
 		"""1) Automated Underwriting System: 1 and
@@ -1226,18 +1226,18 @@ class lar_constraints(object):
 			   Automated Underwriting System Result: Conditional
 			   Free Form Text Field for Code 16 must be left blank."""
 		if row["aus_1"]=="1111":
-		 row["aus_1"]= "1111" 
-		 row["aus_result_1"]= "1111"
-		 row["aus_2"]= "" 
-		 row["aus_3"]= ""
-		 row["aus_4"] = "" 
-		 row["aus_5"] = ""
-		 row["aus_code_5"] = ""
-		 row["aus_result_2"]=""
-		 row["aus_result_3"]= "" 
-		 row["aus_result_4"] = ""
-		 row["aus_result_5"] =""
-		 row["aus_code_16"]==""
+			row["aus_1"]= "1111" 
+			row["aus_result_1"]= "1111"
+			row["aus_2"]= "" 
+			row["aus_3"]= ""
+			row["aus_4"] = "" 
+			row["aus_5"] = ""
+			row["aus_code_5"] = ""
+			row["aus_result_2"]=""
+			row["aus_result_3"]= "" 
+			row["aus_result_4"] = ""
+			row["aus_result_5"] =""
+			row["aus_code_16"]==""
 
 		return row
 		
