@@ -1208,6 +1208,8 @@ class lar_constraints(object):
 	     row["loan_costs"]= "Exempt"
 		 row["points_fees"]= "Exempt"
 
+		return row
+
 	def v713_const(self, row):
 		"""1) Automated Underwriting System: 1 and
 			  Automated Underwriting System Result: 1 must be
@@ -1235,6 +1237,8 @@ class lar_constraints(object):
 		 row["aus_result_4"] = ""
 		 row["aus_result_5"] =""
 		 row["aus_code_16"]==""
+
+		return row
 		
 	def v714_const(self, row):
 		"""1) If the Application Channel exemption election is
@@ -1243,6 +1247,8 @@ class lar_constraints(object):
 		if row["app_submission"] == "1111":
 			row["app_submission"] = "1111"
 			row["initially_payable"] = "1111"
+
+		return row
 		
 	def v715_const(self, row):
 		"""1) If the Non-Amortizing Features exemption election
@@ -1253,5 +1259,7 @@ class lar_constraints(object):
 			row["balloon"] = "1111" 
 			row["int_only_pmts"] ="1111" 
 			row['neg_amort'] = "1111" 
-			row["non_amort_features"] = "1111" 
+			row["non_amort_features"] = "1111"
+
+		return row 
 		
