@@ -1839,7 +1839,6 @@ class rules_engine(object):
 		1) Lender Credits must be a number greater than 0, blank, Exempt, or NA. """
 		field = "Lender Credits"
 		edit_name = "v676_1"
-		print(self.lar_df["lender_credits"])
 		fail_df = self.lar_df[(self.lar_df.lender_credits.map(lambda x: 
 			self.check_number(x, min_val=1))==False)&(~self.lar_df.lender_credits.isin(["NA", "Exempt", ""]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
@@ -2712,9 +2711,10 @@ class rules_engine(object):
 				Total Points and Fees must be reported Exempt."""
 		field = "Total Loan Costs/Points and Fees"
 		edit_name = "v712"
-		fail_df = self.lar_df[((self.lar_df.loan_costs=="Exempt")|(self.lar_df.points_fees=="Exempt")) & ((self.lar_df.loan_costs!="Exempt")
-					& (self.lar_df.points_fees!="Exempt"))]
+		fail_df = self.lar_df[((self.lar_df.loan_costs=="Exempt") | (self.lar_df.points_fees=="Exempt")) & ((self.lar_df.loan_costs!="Exempt")
+					| (self.lar_df.points_fees!="Exempt"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 	def v713_1(self):
 		"""If the Automated Underwriting System exemption
 			election is taken,
@@ -2752,7 +2752,9 @@ class rules_engine(object):
 			to Your Institution must be reported 1111."""
 		field = "Application Channel"
 		edit_name = "v714"
-		fail_df = self.lar_df[(self.lar_df.app_submission=="1111") & ((self.lar_df.app_submission!="1111") & (self.lar_df.initially_payable!="1111"))]
+		fail_df = self.lar_df[((self.lar_df.app_submission == "1111") & (self.lar_df.initially_payable != "1111"))|
+		((self.lar_df.app_submission != "1111") & (self.lar_df.initially_payable == "1111"))]  
+		#((self.lar_df.app_submission != "1111") & (self.lar_df.initially_payable != "1111"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 	
 	def v715(self):
@@ -2762,7 +2764,10 @@ class rules_engine(object):
 			Features must be reported 1111."""
 		field = "Non-Amortizing Features"
 		edit_name = "v715"
-		fail_df = self.lar_df[(self.lar_df.non_amort_features=="1111") & ((self.lar_df.balloon!="1111") 
+		fail_df = self.lar_df[(
+			(self.lar_df.non_amort_features=="1111") | (self.lar_df.balloon=="1111") | (self.lar_df.int_only_pmts=="1111")|
+			(self.lar_df.neg_amort=="1111")) 
+			& ((self.lar_df.balloon!="1111") 
 			& (self.lar_df.int_only_pmts!="1111") 
 			& (self.lar_df.neg_amort!="1111") 
 			& (self.lar_df.non_amort_features!="1111"))]
