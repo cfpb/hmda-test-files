@@ -1154,13 +1154,15 @@ class lar_constraints(object):
 	def v709_const(self, row):
 		"""1) If Street Address, City, and Zip Code is reported Exempt, then all three
 			 must be reported Exempt."""
-		if row["street_address"] == "Exempt" and row["city"] == "Exempt" and row["zip_code"] == "Exempt":
+		if (row["street_address"] == "Exempt" or row["city"] == "Exempt" or row["zip_code"] == "Exempt"):
 			row["street_address"] = "Exempt"
 			row["city"] = "Exempt"
 			row["zip_code"] = "Exempt"
 		return row
 	
 	def v710_const(self, row):
+		
+		"""If the Credit Score exemption election is taken,"""
 		"""1) Credit Score of Applicant or Borrower, Credit
 			Score of Co-Applicant or Co-Borrower, Applicant or
 			Borrower, Name and Version of Credit Scoring
@@ -1185,6 +1187,7 @@ class lar_constraints(object):
 
 
 	def v711_const(self, row):
+
 		"""1) If the Reason for Denial exemption election is
 			taken, Reason for Denial: 1 must be reported 1111;
 			and
@@ -1213,7 +1216,8 @@ class lar_constraints(object):
 		return row
 
 	def v713_const(self, row):
-		"""1) Automated Underwriting System: 1 and
+		"""If the Automated Underwriting exemption election is taken,
+		1) Automated Underwriting System: 1 and
 			  Automated Underwriting System Result: 1 must be
               reported 1111; and
 			2) Automated Underwriting System: 2, Automated

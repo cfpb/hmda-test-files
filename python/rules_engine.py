@@ -2652,8 +2652,8 @@ class rules_engine(object):
 
 		field = "Property Address"
 		edit_name = "v709"
-		fail_df = self.lar_df[((self.lar_df.street_address=="Exempt")&(self.lar_df.city=="Exempt")&(self.lar_df.zip_code == "Exempt"))&
-			((self.lar_df.street_address!="Exempt") & (self.lar_df.city !="Exempt") & (self.lar_df.zip_code != "Exempt"))]
+		fail_df = self.lar_df[((self.lar_df.street_address == "Exempt")|(self.lar_df.city == "Exempt")|(self.lar_df.zip_code == "Exempt")) &
+			((self.lar_df.street_address != "Exempt") | (self.lar_df.city != "Exempt") | (self.lar_df.zip_code != "Exempt"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v710_1(self):
@@ -2666,8 +2666,8 @@ class rules_engine(object):
 			1111.""" 
 		field = "Credit Score"
 		edit_name = "v710_1"
-		fail_df = self.lar_df[(self.lar_df.app_credit_score=="1111")&((self.lar_df.co_app_credit_score!="1111")& 
-				(self.lar_df.app_score_name!="1111")&(self.lar_df.co_app_score_name!="1111"))]
+		fail_df = self.lar_df[(self.lar_df.app_credit_score=="1111")&((self.lar_df.co_app_credit_score!="1111")|
+				(self.lar_df.app_score_name!="1111")|(self.lar_df.co_app_score_name!="1111"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 	
 	def v710_2(self):
@@ -2680,19 +2680,13 @@ class rules_engine(object):
 				left blank."""
 		field = "Credit Score"
 		edit_name = "v710_2"
-		fail_df = self.lar_df[(self.lar_df.app_credit_score=="1111")&((self.lar_df.app_score_name!="")& 
-				(self.lar_df.app_score_code_8!="")&(self.lar_df.co_app_score_name!="")&(self.lar_df.co_app_score_code_8!=""))]
+		fail_df = self.lar_df[(self.lar_df.app_credit_score=="1111")&((self.lar_df.app_score_name!="")|
+				(self.lar_df.app_score_code_8!="")|(self.lar_df.co_app_score_name!="")|(self.lar_df.co_app_score_code_8!=""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v711_1(self):
+	def v711_1_2(self):
 		"""1) If the Reason for Denial exemption election is
 			taken, Reason for Denial: 1 must be reported 1111;"""
-		field = "Reason for Denial"
-		edit_name = "v711_1"
-		fail_df = self.lar_df[(self.lar_df.denial_1=="1111")&(self.lar_df.denial_1!="1111")]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
-	def v711_2(self):
 		"""2)If the Reason for Denial exemption election is
 			taken, 
 			Reason for Denial: 2, Reason for Denial: 3,
@@ -2700,9 +2694,9 @@ class rules_engine(object):
 			Conditional Free Form Text Field for Code 9 must be
 			left blank."""
 		field = "Reason for Denial"
-		edit_name = "v711_2"
-		fail_df = self.lar_df[(self.lar_df.denial_1=="1111")&((self.lar_df.denial_2!="")&(self.lar_df.denial_3!="")
-					&(self.lar_df.denial_4!="")&(self.lar_df.denial_code_9!=""))]
+		edit_name = "v711_1_2"
+		fail_df = self.lar_df[(self.lar_df.denial_1=="1111")&((self.lar_df.denial_2!="")|(self.lar_df.denial_3!="")
+					| (self.lar_df.denial_4!="") | (self.lar_df.denial_code_9!=""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v712(self):
@@ -2723,7 +2717,7 @@ class rules_engine(object):
 			reported 1111; and"""
 		field = "Automated Underwriting System"
 		edit_name = "v713_1"
-		fail_df = self.lar_df[(self.lar_df.aus_1=="1111") & ((self.lar_df.aus_1!="1111") & (self.lar_df.aus_result_1!="1111"))]
+		fail_df = self.lar_df[(self.lar_df.aus_1=="1111") & (self.lar_df.aus_result_1!="1111")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 	
 	def v713_2(self):
@@ -2741,9 +2735,9 @@ class rules_engine(object):
 			Free Form Text Field for Code 16 must be left blank."""
 		field = "Automated Underwriting System"
 		edit_name = "v713_2"
-		fail_df = self.lar_df[(self.lar_df.aus_1=="1111") & ((self.lar_df.aus_2!="") & (self.lar_df.aus_3!="") & (self.lar_df.aus_4!="") & 
-			(self.lar_df.aus_5!="") & (self.lar_df.aus_code_5!="") & (self.lar_df.aus_result_2!="") & (self.lar_df.aus_result_3!="") 
-			& (self.lar_df.aus_result_4!="") & (self.lar_df.aus_result_5!="") & (self.lar_df.aus_code_16!=""))]
+		fail_df = self.lar_df[(self.lar_df.aus_1=="1111") & ((self.lar_df.aus_2!="") | (self.lar_df.aus_3!="") | (self.lar_df.aus_4!="") | 
+			(self.lar_df.aus_5!="") | (self.lar_df.aus_code_5!="") | (self.lar_df.aus_result_2!="") | (self.lar_df.aus_result_3!="") 
+			| (self.lar_df.aus_result_4!="") | (self.lar_df.aus_result_5!="") | (self.lar_df.aus_code_16!=""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v714(self):
@@ -2752,9 +2746,8 @@ class rules_engine(object):
 			to Your Institution must be reported 1111."""
 		field = "Application Channel"
 		edit_name = "v714"
-		fail_df = self.lar_df[((self.lar_df.app_submission == "1111") & (self.lar_df.initially_payable != "1111"))|
-		((self.lar_df.app_submission != "1111") & (self.lar_df.initially_payable == "1111"))]  
-		#((self.lar_df.app_submission != "1111") & (self.lar_df.initially_payable != "1111"))]
+		fail_df = self.lar_df[((self.lar_df.app_submission == "1111") | (self.lar_df.initially_payable == "1111")) &
+		((self.lar_df.app_submission != "1111") | (self.lar_df.initially_payable != "1111"))]  
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 	
 	def v715(self):
@@ -2768,9 +2761,9 @@ class rules_engine(object):
 			(self.lar_df.non_amort_features=="1111") | (self.lar_df.balloon=="1111") | (self.lar_df.int_only_pmts=="1111")|
 			(self.lar_df.neg_amort=="1111")) 
 			& ((self.lar_df.balloon!="1111") 
-			& (self.lar_df.int_only_pmts!="1111") 
-			& (self.lar_df.neg_amort!="1111") 
-			& (self.lar_df.non_amort_features!="1111"))]
+			| (self.lar_df.int_only_pmts!="1111") 
+			| (self.lar_df.neg_amort!="1111") 
+			| (self.lar_df.non_amort_features!="1111"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q600(self):
