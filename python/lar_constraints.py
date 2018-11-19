@@ -1238,10 +1238,10 @@ class lar_constraints(object):
 			row["aus_4"] = "" 
 			row["aus_5"] = ""
 			row["aus_code_5"] = ""
-			row["aus_result_2"]=""
+			row["aus_result_2"] = ""
 			row["aus_result_3"] = "" 
 			row["aus_result_4"] = ""
-			row["aus_result_5"] =""
+			row["aus_result_5"] = ""
 			row["aus_code_16"] = ""
 
 		return row
@@ -1250,7 +1250,6 @@ class lar_constraints(object):
 		"""1) If the Application Channel exemption election is
 			taken, Submission of Application and Initially Payable
 			to Your Institution must be reported 1111."""
-		print("Constraint applied")
 		if (row["app_submission"] == "1111" or 
 			row["initially_payable"] == "1111"):
 			row["app_submission"] = "1111"
@@ -1264,7 +1263,7 @@ class lar_constraints(object):
 				Features must be reported 1111."""
 		if (row["non_amort_features"] == "1111" or row["balloon"] == "1111" or row["int_only_pmts"] == "1111" or row["neg_amort"] == "1111"):
 			row["balloon"] = "1111" 
-			row["int_only_pmts"] ="1111" 
+			row["int_only_pmts"] = "1111" 
 			row['neg_amort'] = "1111" 
 			row["non_amort_features"] = "1111"
 
