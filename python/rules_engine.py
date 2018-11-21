@@ -2684,7 +2684,7 @@ class rules_engine(object):
 				(self.lar_df.app_score_code_8 != "") | (self.lar_df.co_app_score_name != "") | (self.lar_df.co_app_score_code_8 != ""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v711_1_2(self):
+	def v711(self):
 		"""1) If the Reason for Denial exemption election is
 			taken, Reason for Denial: 1 must be reported 1111;"""
 		"""2)If the Reason for Denial exemption election is
@@ -2694,7 +2694,7 @@ class rules_engine(object):
 			Conditional Free Form Text Field for Code 9 must be
 			left blank."""
 		field = "Reason for Denial"
-		edit_name = "v711_1_2"
+		edit_name = "v711"
 		fail_df = self.lar_df[(self.lar_df.denial_1 == "1111") & ((self.lar_df.denial_2 != "") | (self.lar_df.denial_3 != "")
 					| (self.lar_df.denial_4 != "") | (self.lar_df.denial_code_9 != ""))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
