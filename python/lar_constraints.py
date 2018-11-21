@@ -11,7 +11,8 @@ class lar_constraints(object):
 		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
 		"v668_const", "v669_const", "v670_const", "v671_const", "v672_const", "v673_const", "v674_const", "v675_const", "v676_const", "v677_const", "v678_const",
 		"v679_const", "v680_const", "v681_const", "v682_const", "v688_const", "v689_const", "v690_const", "v692_const", "v693_const", "v694_const", "v696_const",
-		"v697_const", "v698_const", "v699_const", "v700_const", "v701_const", "v702_const", "v703_const", "v704_const", "v705_const"]
+		"v697_const", "v698_const", "v699_const", "v700_const", "v701_const", "v702_const", "v703_const", "v704_const", "v705_const", "v709_const", "v710_const",
+		"v711_const", "v712_const", "v713_const", "v714_const", "v715_const"]
 		self.tracts = tracts
 		self.counties = counties
 			#functions used by constraint functions
@@ -1149,3 +1150,122 @@ class lar_constraints(object):
 			row["aus_1"] = "6"
 			row["aus_result_1"] = "17"
 		return row
+	
+	def v709_const(self, row):
+		"""1) If Street Address, City, and Zip Code is reported Exempt, then all three
+			 must be reported Exempt."""
+		if (row["street_address"] == "Exempt" or row["city"] == "Exempt" or row["zip_code"] == "Exempt"):
+			row["street_address"] = "Exempt"
+			row["city"] = "Exempt"
+			row["zip_code"] = "Exempt"
+		return row
+	
+	def v710_const(self, row):
+		
+		"""If the Credit Score exemption election is taken,"""
+		"""1) Credit Score of Applicant or Borrower, Credit
+			Score of Co-Applicant or Co-Borrower, Applicant or
+			Borrower, Name and Version of Credit Scoring
+			Model, and Co-Applicant or Co-Borrower, Name and
+			Version of Credit Scoring Model must be reported
+			1111; and
+		   2) Applicant or Borrower, Name and Version of
+			Credit Scoring Model: Conditional Free Form Text
+			Field for Code 8 and Co-Applicant or Co-Borrower,
+			Name and Version of Credit Scoring Model:
+			Conditional Free Form Text Field for Code 8 must be
+			left blank."""
+		if row["app_credit_score"] == "1111":
+			row["co_app_credit_score"] = "1111"
+			row["app_score_name"] = "1111"
+			row["co_app_score_name"] = "1111"
+			row["app_score_name"] = ""
+			row["app_score_code_8"] = ""
+			row["co_app_score_name"] = ""
+			row["co_app_score_code_8"] = ""
+		return row
+
+
+	def v711_const(self, row):
+
+		"""1) If the Reason for Denial exemption election is
+			taken, Reason for Denial: 1 must be reported 1111;
+			and
+		   2) Reason for Denial: 2, Reason for Denial: 3,
+			Reason for Denial: 4, and Reason for Denial:
+			Conditional Free Form Text Field for Code 9 must be
+			left blank."""
+		if row["denial_1"] == "1111":
+			row["denial_1"] = "1111"
+			row["denial_1"] = "1111" 
+			row["denial_2"] = ""
+			row["denial_3"] = ""
+			row["denial_4"] = ""
+			row["denial_code_9"] = ""
+		return row
+
+
+	def v712_const(self, row):
+		"""1) If the Total Loan Costs or Total Points and Fees
+			  exemption election is taken, Total Loan Costs and
+			  Total Points and Fees must be reported Exempt."""
+		if (row["loan_costs"] == "Exempt" or row["points_fees"] == "Exempt"):
+			row["loan_costs"] = "Exempt"
+			row["points_fees"] = "Exempt"
+
+		return row
+
+	def v713_const(self, row):
+		"""If the Automated Underwriting exemption election is taken,
+		1) Automated Underwriting System: 1 and
+			  Automated Underwriting System Result: 1 must be
+              reported 1111; and
+			2) Automated Underwriting System: 2, Automated
+			   Underwriting System: 3, Automated Underwriting
+			   System: 4, Automated Underwriting System: 5,
+			   Automated Underwriting System: Conditional Free
+			   Form Text Field for Code 5, Automated Underwriting
+			   System Result: 2, Automated Underwriting System
+			   Result: 3, Automated Underwriting System Result: 4,
+			   Automated Underwriting System Result: 5, and
+			   Automated Underwriting System Result: Conditional
+			   Free Form Text Field for Code 16 must be left blank."""
+		if row["aus_1"] == "1111":
+			row["aus_1"] = "1111" 
+			row["aus_result_1"] = "1111"
+			row["aus_2"] = "" 
+			row["aus_3"] = ""
+			row["aus_4"] = "" 
+			row["aus_5"] = ""
+			row["aus_code_5"] = ""
+			row["aus_result_2"] = ""
+			row["aus_result_3"] = "" 
+			row["aus_result_4"] = ""
+			row["aus_result_5"] = ""
+			row["aus_code_16"] = ""
+
+		return row
+		
+	def v714_const(self, row):
+		"""1) If the Application Channel exemption election is
+			taken, Submission of Application and Initially Payable
+			to Your Institution must be reported 1111."""
+		if (row["app_submission"] == "1111" or 
+			row["initially_payable"] == "1111"):
+			row["app_submission"] = "1111"
+			row["initially_payable"] = "1111"
+		return row
+		
+	def v715_const(self, row):
+		"""1) If the Non-Amortizing Features exemption election
+				is taken, Balloon Payment, Interest-Only Payments,
+				Negative Amortization and Other Non-amortizing
+				Features must be reported 1111."""
+		if (row["non_amort_features"] == "1111" or row["balloon"] == "1111" or row["int_only_pmts"] == "1111" or row["neg_amort"] == "1111"):
+			row["balloon"] = "1111" 
+			row["int_only_pmts"] = "1111" 
+			row['neg_amort'] = "1111" 
+			row["non_amort_features"] = "1111"
+
+		return row 
+
