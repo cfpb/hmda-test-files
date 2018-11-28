@@ -14,41 +14,42 @@ from lar_generator import lar_gen #Imports lar_gen class.
 #Instantiates lar_gen class as lar_gen. 
 lar_gen = lar_gen() 
 
-class CustomTestFiles(object):
+class LargeTestFiles(object):
     
     """
-    Returns a CustomTestFiles class object to create submission files
+    Returns a LargeTestFiles class object to create submission files
     with a specified number of rows.
     """
     
-    def __init__(self, old_filepath, new_filepath):
+    def __init__(self, source_filename, output_filename):
         
         """Instantiates the class with an existing file.""" 
         
-        #Stores the filepath to the old submission file. 
-        self.old_filepath = old_filepath 
-        #Stores the filepath for the new submission file. 
-        self.new_filepath = new_filepath
-        #Stores the filepath for the TS data.  
-        self.ts_filepath = "../edits_files/file_parts/ts_data.txt" 
-        #Stores the filepath for the LAR data. 
-        self.lar_filepath = "../edits_files/file_parts/lar_data.txt"
-        #Stores the filepath for the LAR schema.
-        self.lar_schema_filepath = "../schemas/lar_schema.json"  
+        #Stores the filename to the source submission file. 
+        self.source_filename = source_filename 
+        #Stores the filename for the output submission file. 
+        self.output_filename = output_filename
+        #Stores the filename for the TS data.  
+        self.ts_filename = "../edits_files/file_parts/ts_data.txt" 
+        #Stores the filename for the LAR data. 
+        self.lar_filename = "../edits_files/file_parts/lar_data.txt"
+        #Stores the filename for the LAR schema.
+        self.lar_schema_filename = "../schemas/lar_schema.json"  
         
         print("Instantiated.")
             
     def create_file(self, row_count=None):
         """
-        Creates a new custom file, passing in a row count. 
+        Creates a new large test file, passing in a row count to 
+        set a maximum number of rows. 
         """
         #Creates new files and stores dataframes for LAR and TS data.
         self.load_lar_ts_df() 
 
-        #Saves a file of LAR with a new number of rows.
+        #Saves a file of LAR with the number of rows specified.
         self.new_lar_rows(row_count=row_count) 
         
-        #Places the dataframe of LAR in a file with a TS row. 
+        #Writes the LAR dataframe to file with a TS row. 
         self.lar_to_hmda_file()  
     
     def load_lar_ts_df(self):  
@@ -57,33 +58,33 @@ class CustomTestFiles(object):
         Loads the column names for the LAR dataframe.
         Stores variables for the bank name and LEI.  
         """
-        #Opening the submission file.
-        with open(self.old_filepath, 'r+' ) as f:  
+        #Opening the source file to read in its data.
+        with open(self.source_filename, 'r+' ) as f:  
             #Reading in the first row as the TS submission. 
             ts_row = f.readline()
             #Reading in the other rows as the LAR submission. 
             lar_rows = f.readlines() 
         
         #Writes a file of TS data. 
-        with open(self.ts_filepath, 'w') as out_ts: 
+        with open(self.ts_filename, 'w') as out_ts: 
             out_ts.writelines(ts_row)
 
         #Writes a file of LAR data.
-        with open(self.lar_filepath, 'w') as out_lar: 
+        with open(self.lar_filename, 'w') as out_lar: 
             out_lar.writelines(lar_rows)
 
         #Loads in the schema for the LAR data. 
-        with open(self.lar_schema_filepath) as d: 
+        with open(self.lar_schema_filename) as d: 
             headers = json.load(d)
             headers = pd.DataFrame(headers)
          
         #Saves a dataframe of TS data in memory. 
-        self.ts_df = pd.read_csv(self.ts_filepath, 
+        self.ts_df = pd.read_csv(self.ts_filename, 
             delimiter="|", header=None, dtype='object',
             keep_default_na=False) 
 
         #Saves a dataframe of LAR data in memory. 
-        self.lar_df = pd.read_csv(self.lar_filepath, 
+        self.lar_df = pd.read_csv(self.lar_filename, 
             delimiter="|", header=None, dtype='object',
             keep_default_na=False) 
 
@@ -124,13 +125,13 @@ class CustomTestFiles(object):
         to generate a unique set of ULIs."""  
         self.new_lar_df = self.unique_uli(new_lar_df)
 
-        #Saves the new dataframe to the lar_filepath. 
-        self.new_lar_df.to_csv(self.lar_filepath, sep="|", 
+        #Saves the new dataframe to the lar_filename. 
+        self.new_lar_df.to_csv(self.lar_filename, sep="|", 
             index=False, header=None) 
         
-        #Stores the raw data from the lar_filepath.
+        #Stores the raw data from the lar_filename.
         #This variable will be used in the lar_to_hmda_file function. 
-        with open(self.lar_filepath, 'r' ) as f:
+        with open(self.lar_filename, 'r' ) as f:
             self.new_lar_data = f.readlines()
 
         #Stores the new number of rows.
@@ -166,24 +167,24 @@ class CustomTestFiles(object):
         
         """
         Creates a HMDA submission file, passing in a dataframe of LAR 
-        rows, the TS file, and a filepath to store the file. 
+        rows, the TS file, and a filename to store the file. 
         """
 
-        #Creates a filepath to store the new HMDA submission file.
-        os.makedirs(os.path.dirname(self.new_filepath), exist_ok=True)
+        #Creates a filename to store the new HMDA submission file.
+        os.makedirs(os.path.dirname(self.output_filename), exist_ok=True)
         
-        """Copies the TS text file into the new filepath specified 
+        """Copies the TS text file into the new filename specified 
         in the function."""
-        sh.copyfile(self.ts_filepath, self.new_filepath) 
+        sh.copyfile(self.ts_filename, self.output_filename) 
         
-        #Reads in the new_filepath text file and appends the LAR data. 
-        with open(self.new_filepath, 'a') as append_lar:
+        #Reads in the ouput_filename text file and appends the LAR data. 
+        with open(self.output_filename, 'a') as append_lar:
             append_lar.writelines(self.new_lar_data)
 
         """Prints out a statement with the number of rows created, 
         and the location of the new file."""
         statement = (str("{:,}".format(self.new_row_count)) + 
             " Row File Created for " + str(self.bank_name) + 
-            " File Path: " + str(self.new_filepath))
+            " File Path: " + str(self.output_filename))
         
         print(statement)
