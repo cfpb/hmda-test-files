@@ -89,7 +89,7 @@ class MacroEdits(object):
 	def q635_edit(self, row_count=2000):
 		
 		"""Produces a file with a specified row count that fails 
-		Macro Quality Edit, Q635.Requires a minimum file size of 
+		Macro Quality Edit, Q635. Requires a minimum file size of 
 		5 LAR rows.""" 
 
 		edit_name = "q635"
@@ -103,7 +103,7 @@ class MacroEdits(object):
 	def q636_edit(self, row_count=2000):
 		
 		"""Produces a file with a specified row count that fails 
-		Macro Quality Edit, Q636.Requires a minimum file size of 
+		Macro Quality Edit, Q636. Requires a minimum file size of 
 		5 LAR rows.""" 
 
 		edit_name = "q636"
@@ -116,7 +116,7 @@ class MacroEdits(object):
 	def q637_edit(self, row_count=2000):
 		
 		"""Produces a file with a specified row count that fails 
-		Macro Quality Edit, Q637.Requires a minimum file size of 
+		Macro Quality Edit, Q637. Requires a minimum file size of 
 		5 LAR rows.""" 
 
 		edit_name = "q637"
@@ -131,7 +131,7 @@ class MacroEdits(object):
 	def q638_edit(self, row_count=2000):
 		
 		"""Produces a file with a specified row count that fails 
-		Macro Quality Edit, Q638.Requires a minimum file size of 
+		Macro Quality Edit, Q638. Requires a minimum file size of 
 		5 LAR rows.""" 
 
 		edit_name = "q638"
@@ -146,7 +146,7 @@ class MacroEdits(object):
 	def q639_edit(self, row_count=2000):
 		
 		"""Produces a file with a specified row count that fails 
-		Macro Quality Edit, Q639.Requires a minimum file size of 
+		Macro Quality Edit, Q639. Requires a minimum file size of 
 		1 LAR row."""
 
 		edit_name = "q639" 
@@ -171,7 +171,7 @@ class MacroEdits(object):
 	def q640_edit(self, row_count=2000):
 		
 		"""Produces a file with a specified row count that fails 
-		Macro Quality Edit, Q640.Requires a minimum file size of 
+		Macro Quality Edit, Q640. Requires a minimum file size of 
 		5 LAR rows.""" 
 
 		edit_name = "q640"
