@@ -80,12 +80,12 @@ class LargeTestFiles(object):
          
         #Saves a dataframe of TS data in memory. 
         self.ts_df = pd.read_csv(self.ts_filename, 
-            delimiter="|", header=None, dtype='object',
+            sep="|", header=None, dtype='object',
             keep_default_na=False) 
 
         #Saves a dataframe of LAR data in memory. 
         self.lar_df = pd.read_csv(self.lar_filename, 
-            delimiter="|", header=None, dtype='object',
+            sep="|", header=None, dtype='object',
             keep_default_na=False) 
 
         #Places the column names to the LAR data. 
@@ -169,6 +169,15 @@ class LargeTestFiles(object):
         Creates a HMDA submission file, passing in a dataframe of LAR 
         rows, the TS file, and a filename to store the file. 
         """
+
+        ts_row = pd.read_csv(self.ts_filename, 
+            sep="|", header=None, dtype='object',
+            keep_default_na=False) 
+        
+        ts_row[12] = str(self.new_row_count)
+
+        ts_row.to_csv(self.ts_filename, sep="|", 
+            index=False, header=None) 
 
         #Creates a filename to store the new HMDA submission file.
         os.makedirs(os.path.dirname(self.output_filename), exist_ok=True)
