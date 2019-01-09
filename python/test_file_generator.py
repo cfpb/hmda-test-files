@@ -6,7 +6,9 @@ import string
 import utils
 
 class test_data(object):
-	"""This class alters clean synthetic data files in order to cause the altered file to fail the specified edit. Modified files may fail other edits as well."""
+	"""This class alters clean synthetic data files in order to cause the 
+	altered file to fail the specified edit. Modified files may fail other 
+	edits as well."""
 
 	def __init__(self, ts_schema, lar_schema):
 		"""Set initial class variables"""
@@ -18,11 +20,15 @@ class test_data(object):
 		self.ts_field_names = list(ts_schema.field)
 
 		#load CBSA data for geography testing edits
-		use_cols = ['name', 'metDivName', 'countyFips', 'geoIdMsa', 'metDivFp', 'smallCounty', 'tracts', 'stateCode']
-		cbsa_cols = ['name', 'metDivName', 'state', 'countyFips', 'county', 'tracts','geoIdMsa', 'metDivFp', 'smallCounty', 
+		use_cols = ['name', 'metDivName', 'countyFips', 'geoIdMsa', 
+		'metDivFp', 'smallCounty', 'tracts', 'stateCode']
+		cbsa_cols = ['name', 'metDivName', 'state', 'countyFips', 'county', 
+		'tracts','geoIdMsa', 'metDivFp', 'smallCounty', 
 			 'stateCode', 'tractDecimal']
-		self.cbsa_data = pd.read_csv('../dependencies/tract_to_cbsa_2015.txt', usecols=use_cols, delimiter='|', 
-					header=None, names=cbsa_cols, dtype=object) #load tract to CBSA data from platform file
+
+		self.cbsa_data = pd.read_csv('../dependencies/tract_to_cbsa_2015.txt', 
+		usecols=use_cols, delimiter='|', 
+		header=None, names=cbsa_cols, dtype=object) #load tract to CBSA data from platform file
 	
 	def load_data_frames(self, ts_data, lar_data):
 		"""Receives dataframes for TS and LAR and writes them as object attributes"""
@@ -183,12 +189,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v606_file(self):
-		"""Convert number of entries to a negative decimal number."""
+		"""Convert number of entries to a negative number."""
 		name = "v606.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		ts.lar_entries = "-1.67"
+		ts.lar_entries = "-15"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -203,8 +209,9 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v608_file(self):
-		"""For rows with a ULI: changes ULI to be 22 characters or less or more than 45 characters. 
-		   For rows with a loan ID: changes loan ID (listed as ULI) to be blank or longer than 22 characters.
+		"""For rows with a ULI: changes ULI to be 22 characters 
+		or less or more than 45 characters. For rows with a loan ID: 
+		changes loan ID (listed as ULI) to be longer than 22 characters.
 		Preserves the LEI prefix of ULI to reduce the number of edits failed."""
 		name = "v608.txt"
 		path = self.validity_path
@@ -219,7 +226,7 @@ class test_data(object):
 		lar_uli_fail.uli = lar_uli_fail.uli.apply(lambda x: random.choice([x, x[:21]]))
 		#fail condition for loan id
 		lar_loan_id_fail.uli = lar_loan_id_fail.uli.map(lambda x: ''.join(random.choice(string.ascii_uppercase + string.digits)
-			for _ in random.choice([range(0), range(30)])))
+			for _ in range(30)))
 		#recombine fail data
 		lar = pd.concat([lar_uli_fail, lar_loan_id_fail])
 		print("writing {name}".format(name=name))
@@ -237,12 +244,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v610_1_file(self):
-		"""Change application date to blank."""
+		"""Change application date to nine 2's."""
 		name = "v610_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.app_date = ""
+		lar.app_date = "222222222"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -271,22 +278,22 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v611_file(self):
-		"""Sets loan type to 5 or blank."""
+		"""Sets loan type to 5."""
 		name = "v611.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.loan_type = lar.loan_type.map(lambda x: random.choice(("5", "")))
+		lar.loan_type = lar.loan_type.map(lambda x: random.choice(("5")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v612_1_file(self):
-		"""Set loan purpose to 3 or blank."""
+		"""Set loan purpose to 3."""
 		name = "v612_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.loan_purpose = lar.loan_purpose.map(lambda x: random.choice(("3", "")))
+		lar.loan_purpose = lar.loan_purpose.map(lambda x: random.choice("3"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -302,12 +309,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v613_1_file(self):
-		"""Set preapproval to 3 or blank."""
+		"""Set preapproval to 3."""
 		name = "v613_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.preapproval = lar.preapproval.map(lambda x: random.choice(("3", "")))
+		lar.preapproval = lar.preapproval.map(lambda x: random.choice("3"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -389,12 +396,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v615_1_file(self):
-		"""Set construction method to random 3 or blank."""
+		"""Set construction method to random 3."""
 		name = "v615_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.const_method = lar.const_method.map(lambda x: random.choice(("3", "")))
+		lar.const_method = lar.const_method.map(lambda x: random.choice("3"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -421,42 +428,42 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v616_file(self):
-		"""Set occupancy to random 4 or blank."""
+		"""Set occupancy to random 4."""
 		name = "v616.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.occ_type = lar.occ_type.map(lambda x: random.choice(("4", "")))
+		lar.occ_type = lar.occ_type.map(lambda x: random.choice("4"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v617_file(self):
-		"""Set loan amount to random 0 or blank."""
+		"""Set loan amount to random 0."""
 		name = "v617.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.loan_amount = lar.loan_amount.map(lambda x: random.choice(("0", "")))
+		lar.loan_amount = lar.loan_amount.map(lambda x: random.choice("0"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v618_file(self):
-		"""Set action taken to random 0, NA or blank."""
+		"""Set action taken to random 0, or NA."""
 		name = "v618.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.action_taken = lar.action_taken.map(lambda x: random.choice(("0", "NA", "")))
+		lar.action_taken = lar.action_taken.map(lambda x: random.choice(("0", "NA")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v619_1_file(self):
-		"""Set action taken date to random NA or blank."""
+		"""Set action taken date to random NA."""
 		name = "v619_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.action_date = lar.action_date.map(lambda x: random.choice(("NA", "")))
+		lar.action_date = lar.action_date.map(lambda x: random.choice("NA"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -692,25 +699,14 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v630_1_file(self):
+	def v630_file(self):
 		"""Set applicant ethnicity 1 to 4. Set applicant ethnicity basis to 2."""
-		name = "v630_1.txt"
+		name = "v630.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.app_eth_basis = "2"
 		lar.app_eth_1 = "4"
-		print("writing {name}".format(name=name))
-		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-
-	def v630_2_file(self):
-		"""Set applicant ethnicity basis to 3. Set applicant ethnicity 1 to 2."""
-		name = "v630_2.txt"
-		path = self.validity_path
-		ts = self.ts_df.copy()
-		lar = self.lar_df.copy()
-		lar.app_eth_basis = "3"
-		lar.app_eth_1 = "2"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -767,12 +763,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v632_1_file(self):
-		"""Set co-app ethnicity basis to blank."""
+		"""Set co-app ethnicity basis to 5"""
 		name = "v632_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.co_app_eth_basis = ""
+		lar.co_app_eth_basis = "5"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -802,25 +798,14 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v633_1_file(self):
+	def v633_file(self):
 		"""Set co-app ethnicity 1 to 4. Set co-app ethnicity basis to 1."""
-		name = "v633_1.txt"
+		name = "v633.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.co_app_eth_1 = "4"
 		lar.co_app_eth_basis = "1"
-		print("writing {name}".format(name=name))
-		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-
-	def v633_2_file(self):
-		"""Set co-app ethnicity basis to 3. Set co-app ethnicity 1 to random choice of 3 or 4."""
-		name = "v633_2.txt"
-		path = self.validity_path
-		ts = self.ts_df.copy()
-		lar = self.lar_df.copy()
-		lar.co_app_eth_1 = lar.co_app_eth_1.map(lambda x: random.choice(("1", "2")))
-		lar.co_app_eth_basis = "3"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -937,25 +922,14 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v637_1_file(self):
+	def v637_file(self):
 		"""Set app race 1 to 7. Set app race basis to random choice of 1, 2."""
-		name = "v637_1.txt"
+		name = "v637.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.app_race_1 = "7"
 		lar.app_race_basis = lar.app_race_basis.map(lambda x: random.choice(("1", "2")))
-		print("writing {name}".format(name=name))
-		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-
-	def v637_2_file(self):
-		"""Set app race basis to 3. Set app race 1 to random choice of 1-5."""
-		name = "v637_2.txt"
-		path = self.validity_path
-		ts = self.ts_df.copy()
-		lar = self.lar_df.copy()
-		lar.app_race_basis = "3"
-		lar.app_race_1 = lar.app_race_1.map(lambda x: random.choice(("1", "2", "3", "4", "5")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1019,7 +993,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.co_app_race_basis = ""
+		lar.co_app_race_basis = "5"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1053,25 +1027,14 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v640_1_file(self):
+	def v640_file(self):
 		"""Set co-app race 1 to 7. Set co-app race basis to random choice of 1, 2."""
-		name = "v640_1.txt"
+		name = "v640.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.co_app_race_basis = lar.co_app_race_basis.map(lambda x: random.choice(("1", "2")))
 		lar.co_app_race_1 = "7"
-		print("writing {name}".format(name=name))
-		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-
-	def v640_2_file(self):
-		"""Set co-app race basis to 3. Set co-app race 1 to random choice of 1-5."""
-		name = "v640_2.txt"
-		path = self.validity_path
-		ts = self.ts_df.copy()
-		lar = self.lar_df.copy()
-		lar.co_app_race_basis = "3"
-		lar.co_app_race_1 = lar.co_app_race_1.map(lambda x: random.choice(("1", "2", "3", "4", "5")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1087,44 +1050,33 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v642_1_file(self):
-		"""Set applicant sex to blank."""
+		"""Set applicant sex to 5."""
 		name = "v642_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.app_sex = ""
+		lar.app_sex = "5"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v642_2_file(self):
-		"""Set applicant sex basis to blank."""
+		"""Set applicant sex basis to 5."""
 		name = "v642_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.app_sex_basis = ""
+		lar.app_sex_basis = "5"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v643_1_file(self):
+	def v643_file(self):
 		"""Set applicant sex basis to 1. Set applicant sex to 3."""
-		name = "v643_1.txt"
+		name = "v643.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.app_sex_basis = "1"
 		lar.app_sex = "3"
-		print("writing {name}".format(name=name))
-		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-
-	def v643_2_file(self):
-		"""Set applicant sex to random choice of 1, 2. Set applicant sex basis to random choice of 3, 4."""
-		name = "v643_2.txt"
-		path = self.validity_path
-		ts = self.ts_df.copy()
-		lar = self.lar_df.copy()
-		lar.app_sex = lar.app_sex.map(lambda x: random.choice(("1", "2")))
-		lar.app_sex_basis = lar.app_sex_basis.map(lambda x: random.choice(("3", "4")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1150,20 +1102,9 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v645_1_file(self):
-		"""Set applicant sex basis to 3. Set applicant sex to random choice of 1, 2."""
-		name = "v645_1.txt"
-		path = self.validity_path
-		ts = self.ts_df.copy()
-		lar = self.lar_df.copy()
-		lar.app_sex_basis = "3"
-		lar.app_sex = lar.app_sex.map(lambda x: random.choice(("1", "2")))
-		print("writing {name}".format(name=name))
-		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-
-	def v645_2_file(self):
+	def v645_file(self):
 		"""Set applicant sex to 4. Set applicant sex basis to random choice of 1, 2."""
-		name = "v645_2.txt"
+		name = "v645.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -1173,44 +1114,33 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v646_1_file(self):
-		"""Set co-applicant sex to blank."""
+		"""Set co-applicant sex to 5."""
 		name = "v646_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.co_app_sex = ""
+		lar.co_app_sex = "5"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v646_2_file(self):
-		"""Set co-applicant sex basis to blank."""
+		"""Set co-applicant sex basis to 5."""
 		name = "v646_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.co_app_sex_basis = ""
+		lar.co_app_sex_basis = "5"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v647_1_file(self):
+	def v647_file(self):
 		"""Set co-app sex basis to 1. Set co-app sex to random choice of 3, 4."""
-		name = "v647_1.txt"
+		name = "v647.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.co_app_sex_basis = "1"
 		lar.co_app_sex = lar.co_app_sex.map(lambda x: random.choice(("3", "4")))
-		print("writing {name}".format(name=name))
-		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-
-	def v647_2_file(self):
-		"""Set co-app sex to random choice of 1, 2. Set co-app sex basis to random choice of 3, 4."""
-		name = "v647_2.txt"
-		path = self.validity_path
-		ts = self.ts_df.copy()
-		lar = self.lar_df.copy()
-		lar.co_app_sex_basis = lar.co_app_sex_basis.map(lambda x: random.choice(("3", "4")))
-		lar.co_app_sex = lar.co_app_sex.map(lambda x: random.choice(("1", "2")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1236,20 +1166,9 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v649_1_file(self):
-		"""Set co-app sex basis to 3. Set co-app sex to random choice of 1, 2."""
-		name = "v649_1.txt"
-		path = self.validity_path
-		ts = self.ts_df.copy()
-		lar = self.lar_df.copy()
-		lar.co_app_sex_basis = "3"
-		lar.co_app_sex = lar.co_app_sex.map(lambda x: random.choice(("1", "2")))
-		print("writing {name}".format(name=name))
-		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
-
-	def v649_2_file(self):
+	def v649_file(self):
 		"""Set co-app sex to 4. Set co-app sex basis to random choice of 1, 2."""
-		name = "v649_2.txt"
+		name = "v649.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -1270,12 +1189,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v651_1_file(self):
-		"""Set app age to random choice of 0 or blank."""
+		"""Set app age to 0."""
 		name = "v651_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.app_age = lar.app_age.map(lambda x: random.choice(("0", "")))
+		lar.app_age = lar.app_age.map(lambda x: random.choice("0"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1293,12 +1212,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v652_1_file(self):
-		"""Set co-app age to random choice of 0, blank."""
+		"""Set co-app age to 0."""
 		name = "v652_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.co_app_age = lar.co_app_age.map(lambda x: random.choice(("0", "")))
+		lar.co_app_age = lar.co_app_age.map(lambda x: random.choice("0"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1321,7 +1240,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.income = lar.income.map(lambda x: random.choice(("1.5", "")))
+		lar.income = lar.income.apply(lambda x: "1.5")
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1363,12 +1282,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v656_1_file(self):
-		"""Set purchaser type to random of blank or 10."""
+		"""Set purchaser type to 10."""
 		name = "v656_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.purchaser_type = lar.purchaser_type.map(lambda x: random.choice(("", "10")))
+		lar.purchaser_type = lar.purchaser_type.map(lambda x: random.choice("10"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1416,12 +1335,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v658_1_file(self):
-		"""Set HOEPA status to blank."""
+		"""Set HOEPA status to 5."""
 		name = "v658_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.hoepa = ""
+		lar.hoepa = "5"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1437,33 +1356,33 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v659_file(self):
-		"""Set lien status to random of 3, blank."""
+		"""Set lien status to 3."""
 		name = "v659.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.lien = lar.lien.map(lambda x: random.choice(("3", "")))
+		lar.lien = lar.lien.apply(lambda x: "3")
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v660_1_file(self):
-		"""Set app credit score to random of blank or "aaa"."""
+		"""Set app credit score to "aaa"."""
 		name = "v660_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.app_credit_score = lar.app_credit_score.map(lambda x: random.choice(("aaa", "")))
+		lar.app_credit_score = lar.app_credit_score.apply(lambda x: "aaa")
 		lar.action_taken = lar.action_taken.map(lambda x: random.choice(("2", "3", "4", "5", "7", "8")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v660_2_file(self):
-		"""Set app credit score model to random of blank or 10."""
+		"""Set app credit score model to 10."""
 		name = "v660_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.app_score_name = lar.app_score_name.map(lambda x: random.choice(("10", "")))
+		lar.app_score_name = lar.app_score_name.apply(lambda x: "10")
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1534,17 +1453,17 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.co_app_credit_score = lar.co_app_credit_score.map(lambda x: random.choice(("aaa", "")))
+		lar.co_app_credit_score = lar.co_app_credit_score.map(lambda x: random.choice("aaa"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v665_2_file(self):
-		"""Set co-app score name to random of 0, blank."""
+		"""Set co-app score name to 0."""
 		name = "v665_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.co_app_score_name = lar.co_app_score_name.map(lambda x: random.choice(("0", "")))
+		lar.co_app_score_name = lar.co_app_score_name.apply(lambda x: "0")
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1624,7 +1543,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.denial_1 = ""
+		lar.denial_1 = "25"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1683,7 +1602,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.denial_1 = lar.denial_1.map(lambda x: random.choice(str([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, -1])))
+		lar.denial_1 = lar.denial_1.map(lambda x: random.choice(str([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])))
 		lar.action_taken = lar.action_taken.map(lambda x: random.choice(("1", "2", "4", "5", "6", "8")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
@@ -1722,7 +1641,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.loan_costs = lar.loan_costs.map(lambda x: random.choice(("-1", "")))
+		lar.loan_costs = lar.loan_costs.map(lambda x: random.choice("4.5"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1841,7 +1760,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.origination_fee = lar.origination_fee.map(lambda x: random.choice(("-1", "")))
+		lar.origination_fee = lar.origination_fee.map(lambda x: random.choice("HM"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -1998,12 +1917,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v677_1_file(self):
-		"""Set interest rate to 0, -1 or blank."""
+		"""Set interest rate to 0, or -1."""
 		name = "v677_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.interest_rate = lar.interest_rate.map(lambda x: random.choice(("0", "-1", "")))
+		lar.interest_rate = lar.interest_rate.map(lambda x: random.choice(("0", "-1")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2019,12 +1938,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v678_1_file(self):
-		"""Set penalty term to 0, -1, or blank."""
+		"""Set penalty term to 0, or -1."""
 		name = "v678_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.prepayment_penalty = lar.prepayment_penalty.map(lambda x: random.choice(("0", "-1", "")))
+		lar.prepayment_penalty = lar.prepayment_penalty.map(lambda x: random.choice(("0", "-1")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2073,12 +1992,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v679_1_file(self):
-		"""Set DTI to blank or aa."""
+		"""Set DTI to aa."""
 		name = "v679_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.dti = lar.dti.map(lambda x: random.choice(("", "aa")))
+		lar.dti = lar.dti.map(lambda x: random.choice(("aa")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2094,7 +2013,7 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v679_3_file(self):
-		"""Set affordable units to 1. Set DTI to 15 or blank."""
+		"""Set affordable units to 1. Set DTI to 15."""
 		name = "v679_3.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
@@ -2123,7 +2042,7 @@ class test_data(object):
 
 	def v680_2_file(self):
 		"""Set app eth 1 to 4. Set app race 1 to 7. Set app sex to 4. Set co-app eth 1 to 4.
-		Set co-app race 1 to 7. Set co-app sex to 4. Set DTI to 15 or blank."""
+		Set co-app race 1 to 7. Set co-app sex to 4. Set DTI to 15."""
 		name = "v680_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
@@ -2139,12 +2058,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v681_1_file(self):
-		"""Set CLTV to 0, blank or -1."""
+		"""Set CLTV to 0 or -1."""
 		name = "v681_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.cltv = lar.cltv.map(lambda x: random.choice(("0", "", "-1")))
+		lar.cltv = lar.cltv.map(lambda x: random.choice(("0", "-1")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2155,7 +2074,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.action_taken = lar.action_taken.map(lambda x: random.choice(("4", "5", "6")))
-		lar.cltv = "15"
+		lar.cltv = "None"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2165,7 +2084,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.loan_term = lar.loan_term.map(lambda x: random.choice(("0", "")))
+		lar.loan_term = lar.loan_term.map(lambda x: random.choice("0"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2186,7 +2105,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.intro_rate = lar.intro_rate.map(lambda x: random.choice(("0", "-1", "")))
+		lar.intro_rate = lar.intro_rate.map(lambda x: random.choice(("0", "-1")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2196,7 +2115,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.balloon = lar.balloon.map(lambda x: random.choice(("0", "", "NA")))
+		lar.balloon = lar.balloon.map(lambda x: random.choice(("3")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2206,7 +2125,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.int_only_pmts = lar.int_only_pmts.map(lambda x: random.choice(("0", "")))
+		lar.int_only_pmts = lar.int_only_pmts.map(lambda x: random.choice(("0")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2226,7 +2145,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.non_amort_features = lar.non_amort_features.map(lambda x: random.choice(("0", "")))
+		lar.non_amort_features = lar.non_amort_features.map(lambda x: random.choice(("0")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2236,7 +2155,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.property_value = lar.property_value.map(lambda x: random.choice(("0", "")))
+		lar.property_value = lar.property_value.map(lambda x: random.choice(("0")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2257,7 +2176,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.manufactured_type = lar.manufactured_type.map(lambda x: random.choice(("", "0")))
+		lar.manufactured_type = lar.manufactured_type.map(lambda x: random.choice(("0")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2291,7 +2210,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.manufactured_interest = lar.manufactured_interest.map(lambda x: random.choice(("0", "")))
+		lar.manufactured_interest = lar.manufactured_interest.map(lambda x: random.choice(("0")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2325,7 +2244,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.total_units = lar.total_units.map(lambda x: random.choice(("0", "")))
+		lar.total_units = lar.total_units.map(lambda x: random.choice(("0")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2335,7 +2254,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.affordable_units = ""
+		lar.affordable_units = "40"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2347,7 +2266,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.total_units = lar.total_units.map(lambda x: random.choice(("1", "2", "3", "4")))
-		lar.affordable_units = random.choice(("0", ""))
+		lar.affordable_units = random.choice(("0"))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 	
@@ -2369,7 +2288,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.app_submission = lar.app_submission.map(lambda x: random.choice(("0","")))
+		lar.app_submission = lar.app_submission.map(lambda x: random.choice(("0")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2402,7 +2321,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.initially_payable = lar.initially_payable.map(lambda x: random.choice(("0", "")))
+		lar.initially_payable = lar.initially_payable.map(lambda x: random.choice(("0")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2444,7 +2363,6 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.aus_1 = ""
 		lar.aus_2 = "6"
 		lar.aus_3 = "6"
 		lar.aus_4 = "6"
@@ -2458,7 +2376,6 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.aus_result_1 = ""
 		lar.aus_result_2 = "17"
 		lar.aus_result_3 = "17"
 		lar.aus_result_4 = "17"
@@ -2478,8 +2395,8 @@ class test_data(object):
 		lar.aus_3 = ""
 		lar.aus_4 = ""
 		lar.aus_5 = ""
-		lar.aus_result_1 = ""
-		lar.aus_result_2 = ""
+		lar.aus_result_1 = "9"
+		lar.aus_result_2 = "10"
 		lar.aus_result_3 = ""
 		lar.aus_result_4 = ""
 		lar.aus_result_5 = ""
@@ -2659,7 +2576,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.reverse_mortgage = lar.reverse_mortgage.map(lambda x: random.choice(("0", "")))
+		lar.reverse_mortgage = lar.reverse_mortgage.map(lambda x: random.choice(("0")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2669,7 +2586,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.open_end_credit = lar.open_end_credit.map(lambda x: random.choice(("0", "")))
+		lar.open_end_credit = lar.open_end_credit.map(lambda x: random.choice(("0")))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2679,7 +2596,140 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.business_purpose = lar.business_purpose.map(lambda x: random.choice(("0", "")))
+		lar.business_purpose = lar.business_purpose.map(lambda x: random.choice(("0")))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v709(self):
+		"""Set City and Zip Code to Exempt and Street Address to not Exempt"""
+		name = "v709.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.street_address = "1234 Hocus Potato Way"
+		lar.city = "Exempt"
+		lar.zip_code = "Exempt"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v710_1(self):
+		"""Set Applicant Credit Score to Exempt, and set Co-Applicant Credit Score,
+		Applicant Score Name, and Co-Applicant Score Name to 650, 1, and 1 
+		respectively."""
+		name = "v710_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_credit_score = "1111"
+		lar.co_app_credit_score = "650"
+		lar.app_score_name = "1"
+		lar.co_app_score_name = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v710_2(self):
+		"""Set Applicant Credit Score to Exempt, and set
+		Applicant Score Name, Co-Applicant Score Name, Applicant Score Code 8
+		and Co-Applicant Score Code 8 to 8, 8, "New Scoring Model", and "New Scoring Model" 
+		respectively."""
+		name = "v710_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_credit_score = "1111"
+		lar.app_score_name = "8"
+		lar.co_app_score_name = "8"
+		lar.app_score_code_8 = "New Scoring Model"
+		lar.co_app_score_code_8 = "New Scoring Model"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v711(self):
+		"""Set Denial 1 to Exempt, and set
+		Denial 2, Denial 3, Denial 4
+		and Denial Code 9 to 2, 3, 4, 
+		respectively."""
+		name = "v711.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.denial_1 = "1111"
+		lar.denial_2 = "2"
+		lar.denial_3 = "3"
+		lar.denial_4 = "4"
+		lar.denial_code_9 = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v712(self):
+		"""Set Loan Costs to Exempt, and set
+		Points and Fees to 1000."""
+		name = "v712.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.loan_costs = "Exempt"
+		lar.points_fees = "1000"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v713_1(self):
+		"""Set AUS 1 to Exempt, and AUS Result 1 to 1."""
+		name = "v713_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_1 = "1111"
+		lar.aus_result_1 = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+	
+	def v713_2(self):
+		"""Set AUS 1 to Exempt, AUS 2-5, AUS Result 2-5, 
+		AUS Code 5, and AUS Code 16 to 1."""
+		name = "v713_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.aus_1 = "1111"
+		lar.aus_2 = "1"
+		lar.aus_3 = "1"
+		lar.aus_4 = "1"
+		lar.aus_5 = "1"
+		lar.aus_result_1 = "1"
+		lar.aus_result_2 = "1"
+		lar.aus_result_3 = "1"
+		lar.aus_result_4 = "1"
+		lar.aus_result_5 = "1"
+		lar.aus_code_5 = "1"
+		lar.aus_code_16 = "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+		
+	def v714_const(self):
+		"""Set Submission of Application to Exempt and Initially Payable
+			to Your Institution to 1."""
+		name = "v714.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_submission = "1111"
+		lar.initially_payable= "1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v715_const(self):
+		"""Set Balloon Payments to Exempt; set 
+		Interest-Only Payments, Negative Amortizing Features, and Non-Amortizing Features 
+		to 1."""
+		name = "v715.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.balloon = "1111"
+		lar.non_amort_features = "1"
+		lar.int_only_pmts = "1" 
+		lar.neg_amort = "1" 
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
