@@ -14,6 +14,32 @@ from lar_generator import lar_gen #Imports lar_gen class.
 #Instantiates lar_gen class as lar_gen. 
 lar_gen = lar_gen() 
 
+def unique_uli(new_lar_df = None, lei=None):
+    """Generates a new set of ULI's for a LAR dataframe."""
+    
+    #Copying over ULIs with the LEI.
+    new_lar_df["uli"] = new_lar_df["uli"].apply(lambda x: 
+        lei)  
+    
+    """Generates a loan ID as a random 23-character 
+    string for each LEI.""" 
+    new_lar_df["uli"] = new_lar_df["uli"].apply(lambda x: x + 
+        lar_gen.char_string_gen(23)) 
+    
+    # Adds a check digit to each.
+    new_lar_df['uli'] = new_lar_df["uli"].apply(lambda x: x + 
+        lar_gen.check_digit_gen(ULI=x))
+
+    """If ULIs are duplicated, the unique_uli function 
+    is applied again.""" 
+    if len(new_lar_df['uli']) > len(set(new_lar_df['uli'])):
+        print("Re-Running")
+        self.unique_uli(new_lar_df)
+    else:
+        print("Unique ULIs Assigned")
+
+    return new_lar_df
+
 class LargeTestFiles(object):
     
     """
@@ -21,7 +47,8 @@ class LargeTestFiles(object):
     with a specified number of rows.
     """
     
-    def __init__(self, source_filepath, source_filename, output_filepath, output_filename):
+    def __init__(self, source_filepath, source_filename, 
+        output_filepath, output_filename):
         
         """Instantiates the class with an existing file.""" 
         
@@ -95,33 +122,7 @@ class LargeTestFiles(object):
         
         """Applies the unique_uli function to the new LAR dataframe 
         to generate a unique set of ULIs."""  
-        new_lar_df = self.unique_uli(new_lar_df)
-
-        return new_lar_df
-         
-    def unique_uli(self, new_lar_df = None):
-        """Generates a new set of ULI's for a LAR dataframe."""
-        
-        #Copying over ULIs with the LEI.
-        new_lar_df["uli"] = new_lar_df["uli"].apply(lambda x: 
-            self.lei)  
-        
-        """Generates a loan ID as a random 23-character 
-        string for each LEI.""" 
-        new_lar_df["uli"] = new_lar_df["uli"].apply(lambda x: x + 
-            lar_gen.char_string_gen(23)) 
-        
-        # Adds a check digit to each.
-        new_lar_df['uli'] = new_lar_df["uli"].apply(lambda x: x + 
-            lar_gen.check_digit_gen(ULI=x))
-
-        """If ULIs are duplicated, the unique_uli function 
-        is applied again.""" 
-        if len(new_lar_df['uli']) > len(set(new_lar_df['uli'])):
-            print("Re-Running")
-            self.unique_uli(new_lar_df)
-        else:
-            print("Unique ULIs Assigned")
+        new_lar_df = unique_uli(new_lar_df=new_lar_df, lei=self.lei)
 
         return new_lar_df  
 

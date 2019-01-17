@@ -37,8 +37,10 @@ newly created file."""
 
 #The class is instantiated with an existing source file. 
 large_file = LargeTestFiles(
-	source_filename="../edits_files/clean_file_1000_rows.txt", 
-	output_filename="../edits_files/clean_file_4000_rows.txt" )
+	source_filepath="../edits_files/",
+	source_filename= "clean_file_100_rows.txt",
+	output_filepath = "../edits_files/",
+	output_filename="clean_file_4000_rows.txt" )
 
 
 # In[5]:
