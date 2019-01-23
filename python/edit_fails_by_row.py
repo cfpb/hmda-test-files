@@ -32,7 +32,7 @@ class EditFailsByRow(object):
 
 		#Storing the first LAR row of the clean file. 
 		self.passes_all_lar = self.passes_all_lar.iloc[0:1]
-		print(self.passes_all_lar)
+		#print(self.passes_all_lar)
 
 		#Storing the LEI in a global variable. 
 		self.lei = self.ts_data.iloc[0][14]
@@ -47,7 +47,7 @@ class EditFailsByRow(object):
 
 		#Storing the first LAR row of the file that fails a set of edits for every row. 	
 		self.fails_all_lar = self.fails_all_lar.iloc[0:1]
-		print(self.fails_all_lar)
+		#print(self.fails_all_lar)
 
 		#Prints a statement indicating that the object has been instantiated. 
 		print("Instantiated")
