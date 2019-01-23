@@ -27,7 +27,7 @@ class EditFailsByRow(object):
                                                  data_file=passes_all_filename)
 
 		#Loading TS and LAR data for the file that fails a set of edits for every row. 
-		self.ts_data, self.fails_all_lar = utils.read_data_file(path=fails_all_filepath,
+		other_ts_data, self.fails_all_lar = utils.read_data_file(path=fails_all_filepath,
 												 data_file=fails_all_filename)
 
 		#Storing the first LAR row of the clean file. 
@@ -37,6 +37,14 @@ class EditFailsByRow(object):
 		#Storing the LEI in a global variable. 
 		self.lei = self.ts_data.iloc[0][14]
 
+		#Storing the bank name as a global variable. 
+		self.bank_name = self.ts_data.iloc[0][1]
+
+		#Setting LEI's for each by self.lei.
+		self.passes_all_lar["lei"] = self.lei
+
+		self.fails_all_lar["lei"] = self.lei
+
 		#Storing the first LAR row of the file that fails a set of edits for every row. 	
 		self.fails_all_lar = self.fails_all_lar.iloc[0:1]
 		print(self.fails_all_lar)
@@ -45,7 +53,9 @@ class EditFailsByRow(object):
 		print("Instantiated")
 
 	def create_edit_fails_by_row_file(self, rows_failed=50, rows_total=100, 
-		output_filepath="../edits_files/edit_fails_by_row/"):
+		output_filepath= "../edits_files/edit_fails_by_row/"):
+
+		output_filepath = output_filepath + str(self.bank_name) + "/"
 
 		"""Creates a file that fails a set of edits by a 
 		certain number of rows."""
@@ -62,9 +72,12 @@ class EditFailsByRow(object):
 		#Creates a new set of unique ulis to avoid creating duplicate rows.  
 		new_lar = unique_uli(new_lar_df = new_lar, lei=self.lei)
 
+		#Replaces the TS number of rows with the rows in total.
+		self.ts_data['lar_entries'] = str(rows_total)
+
 		#Writes the file to the output filepath specified in the class instantiation. 
 		utils.write_file(ts_input=self.ts_data, lar_input=new_lar,
-			path=output_filepath, name=str(rows_failed)+"_rows_failed_"+str(rows_total)+"_total_rows.txt")
+			path=output_filepath+self.bank_name+"/", name=str(rows_failed)+"_rows_failed_"+str(rows_total)+"_total_rows.txt")
 
 		#Prints a statement indicating that the file has been creating in the specified
 		#filepath. 

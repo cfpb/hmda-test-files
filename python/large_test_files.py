@@ -76,10 +76,13 @@ class LargeTestFiles(object):
         self.bank_name = self.ts_df.iloc[0][1]
         
         #Stores the second column of the LAR data as "lei."    
-        self.lei = self.lar_df.iloc[0][1]
+        self.lei = self.ts_df.iloc[0][14]
 
         #Changes the TS row to the number of rows specified. 
         self.ts_df['lar_entries'] = str(row_count)
+
+        #Changes each LAR row to the LEI specified in the TS row. 
+        self.lar_df["lei"] = self.lei
 
         #Creates a dataframe of LAR with the number of rows specified.
         new_lar_df = self.new_lar_rows(row_count=row_count)
