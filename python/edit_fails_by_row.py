@@ -63,33 +63,37 @@ class EditFailsByRow(object):
 		"""Creates a file that fails a set of edits by a 
 		certain number of rows."""
 
-		#Naming an output filepath. 
-		output_filepath = output_filepath + str(self.bank_name) + "/"
+		if rows_failed >= rows_total:
+			print("Sorry - rows_failed must be a number less than rows_total.")
 
-		#Creates LAR rows that pass every edit.  
-		new_rows_passes = pd.concat([self.clean_lar]*(rows_total-rows_failed))
+		else: 
+			#Naming an output filepath. 
+			output_filepath = output_filepath + str(self.bank_name) + "/"
 
-		#Creates a specified number of LAR rows that fail a set of edits.
-		new_rows_fails = pd.concat([self.fail_lar]*(rows_failed))
+			#Creates LAR rows that pass every edit.  
+			new_rows_passes = pd.concat([self.clean_lar]*(rows_total-rows_failed))
 
-		#Concatenates the LAR rows above to form the specified number of rows in total. 
-		new_lar = pd.concat([new_rows_passes, new_rows_fails])
+			#Creates a specified number of LAR rows that fail a set of edits.
+			new_rows_fails = pd.concat([self.fail_lar]*(rows_failed))
 
-		#Creates a new set of unique ulis to avoid creating duplicate rows.  
-		new_lar = unique_uli(new_lar_df = new_lar, lei=self.lei)
+			#Concatenates the LAR rows above to form the specified number of rows in total. 
+			new_lar = pd.concat([new_rows_passes, new_rows_fails])
 
-		#Replaces the TS number of rows with the rows in total.
-		self.clean_ts['lar_entries'] = str(rows_total)
+			#Creates a new set of unique ulis to avoid creating duplicate rows.  
+			new_lar = unique_uli(new_lar_df = new_lar, lei=self.lei)
 
-		#Writes the file to the output filepath specified in the class instantiation. 
-		utils.write_file(ts_input=self.clean_ts, lar_input=new_lar,
-			path=output_filepath+self.bank_name+"/", name=str(rows_failed)+"_rows_failed_"+str(rows_total)+"_total_rows.txt")
+			#Replaces the TS number of rows with the rows in total.
+			self.clean_ts['lar_entries'] = str(rows_total)
 
-		#Prints a statement indicating that the file has been creating in the specified
-		#filepath. 
-		statement = (str("{:,}".format(rows_failed)) + 
-            " rows failed " + str("{:,}".format(rows_total)) + 
-            " rows total stored in " + output_filepath)
+			#Writes the file to the output filepath specified in the class instantiation. 
+			utils.write_file(ts_input=self.clean_ts, lar_input=new_lar,
+				path=output_filepath+self.bank_name+"/", name=str(rows_failed)+"_rows_failed_"+str(rows_total)+"_total_rows.txt")
 
-		print(statement)
+			#Prints a statement indicating that the file has been creating in the specified
+			#filepath. 
+			statement = (str("{:,}".format(rows_failed)) + 
+	            " rows failed " + str("{:,}".format(rows_total)) + 
+	            " rows total stored in " + output_filepath)
+
+			print(statement)
 		
