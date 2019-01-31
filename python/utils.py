@@ -2,6 +2,7 @@
 import json
 import os
 import pandas as pd
+from large_test_files import unique_uli
 
 
 state_codes = {'WA':'53', 'WI':'55', 'WV':'54', 'FL':'12', 'WY':'56', 'NH':'33', 'NJ':'34', 'NM':'33', 'NC':'37', 'ND':'38', 'NE':'31', 'NY':'36', 'RI':'44', 'NV':'32', 'CO':'08', 'CA':'06', 'GA':'13', 'CT':'09', 'OK':'40', 'OH':'39',
@@ -60,3 +61,35 @@ def read_data_file(path="", data_file=None):
 			return (ts_df, lar_df)
 	else:
 		raise ValueError("A data file mus be passed. No data have been written to the object")
+
+def change_bank(ts_data=None, lar_data=None, new_bank_name=None, 
+	new_lei=None, new_tax_id=None):
+	"""Takes in TS and LAR data of one bank and outputs
+	the same TS and LAR data with specifications for a different
+	bank in the function call."""
+
+	#Stores original bank name.
+	orig_bank_name = ts_data.iloc[0][1]
+	#print(orig_bank_name) 
+
+	#Changes TS Data to new institution specifications. 
+	ts_data["inst_name"] = new_bank_name
+	ts_data["tax_id"] = new_tax_id
+	ts_data["lei"] = new_lei
+
+	#Changes LAR Data to new institution specifications.
+	lar_data["lei"] = new_lei
+
+	#Runs a new set of unique ULI's 
+	lar_data = unique_uli(new_lar_df = lar_data, lei = new_lei)
+
+	#Implementing S304 compliance. 
+
+	ts_data["lar_entries"] = len(lar_data.index)
+
+	#Returning a new set of TS and LAR data with a print statement. 
+
+	print("Data for " + str(orig_bank_name) + " has been changed to specifications for  " + str(new_bank_name))
+	
+	return (ts_data, lar_data)
+
