@@ -26,7 +26,7 @@ lar_df = lar_df[(lar_df['loan_amount'] != 'Exempt') &
                 (lar_df['cltv'] != 'NA')]
 
 #Creates a five line file for each line in the row by row modification yaml.
-lar_df, ts_df = new_lar_rows(row_count=5, lar_df=lar_df, ts_df=ts_df)
+lar_df, ts_df = utils.new_lar_rows(row_count=5, lar_df=lar_df, ts_df=ts_df)
 
 #Modifies the file based on the row by row modification yaml.
 lar_df = utils.row_by_row_modification(lar_df)
@@ -35,7 +35,7 @@ lar_df = utils.row_by_row_modification(lar_df)
 output_filepath = "../edits_files/Q617_testing/"
 
 #Stores the file name for the resulting file. 
-output_filename = "Q617_test.txt"
+output_filename = "Q617_testing.txt"
 
 #Writes a file to the filename and path. 
 utils.write_file(path=output_filepath, ts_input=ts_df, 
