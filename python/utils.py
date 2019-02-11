@@ -148,12 +148,12 @@ def new_lar_rows(row_count=None, lar_df=None, ts_df=None):
 
     return (new_lar_df, ts_df)
 
-def row_by_row_modification(lar_df):
+def row_by_row_modification(lar_df, yaml_filepath='row_by_row_modification.yaml'):
 	"""Uses the inputs from the row_by_row 
 	modification yaml to modify a dataframe"""
 
 	#Opens the yaml_file. 
-	yaml_file ='row_by_row_modification.yaml'
+	yaml_file = yaml_filepath
 	with open(yaml_file, 'r') as f:
 		row_by_row = yaml.safe_load(f)
 	

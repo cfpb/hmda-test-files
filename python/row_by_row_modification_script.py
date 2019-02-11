@@ -26,8 +26,8 @@ ts_df, lar_df = utils.read_data_file(path=custom["row_by_row_file"]["source_file
 lar_df, ts_df = utils.new_lar_rows(row_count=custom["row_by_row_file"]["row_count"], 
 	lar_df=lar_df, ts_df=ts_df)
 
-#Modifies the LAR rows based on the row_by_row_modification yaml file.
-lar_df = utils.row_by_row_modification(lar_df)
+#Modifies the LAR rows based on the modification yaml file specified.
+lar_df = utils.row_by_row_modification(lar_df, yaml_filepath=custom["row_by_row_file"]["yaml_file"])
 
 #Writes a file to the filename and path in the custom_file_specifications yaml
 #file. 
