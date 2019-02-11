@@ -1,0 +1,7 @@
+    row_by_row_file:
+      source_filepath: #Specify source filepath
+      source_filename: #Specify source filename
+      output_filepath: "../edits_files/Q617_testing/"
+      output_filename: "Q617_test.txt"
+      yaml_file: "row_by_row_Q617_test.yaml"
+      row_count: 5
