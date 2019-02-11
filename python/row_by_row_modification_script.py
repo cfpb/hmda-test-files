@@ -37,4 +37,4 @@ utils.write_file(path=custom["row_by_row_file"]["output_filepath"],
 #Outputs print statements indicating the number of LAR, the filename, 
 #and the filepath the new file is stored. 
 print("Row count is " + str(len(lar_df)) + " for " + str(custom["row_by_row_file"]["output_filename"]))
-print(str(custom["row_by_row_file"]["output_filepath"]) + " is stored in " + str(custom["row_by_row_file"]["output_filename"]))
+print(str(custom["row_by_row_file"]["output_filename"]) + " is stored in " + str(custom["row_by_row_file"]["output_filepath"]))

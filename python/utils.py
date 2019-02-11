@@ -162,7 +162,7 @@ def row_by_row_modification(lar_df):
 	for case in row_by_row:
 		for column in row_by_row[case]["columns"]:
 			for key in column:
-				lar_df.iloc[row_by_row[case]["row"]][key] = column[key]
+				lar_df.at[row_by_row[case]["row"], str(key)] = column[key]
 
 	return lar_df
 					
