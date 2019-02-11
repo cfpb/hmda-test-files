@@ -17,7 +17,7 @@
       columns: [
         loan_amount: 100000,
         property_value: 200000,
-        cltv: 49.0
+        cltv: 50.0
     ]
     Case 4:
       row: 3
