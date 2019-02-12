@@ -87,7 +87,7 @@ class EditFailsByRow(object):
 
 			#Writes the file to the output filepath specified in the class instantiation. 
 			utils.write_file(ts_input=self.clean_ts, lar_input=new_lar,
-				path=output_filepath+self.bank_name+"/", name=str(rows_failed)+"_rows_failed_"+str(rows_total)+"_total_rows.txt")
+				path=output_filepath, name=str(rows_failed)+"_rows_failed_"+str(rows_total)+"_total_rows.txt")
 
 			#Prints a statement indicating that the file has been creating in the specified
 			#filepath. 
