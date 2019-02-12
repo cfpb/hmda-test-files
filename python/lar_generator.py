@@ -49,55 +49,6 @@ class lar_gen(object):
 		self.prop_val_max = data_map["prop_val_max"]["value"]
 		self.prop_val_min = data_map["prop_val_min"]["value"]
 
-	#helper functions
-	def check_digit_gen(valid=True, ULI=None):
-		"""Generates a check digit for a ULI in accordance with
-		https://www.consumerfinance.gov/eregulations/diff/1003-C/2015-26607_20170101/2015-26607_20180101?from_version=2015-26607_20170101#1003-C-1"""
-		if ULI is None:
-			raise ValueError("a ULI must be supplied")
-		#GENERATING A CHECK DIGIT
-		#Step 1: Starting with the leftmost character in the string that consists of the combination of the
-		#Legal Entity Identifier (LEI) pursuant to § 1003.4(a)(1)(i)(A) and the additional characters identifying the
-		#covered loan or application pursuant to § 1003.4(a)(1)(i)(B), replace each alphabetic character with numbers
-		#in accordance with Table I below to obtain all numeric values in the string.
-		
-		
-		#1: convert letters to digits
-		#2: append '00' to right of string
-		#3:Apply the mathematical function mod=(n, 97) where n= the number obtained in step 2 above and 97 is the divisor.
-		#3a: Alternatively, to calculate without using the modulus operator, divide the numbers in step 2 above by 97.
-		#   Truncate the remainder to three digits and multiply it by .97. Round the result to the nearest whole number.
-		#4: Subtract the result in step 3 from 98. If the result is one digit, add a leading 0 to make it two digits.
-		#5: The two digits in the result from step 4 is the check digit. Append the resulting check digit to the
-		#   rightmost position in the combined string of characters described in step 1 above to generate the ULI.
-		
-		#digit_vals contains the conversion of numbers to letters
-		digit_vals = {
-		'A':10, 'H':17,'O':24,'V':31,'B':11,'I':18,'P':25,'W':32,'C':12,'J':19,'Q':26,'X':33,'D':13,'K':20,'R':27,'Y':34,
-		'E':14,'L':21,'S':28,'Z':35,'F':15,'M':22,'T':29,'G':16,'N':23,'U':30}
-		
-		uli_chars = list(ULI)
-		mod_uli_chars = []
-		for char in uli_chars:
-			if char.upper() in digit_vals.keys():
-				mod_uli_chars.append(str(digit_vals[char.upper()]))
-			else:
-				mod_uli_chars.append(char)
-		mod_uli_chars.append('00') 
-		digit_base = int("".join(mod_uli_chars))
-		digit_modulo = digit_base % 97
-		check_digit = 98 - digit_modulo
-
-		if valid:
-			return str(check_digit).zfill(2) #left pad check digit with 0 if length is less than 2
-		else:
-			return str(check_digit+6).zfill(2)[:2] #return a bad check digit (used in edit testing)
-
-
-	def char_string_gen(self,length):
-		"""Generates a string of chosen length using ascii uppercase and numerical characters"""
-		return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
-
 	def date_gen(self, year=2018, valid=True):
 		"""Generates and returns a semi-valid date string or an invalid date string. Does not check days per month."""
 		months = list(range(1,13))
@@ -202,9 +153,9 @@ class lar_gen(object):
 		valid_lar_row = OrderedDict() 
 		valid_lar_row["record_id"] = str(self.LAR_df.valid_vals[self.LAR_df.field=="record_id"].iloc[0][0])	
 		valid_lar_row["lei"] = lei
-		valid_lar_row["uli"] = valid_lar_row['lei'] + self.char_string_gen(23)
-		valid_lar_row["uli"] = valid_lar_row["uli"] + self.check_digit_gen(ULI=valid_lar_row["uli"])
-		valid_lar_row["uli"] = random.choice([valid_lar_row["uli"], self.char_string_gen(22)])
+		valid_lar_row["uli"] = valid_lar_row['lei'] + utils.char_string_gen(23)
+		valid_lar_row["uli"] = valid_lar_row["uli"] + utils.check_digit_gen(ULI=valid_lar_row["uli"])
+		valid_lar_row["uli"] = random.choice([valid_lar_row["uli"], utils.char_string_gen(22)])
 		valid_lar_row["app_date"] = str(self.date_gen())
 		valid_lar_row["loan_type"] = str(self.random_enum(self.get_schema_list(field="loan_type")))
 		valid_lar_row["loan_purpose"] = str(self.random_enum(self.get_schema_list(field="loan_purpose")))
@@ -225,13 +176,13 @@ class lar_gen(object):
 		valid_lar_row["app_eth_3"] = str(self.random_enum(self.get_schema_list(field="app_eth_3", empty=True)))
 		valid_lar_row["app_eth_4"] = str(self.random_enum(self.get_schema_list(field="app_eth_4", empty=True)))
 		valid_lar_row["app_eth_5"] = str(self.random_enum(self.get_schema_list(field="app_eth_5", empty=True)))
-		valid_lar_row["app_eth_free"] = self.char_string_gen(random.choice(range(100)))
+		valid_lar_row["app_eth_free"] = utils.char_string_gen(random.choice(range(100)))
 		valid_lar_row["co_app_eth_1"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_1", empty=True)))
 		valid_lar_row["co_app_eth_2"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_2", empty=True)))
 		valid_lar_row["co_app_eth_3"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_3", empty=True)))
 		valid_lar_row["co_app_eth_4"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_4", empty=True)))
 		valid_lar_row["co_app_eth_5"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_5", empty=True)))
-		valid_lar_row["co_app_eth_free"] = self.char_string_gen(random.choice(range(100)))
+		valid_lar_row["co_app_eth_free"] = utils.char_string_gen(random.choice(range(100)))
 		valid_lar_row["app_eth_basis"] = str(self.random_enum(self.get_schema_list(field="app_eth_basis")))
 		valid_lar_row["co_app_eth_basis"] = str(self.random_enum(self.get_schema_list(field="co_app_eth_basis")))
 		valid_lar_row["app_race_1"] = str(self.random_enum(self.get_schema_list(field="app_race_1", empty=True)))
@@ -239,17 +190,17 @@ class lar_gen(object):
 		valid_lar_row["app_race_3"] = str(self.random_enum(self.get_schema_list(field="app_race_3", empty=True)))
 		valid_lar_row["app_race_4"] = str(self.random_enum(self.get_schema_list(field="app_race_4", empty=True)))
 		valid_lar_row["app_race_5"] = str(self.random_enum(self.get_schema_list(field="app_race_5", empty=True)))
-		valid_lar_row["app_race_native_text"] = self.char_string_gen(random.choice(range(100)))
-		valid_lar_row["app_race_asian_text"] = self.char_string_gen(random.choice(range(100)))
-		valid_lar_row["app_race_islander_text"] = self.char_string_gen(random.choice(range(100)))
+		valid_lar_row["app_race_native_text"] = utils.char_string_gen(random.choice(range(100)))
+		valid_lar_row["app_race_asian_text"] = utils.char_string_gen(random.choice(range(100)))
+		valid_lar_row["app_race_islander_text"] = utils.char_string_gen(random.choice(range(100)))
 		valid_lar_row["co_app_race_1"] = str(self.random_enum(self.get_schema_list(field="co_app_race_1", empty=True)))
 		valid_lar_row["co_app_race_2"] = str(self.random_enum(self.get_schema_list(field="co_app_race_2", empty=True)))
 		valid_lar_row["co_app_race_3"] = str(self.random_enum(self.get_schema_list(field="co_app_race_3", empty=True)))
 		valid_lar_row["co_app_race_4"] = str(self.random_enum(self.get_schema_list(field="co_app_race_4", empty=True)))
 		valid_lar_row["co_app_race_5"] = str(self.random_enum(self.get_schema_list(field="co_app_race_5", empty=True)))
-		valid_lar_row["co_app_race_native_text"] = self.char_string_gen(random.choice(range(100)))
-		valid_lar_row["co_app_race_asian_text"] = self.char_string_gen(random.choice(range(100)))
-		valid_lar_row["co_app_race_islander_text"] = self.char_string_gen(random.choice(range(100)))
+		valid_lar_row["co_app_race_native_text"] = utils.char_string_gen(random.choice(range(100)))
+		valid_lar_row["co_app_race_asian_text"] = utils.char_string_gen(random.choice(range(100)))
+		valid_lar_row["co_app_race_islander_text"] = utils.char_string_gen(random.choice(range(100)))
 		valid_lar_row["app_race_basis"] = str(self.random_enum(self.get_schema_list(field="app_race_basis")))
 		valid_lar_row["co_app_race_basis"] = str(self.random_enum(self.get_schema_list(field="co_app_race_basis")))
 		valid_lar_row["app_sex"] = str(self.random_enum(self.get_schema_list(field="app_sex")))
@@ -266,14 +217,14 @@ class lar_gen(object):
 		valid_lar_row["app_credit_score"] = str(self.random_enum(self.range_and_enum(field="app_credit_score", rng_min=self.min_credit_score,rng_max=self.max_credit_score)))
 		valid_lar_row["co_app_credit_score"] = str(self.random_enum(self.range_and_enum(field="co_app_credit_score", rng_min=self.min_credit_score, rng_max=self.max_credit_score)))
 		valid_lar_row["app_score_name"] = str(self.random_enum(self.get_schema_list(field="app_score_name")))
-		valid_lar_row["app_score_code_8"] = str(self.char_string_gen(random.choice(range(100))))
+		valid_lar_row["app_score_code_8"] = str(utils.char_string_gen(random.choice(range(100))))
 		valid_lar_row["co_app_score_name"] = str(self.random_enum(self.get_schema_list(field="co_app_score_name")))
-		valid_lar_row["co_app_score_code_8"] = self.char_string_gen(random.choice(range(100)))
+		valid_lar_row["co_app_score_code_8"] = utils.char_string_gen(random.choice(range(100)))
 		valid_lar_row["denial_1"] = str(self.random_enum(self.get_schema_list(field="denial_1")))
 		valid_lar_row["denial_2"] = str(self.random_enum(self.get_schema_list(field="denial_2", empty=True)))
 		valid_lar_row["denial_3"] = str(self.random_enum(self.get_schema_list(field="denial_3", empty=True)))
 		valid_lar_row["denial_4"] = str(self.random_enum(self.get_schema_list(field="denial_4", empty=True)))
-		valid_lar_row["denial_code_9"] = self.char_string_gen(random.choice(range(255)))
+		valid_lar_row["denial_code_9"] = utils.char_string_gen(random.choice(range(255)))
 		valid_lar_row["loan_costs"] = str(self.random_enum(self.range_and_enum(field="loan_costs",rng_max=self.loan_costs)))
 		valid_lar_row["points_fees"] = str(self.random_enum(self.range_and_enum(field="points_fees", rng_max=self.points_and_fees)))
 		valid_lar_row["origination_fee"] = str(self.random_enum(self.range_and_enum(field="origination_fee", rng_max=self.orig_charges)))
@@ -296,19 +247,19 @@ class lar_gen(object):
 		valid_lar_row["affordable_units"] = str(self.random_enum(self.range_and_enum(field="affordable_units", rng_min=0, rng_max=int(valid_lar_row["total_units"]))))
 		valid_lar_row["app_submission"] = str(self.random_enum(self.get_schema_list(field="app_submission")))
 		valid_lar_row["initially_payable"] = str(self.random_enum(self.get_schema_list(field="initially_payable")))
-		valid_lar_row["mlo_id"] = self.char_string_gen(random.choice(range(25)))
+		valid_lar_row["mlo_id"] = utils.char_string_gen(random.choice(range(25)))
 		valid_lar_row["aus_1"] = str(self.random_enum(self.get_schema_list(field="aus_1")))
 		valid_lar_row["aus_2"] = str(self.random_enum(self.get_schema_list(field="aus_2", empty=True)))
 		valid_lar_row["aus_3"] = str(self.random_enum(self.get_schema_list(field="aus_3", empty=True)))
 		valid_lar_row["aus_4"] = str(self.random_enum(self.get_schema_list(field="aus_4", empty=True)))
 		valid_lar_row["aus_5"] = str(self.random_enum(self.get_schema_list(field="aus_5", empty=True)))
-		valid_lar_row["aus_code_5"] = self.char_string_gen(random.choice(range(255)))
+		valid_lar_row["aus_code_5"] = utils.char_string_gen(random.choice(range(255)))
 		valid_lar_row["aus_result_1"] = str(self.random_enum(self.get_schema_list(field="aus_result_1")))
 		valid_lar_row["aus_result_2"] = str(self.random_enum(self.get_schema_list(field="aus_result_2", empty=True)))
 		valid_lar_row["aus_result_3"] = str(self.random_enum(self.get_schema_list(field="aus_result_3", empty=True)))
 		valid_lar_row["aus_result_4"] = str(self.random_enum(self.get_schema_list(field="aus_result_4", empty=True)))
 		valid_lar_row["aus_result_5"] = str(self.random_enum(self.get_schema_list(field="aus_result_5", empty=True)))
-		valid_lar_row["aus_code_16"] = self.char_string_gen(random.choice(range(255)))
+		valid_lar_row["aus_code_16"] = utils.char_string_gen(random.choice(range(255)))
 		valid_lar_row["reverse_mortgage"] = str(self.random_enum(self.get_schema_list(field="reverse_mortgage")))
 		valid_lar_row["open_end_credit"] = str(self.random_enum(self.get_schema_list(field="open_end_credit")))
 		valid_lar_row["business_purpose"] = str(self.random_enum(self.get_schema_list(field="business_purpose")))

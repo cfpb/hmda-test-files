@@ -9,7 +9,7 @@ from io import StringIO
 import string
 import time
 
-from lar_generator import lar_gen #used for check digit
+import utils
 
 class rules_engine(object):
 	"""docstring for ClassName"""
@@ -332,7 +332,7 @@ class rules_engine(object):
 		In that situation, this edit is not applicable."""
 		edit_name = "v609"
 		field = "ULI"
-		check_digit = lar_gen.check_digit_gen #establish check digit function alias
+		check_digit = utils.check_digit_gen #establish check digit function alias
 
 		#limit check digit checking to records with a ULI
 		fail_df = self.lar_df[self.lar_df.uli.apply(lambda x: x[:20]==self.lar_df.lei.iloc[0])]
