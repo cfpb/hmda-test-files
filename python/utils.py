@@ -166,5 +166,36 @@ def row_by_row_modification(lar_df, yaml_filepath='row_by_row_modification.yaml'
 
 	return lar_df
 					
-		
+def change_bank(ts_data=None, lar_data=None, new_bank_name=None, 
+	new_lei=None, new_tax_id=None):
+	"""Takes in TS and LAR data of one bank and outputs
+	the same TS and LAR data with specifications for a different
+	bank in the function call. The elements changed are Bank Name in 
+	the TS row, LEI in the TS row and the  
+	LAR rows, and Tax ID in the TS row. ULI's are generated with the 
+	new LEI.
+	"""
+
+	#Stores original Bank Name.
+	orig_bank_name = ts_data.iloc[0][1] 
+
+	#Changes TS Data to new institution specifications. 
+	ts_data["inst_name"] = new_bank_name
+	ts_data["tax_id"] = new_tax_id
+	ts_data["lei"] = new_lei
+
+	#Changes LAR Data to new institution specifications.
+	lar_data["lei"] = new_lei
+
+	#Runs a new set of unique ULI's 
+	lar_data = utils.unique_uli(new_lar_df = lar_data, lei = new_lei)
+
+	#Implementing S304 compliance. 
+	ts_data["lar_entries"] = len(lar_data.index)
+
+	#Returning a new set of TS and LAR data with a print statement. 
+	print("Data for " + str(orig_bank_name) + " has been changed to specifications for  " + str(new_bank_name))
+	
+	return (ts_data, lar_data)
+
 
