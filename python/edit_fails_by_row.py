@@ -12,7 +12,7 @@ from lar_generator import lar_gen #Imports lar_gen class.
 
 from large_test_files import LargeTestFiles
 
-from large_test_files import unique_uli
+from unique_uli import unique_uli
 
 class EditFailsByRow(object):
 
