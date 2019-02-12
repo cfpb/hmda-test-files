@@ -6,7 +6,6 @@ import math
 import json
 import os
 import pandas as pd
-from large_test_files import unique_uli
 import yaml
 import utils
 
@@ -174,8 +173,7 @@ def change_bank(ts_data=None, lar_data=None, new_bank_name=None,
 	bank in the function call."""
 
 	#Stores original bank name.
-	orig_bank_name = ts_data.iloc[0][1]
-	#print(orig_bank_name) 
+	orig_bank_name = ts_data.iloc[0][1] 
 
 	#Changes TS Data to new institution specifications. 
 	ts_data["inst_name"] = new_bank_name
@@ -186,14 +184,12 @@ def change_bank(ts_data=None, lar_data=None, new_bank_name=None,
 	lar_data["lei"] = new_lei
 
 	#Runs a new set of unique ULI's 
-	lar_data = unique_uli(new_lar_df = lar_data, lei = new_lei)
+	lar_data = utils.unique_uli(new_lar_df = lar_data, lei = new_lei)
 
 	#Implementing S304 compliance. 
-
 	ts_data["lar_entries"] = len(lar_data.index)
 
 	#Returning a new set of TS and LAR data with a print statement. 
-
 	print("Data for " + str(orig_bank_name) + " has been changed to specifications for  " + str(new_bank_name))
 	
 	return (ts_data, lar_data)
