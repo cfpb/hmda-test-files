@@ -9,12 +9,6 @@ import pandas as pd
 import yaml
 import utils
 
-#Imports lar_gen class to support the unique_uli function. 
-from lar_generator import lar_gen 
-
-#Instantiates lar_gen class as lar_gen. 
-lar_gen = lar_gen() 
-
 state_codes = {'WA':'53', 'WI':'55', 'WV':'54', 'FL':'12', 'WY':'56', 
 'NH':'33', 'NJ':'34', 'NM':'33', 'NC':'37', 'ND':'38', 'NE':'31', 'NY':'36', 
 'RI':'44', 'NV':'32', 'CO':'08', 'CA':'06', 'GA':'13', 'CT':'09', 'OK':'40', 
@@ -88,6 +82,12 @@ def unique_uli(new_lar_df=None, lei=None):
     """
     Generates a set of unique ULI's for a LAR dataframe.
     """
+
+    #Imports lar_gen class to support the unique_uli function. 
+    from lar_generator import lar_gen 
+
+    #Instantiates lar_gen class as lar_gen. 
+    lar_gen = lar_gen() 
 
     #Copying over ULIs with the LEI.
     new_lar_df["uli"] = new_lar_df["uli"].apply(lambda x: 
