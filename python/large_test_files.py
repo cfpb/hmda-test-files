@@ -9,7 +9,7 @@ import time
 import yaml
 import utils
 
-from lar_generator import lar_gen #Imports lar_gen class. 
+from lar_generator import lar_gen #Imports lar_gen class.
 
 #Instantiates lar_gen class as lar_gen. 
 lar_gen = lar_gen() 
@@ -21,7 +21,8 @@ class LargeTestFiles(object):
     with a specified number of rows.
     """
     
-    def __init__(self, source_filepath, source_filename, output_filepath, output_filename):
+    def __init__(self, source_filepath, source_filename, 
+        output_filepath, output_filename):
         
         """Instantiates the class with an existing file.""" 
         
@@ -48,11 +49,14 @@ class LargeTestFiles(object):
         #Stores the second column of the TS data as "bank_name." 
         self.bank_name = self.ts_df.iloc[0][1]
         
-        #Stores the second column of the LAR data as "lei."    
-        self.lei = self.lar_df.iloc[0][1]
+        #Stores the fifteenth column of the TS data as "lei."    
+        self.lei = self.ts_df.iloc[0][14]
 
         #Changes the TS row to the number of rows specified. 
         self.ts_df['lar_entries'] = str(row_count)
+
+        #Changes each LAR row to the LEI specified in the TS row. 
+        self.lar_df["lei"] = self.lei
 
         #Creates a dataframe of LAR with the number of rows specified.
         new_lar_df = self.new_lar_rows(row_count=row_count)
@@ -61,8 +65,8 @@ class LargeTestFiles(object):
         utils.write_file(path=self.output_filepath, ts_input=self.ts_df, 
             lar_input=new_lar_df, name=self.output_filename)
         
-        """Prints out a statement with the number of rows created, 
-        and the location of the new file."""
+        #Prints out a statement with the number of rows created, 
+        #and the location of the new file.
         statement = (str("{:,}".format(row_count)) + 
             " Row File Created for " + str(self.bank_name) + 
             " File Path: " + str(self.output_filepath+self.output_filename))
@@ -80,12 +84,12 @@ class LargeTestFiles(object):
         #Stores the number of rows currently in the dataframe.
         current_row = len(new_lar_df.index) 
         
-        """Calculates a multiplier taking the ceiling function of 
-        the desired row count over the current row count.""" 
+        #Calculates a multiplier taking the ceiling function of 
+        #the desired row count over the current row count.
         multiplier = math.ceil(row_count/current_row)
         
-        """Concatenates data to produce the number of rows 
-        by the multiplier in a new LAR dataframe."""  
+        #Concatenates data to produce the number of rows 
+        #by the multiplier in a new LAR dataframe.
         new_lar_df = pd.concat([new_lar_df]*int(multiplier))
         
         #Drops the number of rows to the count specified. 
@@ -93,35 +97,9 @@ class LargeTestFiles(object):
             drop_rows = current_row - (row_count % current_row)
             new_lar_df = new_lar_df[: - (drop_rows)]
         
-        """Applies the unique_uli function to the new LAR dataframe 
-        to generate a unique set of ULIs."""  
-        new_lar_df = self.unique_uli(new_lar_df)
-
-        return new_lar_df
-         
-    def unique_uli(self, new_lar_df = None):
-        """Generates a new set of ULI's for a LAR dataframe."""
-        
-        #Copying over ULIs with the LEI.
-        new_lar_df["uli"] = new_lar_df["uli"].apply(lambda x: 
-            self.lei)  
-        
-        """Generates a loan ID as a random 23-character 
-        string for each LEI.""" 
-        new_lar_df["uli"] = new_lar_df["uli"].apply(lambda x: x + 
-            lar_gen.char_string_gen(23)) 
-        
-        # Adds a check digit to each.
-        new_lar_df['uli'] = new_lar_df["uli"].apply(lambda x: x + 
-            lar_gen.check_digit_gen(ULI=x))
-
-        """If ULIs are duplicated, the unique_uli function 
-        is applied again.""" 
-        if len(new_lar_df['uli']) > len(set(new_lar_df['uli'])):
-            print("Re-Running")
-            self.unique_uli(new_lar_df)
-        else:
-            print("Unique ULIs Assigned")
+        #Applies the unique_uli function to the new LAR dataframe 
+        #to generate a unique set of ULIs.
+        new_lar_df = utils.unique_uli(new_lar_df=new_lar_df, lei=self.lei)
 
         return new_lar_df  
 
