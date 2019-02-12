@@ -10,7 +10,6 @@ import yaml
 import utils
 
 from lar_generator import lar_gen #Imports lar_gen class.
-from unique_uli import unique_uli #Imports unique_uli function.  
 
 #Instantiates lar_gen class as lar_gen. 
 lar_gen = lar_gen() 
@@ -100,7 +99,7 @@ class LargeTestFiles(object):
         
         #Applies the unique_uli function to the new LAR dataframe 
         #to generate a unique set of ULIs.
-        new_lar_df = unique_uli(new_lar_df=new_lar_df, lei=self.lei)
+        new_lar_df = utils.unique_uli(new_lar_df=new_lar_df, lei=self.lei)
 
         return new_lar_df  
 
