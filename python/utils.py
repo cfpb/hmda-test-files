@@ -170,7 +170,10 @@ def change_bank(ts_data=None, lar_data=None, new_bank_name=None,
 	new_lei=None, new_tax_id=None):
 	"""Takes in TS and LAR data of one bank and outputs
 	the same TS and LAR data with specifications for a different
-	bank in the function call."""
+	bank in the function call. The elements changed are bank name in 
+	the TS row and the LAR rows, lei in the TS row and the  
+	LAR rows, and tax id in the TS row. 
+	"""
 
 	#Stores original bank name.
 	orig_bank_name = ts_data.iloc[0][1] 
