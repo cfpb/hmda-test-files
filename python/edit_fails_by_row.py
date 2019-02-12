@@ -10,10 +10,6 @@ import utils
 
 from lar_generator import lar_gen #Imports lar_gen class. 
 
-from large_test_files import LargeTestFiles
-
-from unique_uli import unique_uli
-
 class EditFailsByRow(object):
 
 	def __init__(self, passes_all_filepath, passes_all_filename, 
@@ -80,7 +76,7 @@ class EditFailsByRow(object):
 			new_lar = pd.concat([new_rows_passes, new_rows_fails])
 
 			#Creates a new set of unique ulis to avoid creating duplicate rows.  
-			new_lar = unique_uli(new_lar_df = new_lar, lei=self.lei)
+			new_lar = utils.unique_uli(new_lar_df = new_lar, lei=self.lei)
 
 			#Replaces the TS number of rows with the rows in total.
 			self.clean_ts['lar_entries'] = str(rows_total)
