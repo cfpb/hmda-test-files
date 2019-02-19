@@ -6,9 +6,7 @@ import random
 import string
 import time
 import yaml
-import utils
-
-from lar_generator import lar_gen #Imports lar_gen class. 
+import utils 
 
 class EditFailsByRow(object):
 

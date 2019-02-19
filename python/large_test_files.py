@@ -9,11 +9,6 @@ import time
 import yaml
 import utils
 
-from lar_generator import lar_gen #Imports lar_gen class.
-
-#Instantiates lar_gen class as lar_gen. 
-lar_gen = lar_gen() 
-
 class LargeTestFiles(object):
     
     """
