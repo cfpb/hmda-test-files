@@ -192,7 +192,7 @@ def change_bank(ts_data=None, lar_data=None, new_bank_name=None,
 	#Returning a new set of TS and LAR data with a print statement. 
 	print("Data for " + str(orig_bank_name) + " has been changed to specifications for  " + str(new_bank_name))
 	
-	return (ts_data, lar_data)
+	return (lar_data, ts_data)
 
 def char_string_gen(length):
 	"""Generates a string of chosen length using ascii uppercase and numerical characters"""
