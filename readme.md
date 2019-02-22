@@ -46,7 +46,7 @@ In addition to test file creation features, the repository contains utility func
 - [unique_uli](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L83): Writes a set of unique ULI’s with check digits to a LAR data frame given an LEI input. 
 - [new_lar_rows](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L111): Duplicates or retracts rows in a LAR data frame to produce a file with a certain number of rows. This function can create LAR data frames with large row counts. 
 - [row_by_row_modification](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L147): This function changes a LAR data frame given changes specified in a yaml file. It allows users to test for minor changes in LAR data.
-- [change_bank](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L147): Changes TS and LAR data frames to a new test institution with an institution name, LEI, and Tax ID. 
+- [change_bank](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L165): Changes TS and LAR data frames to a new test institution with an institution name, LEI, and Tax ID. 
 - [check_digit_gen](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L201): Generates and appends a check digit to a ULI.   
 
 
