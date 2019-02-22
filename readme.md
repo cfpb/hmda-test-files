@@ -40,12 +40,14 @@ To generate test files:
         - A file containing a list of US ZIP codes
 
 ## Additional Utilities
-In addition to test file creation features, the repository contains utility functions that work with existing test file data. These functions assist in creating test files with further customization, such as files with a large number of rows or files as part of a new institution. Most of these functions are located in python/utils.py. The functions included are:
-- [write_file](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L23): Which writes TS and LAR data frames to a HMDA submission test file with a specified file path and directory. 
-- [read_data_file](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L60): Which reads in a HMDA submission test file and outputs a TS and LAR data frame. 
+In addition to test file creation features, the repository contains utility functions that work with existing test file data. These functions assist in creating test files with further customization, such as files with a large number of rows or files as part of a new institution. The functions are located in python/utils.py. 
+
+These functions include:
+- [write_file](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L23): Writes TS and LAR data frames to a HMDA submission test file with a specified file path and directory. 
+- [read_data_file](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L60): Reads in a HMDA submission test file and outputs a TS and LAR data frame. 
 - [unique_uli](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L83): Writes a set of unique ULI’s with check digits to a LAR data frame given an LEI input. 
-- [new_lar_rows](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L111): Duplicates or retracts rows in a LAR data frame to produce a file with a certain number of rows. This function can create LAR data frames with large row counts. 
-- [row_by_row_modification](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L147): This function changes a LAR data frame given changes specified in a yaml file. It allows users to test for minor changes in LAR data.
+- [new_lar_rows](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L111): Duplicates or retracts rows in a LAR data frame to produce a file with a certain number of rows. Provides capabilities for creating LAR data frames with large row counts. 
+- [row_by_row_modification](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L147): Changes a LAR data frame given changes specified in a yaml file. It allows users to test for minor changes in LAR data.
 - [change_bank](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L165): Changes TS and LAR data frames to a new test institution with an institution name, LEI, and Tax ID. 
 - [check_digit_gen](https://github.com/cfpb/hmda-test-files/blob/ce12748672f83bd7ead396ccf0ed395dbb02a29a/python/utils.py#L201): Generates and appends a check digit to a ULI.   
 
