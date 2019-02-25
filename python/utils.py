@@ -142,7 +142,7 @@ def new_lar_rows(row_count=None, lar_df=None, ts_df=None):
     #Modifies TS data for the new number of LAR entries.
     ts_df["lar_entries"] = len(new_lar_df)
 
-    return (new_lar_df, ts_df)
+    return (ts_df, new_lar_df)
 
 def row_by_row_modification(lar_df, yaml_filepath='row_by_row_modification.yaml'):
 	"""Uses the inputs from the row_by_row 
@@ -192,7 +192,7 @@ def change_bank(ts_data=None, lar_data=None, new_bank_name=None,
 	#Returning a new set of TS and LAR data with a print statement. 
 	print("Data for " + str(orig_bank_name) + " has been changed to specifications for  " + str(new_bank_name))
 	
-	return (lar_data, ts_data)
+	return (ts_data, lar_data)
 
 def char_string_gen(length):
 	"""Generates a string of chosen length using ascii uppercase and numerical characters"""
