@@ -142,7 +142,7 @@ def new_lar_rows(row_count=None, lar_df=None, ts_df=None):
     #Modifies TS data for the new number of LAR entries.
     ts_df["lar_entries"] = len(new_lar_df)
 
-    return (new_lar_df, ts_df)
+    return (ts_df, new_lar_df)
 
 def row_by_row_modification(lar_df, yaml_filepath='row_by_row_modification.yaml'):
 	"""Uses the inputs from the row_by_row 
