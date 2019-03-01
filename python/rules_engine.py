@@ -482,7 +482,7 @@ class rules_engine(object):
 		fail_df = self.lar_df.copy()
 		fail_df["amount"] = fail_df.loan_amount
 		fail_df.amount = fail_df.amount.map(lambda x: 0 if x == "" else x)
-		fail_df = fail_df[(fail_df.amount.map(lambda x: float(x))<1)]
+		fail_df = fail_df[(fail_df.amount.map(lambda x: float(x))<=0)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v618(self):
