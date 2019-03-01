@@ -2946,6 +2946,10 @@ class rules_engine(object):
 		field = "Discount Points; Total Loan Costs; Total Points and Fees"
 		edit_name = "q616_1"
 		fail_df = self.lar_df[(~self.lar_df.loan_costs.isin(["NA", "Exempt"]))&(~self.lar_df.discount_points.isin(["NA", "Exempt"]))].copy()
+		
+		fail_df.loan_costs = fail_df.loan_costs.map({"": 0.0})
+		fail_df.discount_points = fail_df.discount_points.map({"": 0.0})
+
 		fail_df.loan_costs = fail_df.loan_costs.apply(lambda x: float(x))
 		fail_df.discount_points = fail_df.discount_points.apply(lambda x: float(x))
 		fail_df = fail_df[(fail_df.loan_costs<fail_df.discount_points)]
