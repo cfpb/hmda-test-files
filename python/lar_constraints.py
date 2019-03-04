@@ -4,15 +4,6 @@ import string
 class lar_constraints(object):
 
 	def __init__(self, counties, tracts):
-		#list of constraining edits:
-		self.constraint_funcs = ["v612_const", "v610_const", "v613_const", "v614_const", "v615_const", "v619_const", "v622_const", "v627_const", "v628_const",
-		"v629_const", "v630_const", "v631_const", "v632_const", "v633_const", "v634_const", "v635_const", "v636_const", "v637_const", "v638_const", "v638_const",
-		"v640_const", "v641_const", "v643_const", "v644_const", "v645_const", "v647_const", "v648_const", "v649_const", "v650_const", "v651_const", "v652_const",
-		"v654_const", "v655_const", "v656_const", "v657_const", "v658_const", "v661_const", "v662_const", "v663_const", "v664_const", "v666_const", "v667_const",
-		"v668_const", "v669_const", "v670_const", "v671_const", "v672_const", "v673_const", "v674_const", "v675_const", "v676_const", "v677_const", "v678_const",
-		"v679_const", "v680_const", "v681_const", "v682_const", "v688_const", "v689_const", "v690_const", "v692_const", "v693_const", "v694_const", "v696_const",
-		"v697_const", "v698_const", "v699_const", "v700_const", "v701_const", "v702_const", "v703_const", "v704_const", "v705_const", "v709_const", "v710_const",
-		"v711_const", "v712_const", "v713_const", "v714_const", "v715_const"]
 		self.tracts = tracts
 		self.counties = counties
 			#functions used by constraint functions
