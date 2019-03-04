@@ -39,7 +39,7 @@ utils.write_file(path=output_filepath, ts_input=ts_data, lar_input=lar_data, nam
 
 #If a row by row modification yaml file is present, the row by row modification function is applied. 
 if custom["large_file"]["row_by_row_modification_yaml_file"] != None:
-	lar_df = utils.row_by_row_modification(lar_df, yaml_filepath=custom["large_file"]["row_by_row_modification_yaml_file"])
+	lar_df = utils.row_by_row_modification(lar_df, yaml_filepath=custom_file["large_file"]["row_by_row_modification_yaml_file"])
 
 #Prints a statement of the file created. 
 statement = (str("{:,}".format(len(lar_data.index))) + 
