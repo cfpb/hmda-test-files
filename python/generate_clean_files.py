@@ -10,6 +10,7 @@ import os
 import pandas as pd
 import random
 import yaml
+import logging
 #custom imports
 import lar_constraints
 import lar_generator
@@ -38,8 +39,9 @@ def apply_constraint(row, func):
 	row = getattr(lar_const, func)(row) #apply constraint to row
 	diff_1, diff_2 = get_diff(row, row_start)
 	if len(diff_1) > 0:
-		print(str(func))
-		print(diff_1, "\n\n", diff_2)
+		logging.info(str(func))
+		logging.info(diff_1) 
+		logging.info(diff_2)
 	return row
 
 def get_diff(row, row_base):
@@ -63,6 +65,19 @@ def validation(row, ts_row):
 			#print("applying:", func)
 			getattr(rules_check, func)()
 	return rules_check.results
+
+#Indicates in the console that the program began and is running. 
+print("Running.........")
+
+#Stores the log file name. 
+log_file_name = 'clean_files_log.txt'
+
+#Initiating the log file. 
+logging.basicConfig(filename=log_file_name,
+					format='%(asctime)s %(message)s',
+                	datefmt='%m/%d/%Y %I:%M:%S %p',
+                	filemode='w',
+                	level=logging.INFO)
 
 #load configuration data from YAML file
 with open('config.yaml') as f:
@@ -102,8 +117,12 @@ first = True #flag for first row of data. The first row is used to create the da
 #The rules engine is then used to check if the row passes all edits
 #The row is then converted to a Pandas dataframe
 for i in range(0, file_length): #loop over file length
+	
 	stop = False #Flag variable for controlling sub-loop. Stop is set to True if the row passes all edits in the rules engine.
-	print("making new row {row_num}\n\n".format(row_num=i), "*"*50)
+	message = "making new row {row_num}\n\n".format(row_num=i)
+	logging.info(message)
+	logging.info("*"*50)
+
 	if lei:
 		row = lar_gen.make_row(lei=lei) #generate a row using the same  LEI. The same LEI must be used for each row
 	else:
@@ -116,23 +135,32 @@ for i in range(0, file_length): #loop over file length
 	while stop == False:
 		row_base = row.copy() #copy row to enable diff
 		res = pd.DataFrame(validation(row, ts_row))
-		print(res[res.status=="failed"]) #print the results dataframe of edits that failed
+		logging.info(res[res.status=="failed"]) #print the results dataframe of edits that failed
 		if len(res[res.status=="failed"])<=0:
 			stop = True #stop applying constraints to the data row the row passes all edits
 		else:
-			print("\nstarting constraints iteration {iter}".format(iter=iters))
+			message = "\nstarting constraints iteration {iter}".format(iter=iters)
+			logging.info(message)
 			row = constraints_loop(get_const_list(lar_const), row, row_base) #edit the data row by applying constraints
 		iters+=1
 
 	if first: #create first row of dataframe
 		lar_frame = pd.DataFrame(row, index=[1])
 		first = False
-		print("finished row\ncreating dataframe")
+		message = "finished row\ncreating dataframe"
+		logging.info(message)
 	else: #add additional rows to dataframe
-		print("finished row\nappending to dataframe")
+		message = "finished row\nappending to dataframe"
+		logging.info(message)
 		new_lar = pd.DataFrame(row, index=[1])
 		lar_frame = pd.concat([lar_frame, new_lar], axis=0)
+
+message = "LAR dataframe complete"
+logging.info(message)
+
 print("LAR dataframe complete") #file generation is complete
+print("File available in clean files directory")
+print("Log Output in {filename}".format(filename=log_file_name))
 
 #check validity and syntax of data using rules_engine
 #instantiate edits rules engine to check validity of file.
@@ -144,12 +172,13 @@ validator.load_ts_data(pd.DataFrame(ts_row, index=[0], columns=validator.ts_fiel
 #check dataframe to see if it passes edits
 for func in dir(validator):
 	if func[:1] in ("s", "v") and func[1:4].isdigit()==True:
-		print("applying:", func) #print which function is being applied
+		message = "applying" + str(func)
+		logging.info(message) #print which function is being applied
 		getattr(validator, func)() #apply validation check
 
 #get validation results
 results_df = pd.DataFrame(validator.results) #convert results json object to dataframe
-print(results_df[results_df.status=="failed"]) #display dataframe of failed edits. If no rows are present the file is clean of edit rule violations.
+logging.info(results_df[results_df.status=="failed"]) #display dataframe of failed edits. If no rows are present the file is clean of edit rule violations.
 
 #write clean data file to disk
 utils.write_file(ts_input=pd.DataFrame(ts_row, index=[0], columns=validator.ts_field_names), lar_input=lar_frame, path="../edits_files/",
