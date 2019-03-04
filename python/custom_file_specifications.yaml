@@ -3,18 +3,9 @@
       source_filename: #Specify source filename
       output_filepath: "../edits_files/large_test_files/" 
       output_filename: "large_file_10000_rows.txt"
-      yaml_file:
+      row_by_row_modification_yaml_file:
       bank_name: "Bank1"
       lei: BANK1LEIFORTEST12345
       tax_id: 02-1234567
       row_count: 10000
-    row_by_row_file:
-      source_filepath: #Specify source filepath
-      source_filename: #Specify source filename
-      output_filepath: "../edits_files/Q617_testing/"
-      output_filename: "Q617_test.txt"
-      yaml_file: "row_by_row_Q617_test.yaml"
-      bank_name:
-      lei:
-      tax_id:
-      row_count: 5
+ 
