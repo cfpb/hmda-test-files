@@ -154,7 +154,7 @@ print(results_df[results_df.status=="failed"]) #display dataframe of failed edit
 
 #write clean data file to disk
 utils.write_file(ts_input=pd.DataFrame(ts_row, index=[0], columns=validator.ts_field_names), lar_input=lar_frame, 
-	path="../edits_files/{bank_name}/".format(bank_name=data_map["name"]["value"]),
+	path="../edits_files/clean_files/{bank_name}/".format(bank_name=data_map["name"]["value"]),
 	name="clean_file_{n}_rows_{bank_name}.txt".format(n=file_length, bank_name=data_map["name"]["value"]))
 
 

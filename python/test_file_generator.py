@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import random
 import string
-
+import yaml
 import utils
 
 class test_data(object):
@@ -12,10 +12,17 @@ class test_data(object):
 
 	def __init__(self, ts_schema, lar_schema):
 		"""Set initial class variables"""
-		self.clean_file_path = "../edits_files/"
-		self.validity_path = "../edits_files/validity/"
-		self.syntax_path = "../edits_files/syntax/"
-		self.quality_path = "../edits_files/quality/"
+
+		#load configuration data from YAML file
+		#use safe_load instead load
+		
+		with open('config.yaml') as f:
+			data_map = yaml.safe_load(f)
+		
+		self.clean_file_path = "../edits_files/clean_files/{bank_name}/".format(bank_name=data_map["name"]["value"])
+		self.validity_path = "../edits_files/test_files/{bank_name}/validity/".format(bank_name=data_map["name"]["value"])
+		self.syntax_path = "../edits_files/test_files/{bank_name}/syntax/".format(bank_name=data_map["name"]["value"])
+		self.quality_path = "../edits_files/test_files/{bank_name}/quality/".format(bank_name=data_map["name"]["value"])
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 
