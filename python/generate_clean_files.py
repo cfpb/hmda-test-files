@@ -180,8 +180,10 @@ for func in dir(validator):
 results_df = pd.DataFrame(validator.results) #convert results json object to dataframe
 logging.info(results_df[results_df.status=="failed"]) #display dataframe of failed edits. If no rows are present the file is clean of edit rule violations.
 
+
 #write clean data file to disk
-utils.write_file(ts_input=pd.DataFrame(ts_row, index=[0], columns=validator.ts_field_names), lar_input=lar_frame, path="../edits_files/",
-	name="clean_file_{n}_rows_{name}.txt".format(n=file_length, name=data_map["name"]["value"]))
+utils.write_file(ts_input=pd.DataFrame(ts_row, index=[0], columns=validator.ts_field_names), lar_input=lar_frame, 
+	path="../edits_files/clean_files/{bank_name}/".format(bank_name=data_map["name"]["value"]),
+	name="clean_file_{n}_rows_{bank_name}.txt".format(n=file_length, bank_name=data_map["name"]["value"]))
 
 
