@@ -10,7 +10,7 @@ import yaml
 import utils
 
 #Loads the custom file specifications yaml. 
-yaml_file ='custom_file_specifications.yaml'
+yaml_file ='configurations/custom_file_specifications.yaml'
 with open(yaml_file, 'r') as f:
     custom_file = yaml.safe_load(f)
 
