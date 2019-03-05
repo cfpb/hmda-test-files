@@ -24,9 +24,6 @@ bank_name = custom_file['large_file']['bank_name']
 lei = custom_file['large_file']['lei']
 tax_id = custom_file['large_file']['tax_id']
 
-print(source_filepath)
-print(source_filename)
-
 #Loads in TS and LAR data from the source filepath and source filename. 
 ts_data, lar_data = utils.read_data_file(path=source_filepath, 
     data_file=source_filename)
@@ -39,6 +36,10 @@ ts_data, lar_data = utils.new_lar_rows(row_count=row_count, lar_df=lar_data, ts_
 
 #Writes file to the output filepath and name in the custome file specifications yaml. 
 utils.write_file(path=output_filepath, ts_input=ts_data, lar_input=lar_data, name=output_filename)
+
+#If a row by row modification yaml file is present, the row by row modification function is applied. 
+if custom["large_file"]["row_by_row_modification_yaml_file"] != None:
+	lar_df = utils.row_by_row_modification(lar_df, yaml_filepath=custom_file["large_file"]["row_by_row_modification_yaml_file"])
 
 #Prints a statement of the file created. 
 statement = (str("{:,}".format(len(lar_data.index))) + 
