@@ -7,22 +7,22 @@ import yaml
 import utils 
 
 #Loads custom_file_specifications yaml. 
-with open('configurations/custom_file_specifications.yaml') as f:
+with open('configurations/edit_fails_by_row_script_config.yaml') as f:
 	# Use safe_load instead of the load function. 
 	data_map = yaml.safe_load(f)
 
 #Loads and stores requisite variables. 
-bank_name = data_map['edit_fails_by_row']['bank_name']
-lei = data_map['edit_fails_by_row']['lei']
-tax_id = data_map['edit_fails_by_row']['tax_id']
-rows_failed = data_map['edit_fails_by_row']['rows_failed']
-rows_total = data_map['edit_fails_by_row']['rows_total']
-passes_all_filepath = data_map['edit_fails_by_row']['passes_all_filepath']
-passes_all_filename = data_map['edit_fails_by_row']['passes_all_filename']
-fails_all_filepath = data_map['edit_fails_by_row']['fails_all_filepath']
-fails_all_filename = data_map['edit_fails_by_row']['fails_all_filename']
-output_filepath = data_map['edit_fails_by_row']['output_filepath']
-output_filename = data_map['edit_fails_by_row']['output_filename']
+bank_name = data_map['bank_name']
+lei = data_map['lei']
+tax_id = data_map['tax_id']
+rows_failed = data_map['rows_failed']
+rows_total = data_map['rows_total']
+passes_all_filepath = data_map['passes_all_filepath']
+passes_all_filename = data_map['passes_all_filename']
+fails_all_filepath = data_map['fails_all_filepath']
+fails_all_filename = data_map['fails_all_filename']
+output_filepath = data_map['output_filepath']
+output_filename = data_map['output_filename']
 
 	
 #Loading TS and LAR data for the clean file. 
