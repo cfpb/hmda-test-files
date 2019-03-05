@@ -1,11 +1,11 @@
     clean_file:
      desc: The file used to create error files
      type: File
-     value: "clean_file_100_rows.txt"
+     value: "clean_file_10_rows_Bank1.txt"
     file_length:
       desc: "The number of lines in the clean data file"
       type: Integer
-      value: 500
+      value: 10
     name:
       desc: The name of the institution filing data
       type: String
