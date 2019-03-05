@@ -16,7 +16,7 @@ class test_data(object):
 		#load configuration data from YAML file
 		#use safe_load instead load
 		
-		with open('configurations/config.yaml') as f:
+		with open('configurations/clean_file_config.yaml') as f:
 			data_map = yaml.safe_load(f)
 		
 		self.clean_file_path = "../edits_files/clean_files/{bank_name}/".format(bank_name=data_map["name"]["value"])

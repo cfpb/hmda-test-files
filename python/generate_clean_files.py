@@ -80,7 +80,7 @@ logging.basicConfig(filename=log_file_name,
                 	level=logging.INFO)
 
 #load configuration data from YAML file
-with open('configurations/config.yaml') as f:
+with open('configurations/clean_file_config.yaml') as f:
 	# use safe_load instead load
 	data_map = yaml.safe_load(f)
 #load tract and county data from the CBSA file

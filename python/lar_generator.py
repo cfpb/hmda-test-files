@@ -19,7 +19,7 @@ class lar_gen(object):
 		self.county_list = counties #list of CBSA counties, dtype string
 		self.tract_list = tracts #list of CBSA tracts, dtype string
 		self.state_codes = [] #list of valid state and territory codes (two digit letter)
-		with open('configurations/config.yaml') as f:
+		with open('configurations/clean_file_config.yaml') as f:
 			# use safe_load instead load
 			data_map = yaml.safe_load(f)
 		#load TS data
