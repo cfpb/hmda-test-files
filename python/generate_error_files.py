@@ -11,7 +11,7 @@ from test_file_generator import test_data
 import utils
 
 #load config data from yaml file
-with open('config.yaml') as f:
+with open('configurations/config.yaml') as f:
 	# use safe_load instead load
 	data_map = yaml.safe_load(f)
 
