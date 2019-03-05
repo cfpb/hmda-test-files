@@ -8,4 +8,17 @@
       lei: BANK1LEIFORTEST12345
       tax_id: 02-1234567
       row_count: 10000
+
+    edit_fails_by_row:
+      bank_name: "Bank1"
+      lei: "BANK1LEIFORTEST12345"
+      tax_id: "02-1234567"
+      rows_failed: 50
+      rows_total: 100
+      passes_all_filepath: #Specify source filepath
+      passes_all_filename: #Specify source filename
+      fails_all_filepath: "../edits_files/test_files/Bank1/syntax/"
+      fails_all_filename: "s302.txt"
+      output_filepath: "../edits_files/edit_fails_by_row/Bank1/"
+      output_filename: "50_rows_failed_100_rows_total.txt"
  
