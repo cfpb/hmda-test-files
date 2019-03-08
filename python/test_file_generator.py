@@ -16,19 +16,26 @@ class test_data(object):
 		#load configuration data from YAML file
 		#use safe_load instead load
 		
+		#Loads the clean file configuration. 
 		with open('configurations/clean_file_config.yaml') as f:
 			data_map = yaml.safe_load(f)
+
+		#Loads the filepath configuration. 
+		with open('configurations/test_filepaths.yaml') as f:
+			filepaths = yaml.safe_load(f)
 		
-		self.clean_file_path = "../edits_files/clean_files/{bank_name}/".format(bank_name=data_map["name"]["value"])
-		self.validity_path = "../edits_files/test_files/{bank_name}/validity/".format(bank_name=data_map["name"]["value"])
-		self.syntax_path = "../edits_files/test_files/{bank_name}/syntax/".format(bank_name=data_map["name"]["value"])
-		self.quality_path = "../edits_files/test_files/{bank_name}/quality/".format(bank_name=data_map["name"]["value"])
+		self.clean_file_path = filepaths['clean_filepath'].format(bank_name=data_map["name"]["value"])
+		self.validity_path = filepaths['validity_filepath'].format(bank_name=data_map["name"]["value"])
+		self.syntax_path = filepaths['syntax_filepath'].format(bank_name=data_map["name"]["value"])
+		self.quality_path = filepaths['quality_filepath'].format(bank_name=data_map["name"]["value"])
+		
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 
 		#load CBSA data for geography testing edits
 		use_cols = ['name', 'metDivName', 'countyFips', 'geoIdMsa', 
 		'metDivFp', 'smallCounty', 'tracts', 'stateCode']
+		
 		cbsa_cols = ['name', 'metDivName', 'state', 'countyFips', 'county', 
 		'tracts','geoIdMsa', 'metDivFp', 'smallCounty', 
 			 'stateCode', 'tractDecimal']

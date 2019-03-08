@@ -18,6 +18,10 @@ from rules_engine import rules_engine
 from test_file_generator import test_data
 import utils
 
+#Loads the filepath configuration. 
+with open('configurations/test_filepaths.yaml') as f:
+	filepaths = yaml.safe_load(f)
+
 #helper functions for data generation
 def get_const_list(lar_const):
 	"""Creates a list of constraints from the functions in the lar_constraints object."""
@@ -83,11 +87,14 @@ logging.basicConfig(filename=log_file_name,
 with open('configurations/clean_file_config.yaml') as f:
 	# use safe_load instead load
 	data_map = yaml.safe_load(f)
+
 #load tract and county data from the CBSA file
 #tract and county FIPS codes will be used  in geographic data generation
 use_cols = ['name', 'metDivName', 'countyFips', 'geoIdMsa', 'metDivFp', 'smallCounty', 'tracts', 'stateCode']
+
 cbsa_cols = ['name', 'metDivName', 'state', 'countyFips', 'county', 'tracts','geoIdMsa', 'metDivFp', 'smallCounty', 
 			 'stateCode', 'tractDecimal']
+
 cbsas = pd.read_csv('../dependencies/tract_to_cbsa_2015.txt', usecols=use_cols, delimiter='|', 
 					header=None, names=cbsa_cols, dtype=str) #load tract to CBSA data from platform file
 cbsas["tractFips"] = cbsas.countyFips + cbsas.tracts
@@ -181,9 +188,9 @@ results_df = pd.DataFrame(validator.results) #convert results json object to dat
 logging.info(results_df[results_df.status=="failed"]) #display dataframe of failed edits. If no rows are present the file is clean of edit rule violations.
 
 
-#write clean data file to disk
+#Write clean data file to disk
 utils.write_file(ts_input=pd.DataFrame(ts_row, index=[0], columns=validator.ts_field_names), lar_input=lar_frame, 
-	path="../edits_files/clean_files/{bank_name}/".format(bank_name=data_map["name"]["value"]),
-	name="clean_file_{n}_rows_{bank_name}.txt".format(n=file_length, bank_name=data_map["name"]["value"]))
+	path=filepaths['clean_filepath'].format(bank_name=data_map["name"]["value"]),
+	name=filepaths['clean_filename'].format(n=file_length, bank_name=data_map["name"]["value"]))
 
 

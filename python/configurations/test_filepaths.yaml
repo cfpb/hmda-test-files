@@ -1,0 +1,5 @@
+clean_filepath: "../edits_files/clean_files/{bank_name}/"
+clean_filename: "clean_file_{n}_rows_{bank_name}.txt"
+validity_filepath: "../edits_files/test_files/{bank_name}/validity/"
+syntax_filepath: "../edits_files/test_files/{bank_name}/syntax/"
+quality_filepath: "../edits_files/test_files/{bank_name}/quality/"
