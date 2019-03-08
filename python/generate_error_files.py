@@ -18,8 +18,8 @@ with open('configurations/clean_file_config.yaml') as f:
 with open('configurations/test_filepaths.yaml') as f:
 	filepaths = yaml.safe_load(f)
 
-ts_schema = pd.DataFrame(json.load(open("../schemas/ts_schema.json"))) #load TS schema
-lar_schema = pd.DataFrame(json.load(open("../schemas/lar_schema.json"))) #load LAR schema
+ts_schema = pd.DataFrame(json.load(open(filepaths['ts_schema_json']))) #load TS schema
+lar_schema = pd.DataFrame(json.load(open(filepaths['lar_schema_json']))) #load LAR schema
 #instantiate test_file_generator.py to modify clean data so that the resulting files fail specific edits
 file_maker = test_data(ts_schema=ts_schema, lar_schema=lar_schema) #instantiate edit file maker
 

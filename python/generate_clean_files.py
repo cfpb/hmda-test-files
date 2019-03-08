@@ -104,8 +104,8 @@ small_counties = list(cbsas.countyFips[cbsas.smallCounty=="1"])
 
 #load schemas for LAR and transmittal sheet
 #schemas contain valid enumerations, including NA values, for each field in the dataset
-lar_schema_df = pd.DataFrame(json.load(open("../schemas/lar_schema.json", "r")))
-ts_schema_df = pd.DataFrame(json.load(open("../schemas/ts_schema.json", "r")))
+lar_schema_df = pd.DataFrame(json.load(open(filepaths['lar_schema_json'], "r")))
+ts_schema_df = pd.DataFrame(json.load(open(filepaths['ts_schema_json'], "r")))
 
 #instantiate class objects
 lar_gen = lar_generator.lar_gen(lar_schema_df, ts_schema_df, counties=counties, tracts=tracts) #lar gen is responsible for generating data according to the schema
