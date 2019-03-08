@@ -34,12 +34,12 @@ ts_data, lar_data = utils.change_bank(ts_data=ts_data, lar_data=lar_data, new_ba
 
 ts_data, lar_data = utils.new_lar_rows(row_count=row_count, lar_df=lar_data, ts_df=ts_data)
 
-#Writes file to the output filepath and name in the large file specifications yaml. 
-utils.write_file(path=output_filepath, ts_input=ts_data, lar_input=lar_data, name=output_filename)
-
 #If a row by row modification yaml file is present in the configuration, the row by row modification function is applied. 
 if large_file["row_by_row_modification_yaml_file"] != None:
-	lar_df = utils.row_by_row_modification(lar_df, yaml_filepath=large_file["row_by_row_modification_yaml_file"])
+	lar_data = utils.row_by_row_modification(lar_data, yaml_filepath=large_file["row_by_row_modification_yaml_file"])
+
+#Writes file to the output filepath and name in the large file specifications yaml. 
+utils.write_file(path=output_filepath, ts_input=ts_data, lar_input=lar_data, name=output_filename)
 
 #Prints a statement of the file created. 
 statement = (str("{:,}".format(len(lar_data.index))) + 
