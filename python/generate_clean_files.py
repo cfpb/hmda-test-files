@@ -22,6 +22,10 @@ import utils
 with open('configurations/test_filepaths.yaml') as f:
 	filepaths = yaml.safe_load(f)
 
+#Loads the geographic data.
+with open('configurations/geographic_data.yaml') as f:
+	geographic = yaml.safe_load(f)
+
 #helper functions for data generation
 def get_const_list(lar_const):
 	"""Creates a list of constraints from the functions in the lar_constraints object."""
@@ -90,12 +94,11 @@ with open('configurations/clean_file_config.yaml') as f:
 
 #load tract and county data from the CBSA file
 #tract and county FIPS codes will be used  in geographic data generation
-use_cols = ['name', 'metDivName', 'countyFips', 'geoIdMsa', 'metDivFp', 'smallCounty', 'tracts', 'stateCode']
+use_cols = geographic['tract_file_columns_used']
 
-cbsa_cols = ['name', 'metDivName', 'state', 'countyFips', 'county', 'tracts','geoIdMsa', 'metDivFp', 'smallCounty', 
-			 'stateCode', 'tractDecimal']
+cbsa_cols = geographic['tract_file_columns']
 
-cbsas = pd.read_csv('../dependencies/tract_to_cbsa_2015.txt', usecols=use_cols, delimiter='|', 
+cbsas = pd.read_csv(geographic['tract_to_cbsa_file'], usecols=use_cols, delimiter='|', 
 					header=None, names=cbsa_cols, dtype=str) #load tract to CBSA data from platform file
 cbsas["tractFips"] = cbsas.countyFips + cbsas.tracts
 counties = list(cbsas.countyFips)

@@ -23,6 +23,10 @@ class test_data(object):
 		#Loads the filepath configuration. 
 		with open('configurations/test_filepaths.yaml') as f:
 			filepaths = yaml.safe_load(f)
+
+		#Loads the geographic data configuration.
+		with open('configurations/geographic_data.yaml') as f:
+			geographic = yaml.safe_load(f)
 		
 		self.clean_file_path = filepaths['clean_filepath'].format(bank_name=data_map["name"]["value"])
 		self.validity_path = filepaths['validity_filepath'].format(bank_name=data_map["name"]["value"])
@@ -33,14 +37,10 @@ class test_data(object):
 		self.ts_field_names = list(ts_schema.field)
 
 		#load CBSA data for geography testing edits
-		use_cols = ['name', 'metDivName', 'countyFips', 'geoIdMsa', 
-		'metDivFp', 'smallCounty', 'tracts', 'stateCode']
-		
-		cbsa_cols = ['name', 'metDivName', 'state', 'countyFips', 'county', 
-		'tracts','geoIdMsa', 'metDivFp', 'smallCounty', 
-			 'stateCode', 'tractDecimal']
+		use_cols = geographic['tract_file_columns_used']
+		cbsa_cols = geographic['tract_file_columns']
 
-		self.cbsa_data = pd.read_csv('../dependencies/tract_to_cbsa_2015.txt', 
+		self.cbsa_data = pd.read_csv(geographic['tract_to_cbsa_file'], 
 		usecols=use_cols, delimiter='|', 
 		header=None, names=cbsa_cols, dtype=object) #load tract to CBSA data from platform file
 	

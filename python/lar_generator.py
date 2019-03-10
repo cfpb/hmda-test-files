@@ -22,12 +22,19 @@ class lar_gen(object):
 		with open('configurations/clean_file_config.yaml') as f:
 			# use safe_load instead load
 			data_map = yaml.safe_load(f)
+		#Loads geographic configuration file. 
+		with open('configurations/geographic_data.yaml') as f:
+			geographic = yaml.safe_load(f)
+
+		#Loading in state codes. 
+		self.state_codes = geographic['state_codes']
+		
 		#load TS data
 		self.street_addy = data_map['street_addy']["value"]
 		self.city = data_map["city"]["value"]
 		self.bank_name = data_map["name"]["value"]
 		#Base LAR File range limits
-		self.zip_codes = json.load(open("../dependencies/zip_codes.json"))
+		self.zip_codes = json.load(open(geographic['zip_code_file']))
 		self.lar_zips = self.zip_codes.append("Exempt")
 		self.max_age = data_map["max_age"]["value"]
 		self.max_amount = data_map["max_amount"]["value"]
@@ -168,7 +175,7 @@ class lar_gen(object):
 		valid_lar_row["action_date"] = str(self.date_gen())
 		valid_lar_row["street_address"] = random.choice([self.street_addy, self.street_addy, "Exempt"])
 		valid_lar_row["city"] = self.city
-		valid_lar_row["state"] = random.choice(list(utils.state_codes.keys()))
+		valid_lar_row["state"] = random.choice(list(self.state_codes.keys()))
 		valid_lar_row["zip_code"] = random.choice(self.zip_codes)
 		valid_lar_row["county"] = self.random_enum(self.county_list)
 		valid_lar_row["tract"] = self.tract_from_county(valid_lar_row["county"])
