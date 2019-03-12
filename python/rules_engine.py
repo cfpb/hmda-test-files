@@ -8,13 +8,19 @@ import pandas as pd
 from io import StringIO
 import string
 import time
-
+import yaml
 import utils
 
 class rules_engine(object):
 	"""docstring for ClassName"""
 	def __init__(self, lar_schema=None, ts_schema=None, year=2018, cbsa_data=None):#tracts=None, counties=None, small_counties=None):
 		#lar and TS field names (load from schema names?)
+		
+		#Loading yaml for geographic data.
+		yaml_file = "configurations/geographic_data.yaml"
+		with open(yaml_file, 'r') as f:
+			geographic = yaml.safe_load(f)
+
 		self.year = year
 		self.tracts = list(cbsa_data.tractFips)#tracts #instantiate valid Census tracts
 		self.counties = list(cbsa_data.countyFips) #instantiate valid Census counties
@@ -25,10 +31,9 @@ class rules_engine(object):
 		#self.ts_df, self.lar_df= self.split_ts_row(data_file=data_file)
 		#if data_row:
 			#self.lar_df = data_row
-		self.state_codes = {'WA':'53', 'WI':'55', 'WV':'54', 'FL':'12', 'WY':'56', 'NH':'33', 'NJ':'34', 'NM':'33', 'NC':'37', 'ND':'38', 'NE':'31', 'NY':'36', 'RI':'44', 'NV':'32', 'CO':'08', 'CA':'06', 'GA':'13', 'CT':'09', 'OK':'40', 'OH':'39',
-							'KS':'20', 'SC':'45', 'KY':'21', 'OR':'41', 'SD':'46', 'DE':'10', 'HI':'15', 'PR':'43', 'TX':'48', 'LA':'22', 'TN':'47', 'PA':'42', 'VA':'51', 'VI':'78', 'AK':'02', 'AL':'01', 'AR':'05', 'VT':'50', 'IL':'17', 'IN':'18',
-							'IA':'19', 'AZ':'04', 'ID':'16', 'ME':'23', 'MD':'24', 'MA':'25', 'UT':'49', 'MO':'29', 'MN':'27', 'MI':'26', 'MT':'30', 'MS':'29', 'DC':'11'}
+		self.state_codes = geographic['state_codes']
 		self.results = []
+	
 	#Helper Functions
 	def load_lar_data(self, lar_df=None):
 		"""Takes a dataframe of LAR data and stores it as a class variable."""
