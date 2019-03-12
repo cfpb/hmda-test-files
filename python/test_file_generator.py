@@ -37,8 +37,8 @@ class test_data(object):
 		self.ts_field_names = list(ts_schema.field)
 
 		#load CBSA data for geography testing edits
-		use_cols = geographic['tract_file_columns_used']
-		cbsa_cols = geographic['tract_file_columns']
+		use_cols = geographic['cbsa_columns_used']
+		cbsa_cols = geographic['cbsa_columns']
 
 		self.cbsa_data = pd.read_csv(geographic['tract_to_cbsa_file'], 
 		usecols=use_cols, delimiter='|', 

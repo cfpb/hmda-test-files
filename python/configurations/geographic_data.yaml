@@ -1,8 +1,8 @@
 tract_to_cbsa_file: '../dependencies/tract_to_cbsa_2015.txt'
 zip_code_file: "../dependencies/zip_codes.json"
-tract_file_columns: ['name', 'metDivName', 'state', 'countyFips', 'county', 'tracts','geoIdMsa', 'metDivFp', 'smallCounty', 
+cbsa_columns: ['name', 'metDivName', 'state', 'countyFips', 'county', 'tracts','geoIdMsa', 'metDivFp', 'smallCounty', 
        'stateCode', 'tractDecimal']
-tract_file_columns_used: ['name', 'metDivName', 'countyFips', 'geoIdMsa', 'metDivFp', 'smallCounty', 'tracts', 'stateCode']
+cbsa_columns_used: ['name', 'metDivName', 'countyFips', 'geoIdMsa', 'metDivFp', 'smallCounty', 'tracts', 'stateCode']
 state_codes: {
   'AL':'01', 'AK':'02', 'AZ':'04', 'AR':'05', 'CA':'06', 'CO':'08','CT':'09', 
   'DE':'10', 'DC':'11', 'FL':'12', 'GA':'13', 'HI':'15', 'ID':'16', 'IL':'17',

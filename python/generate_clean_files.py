@@ -94,9 +94,10 @@ with open('configurations/clean_file_config.yaml') as f:
 
 #load tract and county data from the CBSA file
 #tract and county FIPS codes will be used  in geographic data generation
-use_cols = geographic['tract_file_columns_used']
 
-cbsa_cols = geographic['tract_file_columns']
+use_cols = geographic['cbsa_columns_used']
+
+cbsa_cols = geographic['cbsa_columns']
 
 cbsas = pd.read_csv(geographic['tract_to_cbsa_file'], usecols=use_cols, delimiter='|', 
 					header=None, names=cbsa_cols, dtype=str) #load tract to CBSA data from platform file
