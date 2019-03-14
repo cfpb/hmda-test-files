@@ -190,7 +190,8 @@ class rules_engine(object):
 		"""The reported Calendar Year does not match the filing year indicated at the start of the filing."""
 		field = "calendar_year"
 		edit_name = "s302"
-		fail_df = self.ts_df[self.ts_df.calendar_year != str(self.year)]
+		year = str(self.year)
+		fail_df = self.ts_df[self.ts_df.calendar_year != self.year]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	def s304(self):
@@ -247,7 +248,9 @@ class rules_engine(object):
 		"""An invalid Calendar Quarter was reported. 1) Calendar Quarter must equal 4, and cannot be left blank."""
 		field = "calendar_quarter"
 		edit_name = "v602"
-		fail_df = self.ts_df[self.ts_df.calendar_quarter!=str(4)]
+		fail_df = self.ts_df.copy()
+		fail_df.calendar_quarter = fail_df.calendar_quarter.apply(lambda x: int(x))
+		fail_df = fail_df[(fail_df.calendar_quarter != 4)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	def v603(self):
