@@ -2914,7 +2914,7 @@ class rules_engine(object):
 		field = "Age of Applicant or Borrower"
 		edit_name = "q614"
 		fail_df = self.lar_df[self.lar_df.app_age!="NA"].copy()
-		fail_df = fail_df[~(fail_df.app_age.apply(lambda x: 17 <= int(x) <= 101))]
+		fail_df = fail_df[~(fail_df.app_age.apply(lambda x: 18 <= int(x) <= 100))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q615_1(self):
