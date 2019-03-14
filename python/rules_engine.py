@@ -2846,7 +2846,7 @@ class rules_engine(object):
 		field = "Loan Amount/Lien Status"
 		edit_name = "q607"
 		fail_df = self.lar_df[(self.lar_df.loan_amount!="NA")].copy()
-		fail_df = fail_df[(fail_df.lien=="2")&(fail_df.loan_amount.apply(lambda x: int(x)>250))]
+		fail_df = fail_df[(fail_df.lien=="2")&(fail_df.loan_amount.apply(lambda x: int(x)>250000))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q608(self):
