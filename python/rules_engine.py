@@ -2893,7 +2893,8 @@ class rules_engine(object):
 		"""If Type of Purchaser equals 1 or 3, then HOEPA Status generally should be 2 or 3."""
 		field = "Type of Purchaser/HOEPA Status"
 		edit_name = "q612"
-		fail_df = self.lar_df[(self.lar_df.purchaser_type.isin(["1", "3"]))&(~self.lar_df.hoepa.isin(["2","3'"]))]
+		fail_df = self.lar_df[(self.lar_df.purchaser_type.isin(["1", "3"]))&
+		(~self.lar_df.hoepa.isin(["2","3"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 		
 	def q613(self):
