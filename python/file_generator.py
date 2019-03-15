@@ -155,7 +155,7 @@ class generate_file(object):
 
 	def validation(self, row, ts_row):
 		"""
-		Applies the rules engine logic 
+		Applies the syntax and validity rules engine logic 
 		to the LAR row to create an edit report.
 		"""
 
@@ -253,21 +253,19 @@ class generate_file(object):
 		#The following produces a clean file. 
 		if kind == 'clean_file':
 
-			#Creates a first row and a second row of LAR data which result in 
-			#a LAR dataframe for which more rows are added. 
+			#Creates a first row of LAR to begin the dataframe.
+			#All other rows are concatenated to the dataframe until
+			#it the frame reaches the file length specified in the 
+			#test filepaths yaml file. 
 			for i in range(0, self.file_length):
 				print('Creating row {i}'.format(i=i))
 				if i==0:
-					lar_row = self.make_clean_lar_row(ts_row=self.ts_row)
-					first_row = pd.DataFrame(lar_row, index=[1])
-				elif i==1:
-					new_row = self.make_clean_lar_row(ts_row=self.ts_row)
-					new_lar = pd.DataFrame(new_row, index=[1])
-					lar_frame = pd.concat([first_row, new_lar], axis=0)
+					first_row = self.make_clean_lar_row(ts_row=self.ts_row)
+					lar_frame = pd.DataFrame(first_row, index=[1])
 				else:
 					new_row = self.make_clean_lar_row(ts_row=self.ts_row)
-					new_lar = pd.DataFrame(new_row, index=[1])
-					lar_frame = pd.concat([lar_frame, new_lar], axis=0)
+					new_row = pd.DataFrame(new_row, index=[1])
+					lar_frame = pd.concat([lar_frame, new_row], axis=0)
 			
 			#Writes the file to a clean filepath specified in the test_filepaths
 			#configuration.  
@@ -319,8 +317,8 @@ class generate_file(object):
 		whether any rows of the data failed syntax, validity or quality edits.
 
 		The report contains among its fields the edit name, the status of the 
-		edit, the number of rows failed by the edit, if any, and the ULI's of 
-		NULIs of the rows that fail the edit. 
+		edit, the number of rows failed by the edit, if any, and the ULI's or 
+		NULIs (loan ID) of the rows that fail the edit. 
 
 		The resulting report is saved as a csv file using configurations
 		from the test_filepaths.yaml file. 
