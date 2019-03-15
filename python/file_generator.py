@@ -255,8 +255,9 @@ class generate_file(object):
 
 			#Creates a first row of LAR to begin the dataframe.
 			#All other rows are concatenated to the dataframe until
-			#it the frame reaches the file length specified in the 
-			#test filepaths yaml file. 
+			#the length of the dataframe reaches the file length specified in the 
+			#test filepaths yaml file.
+
 			for i in range(0, self.file_length):
 				print('Creating row {i}'.format(i=i))
 				if i==0:
