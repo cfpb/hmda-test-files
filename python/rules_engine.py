@@ -522,7 +522,7 @@ class rules_engine(object):
 		3) The Action Taken Date must be on or after the Application Date."""
 		field = "action_date"
 		edit_name = "v619_3"
-		fail_df = self.lar_df[(self.lar_df.action_date < self.lar_df.app_date)&(self.lar_df.app_date!="NA")]
+		fail_df = self.lar_df[(self.lar_df.action_date <= self.lar_df.app_date)&(self.lar_df.app_date!="NA")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v620(self):
