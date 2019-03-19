@@ -16,7 +16,7 @@ from test_file_generator import test_data
 import glob
 import utils
 
-class generate_file(object):
+class FileGenerator(object):
 
 	def __init__(self):
 
@@ -421,6 +421,7 @@ class generate_file(object):
 		#The condition where there are no clean rows present in the file. 
 		except ZeroDivisionError:
 			#Prints a message to indicate that the file has not been validated. 
+			print("Zero Division Error. No clean rows available to be duplicated.")
 			print("Sorry no clean file available for {file}.".format(file=quality_filename))
 
 	def edit_report(self, data_filepath, data_filename):
