@@ -421,6 +421,7 @@ class FileGenerator(object):
 		#The condition where there are no clean rows present in the file. 
 		except ZeroDivisionError as e:
 			#Prints a message to indicate that the file has not been validated. 
+			print(e)
 			print("Sorry no clean file available for {file}.".format(file=quality_filename))
 
 	def edit_report(self, data_filepath, data_filename):
