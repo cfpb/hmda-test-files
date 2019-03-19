@@ -1,6 +1,7 @@
 #The following functions help to produce data generation for the script below. 
 
 #Imports the required packages
+import os
 import json
 import pandas as pd
 import yaml
@@ -15,7 +16,7 @@ from test_file_generator import test_data
 import glob
 import utils
 
-class generate_file(object):
+class FileGenerator(object):
 
 	def __init__(self):
 
@@ -309,8 +310,119 @@ class generate_file(object):
 				if func[:1] in ("s", "v", "q") and func[1:4].isdigit()==True: 
 					print("applying:", func)
 					#Applies data modification functions and produces files.
-					getattr(file_maker, func)() 
-					
+					getattr(file_maker, func)()
+
+	def validate_quality_edit_file(self, quality_filename):
+		"""
+		The test file generator logic for creating quality edit test files
+		may cause rows to fail not only quality edits, but also
+		syntax or validity edits in the creation process. 
+
+		This function takes a quality edit test file from the quality filepaths
+		directory in the test filepaths yaml, drops rows that have
+		syntax or validity edits, and duplicates the remaining clean rows to the 
+		length of the original file. 
+
+		The file is then saved in a new directory for quality edit test files 
+		that also pass syntax and validity edits.  
+		"""
+		try: 
+			#Instantiates an edit checker object with rules_engine.
+			checker = rules_engine(lar_schema=self.lar_schema_df, 
+				ts_schema=self.ts_schema_df, cbsa_data=self.cbsas)
+
+			#Reads the files and separates data into TS and LAR frames.
+			ts_df, lar_df = utils.read_data_file(
+				path=self.filepaths['quality_filepath'].format(bank_name=self.data_map['name']['value']), 
+				data_file=quality_filename)
+
+			#Stores the original length of the file. 
+			original_length = len(lar_df.index)
+
+			#Loads data into the checker object. 
+			checker.load_data_frames(ts_df, lar_df)
+
+			#Produces a report as to which syntax or validity
+			#edits have passed or failed based on logic in the rules_engine.
+			for func in dir(checker):
+				if func[:1] in ("s", "v") and func[1:4].isdigit()==True:
+					getattr(checker, func)()
+			
+			#Creates a results dataframe and keeps the results that 
+			#have failed. 
+			res_df = pd.DataFrame(checker.results)
+			new_df = res_df[(res_df['status']=='failed')]
+
+			#If there are no syntax or validity edits,
+			#the data is written to a new directory for quality 
+			#test files that pass syntax and validity edits. 
+
+			if len(new_df) == 0:
+				utils.write_file(path=self.filepaths['quality_pass_s_v_filepath'].format(
+					bank_name=self.data_map['name']['value']), 
+					ts_input=ts_df, 
+					lar_input=lar_df, 
+					name=quality_filename)
+
+			#The case if there are rows that failed syntax or validity edits.
+			
+			else: 
+				#Creates an empty list for storing row numbers
+				#where edits have failed. 
+				uli_list = []
+
+				#Iterates through each row and appends the list of ULI's
+				#of rows where syntax or validity edits have failed. 
+				for index, row in new_df.iterrows():
+					uli_list.append(row.row_ids)
+
+				#Drops not-a-numbers from the ULI list. 
+				if np.nan in uli_list:
+					uli_list.remove(np.nan)
+
+				#Creates a new list to store the ULI's without nested brackets. 
+				new_list = []
+				for i in range(len(uli_list)):
+					for n in range(len(uli_list[i])):
+						new_list.append(uli_list[i][n])
+
+				#Creates a list that removes ULI's that are repeated. 
+				unique_list = []
+				for i in new_list:
+					if i not in unique_list:
+						unique_list.append(i)
+
+				#Creates a list of row numbers corresponding to the
+				#ULI's that have failed syntax or validity edits. 
+				bad_rows = []
+				for index, row in lar_df.iterrows():
+					if row['uli'] in unique_list:
+						failed_uli = row['uli']
+						bad_rows.append(lar_df[lar_df['uli']==failed_uli].index.values.astype(int)[0])
+
+				#Drops all rows that failed syntax or validity edits
+				#from the original LAR dataframe. 
+				lar_df = lar_df.drop(bad_rows)
+
+				#Creates new lar rows to the original length of the file
+				#using the utils new lar rows function. 
+				ts_df, lar_df = utils.new_lar_rows(row_count=original_length, 
+					lar_df=lar_df, ts_df=ts_df)
+
+				#Writes the file to the new path for quality test files
+				#that pass syntax and validity edits. 
+				utils.write_file(path=self.filepaths['quality_pass_s_v_filepath'].format(bank_name=self.data_map['name']['value']), 
+					ts_input=ts_df, lar_input=lar_df, name=quality_filename)
+
+				#Prints to the console the name of the file being changed. 
+				print("Adjusting {file} to pass syntax and validity edits.".format(file=quality_filename))
+				print("File saved in {path}".format(path=self.filepaths['quality_pass_s_v_filepath'].format(bank_name=self.data_map['name']['value'])))
+		
+		#The condition where there are no clean rows present in the file. 
+		except ZeroDivisionError as e:
+			#Prints a message to indicate that the file has not been validated. 
+			print(e)
+			print("Sorry no clean file available for {file}.".format(file=quality_filename))
 
 	def edit_report(self, data_filepath, data_filename):
 		"""
@@ -357,6 +469,10 @@ class generate_file(object):
 		#Logs the result.
 		logging.info("Edit Report has been created in {filepath}".format(
 			filepath=self.filepaths['edit_report_filepath']))
+
+
+
+
 
 
 
