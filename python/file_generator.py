@@ -419,9 +419,8 @@ class FileGenerator(object):
 				print("File saved in {path}".format(path=self.filepaths['quality_pass_s_v_filepath'].format(bank_name=self.data_map['name']['value'])))
 		
 		#The condition where there are no clean rows present in the file. 
-		except ZeroDivisionError:
+		except ZeroDivisionError as e:
 			#Prints a message to indicate that the file has not been validated. 
-			print("Zero Division Error. No clean rows available to be duplicated.")
 			print("Sorry no clean file available for {file}.".format(file=quality_filename))
 
 	def edit_report(self, data_filepath, data_filename):
