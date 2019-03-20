@@ -68,8 +68,7 @@ The function method `create_files(kind)` outputs a clean test file or a set of e
 
 A suggested workflow for creating test files:
 
-1) *Instantiate FileGenerator*: Instantiate `FileGenerator()` to a python object in a script in the `python/` directory. Such as 
-`file = FileGenerator()`.
+1) *Instantiate FileGenerator*: Instantiate `FileGenerator()` to a python object in a script in the `python/` directory. Such as `file = FileGenerator()`.
 
 2) *Adjust Configuration Files*: Make modifications to `test_filepaths.yaml`, `geography_data.yaml`, and `clean_file_config.yaml` for the kind of clean file to be produced. 
 
@@ -80,7 +79,7 @@ A suggested workflow for creating test files:
 
 5) *Validate Quality Edit Test Files*: Ensure that quality edit test files are free of syntax and validity edits. Run `file.validate_quality_edit_file(quality_filename=[quality_file.txt])` in a python script on a quality edit filename.  
 
-6) Create a Large File: Modify `large_file_script_config.yaml` and set the source filepath and source filename to the clean file created. Set the number of rows and/or change the test institution information. Set the filepath and name of the output file. Set the number of rows. Optionally, provide a row by row modification yaml file. Run `large_test_files_script.py` in terminal and create the large file. 
+6) *Create a Large File*: Modify `large_file_script_config.yaml` and set the source filepath and source filename to the clean file created. Set the number of rows and/or change the test institution information. Set the filepath and name of the output file. Set the number of rows. Optionally, provide a row by row modification yaml file. Run `large_test_files_script.py` in terminal and create the large file. 
 
 
 ## Additional Utilities
