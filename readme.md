@@ -64,7 +64,7 @@ In addition, the script contains functionality for changing values by column and
 [`row_by_row_modification.yaml.`](https://github.com/cfpb/hmda-test-files/blob/master/python/configurations/row_by_row_modification.yaml) The script can contain a path to a yaml configuration to initiate this functionality. 
 
 ## Getting Started: Generating Clean Files, Edit Test Files, and Large Files. 
-The function method `create_files(kind)` outputs a clean test file or a set of edit test files, with an input indicating the kind of file to be created. The 
+The function method `create_files(kind)` outputs a clean test file or a set of edit test files, with an input indicating the kinds of file to be created, `"clean_file"` or `"error_files"`. The `kind` keyword in the function is inputted as a string. 
 
 A suggested workflow for creating test files:
 
