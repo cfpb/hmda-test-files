@@ -9,14 +9,14 @@ This repository contains code used to generate synthetic LAR files. These files 
 
 ## Repository Structure
 - [Python](https://github.com/cfpb/hmda-test-files/tree/master/python):
-    - Contains the notebooks and python scripts used to generate synthetic LAR data, perturb the data so that it fails specific business rules, and code to check that the produced files fail as expected.
+    - Contains the notebooks and python scripts used to generate synthetic LAR data, perturb the data so that it fails specific business rules, and code to check that the produced files fail edits as expected.
 
 - [Schemas](https://github.com/cfpb/hmda-test-files/tree/master/schemas)
     - Contains JSON objects that represent the data structures for LAR and Transmittal Sheet as defined by the [2018 HMDA FIG](https://s3.amazonaws.com/cfpb-hmda-public/prod/help/2018-hmda-fig-2018-hmda-rule.pdf)
 
 - [Dependencies](https://github.com/cfpb/hmda-test-files/tree/master/dependencies)
     - Contains files used in the generation of synthetic LAR data.
-        - Tract to CBSA data for 2015 (most current year)
+        - Tract to CBSA data for 2015
         - A file containing a list of US ZIP codes
 
 ## Dependencies
