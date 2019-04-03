@@ -244,4 +244,44 @@ def check_digit_gen(valid=True, ULI=None):
 	else:
 		return str(check_digit+6).zfill(2)[:2] #return a bad check digit (used in edit testing)
 
+def validate_state_codes(path, data_file):
+	"""Parses through an existing test file and replaces the state code 
+	abbreviation with one that maps to the FIPS state code indicated 
+	in the census tract field."""
+
+	#Seperates LAR and TS Data.
+	ts_data, lar_data = utils.read_data_file(path=path, data_file=data_file)
+
+	print(len(lar_data.columns))
+
+	#Loads the geographic file configuration.
+	with open('configurations/geographic_data.yaml') as f:
+		# Uses safe_load instead of load.
+		geographic = yaml.safe_load(f) 
+
+	#Iterrates through each row in the LAR data. 
+	for index, row in lar_data.iterrows():
+		print(row.state)
+		if row.state != 'NA':
+			#Assigns the state code abbreviation key from the FIPS state code value to the row's
+			#state code field. 
+			print("The census tract is " + row['tract'])
+			print("Original value is " + row['state'])
+			print("New state is " + geographic['state_FIPS_to_abbreviation'][row['tract'][0:2]])
+			row['state'] = geographic['state_FIPS_to_abbreviation'][row['tract'][0:2]]
+			print("Changed value is " + row['state'])
+
+	#Prints a statement when the process is complete. 
+	print("Validating State Code Abbreviations")
+
+	if len(lar_data.columns) !=110:
+		print("Not the right number of columns")
+		print("Number of columns is " + str(len(lar_data.columns)))
+
+	#Writes file back to the original path. 
+	utils.write_file(path=path, ts_input=ts_data, lar_input=lar_data, name=data_file)
+
+	#Prints a statement when the file is re-written. 
+	print("File rewritten to " + path)
+
 
