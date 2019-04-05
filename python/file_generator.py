@@ -35,11 +35,8 @@ class FileGenerator(object):
 			# Uses safe_load instead of load.
 			self.data_map = yaml.safe_load(f)
 
-		#Stores the column names for the CBSA file. 
-		cbsa_cols = self.geographic['cbsa_columns']
-
-		#Stores the column names used from the CBSA file. 
-		use_cols = self.geographic['cbsa_columns_used']
+		#Stores the column names for the file containing geographic crosswalk data. 
+		file_cols = self.geographic['file_columns']
 
 		#Sets the logging parameters.
 		#Uses a log file name and file writing mode from the
@@ -50,17 +47,17 @@ class FileGenerator(object):
                 	filemode=self.filepaths['log_mode'],
                 	level=logging.INFO)
 
-		#Loads tract to CBSA data from filepaths named in the test_filepaths
+		#Loads geographic crosswalk data from filepaths named in the test_filepaths
 		#yaml file. 
-		self.cbsas = pd.read_csv(self.geographic['tract_to_cbsa_file'], 
-			usecols=use_cols, 
-			delimiter='|', header=None, names=cbsa_cols, dtype=str)
+		self.crosswalk_data = pd.read_csv(self.geographic['crosswalk_data_file'], 
+			delimiter='|', header=None, names=file_cols, dtype=str)
 
-		#Creates county, tract, and small county data from the CBSA file. 
-		self.cbsas["tractFips"] = self.cbsas.countyFips + self.cbsas.tracts
-		self.counties = list(self.cbsas.countyFips)
-		self.tracts = list(self.cbsas.tractFips)
-		self.small_counties = list(self.cbsas.countyFips[self.cbsas.smallCounty=="1"])
+		#Creates county, tract, and small county data from the file containing geographic crosswalk data. 
+		self.crosswalk_data['countyFips'] = self.crosswalk_data['stateCode'] + self.crosswalk_data['county']
+		self.crosswalk_data["tractFips"] = self.crosswalk_data.countyFips + self.crosswalk_data.tracts
+		self.counties = list(self.crosswalk_data.countyFips)
+		self.tracts = list(self.crosswalk_data.tractFips)
+		self.small_counties = list(self.crosswalk_data.countyFips[self.crosswalk_data.smallCounty=="S"])
 
 		#Loads schemas for LAR and TS.
 		#Schemas contain valid enumerations, including NA values, for each 
@@ -85,7 +82,7 @@ class FileGenerator(object):
 		#lar_validator checks a dataframe and returns a JSON with 
 		#edit pass/fail results. 
 		self.lar_validator = rules_engine(lar_schema=self.lar_schema_df, 
-			ts_schema=self.ts_schema_df, cbsa_data=self.cbsas)
+			ts_schema=self.ts_schema_df, crosswalk_data=self.crosswalk_data)
 					#tracts=tracts, counties=counties, small_counties=small_counties) 
 
 		#Stores the number of rows in the test file
@@ -167,7 +164,7 @@ class FileGenerator(object):
 		#Instantiates a rules checker to check the row against
 		#edits in the rules engine. 
 		rules_check = rules_engine(lar_schema=self.lar_schema_df, 
-			ts_schema=self.ts_schema_df, cbsa_data=self.cbsas)
+			ts_schema=self.ts_schema_df, crosswalk_data=self.crosswalk_data)
 			#tracts=tracts, counties=counties) #instantiate edits rules engine
 
 		#Loads LAR and TS data to the rules engine. 
@@ -285,7 +282,8 @@ class FileGenerator(object):
 			
 			#Instantiates the edit file maker.
 			file_maker = test_data(ts_schema=self.ts_schema_df, 
-				lar_schema=self.lar_schema_df) 
+				lar_schema=self.lar_schema_df, 
+				crosswalk_data=self.crosswalk_data) 
 
 			#Pulls in the clean data filepath and name from the
 			#test filepaths yaml file. 
@@ -329,7 +327,7 @@ class FileGenerator(object):
 		try: 
 			#Instantiates an edit checker object with rules_engine.
 			checker = rules_engine(lar_schema=self.lar_schema_df, 
-				ts_schema=self.ts_schema_df, cbsa_data=self.cbsas)
+				ts_schema=self.ts_schema_df, crosswalk_data=self.crosswalk_data)
 
 			#Reads the files and separates data into TS and LAR frames.
 			ts_df, lar_df = utils.read_data_file(
@@ -438,9 +436,9 @@ class FileGenerator(object):
 		"""
 
 		#Instantiates the rules engine class as a checker object with a
-		#LAR schema, a TS schema, and CBSA data. 
+		#LAR schema, a TS schema, and geographic crosswalk data. 
 		checker = rules_engine(lar_schema=self.lar_schema_df, 
-			ts_schema=self.ts_schema_df, cbsa_data=self.cbsas)
+			ts_schema=self.ts_schema_df, crosswalk_data=self.crosswalk_data)
 
 		#Seperates data from the filepath and filename into a TS dataframe
 		#and a LAR dataframe. 

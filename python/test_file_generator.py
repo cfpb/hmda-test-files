@@ -10,7 +10,7 @@ class test_data(object):
 	altered file to fail the specified edit. Modified files may fail other 
 	edits as well."""
 
-	def __init__(self, ts_schema, lar_schema):
+	def __init__(self, ts_schema, lar_schema, crosswalk_data):
 		"""Set initial class variables"""
 
 		#load configuration data from YAML file
@@ -23,10 +23,6 @@ class test_data(object):
 		#Loads the filepath configuration. 
 		with open('configurations/test_filepaths.yaml') as f:
 			filepaths = yaml.safe_load(f)
-
-		#Loads the geographic data configuration.
-		with open('configurations/geographic_data.yaml') as f:
-			geographic = yaml.safe_load(f)
 		
 		self.clean_file_path = filepaths['clean_filepath'].format(bank_name=data_map["name"]["value"])
 		self.validity_path = filepaths['validity_filepath'].format(bank_name=data_map["name"]["value"])
@@ -36,13 +32,7 @@ class test_data(object):
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 
-		#load CBSA data for geography testing edits
-		use_cols = geographic['cbsa_columns_used']
-		cbsa_cols = geographic['cbsa_columns']
-
-		self.cbsa_data = pd.read_csv(geographic['tract_to_cbsa_file'], 
-		usecols=use_cols, delimiter='|', 
-		header=None, names=cbsa_cols, dtype=object) #load tract to CBSA data from platform file
+		self.crosswalk_data = crosswalk_data
 	
 	def load_data_frames(self, ts_data, lar_data):
 		"""Receives dataframes for TS and LAR and writes them as object attributes"""
@@ -2864,7 +2854,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.tract = "NA"
-		big_counties = list(self.cbsa_data.countyFips[self.cbsa_data.smallCounty!="1"])
+		big_counties = list(self.crosswalk_data.countyFips[self.crosswalk_data.smallCounty!="1"])
 		lar.county = lar.county.map(lambda x: random.choice(big_counties))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
@@ -2876,11 +2866,11 @@ class test_data(object):
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.state = lar.state.map(lambda x: random.choice(list(self.cbsa_data.stateCode)))
+		lar.state = lar.state.map(lambda x: random.choice(list(self.crosswalk_data.stateCode)))
 		#this implemenation sets all state codes to the same code and uses that to make a county list 
 		for index, row in lar.iterrows():
-			row["state"] = random.choice(list(self.cbsa_data.stateCode))
-			row["county"] = random.choice(list(self.cbsa_data.countyFips[self.cbsa_data.stateCode!=row["state"]]))
+			row["state"] = random.choice(list(self.crosswalk_data.stateCode))
+			row["county"] = random.choice(list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode!=row["state"]]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 

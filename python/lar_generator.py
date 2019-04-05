@@ -16,9 +16,14 @@ class lar_gen(object):
 		self.LAR_df = LAR_df
 		self.TS_df = TS_df
 		#external data lists
-		self.county_list = counties #list of CBSA counties, dtype string
-		self.tract_list = tracts #list of CBSA tracts, dtype string
-		self.state_codes = [] #list of valid state and territory codes (two digit letter)
+		
+		#list of counties from the geographic crosswalk data file, dtype string
+		self.county_list = counties 
+		#list of tracts from the geographic crosswalk data file, dtype string
+		self.tract_list = tracts 
+		#list of valid state and territory codes (two digit letter)
+		self.state_codes = [] 
+		
 		with open('configurations/clean_file_config.yaml') as f:
 			# use safe_load instead load
 			data_map = yaml.safe_load(f)
