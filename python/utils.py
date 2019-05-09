@@ -250,7 +250,7 @@ def validate_state_codes(path, lar_file):
 	in the census tract field."""
 
 	#Seperates LAR and TS Data.
-	ts_data, lar_data = utils.read_data_file(path=path, data_file=lar_file)
+	ts_data, lar_data = utils.read_data_file(path=path, data_file=test_file)
 
 	print(len(lar_data.columns))
 
@@ -279,7 +279,7 @@ def validate_state_codes(path, lar_file):
 	print("Validating State Code Abbreviations")
 
 	#Writes file back to the original path. 
-	utils.write_file(path=path, ts_input=ts_data, lar_input=lar_data, name=lar_file)
+	utils.write_file(path=path, ts_input=ts_data, lar_input=lar_data, name=test_file)
 
 	#Prints a statement when the file is re-written. 
 	print("File rewritten to " + path)
