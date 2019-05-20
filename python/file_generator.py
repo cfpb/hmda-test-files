@@ -468,7 +468,8 @@ class FileGenerator(object):
 		logging.info("Edit Report has been created in {filepath}".format(
 			filepath=self.filepaths['edit_report_filepath']))
 
-	def create_custom_file(self, yaml_filepath, filepath, filename):
+	def create_custom_file(self, yaml_filepath, filepath, filename, 
+		filepath_answers, filename_answers):
 		"""
 		Builds a new submission file based on parameters in a 
 		configuration. 
@@ -521,11 +522,10 @@ class FileGenerator(object):
 			res_df = res_df[(res_df['status']=='failed')]
 
 			if len(res_df) == 0: #or 'row_ids' not in list(res_df.columns):
+				
 				#Takes the first row of data. 
 				new_data = lar_data[0:1]
-
-				print(new_data[['action_taken', 'loan_type', 'loan_purpose',
-			'total_units', 'street_address', 'city', 'county', 'zip_code', 'tract']])
+				
 				#Appends data to the LAR list.
 				lar_list.append(new_data)
 				print("No Edits")
@@ -578,9 +578,6 @@ class FileGenerator(object):
 					#Appends data to the LAR list.
 					lar_list.append(new_data)
 
-					print(new_data[['action_taken', 'loan_type', 'loan_purpose',
-				'total_units', 'street_address', 'city', 'county', 'zip_code', 'tract']])
-
 				except AttributeError: pass
 
 			print(len(lar_list))
@@ -599,6 +596,24 @@ class FileGenerator(object):
 
 		#Writes a new file. 
 		utils.write_file(ts_input=ts_data, lar_input=new_df, path=filepath, name=filename)
+
+		#Writing Answer Key File. 
+
+		#The following outputs an "answer key" csv file for each row.
+		answer_key_dict = {'Row': [], 'Answer': []} 
+		
+		for case in custom_file:
+			answer_key_dict['Row'].append(custom_file[case]['row'])
+			answer_key_dict['Answer'].append(custom_file[case]['answer_key'])
+
+		answer_key_dataframe = pd.DataFrame(answer_key_dict)
+
+		if not os.path.exists(filepath_answers):
+			os.makedirs(filepath_answers)
+
+		answer_key_dataframe.to_csv(filepath_answers+filename_answers, index=False)
+
+
 
 
 
