@@ -1,0 +1,110 @@
+    Case 1:
+      row: 0
+      answer_key: "Sex Not Available"
+      columns: [
+        app_sex: '3'
+    ]
+    Case 2:
+      row: 1
+      answer_key: "Sex Not Available"
+      columns: [
+        app_sex: '4'
+    ]
+    Case 3:
+      row: 2
+      answer_key: "Male"
+      columns: [
+        app_sex: '1',
+        co_app_sex: '1'
+    ]
+    Case 4:
+      row: 3
+      answer_key: "Male"
+      columns: [
+        app_sex: '1',
+        co_app_sex: '3'
+    ]
+    Case 5:
+      row: 4
+      answer_key: "Male"
+      columns: [
+        app_sex: '1',
+        co_app_sex: '4'
+    ]
+    Case 6:
+      row: 5
+      answer_key: "Male"
+      columns: [
+        app_sex: '1',
+        co_app_sex: '5'
+    ]
+    Case 7:
+      row: 6
+      answer_key: "Female"
+      columns: [
+        app_sex: '2',
+        co_app_sex: '2'
+    ]
+    Case 8:
+      row: 7
+      answer_key: "Female"
+      columns: [
+        app_sex: '2',
+        co_app_sex: '3'
+    ]
+    Case 9:
+      row: 8
+      answer_key: "Female"
+      columns: [
+        app_sex: '2',
+        co_app_sex: '4'
+    ]
+    Case 10:
+      row: 9
+      answer_key: "Female"
+      columns: [
+        app_sex: '2',
+        co_app_sex: '5'
+    ]
+    Case 11:
+      row: 10
+      answer_key: "Joint"
+      columns: [
+        app_sex: '1',
+        co_app_sex: '2'
+    ]
+    Case 12:
+      row: 11
+      answer_key: "Joint"
+      columns: [
+        app_sex: '1',
+        co_app_sex: '6'
+    ]
+    Case 13:
+      row: 12
+      answer_key: "Joint"
+      columns: [
+        app_sex: '2',
+        co_app_sex: '1'
+    ]
+    Case 14:
+      row: 13
+      answer_key: "Joint"
+      columns: [
+        app_sex: '2',
+        co_app_sex: '6'
+    ]
+    Case 15:
+      row: 14
+      answer_key: "Joint"
+      columns: [
+        app_sex: '6'
+    ]
+    Case 16:
+      row: 15
+      answer_key: "Joint"
+      columns: [
+        co_app_sex: '6'
+    ]
+
+    

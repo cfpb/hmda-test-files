@@ -468,6 +468,138 @@ class FileGenerator(object):
 		logging.info("Edit Report has been created in {filepath}".format(
 			filepath=self.filepaths['edit_report_filepath']))
 
+	def create_custom_file(self, yaml_filepath, filepath, filename):
+		"""
+		Builds a new submission file based on parameters in a 
+		configuration. 
+
+		Requires a clean lar file to be present. 
+		"""
+
+		#Opens YAML File
+		yaml_file = yaml_filepath
+		with open(yaml_file, 'r') as f:
+			custom_file = yaml.safe_load(f)
+
+		#Filters through clean lar file for rows that contain 
+		#the values specified in the yaml. 
+
+		lar_list = []
+		row = 0
+		for case in custom_file:
+			print(case)
+			print(custom_file[case]["columns"])
+			#Pulls in the clean data filepath and name from the
+			#test filepaths yaml file. 
+			ts_data, lar_data = utils.read_data_file(
+				path=self.filepaths['clean_filepath'].format(
+					bank_name=self.data_map["name"]["value"]),
+				data_file=self.filepaths["clean_filename"].format(
+					bank_name=self.data_map["name"]["value"], 
+					n=self.data_map["file_length"]["value"])) 
+
+			for column in custom_file[case]["columns"]:
+				for key in column:
+					lar_data[key] = column[key]
+
+			checker = rules_engine(lar_schema=self.lar_schema_df, 
+				ts_schema=self.ts_schema_df, crosswalk_data=self.crosswalk_data)
+
+			#Produces a report as to which syntax or validity
+			#edits have passed or failed based on logic in the rules_engine.
+			#Loads the TS and LAR dataframes into the checker object. 
+			
+			checker.load_data_frames(ts_data, lar_data)
+
+			for func in dir(checker):
+				if func[:1] in ("s", "v") and func[1:4].isdigit()==True:
+					getattr(checker, func)()
+			
+			#Creates a results dataframe and keeps the results that 
+			#have failed. 
+			res_df = pd.DataFrame(checker.results)
+			res_df = res_df[(res_df['status']=='failed')]
+
+			if len(res_df) == 0: #or 'row_ids' not in list(res_df.columns):
+				#Takes the first row of data. 
+				new_data = lar_data[0:1]
+
+				print(new_data[['action_taken', 'loan_type', 'loan_purpose',
+			'total_units', 'street_address', 'city', 'county', 'zip_code', 'tract']])
+				#Appends data to the LAR list.
+				lar_list.append(new_data)
+				print("No Edits")
+			
+			else:
+				#Creates an empty list for storing row numbers
+				#where edits have failed. 
+				uli_list = []
+
+				try:
+
+					#Iterates through each row and appends the list of ULI's
+					#of rows where syntax or validity edits have failed. 
+					for index, row in res_df.iterrows():
+						uli_list.append(row.row_ids)
+
+					#Drops not-a-numbers from the ULI list. 
+					if np.nan in uli_list:
+						uli_list.remove(np.nan)
+
+					#Creates a new list to store the ULI's without nested brackets. 
+					new_list = []
+					for i in range(len(uli_list)):
+						for n in range(len(uli_list[i])):
+							new_list.append(uli_list[i][n])
+
+					#Creates a list that removes ULI's that are repeated. 
+					unique_list = []
+					for i in new_list:
+						if i not in unique_list:
+							unique_list.append(i)
+
+					#Creates a list of row numbers corresponding to the
+					#ULI's that have failed syntax or validity edits. 
+					bad_rows = []
+					for index, row in lar_data.iterrows():
+						if row['uli'] in unique_list:
+							failed_uli = row['uli']
+							bad_rows.append(lar_data[lar_data['uli']==failed_uli].index.values.astype(int)[0])
+
+					#Drops all rows that failed syntax or validity edits
+					#from the original LAR dataframe. 
+					new_data = lar_data.drop(bad_rows)
+
+					#Takes the first row of data. 
+					new_data = new_data[0:1]
+
+					print('Length of data to be added: ' + str(len(new_data.columns)))
+
+					#Appends data to the LAR list.
+					lar_list.append(new_data)
+
+					print(new_data[['action_taken', 'loan_type', 'loan_purpose',
+				'total_units', 'street_address', 'city', 'county', 'zip_code', 'tract']])
+
+				except AttributeError: pass
+
+			print(len(lar_list))
+
+		print('Final LAR list: ' + str(len(lar_list)))
+
+		#Concatenates dataframes 
+		new_df = pd.concat(lar_list, axis=0)
+		
+		print('Length of the new dataframe: ' + str(len(new_df)))
+		#Creates new ULIs
+		new_df = utils.unique_uli(new_lar_df=new_df, lei=self.lei)
+
+		#Adjusts for S304 Edit. 
+		ts_data.lar_entries = len(new_df.index)
+
+		#Writes a new file. 
+		utils.write_file(ts_input=ts_data, lar_input=new_df, path=filepath, name=filename)
+
 
 
 
