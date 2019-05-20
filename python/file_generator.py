@@ -487,6 +487,9 @@ class FileGenerator(object):
 
 		lar_list = []
 		row = 0
+		#The following outputs an "answer key" csv file for each row.
+		answer_key_dict = {'Row': [], 'Answer': []} 
+
 		for case in custom_file:
 			print(case)
 			print(custom_file[case]["columns"])
@@ -581,6 +584,9 @@ class FileGenerator(object):
 				except AttributeError: pass
 
 			print(len(lar_list))
+			answer_key_dict['Row'].append(len(lar_list))
+			
+			answer_key_dict['Answer'].append(custom_file[case]['answer_key'])
 
 		print('Final LAR list: ' + str(len(lar_list)))
 
@@ -598,14 +604,6 @@ class FileGenerator(object):
 		utils.write_file(ts_input=ts_data, lar_input=new_df, path=filepath, name=filename)
 
 		#Writing Answer Key File. 
-
-		#The following outputs an "answer key" csv file for each row.
-		answer_key_dict = {'Row': [], 'Answer': []} 
-		
-		for case in custom_file:
-			answer_key_dict['Row'].append(custom_file[case]['row'])
-			answer_key_dict['Answer'].append(custom_file[case]['answer_key'])
-
 		answer_key_dataframe = pd.DataFrame(answer_key_dict)
 
 		if not os.path.exists(filepath_answers):
