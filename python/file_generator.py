@@ -6,6 +6,7 @@ import json
 import pandas as pd
 import yaml
 import logging
+import random
 import numpy as np
 
 #Imports custom packages. 
@@ -502,9 +503,25 @@ class FileGenerator(object):
 					bank_name=self.data_map["name"]["value"], 
 					n=self.data_map["file_length"]["value"])) 
 
+			variable_list = []
 			for column in custom_file[case]["columns"]:
 				for key in column:
-					lar_data[key] = column[key]
+					if type(column[key]) == list:
+						new_variable = random.choice(column[key])
+
+						while (new_variable in variable_list):
+							new_variable = random.choice(column[key])
+						else:
+							pass
+							
+
+						lar_data[key] = new_variable
+						variable_list.append(new_variable)
+						print(new_variable)
+						print(variable_list)
+
+					else:
+						lar_data[key] = column[key]
 
 			checker = rules_engine(lar_schema=self.lar_schema_df, 
 				ts_schema=self.ts_schema_df, crosswalk_data=self.crosswalk_data)
@@ -611,25 +628,4 @@ class FileGenerator(object):
 
 		answer_key_dataframe.to_csv(filepath_answers+filename_answers, index=False)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		
+	
