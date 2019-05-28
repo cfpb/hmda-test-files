@@ -1,4 +1,4 @@
-#This script will generate a file that will fail a specific edit (though others may also fail)
+#This script will generate a file that will fail a specific syntax, validity, or quality edit (though others may also fail)
 #This script relies on the presence of a clean data file
 
 from file_generator import FileGenerator 
