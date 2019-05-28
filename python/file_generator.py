@@ -469,167 +469,104 @@ class FileGenerator(object):
 		logging.info("Edit Report has been created in {filepath}".format(
 			filepath=self.filepaths['edit_report_filepath']))
 
-	def create_custom_file(self, yaml_filepath, filepath, filename, 
-		filepath_answers, filename_answers):
+	def validate_custom_row(self, dictionary, clean_filepath, clean_filename):
+
 		"""
-		Builds a new submission file based on parameters in a 
-		configuration. 
+		Creates a custom clean LAR row by passing in a dictionary of columns 
+		and new values to modify all the rows of an 
+		existing clean file, filters the modified file for clean rows, 
+		and then pulls the first row from the file. 
 
-		Requires a clean lar file to be present. 
+		Pulls rows from the clean file last generated. Suggestion that 
+		the file pulled should be 1000 original rows or greater, to ensure
+		that modified clean rows can be found. 
+
 		"""
-
-		#Opens YAML File
-		yaml_file = yaml_filepath
-		with open(yaml_file, 'r') as f:
-			custom_file = yaml.safe_load(f)
-
-		#Filters through clean lar file for rows that contain 
-		#the values specified in the yaml. 
-
-		lar_list = []
-		row = 0
-		#The following outputs an "answer key" csv file for each row.
-		answer_key_dict = {'Row': [], 'Answer': []} 
-
-		for case in custom_file:
-			multiplier = custom_file[case]['multiplier']
-			while(multiplier > 0):
-				print(case)
-				print(custom_file[case]["columns"])
-				#Pulls in the clean data filepath and name from the
-				#test filepaths yaml file. 
-				ts_data, lar_data = utils.read_data_file(
-					path=self.filepaths['clean_filepath'].format(
-						bank_name=self.data_map["name"]["value"]),
-					data_file=self.filepaths["clean_filename"].format(
-						bank_name=self.data_map["name"]["value"], 
-						n=self.data_map["file_length"]["value"])) 
-
-				variable_list = []
-				for column in custom_file[case]["columns"]:
-					for key in column:
-						if type(column[key]) == list:
-							new_variable = random.choice(column[key])
-
-							while (new_variable in variable_list):
-								new_variable = random.choice(column[key])
-							else:
-								pass
-								
-
-							lar_data[key] = new_variable
-							variable_list.append(new_variable)
-							print(new_variable)
-							print(variable_list)
-
-						else:
-							lar_data[key] = column[key]
-
-				checker = rules_engine(lar_schema=self.lar_schema_df, 
-					ts_schema=self.ts_schema_df, crosswalk_data=self.crosswalk_data)
-
-				#Produces a report as to which syntax or validity
-				#edits have passed or failed based on logic in the rules_engine.
-				#Loads the TS and LAR dataframes into the checker object. 
-				
-				checker.load_data_frames(ts_data, lar_data)
-
-				for func in dir(checker):
-					if func[:1] in ("s", "v") and func[1:4].isdigit()==True:
-						getattr(checker, func)()
-				
-				#Creates a results dataframe and keeps the results that 
-				#have failed. 
-				res_df = pd.DataFrame(checker.results)
-				res_df = res_df[(res_df['status']=='failed')]
-
-				if len(res_df) == 0: #or 'row_ids' not in list(res_df.columns):
-					
-					#Takes the first row of data. 
-					new_data = lar_data[0:1]
-					
-					#Appends data to the LAR list.
-					lar_list.append(new_data)
-					print("No Edits")
-				
-				else:
-					#Creates an empty list for storing row numbers
-					#where edits have failed. 
-					uli_list = []
-
-					try:
-
-						#Iterates through each row and appends the list of ULI's
-						#of rows where syntax or validity edits have failed. 
-						for index, row in res_df.iterrows():
-							uli_list.append(row.row_ids)
-
-						#Drops not-a-numbers from the ULI list. 
-						if np.nan in uli_list:
-							uli_list.remove(np.nan)
-
-						#Creates a new list to store the ULI's without nested brackets. 
-						new_list = []
-						for i in range(len(uli_list)):
-							for n in range(len(uli_list[i])):
-								new_list.append(uli_list[i][n])
-
-						#Creates a list that removes ULI's that are repeated. 
-						unique_list = []
-						for i in new_list:
-							if i not in unique_list:
-								unique_list.append(i)
-
-						#Creates a list of row numbers corresponding to the
-						#ULI's that have failed syntax or validity edits. 
-						bad_rows = []
-						for index, row in lar_data.iterrows():
-							if row['uli'] in unique_list:
-								failed_uli = row['uli']
-								bad_rows.append(lar_data[lar_data['uli']==failed_uli].index.values.astype(int)[0])
-
-						#Drops all rows that failed syntax or validity edits
-						#from the original LAR dataframe. 
-						new_data = lar_data.drop(bad_rows)
-
-						#Takes the first row of data. 
-						new_data = new_data[0:1]
-
-						print('Length of data to be added: ' + str(len(new_data.columns)))
-
-						#Appends data to the LAR list.
-						lar_list.append(new_data)
-
-					except AttributeError: pass
-
-				print(len(lar_list))
-				answer_key_dict['Row'].append(len(lar_list))
-				
-				answer_key_dict['Answer'].append(custom_file[case]['answer_key'])
-				multiplier = multiplier - 1
-				print("Multiplier: " + str(multiplier))
-
-		print('Final LAR list: ' + str(len(lar_list)))
-
-		#Concatenates dataframes 
-		new_df = pd.concat(lar_list, axis=0)
+		#Creates a TS and LAR dataframe from the clean filepath and name
+		#specified. 
+		ts_data, lar_data = utils.read_data_file(
+					path=clean_filepath,
+					data_file=clean_filename)
 		
-		print('Length of the new dataframe: ' + str(len(new_df)))
-		#Creates new ULIs
-		new_df = utils.unique_uli(new_lar_df=new_df, lei=self.lei)
+		#for each 
+		for key, value in dictionary.items():
+			lar_data[key] = value
 
-		#Adjusts for S304 Edit. 
-		ts_data.lar_entries = len(new_df.index)
+		checker = rules_engine(lar_schema=self.lar_schema_df, 
+					ts_schema=self.ts_schema_df, 
+					crosswalk_data=self.crosswalk_data)
 
-		#Writes a new file. 
-		utils.write_file(ts_input=ts_data, lar_input=new_df, path=filepath, name=filename)
+		#Produces a report as to which syntax or validity
+		#edits have passed or failed based on logic in the rules_engine.
+		#Loads the TS and LAR dataframes into the checker object. 
+		
+		checker.load_data_frames(ts_data, lar_data)
 
-		#Writing Answer Key File. 
-		answer_key_dataframe = pd.DataFrame(answer_key_dict)
+		for func in dir(checker):
+			if func[:1] in ("s", "v") and func[1:4].isdigit()==True:
+				getattr(checker, func)()
+		
+		#Creates a results dataframe and keeps the results that 
+		#have failed. 
+		res_df = pd.DataFrame(checker.results)
+		res_df = res_df[(res_df['status']=='failed')]
 
-		if not os.path.exists(filepath_answers):
-			os.makedirs(filepath_answers)
+		if len(res_df) == 0: #or 'row_ids' not in list(res_df.columns):
+			
+			#Takes the first row of data. 
+			new_data = lar_data[0:1]
+			
+			#Appends data to the LAR list.
+			lar_list.append(new_data)
+			print("No Edits")
+		
+		else:
+			#Creates an empty list for storing row numbers
+			#where edits have failed. 
+			uli_list = []
 
-		answer_key_dataframe.to_csv(filepath_answers+filename_answers, index=False)
+			try:
 
-	
+				#Iterates through each row and appends the list of ULI's
+				#of rows where syntax or validity edits have failed. 
+				for index, row in res_df.iterrows():
+					uli_list.append(row.row_ids)
+
+				#Drops not-a-numbers from the ULI list. 
+				if np.nan in uli_list:
+					uli_list.remove(np.nan)
+
+				#Creates a new list to store the ULI's without nested brackets. 
+				new_list = []
+				for i in range(len(uli_list)):
+					for n in range(len(uli_list[i])):
+						new_list.append(uli_list[i][n])
+
+				#Creates a list that removes ULI's that are repeated. 
+				unique_list = []
+				for i in new_list:
+					if i not in unique_list:
+						unique_list.append(i)
+
+				#Creates a list of row numbers corresponding to the
+				#ULI's that have failed syntax or validity edits. 
+				bad_rows = []
+				for index, row in lar_data.iterrows():
+					if row['uli'] in unique_list:
+						failed_uli = row['uli']
+						bad_rows.append(lar_data[lar_data['uli']==failed_uli].index.values.astype(int)[0])
+
+				#Drops all rows that failed syntax or validity edits
+				#from the original LAR dataframe. 
+				new_data = lar_data.drop(bad_rows)
+
+				#Takes the first row of data. 
+				new_data = new_data[0:1]
+
+				print('Length of data to be added: ' + str(len(new_data.index)))
+
+			except AttributeError: pass
+
+		return(new_data)
+
+		
