@@ -1926,12 +1926,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v677_1_file(self):
-		"""Set interest rate to 0 or -1."""
+		"""Set interest rate to -1."""
 		name = "v677_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.interest_rate = lar.interest_rate.map(lambda x: random.choice(["0", "-1"]))
+		lar.interest_rate =  "-1"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 

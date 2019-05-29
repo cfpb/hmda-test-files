@@ -801,7 +801,7 @@ class lar_constraints(object):
 		return row
 
 	def v677_const(self, row):
-		"""1) Interest Rate must be a number greater than 0 or NA, and cannot be left blank.
+		"""1) Interest Rate must be a number greater than or equal to 0, NA or Exempt, and cannot be left blank.
 		2) If Action Taken equals 3, 4, 5, or 7; then Interest Rate must be NA."""
 		if row["action_taken"] in ("3", "4", "5", "7"):
 			row["interest_rate"] = "NA"
