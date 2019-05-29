@@ -3292,20 +3292,25 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q644(self):
-		"""If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; 
-		Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 2,
-		then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2; 
-		Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or 
-		Automated Underwriting System Result: 5 should equal 8, 9, 10, 11, or 12."""
+		"""1) If Automated Underwriting System: 1; Automated
+			Underwriting System: 2; Automated Underwriting
+			System: 3; Automated Underwriting System: 4; or
+			Automated Underwriting System: 5 equals 2, then the
+			corresponding Automated Underwriting System Result:
+			1; Automated Underwriting System Result: 2;
+			Automated Underwriting System Result: 3; Automated
+			Underwriting System Result: 4; or Automated
+			Underwriting System Result: 5 should equal 8, 9, 10,
+			11, 12, 13, or 16. """
 		field = """Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; 
 			Automated Underwriting System: 4; Automated Underwriting System: 5; Automated Underwriting System Result: 1; 
 			Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; 
 			Automated Underwriting System Result: 4; Automated Underwriting System Result: 5"""
 		edit_name = "q644"
 		fail_df = self.lar_df[
-				((self.lar_df.aus_1=="2")&(~self.lar_df.aus_result_1.isin(["8","9","10","11","12"])))|
-				((self.lar_df.aus_2=="2")&(~self.lar_df.aus_result_2.isin(["8","9","10","11","12"])))|
-				((self.lar_df.aus_3=="2")&(~self.lar_df.aus_result_3.isin(["8","9","10","11","12"])))|
-				((self.lar_df.aus_4=="2")&(~self.lar_df.aus_result_4.isin(["8","9","10","11","12"])))|
-				((self.lar_df.aus_5=="2")&(~self.lar_df.aus_result_5.isin(["8","9","10","11","12"])))]
+				((self.lar_df.aus_1=="2")&(~self.lar_df.aus_result_1.isin(["8","9","10","11","12","13","16"])))|
+				((self.lar_df.aus_2=="2")&(~self.lar_df.aus_result_2.isin(["8","9","10","11","12","13","16"])))|
+				((self.lar_df.aus_3=="2")&(~self.lar_df.aus_result_3.isin(["8","9","10","11","12","13","16"])))|
+				((self.lar_df.aus_4=="2")&(~self.lar_df.aus_result_4.isin(["8","9","10","11","12","13","16"])))|
+				((self.lar_df.aus_5=="2")&(~self.lar_df.aus_result_5.isin(["8","9","10","11","12","13","16"])))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
