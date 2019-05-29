@@ -324,6 +324,7 @@ class FileGenerator(object):
 		The file is then saved in a new directory for quality edit test files 
 		that also pass syntax and validity edits.  
 		"""
+
 		try: 
 			#Instantiates an edit checker object with rules_engine.
 			checker = rules_engine(lar_schema=self.lar_schema_df, 
@@ -351,11 +352,18 @@ class FileGenerator(object):
 			res_df = pd.DataFrame(checker.results)
 			new_df = res_df[(res_df['status']=='failed')]
 
-			#If there are no syntax or validity edits,
+			#If there are no syntax or validity edits or row_ids is not in column names,
 			#the data is written to a new directory for quality 
 			#test files that pass syntax and validity edits. 
 
 			if len(new_df) == 0:
+				utils.write_file(path=self.filepaths['quality_pass_s_v_filepath'].format(
+					bank_name=self.data_map['name']['value']), 
+					ts_input=ts_df, 
+					lar_input=lar_df, 
+					name=quality_filename)
+
+			elif 'row_ids' not in new_df.columns:
 				utils.write_file(path=self.filepaths['quality_pass_s_v_filepath'].format(
 					bank_name=self.data_map['name']['value']), 
 					ts_input=ts_df, 
@@ -421,6 +429,7 @@ class FileGenerator(object):
 			#Prints a message to indicate that the file has not been validated. 
 			print(e)
 			print("Sorry no clean file available for {file}.".format(file=quality_filename))
+
 
 	def edit_report(self, data_filepath, data_filename):
 		"""
