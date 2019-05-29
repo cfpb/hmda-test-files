@@ -3248,7 +3248,7 @@ class test_data(object):
 
 	def q632(self):
 		"""Set all AUS systems to 5.
-		Set all AUS results to 1-7."""
+		Set all AUS results to 5-7."""
 		name = "q632.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
@@ -3258,11 +3258,11 @@ class test_data(object):
 		lar.aus_3 = "3"
 		lar.aus_4 = "3"
 		lar.aus_5 = "3"
-		lar.aus_result_1 = lar.aus_result_1.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
-		lar.aus_result_2 = lar.aus_result_2.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
-		lar.aus_result_3 = lar.aus_result_3.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
-		lar.aus_result_4 = lar.aus_result_4.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
-		lar.aus_result_5 = lar.aus_result_5.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
+		lar.aus_result_1 = lar.aus_result_1.map(lambda x: random.choice(["5","6","7"]))
+		lar.aus_result_2 = lar.aus_result_2.map(lambda x: random.choice(["5","6","7"]))
+		lar.aus_result_3 = lar.aus_result_3.map(lambda x: random.choice(["5","6","7"]))
+		lar.aus_result_4 = lar.aus_result_4.map(lambda x: random.choice(["5","6","7"]))
+		lar.aus_result_5 = lar.aus_result_5.map(lambda x: random.choice(["5","6","7"]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
