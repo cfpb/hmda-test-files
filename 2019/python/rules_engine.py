@@ -3131,7 +3131,8 @@ class rules_engine(object):
 			Automated Underwriting System Result: 3; Automated
 			Underwriting System Result: 4; or Automated
 			Underwriting System Result: 5 should equal 1, 2, 3, 4,
-			8, 13, 18, 19 or 16. ."""
+			8, 13, 18, 19 or 16.
+		"""
 		field = """Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; 
 				Automated Underwriting System: 4; Automated Underwriting System: 5; Automated Underwriting System Result: 1; 
 				Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; 
