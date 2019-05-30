@@ -1160,7 +1160,11 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v648_2_file(self):
-		"""Set co-app sex to 6. Set co app sex basis to random choice of 1, 4."""
+		"""
+		Set co-app sex to 6. Set co app sex basis to random choice of 1, 4.
+
+		Inclusion of value, 3 is from cfpb/hmda-platform#2774.
+		"""
 		name = "v648_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
