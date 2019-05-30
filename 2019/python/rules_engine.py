@@ -1055,7 +1055,10 @@ class rules_engine(object):
 	def v644_2(self):
 		"""An invalid Sex data field was reported.
 		2) If Sex of Applicant or Borrower equals 6, then Sex of Applicant or Borrower Collected on the Basis of
-		Visual Observation or Surname must equal 2 or 3."""
+		Visual Observation or Surname must equal 2 or 3.
+
+		Inclusion of value, 3 is from cfpb/hmda-platform#2771
+		"""
 		field = "Applicant Sex Basis"
 		edit_name = "v644_2"
 		fail_df = self.lar_df[(self.lar_df.app_sex=="6")&(~self.lar_df.app_sex_basis.isin(("2", "3")))]
