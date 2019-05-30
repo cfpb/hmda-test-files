@@ -487,11 +487,14 @@ class lar_constraints(object):
 		"""1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 2,
 			then Sex of Co-Applicant or Co-Borrower must equal 1, 2, 3 or 6.
 		2) If Sex of Co-Applicant or Co-Borrower equals 6, then Sex of Co-Applicant or Co-Borrower Collected on the
-			Basis of Visual Observation or Surname must equal 2."""
+			Basis of Visual Observation or Surname must equal 2 or 3.
+
+			Inclusion of value, 3 is from cfpb/hmda-platform#2774.
+			"""
 		if row["co_app_sex_basis"] == "2" and row["co_app_sex"] not in ("1", "2", "3", "6"):
 			row["co_app_sex"] = random.choice(("1", "2", "3", "6"))
 		if row["co_app_sex"] == "6":
-			row["co_app_sex_basis"] = "2"
+			row["co_app_sex_basis"] = random.choice(("2","3"))
 		return row
 
 	def v649_const(self, row):
@@ -931,14 +934,26 @@ class lar_constraints(object):
 		return row
 
 	def v696_const(self, row):
-		"""1) Automated Underwriting System: 1 must equal 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated
-			Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4; and
-			Automated Underwriting System: 5 must equal 1, 2, 3, 4, 5, or be left blank.
-		2) Automated Underwriting System Result: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-			16, or 17, and cannot be left blank. Automated Underwriting System Result: 2; Automated
-			Underwriting System Result: 3; Automated Underwriting System Result: 4; and Automated
-			Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or be left blank.
-		3) The number of reported Automated Underwriting Systems must equal the number of reported Automated Underwriting System Results."""
+		"""1. Automated Underwriting System: 1 must equal
+			1111, 1, 2, 3, 4, 5, or 6, and cannot be left blank.
+			Automated Underwriting System: 2; Automated
+			Underwriting System: 3; Automated Underwriting
+			System: 4; and Automated Underwriting System: 5
+			must equal 1, 2, 3, 4, 5, or be left blank.
+
+			2. Automated Underwriting System Result: 1 must
+			equal 1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+			15, 16, 17, 18, 19, 20, 21, 22, 23, or 24 and cannot
+			be left blank. Automated Underwriting System
+			Result: 2; Automated Underwriting System Result: 3;
+			Automated Underwriting System Result: 4; and
+			Automated Underwriting System Result: 5 must
+			equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+			16, 17, 18, 19, 20, 21, 22, 23, 24 or be left blank.
+
+			3. The number of reported Automated Underwriting
+			Systems must equal the number of reported
+			Automated Underwriting System Results."""
 		aus_sys = [row["aus_1"], row["aus_2"], row["aus_3"], row["aus_4"], row["aus_5"]]
 		aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
 
@@ -967,10 +982,12 @@ class lar_constraints(object):
 			row["aus_3"] = ""
 			row["aus_4"] = ""
 			row["aus_5"] = ""
+
 		#Ensure code 5 free form text is marked if the text field is populated
 		if (row["aus_1"]  != "5" and row["aus_2"] != "5" and row["aus_3"] != "5" and row["aus_4"] != "5" and row["aus_5"] != "5") and \
 		row["aus_code_5"] != "":
 			row["aus_code_5"] = ""
+
 		#Ensure code 16 free form text is marked if the text field is populated
 		if row["aus_result_1"] != "16" and row["aus_result_2"] != "16" and row["aus_result_3"] != "16" and row["aus_result_4"] !="16" \
 		and row["aus_result_5"] != "16" and row["aus_code_16"] !="":
