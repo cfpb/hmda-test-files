@@ -452,11 +452,13 @@ class lar_constraints(object):
 		"""1) If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 2,
 			then Sex of Applicant or Borrower must equal 1, 2, 3, or 6.
 		2) If Sex of Applicant or Borrower equals 6, then Sex of Applicant or Borrower Collected on the Basis of
-			Visual Observation or Surname must equal 2."""
+			Visual Observation or Surname must equal 2 or 3.
+
+			Inclusion of value, 3 is from cfpb/hmda-platform#2771."""
 		if row["app_sex_basis"] == "2" and row["app_sex"] not in ("1", "2", "3", "6"):
 			row["app_sex"] = random.choice(("1", "2", "3", "6"))
 		if row["app_sex"] == "6":
-			row["app_sex_basis"] = "2"
+			row["app_sex_basis"] random.choice("2", "3")
 		return row
 
 	def v645_const(self, row):
