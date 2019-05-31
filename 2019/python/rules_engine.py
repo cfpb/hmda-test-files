@@ -3375,6 +3375,7 @@ class rules_engine(object):
 		"""
 		field = "Any data point eligible for an exemption code."
 		edit_name = "q646"
+		fail_df = self.lar_df.copy()
 		fail_df = fail_df[(fail_df.values == 'Exempt').any(1) | (fail_df.values == '1111').any(1)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
