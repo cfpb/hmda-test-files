@@ -3439,3 +3439,32 @@ class test_data(object):
 			"15","17","18","19","20","21","22","23","24"]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q645_1(self):
+		"""
+		Set loan amount to $400.
+		"""
+		name = "q645_1.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+
+		lar.loan_amount = '400'
+
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q645_2(self):
+		"""
+		Set loan purpose to 1 and loan amount to $900. 
+		"""
+		name = "q645_2.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+
+		lar.loan_purpose = '1'
+		lar.loan_amount = '900'
+
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
