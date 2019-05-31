@@ -3351,7 +3351,7 @@ class rules_engine(object):
 
 		field = "Loan Amount"
 		edit_name = "q645_1"
-		fail_df = self.lar_df[((self.loan_amount.apply(lambda x: int(loan_amount) < 500)))]
+		fail_df = self.lar_df[((self.lar_df.loan_amount.apply(lambda x: int(x) < 500)))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q645_2(self):
@@ -3363,6 +3363,23 @@ class rules_engine(object):
 		field = "Loan Amount"
 		edit_name = "q645_2"
 		fail_df = self.lar_df[(self.lar_df.loan_purpose == '1') &
-		(self.loan_amount.apply(lambda x: int(loan_amount) < 1000))]
+		(self.lar_df.loan_amount.apply(lambda x: int(x) < 1000))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q646(self):
+		"""
+		Your file indicates that at least one exemption code
+		was used. Please verify that your institution is eligible
+		for a partial exemption pursuant to the 2018 HMDA
+		Rule.
+		"""
+		field = "Any data point eligible for an exemption code."
+		edit_name = "q646"
+		fail_df = self.lar_df.copy()
+		fail_df = self.lar_df[(fail_df.values == 'Exempt').any(1) | (fail_df.values == '1111').any(1)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+
+
+
 
