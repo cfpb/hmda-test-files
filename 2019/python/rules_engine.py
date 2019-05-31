@@ -3342,3 +3342,27 @@ class rules_engine(object):
 				((self.lar_df.aus_4=="2")&(~self.lar_df.aus_result_4.isin(["8","9","10","11","12","13","16"])))|
 				((self.lar_df.aus_5=="2")&(~self.lar_df.aus_result_5.isin(["8","9","10","11","12","13","16"])))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q645_1(self):
+		"""
+		1) Loan Amount should generally be greater than or
+			equal to $500 (reported 500).
+		"""
+
+		field = "Loan Amount"
+		edit_name = "q645_1"
+		fail_df = self.lar_df[((self.loan_amount.apply(lambda x: int(loan_amount) < 500)))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q645_2(self):
+		"""
+		2) If Loan Purpose equals 1, then Loan Amount should
+			generally be greater than or equal to $1,000 (reported
+			1000).
+		"""
+		field = "Loan Amount"
+		edit_name = "q645_2"
+		fail_df = self.lar_df[(self.lar_df.loan_purpose == '1') &
+		(self.loan_amount.apply(lambda x: int(loan_amount) < 1000))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
