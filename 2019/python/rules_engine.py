@@ -3354,17 +3354,6 @@ class rules_engine(object):
 		fail_df = self.lar_df[((self.lar_df.loan_amount.apply(lambda x: int(x) < 500)))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def q645_1(self):
-		"""
-		1) Loan Amount should generally be greater than or
-			equal to $500 (reported 500).
-		"""
-
-		field = "Loan Amount"
-		edit_name = "q645_1"
-		fail_df = self.lar_df[((self.loan_amount.apply(lambda x: int(loan_amount) < 500)))]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
 	def q645_2(self):
 		"""
 		2) If Loan Purpose equals 1, then Loan Amount should
