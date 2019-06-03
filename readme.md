@@ -40,6 +40,7 @@ For 2019:
 * `tax_id`: 02-1234567
 * `file_length`: 10
 * `clean_file`: "clean_file_10_rows_Bank1.txt
+
 These default values can be changed using the [2019 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/clean_file_config.yaml). 
 3. Run `python3 generate_2019_clean_files.py`
 4. The clean test file will be created in a new edits_files directory under `2019/edits_files/clean_files/{Bank Name}/` with the filename `clean_file_{Number or Rows}_{Bank Name}.txt`. 
@@ -54,6 +55,7 @@ For 2018:
 * `tax_id`: 02-1234567
 * `file_length`: 10
 * `clean_file`: "clean_file_10_rows_Bank1.txt
+
 These default values can be changed using the [2018 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/clean_file_config.yaml). 
 3. Run `python3 generate_2018_clean_files.py`
 4. The clean test file will be created in a new edits_files directory under `2018/edits_files/clean_files/{Bank Name}/` with the filename `clean_file_{Number or Rows}_{Bank Name}.txt`. 
