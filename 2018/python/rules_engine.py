@@ -72,7 +72,7 @@ class rules_engine(object):
 				failed_rows = list(fail_df.uli)
 				self.update_results(edit_name=edit_name, edit_field_results=result, row_type=row_type, fields=field_name, row_ids=failed_rows, fail_count=count)
 			else:
-				self.update_results(edit_name=edit_name, edit_field_results=result, row_type=row_type, fields=field_name)
+				self.update_results(edit_name=edit_name, edit_field_results=result, row_type=row_type, fields=field_name, row_ids='TS', fail_count=1)
 		else:
 			result = "passed"
 			self.update_results(edit_name=edit_name, edit_field_results=result, row_type=row_type, fields=field_name)
