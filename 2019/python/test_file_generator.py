@@ -1160,12 +1160,16 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v648_2_file(self):
-		"""Set co-app sex to 6. Set co app sex basis to random choice of 1, 3, 4."""
+		"""
+		Set co-app sex to 6. Set co app sex basis to random choice of 1, 4.
+
+		Inclusion of value, 3 is from cfpb/hmda-platform#2774.
+		"""
 		name = "v648_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.co_app_sex_basis = lar.co_app_sex_basis.map(lambda x: random.choice(["1", "3", "4"]))
+		lar.co_app_sex_basis = lar.co_app_sex_basis.map(lambda x: random.choice(["1", "4"]))
 		lar.co_app_sex = "6"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
@@ -1926,12 +1930,12 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v677_1_file(self):
-		"""Set interest rate to 0 or -1."""
+		"""Set interest rate to -1."""
 		name = "v677_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.interest_rate = lar.interest_rate.map(lambda x: random.choice(["0", "-1"]))
+		lar.interest_rate =  "-1"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -3248,7 +3252,7 @@ class test_data(object):
 
 	def q632(self):
 		"""Set all AUS systems to 5.
-		Set all AUS results to 1-7."""
+		Set all AUS results to 5-7."""
 		name = "q632.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
@@ -3258,17 +3262,17 @@ class test_data(object):
 		lar.aus_3 = "3"
 		lar.aus_4 = "3"
 		lar.aus_5 = "3"
-		lar.aus_result_1 = lar.aus_result_1.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
-		lar.aus_result_2 = lar.aus_result_2.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
-		lar.aus_result_3 = lar.aus_result_3.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
-		lar.aus_result_4 = lar.aus_result_4.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
-		lar.aus_result_5 = lar.aus_result_5.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
+		lar.aus_result_1 = lar.aus_result_1.map(lambda x: random.choice(["5","6","7"]))
+		lar.aus_result_2 = lar.aus_result_2.map(lambda x: random.choice(["5","6","7"]))
+		lar.aus_result_3 = lar.aus_result_3.map(lambda x: random.choice(["5","6","7"]))
+		lar.aus_result_4 = lar.aus_result_4.map(lambda x: random.choice(["5","6","7"]))
+		lar.aus_result_5 = lar.aus_result_5.map(lambda x: random.choice(["5","6","7"]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def q633(self):
 		"""Set all AUS systems to 4.
-		Set all AUS results to 1-4, 6-7, 11-12."""
+		Set all AUS results to 1-2, 5-9, 11-14, or 17."""
 		name = "q633.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
@@ -3278,11 +3282,11 @@ class test_data(object):
 		lar.aus_3 = "4"
 		lar.aus_4 = "4"
 		lar.aus_5 = "4"
-		lar.aus_result_1 = lar.aus_result_1.map(lambda x: random.choice(["1","2","3","4","6","7","11","12"]))
-		lar.aus_result_2 = lar.aus_result_2.map(lambda x: random.choice(["1","2","3","4","6","7","11","12"]))
-		lar.aus_result_3 = lar.aus_result_3.map(lambda x: random.choice(["1","2","3","4","6","7","11","12"]))
-		lar.aus_result_4 = lar.aus_result_4.map(lambda x: random.choice(["1","2","3","4","6","7","11","12"]))
-		lar.aus_result_5 = lar.aus_result_5.map(lambda x: random.choice(["1","2","3","4","6","7","11","12"]))
+		lar.aus_result_1 = lar.aus_result_1.map(lambda x: random.choice(["1","2","5","6","7","8","9","11","12","13","14","17"]))
+		lar.aus_result_2 = lar.aus_result_2.map(lambda x: random.choice(["1","2","5","6","7","8","9","11","12","13","14","17"]))
+		lar.aus_result_3 = lar.aus_result_3.map(lambda x: random.choice(["1","2","5","6","7","8","9","11","12","13","14","17"]))
+		lar.aus_result_4 = lar.aus_result_4.map(lambda x: random.choice(["1","2","5","6","7","8","9","11","12","13","14","17"]))
+		lar.aus_result_5 = lar.aus_result_5.map(lambda x: random.choice(["1","2","5","6","7","8","9","11","12","13","14","17"]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -3388,7 +3392,7 @@ class test_data(object):
 
 	def q643(self):
 		"""Set AUS systems to 1.
-		Set AUS results to 8-14."""
+		Set AUS results to 8-14, 17-24."""
 		name = "q643.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
@@ -3398,17 +3402,22 @@ class test_data(object):
 		lar.aus_3 = "1"
 		lar.aus_4 = "1"
 		lar.aus_5 = "1"
-		lar.aus_result_1 = lar.aus_result_1.map(lambda x: random.choice(["8","9","10","11","12","13","14"]))
-		lar.aus_result_2 = lar.aus_result_2.map(lambda x: random.choice(["8","9","10","11","12","13","14"]))
-		lar.aus_result_3 = lar.aus_result_3.map(lambda x: random.choice(["8","9","10","11","12","13","14"]))
-		lar.aus_result_4 = lar.aus_result_4.map(lambda x: random.choice(["8","9","10","11","12","13","14"]))
-		lar.aus_result_5 = lar.aus_result_5.map(lambda x: random.choice(["8","9","10","11","12","13","14"]))
+		lar.aus_result_1 = lar.aus_result_1.map(lambda x: random.choice(["8","9","10","11","12","13","14", 
+			"17", "18", "19","20","21","22","23","24"]))
+		lar.aus_result_2 = lar.aus_result_2.map(lambda x: random.choice(["8","9","10","11","12","13","14", 
+			"17", "18", "19","20","21","22","23","24"]))
+		lar.aus_result_3 = lar.aus_result_3.map(lambda x: random.choice(["8","9","10","11","12","13","14", 
+			"17", "18", "19","20","21","22","23","24"]))
+		lar.aus_result_4 = lar.aus_result_4.map(lambda x: random.choice(["8","9","10","11","12","13","14", 
+			"17", "18", "19","20","21","22","23","24"]))
+		lar.aus_result_5 = lar.aus_result_5.map(lambda x: random.choice(["8","9","10","11","12","13","14", 
+			"17", "18", "19","20","21","22","23","24"]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)		
 
 	def q644(self):
 		"""Set all AUS systems to 2.
-		Set AUS results to 1-7."""
+		Set AUS results to 1-7, 14-15, 17-24."""
 		name = "q644.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
@@ -3418,10 +3427,44 @@ class test_data(object):
 		lar.aus_3 = "2"
 		lar.aus_4 = "2"
 		lar.aus_5 = "2"
-		lar.aus_result_1 = lar.aus_result_1.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
-		lar.aus_result_2 = lar.aus_result_2.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
-		lar.aus_result_3 = lar.aus_result_3.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
-		lar.aus_result_4 = lar.aus_result_4.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
-		lar.aus_result_5 = lar.aus_result_5.map(lambda x: random.choice(["1","2","3","4","5","6","7"]))
+		lar.aus_result_1 = lar.aus_result_1.map(lambda x: random.choice(["1","2","3","4","5","6","7","14",
+			"15","17","18","19","20","21","22","23","24"]))
+		lar.aus_result_2 = lar.aus_result_2.map(lambda x: random.choice(["1","2","3","4","5","6","7","14",
+			"15","17","18","19","20","21","22","23","24"]))
+		lar.aus_result_3 = lar.aus_result_3.map(lambda x: random.choice(["1","2","3","4","5","6","7","14",
+			"15","17","18","19","20","21","22","23","24"]))
+		lar.aus_result_4 = lar.aus_result_4.map(lambda x: random.choice(["1","2","3","4","5","6","7","14",
+			"15","17","18","19","20","21","22","23","24"]))
+		lar.aus_result_5 = lar.aus_result_5.map(lambda x: random.choice(["1","2","3","4","5","6","7","14",
+			"15","17","18","19","20","21","22","23","24"]))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q645_1(self):
+		"""
+		Set loan amount to $400.
+		"""
+		name = "q645_1.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+
+		lar.loan_amount = '400'
+
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q645_2(self):
+		"""
+		Set loan purpose to 1 and loan amount to $900. 
+		"""
+		name = "q645_2.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+
+		lar.loan_purpose = '1'
+		lar.loan_amount = '900'
+
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
