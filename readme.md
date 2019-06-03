@@ -99,7 +99,7 @@ Configuration options include (with defaulted values):
 * `tax_id`: 02-1234567
 * `row_count`: 10000
 
-Note: Source filepath and source filename will need to be specified in the configuration before running the [2019 large test files script](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/large_test_files_script.py) or the [2018 large test files script](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/large_test_files_script.py). 
+Note: Source filepath and source filename will need to be specified in the configuration before running the [2019 large test files script](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations/large_test_files_script.py) or the [2018 large test files script](https://github.com/cfpb/hmda-test-files/tree/master/2018/python/configurations/large_test_files_script.py). 
 
 To generate large files for 2019: 
 1. Navigate to the 2019/python directory.
