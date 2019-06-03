@@ -35,6 +35,11 @@ class FileGenerator(object):
 			# Uses safe_load instead of load.
 			self.data_map = yaml.safe_load(f)
 
+		#Loads the edit report configuration.
+		with open('configurations/edit_report_config.yaml') as f:
+			# Uses safe_load instead of load.
+			self.edit_report_config = yaml.safe_load(f) 
+
 		#Stores the column names for the file containing geographic crosswalk data. 
 		file_cols = self.geographic['file_columns']
 
@@ -430,8 +435,8 @@ class FileGenerator(object):
 			print(e)
 			print("Sorry no clean file available for {file}.".format(file=quality_filename))
 
+	def edit_report(self):
 
-	def edit_report(self, data_filepath, data_filename):
 		"""
 		This function takes in a filepath and name, producing a report on
 		whether any rows of the data failed syntax, validity or quality edits.
@@ -451,8 +456,8 @@ class FileGenerator(object):
 
 		#Seperates data from the filepath and filename into a TS dataframe
 		#and a LAR dataframe. 
-		ts_df, lar_df = utils.read_data_file(path=data_filepath, 
-			data_file=data_filename)
+		ts_df, lar_df = utils.read_data_file(path=self.edit_report_config['data_filepath'], 
+			data_file=self.edit_report_config['data_filename'])
 
 		#Loads the TS and LAR dataframes into the checker object. 
 		checker.load_data_frames(ts_df, lar_df)
@@ -471,11 +476,16 @@ class FileGenerator(object):
 
 		#Writes the report to the filepath and name designated in 
 		#the test_fielpaths yaml
-		res_df.to_csv(self.filepaths['edit_report_filepath']+self.filepaths['edit_report_filename'])
+		edit_report_path = self.edit_report_config['edit_report_output_filepath']
+		
+		if not os.path.exists(edit_report_path):
+			os.makedirs(edit_report_path)
+
+		res_df.to_csv(edit_report_path +self.edit_report_config['edit_report_output_filename'])
 
 		#Logs the result.
 		logging.info("Edit Report has been created in {filepath}".format(
-			filepath=self.filepaths['edit_report_filepath']))
+			filepath=edit_report_path))
 
 
 
