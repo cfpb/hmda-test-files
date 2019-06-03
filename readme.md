@@ -32,33 +32,26 @@ The links below contain a discussion of file generation features by year:
 ## Generating Clean Files
 Clean files will pass the HMDA edits (business rules for data submission). These files are used as the base for generating files that will fail edits. Running the following scripts will create the edits_files directory and a data file that will pass the HMDA edit checks. The file will have a number of rows set in a YAML clean file configuration for each directory. Other variables, such as data ranges can also be set in the configuration files.
 
-For 2019:
-1. Navigate to the 2019/python directory.
-2. The default configuration for the test bank, filename, and row count contain the following values:
+The default configuration for the test bank, filename, and row count contain the following values:
 * `name`: "Bank 1"
 * `lei`: BANK1LEIFORTEST12345
 * `tax_id`: 02-1234567
 * `file_length`: 10
 * `clean_file`: "clean_file_10_rows_Bank1.txt
 
-These default values can be changed using the [2019 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/clean_file_config.yaml). 
-3. Run `python3 generate_2019_clean_files.py`
+These default values can be changed using the [2019 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/clean_file_config.yaml) or the [2018 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/clean_file_config.yaml). 
+
+For 2019:
+1. Navigate to the 2019/python directory.
+2. Run `python3 generate_2019_clean_files.py`
 4. The clean test file will be created in a new edits_files directory under `2019/edits_files/clean_files/{Bank Name}/` with the filename `clean_file_{Number or Rows}_{Bank Name}.txt`. 
 
 Note: the filepath and filename for clean files can be adjusted in the [2019 Test Filepaths](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/test_filepaths.yaml) YAML configuration file under `clean_filepath` and `clean_filename` keys.  
 
 For 2018:
 1. Navigate to the 2018/python directory.
-2. The default configuration for the test bank, filename, and row count contain the following values:
-* `name`: "Bank 1"
-* `lei`: BANK1LEIFORTEST12345
-* `tax_id`: 02-1234567
-* `file_length`: 10
-* `clean_file`: "clean_file_10_rows_Bank1.txt
-
-These default values can be changed using the [2018 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/clean_file_config.yaml). 
-3. Run `python3 generate_2018_clean_files.py`
-4. The clean test file will be created in a new edits_files directory under `2018/edits_files/clean_files/{Bank Name}/` with the filename `clean_file_{Number or Rows}_{Bank Name}.txt`. 
+2. Run `python3 generate_2018_clean_files.py`
+3. The clean test file will be created in a new edits_files directory under `2018/edits_files/clean_files/{Bank Name}/` with the filename `clean_file_{Number or Rows}_{Bank Name}.txt`. 
 
 Note: the filepath and filename for clean files can be adjusted in the [2018 Test Filepaths](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/test_filepaths.yaml) YAML configuration file under `clean_filepath` and `clean_filename` keys. 
 
@@ -67,7 +60,7 @@ Test files will fail at least one (and sometimes more than one) edit. These file
 
 Creating test files is a two step process. The generation of edit test files requires a clean data file to be present.[The steps above](https://github.com/cfpb/hmda-test-files/tree/master/readme.md/#generating-clean-files) outline the process to create the clean data files. 
 
-Running generate test files modifies the data from the clean file and saves it with the name of the edit check that it will fail. If edit files already exist with the same names as those produced by this script, they will be overwrriten. These files are written to the appropriate directory based on edit type, such as 2019/edits_files/test_files/{Bank Name}/syntax/s300.txt. The file name indicates which edit the file is designed to test. If an edit has multiple conditions, a file will be made for each condition in the format 2019/edits_files/test_files/{Bank Name}/syntax/s301_1.txt.
+Running the generate test files script modifies the data from the clean file and saves it with the name of the edit check that it will fail. If edit files already exist with the same names as those produced by this script, they will be overwrriten. These files are written to the appropriate directory based on edit type, such as 2019/edits_files/test_files/{Bank Name}/syntax/s300.txt. The file name indicates which edit the file is designed to test. If an edit has multiple conditions, a file will be made for each condition in the format 2019/edits_files/test_files/{Bank Name}/syntax/s301_1.txt.
 
 For 2019: 
 1. Navigate to the 2019/python directory.
@@ -100,7 +93,7 @@ Configuration options include (with defaulted values):
 * `output_filepath`: "../edits_files/large_test_files/" 
 * `output_filename`: "large_file_10000_rows.txt"
 * `row_by_row_modification_yaml_file`:
-    * No default value. The script contains functionality for changing values by column and row using a yaml configuration. An example of this yaml configuration is located in [`python/configurations/row_by_row_modification.yaml`](https://github.com/cfpb/hmda-test-files/blob/master/2018/python/configurations/row_by_row_modification.yaml). The path to the row by row configuration file can be added here to implement the data changing functionality. This is an optional parameter.
+    * No default value. The script contains functionality for changing values by column and row using this yaml configuration [`python/configurations/row_by_row_modification.yaml`](https://github.com/cfpb/hmda-test-files/blob/master/2018/python/configurations/row_by_row_modification.yaml). The path to the row by row configuration file can be added here to implement the data changing functionality. This is an optional parameter.
 * `bank_name`: "Bank1"
 * `lei`: BANK1LEIFORTEST12345
 * `tax_id`: 02-1234567
@@ -117,8 +110,7 @@ To generate large files for 2018:
 1. Navigate to the 2018/python directory.
 2. Adjust the [2018 File Large File Script Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/test_filepaths.yaml) to specify bank name, lei, tax id, row count, output filepath, and output filename. 
 3. Run `python3 large_test_files_script.py` to produce the large file. 
-
-
+----
 ## Data Generation Notes:
 The default values for Bank0 are listed below. 
 - Name: Bank0
