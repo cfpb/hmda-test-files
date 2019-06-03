@@ -35,26 +35,26 @@ Clean files will pass the HMDA edits (business rules for data submission). These
 For 2019:
 1. Navigate to the 2019/python directory.
 2. The default configuration for the test bank, filename, and row count contain the following values:
-	`name: "Bank 1"
-	 lei: BANK1LEIFORTEST12345
-	 tax_id: 02-1234567
-	 file_length: 10
-	 clean_file: "clean_file_10_rows_Bank1.txt` 
-	 These default values can be changed using the [2019 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/clean_file_config.yaml). 
-3. Run `python3 generate_2019_clean_files.py`.
-4. The clean test file will be created in a new edits_files directory under `2019/edits_files/clean_files/{Bank Name}/` with the filename `clean_file_{Number or Rows}_{Bank Name}.txt`.
+* `name`: "Bank 1"
+* `lei`: BANK1LEIFORTEST12345
+* `tax_id`: 02-1234567
+* `file_length`: 10
+* `clean_file`: "clean_file_10_rows_Bank1.txt
+These default values can be changed using the [2019 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/clean_file_config.yaml). 
+3. Run `python3 generate_2019_clean_files.py`
+4. The clean test file will be created in a new edits_files directory under `2019/edits_files/clean_files/{Bank Name}/` with the filename `clean_file_{Number or Rows}_{Bank Name}.txt`. 
 
-Note: the filepath and filename for clean files can be adjusted in the [2019 Test Filepaths](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/test_filepaths.yaml) YAML configuration file under `clean_filepath` and `clean_filename` keys. 
+Note: the filepath and filename for clean files can be adjusted in the [2019 Test Filepaths](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/test_filepaths.yaml) YAML configuration file under `clean_filepath` and `clean_filename` keys.  
 
 For 2018:
 1. Navigate to the 2018/python directory.
 2. The default configuration for the test bank, filename, and row count contain the following values:
-	`name: "Bank 1"
-	 lei: BANK1LEIFORTEST12345
-	 tax_id: 02-1234567
-	 file_length: 10
-	 clean_file: "clean_file_10_rows_Bank1.txt` 
-	 These default values can be changed using the [2018 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/clean_file_config.yaml). 
+* `name`: "Bank 1"
+* `lei`: BANK1LEIFORTEST12345
+* `tax_id`: 02-1234567
+* `file_length`: 10
+* `clean_file`: "clean_file_10_rows_Bank1.txt
+These default values can be changed using the [2018 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/clean_file_config.yaml). 
 3. Run `python3 generate_2018_clean_files.py`
 4. The clean test file will be created in a new edits_files directory under `2018/edits_files/clean_files/{Bank Name}/` with the filename `clean_file_{Number or Rows}_{Bank Name}.txt`. 
 
@@ -92,16 +92,17 @@ Large files are used during load testing. Large test files are created using a c
  [2019 Large File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/test_filepaths.yaml).
  [2018 Large File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/test_filepaths.yaml).
 
-The values listed in each configuration file can be changed. The default configuration contains the following values:
-	`source_filepath: #Specify source filepath.  
-	source_filename: #Specify source filename.
-	output_filepath: "../edits_files/large_test_files/" 
-	output_filename: "large_file_10000_rows.txt"
-	row_by_row_modification_yaml_file:
-	bank_name: "Bank1"
-	lei: BANK1LEIFORTEST12345
-	tax_id: 02-1234567
-	row_count: 10000` 
+Configuration options include (with defaulted values): 
+* `source_filepath`: #Specify source filepath.  
+* `source_filename`: #Specify source filename.
+* `output_filepath`: "../edits_files/large_test_files/" 
+* `output_filename`: "large_file_10000_rows.txt"
+* `row_by_row_modification_yaml_file`:
+    * No default value. The script contains functionality for changing values by column and row using a yaml configuration. An example of this yaml configuration is located in [`python/configurations/row_by_row_modification.yaml`](https://github.com/cfpb/hmda-test-files/blob/master/2018/python/configurations/row_by_row_modification.yaml). The path to the row by row configuration file can be added here to implement the data changing functionality. This is an optional parameter.
+* `bank_name`: "Bank1"
+* `lei`: BANK1LEIFORTEST12345
+* `tax_id`: 02-1234567
+* `row_count`: 10000
 
 Note: Source filepath and source filename will need to be specified in the configuration before running the [2019 large test files script](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/large_test_files_script.py) or the [2018 large test files script](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/large_test_files_script.py). 
 
