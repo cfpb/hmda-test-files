@@ -93,7 +93,7 @@ Configuration options include (with defaulted values):
 * `output_filepath`: "../edits_files/large_test_files/" 
 * `output_filename`: "large_file_10000_rows.txt"
 * `row_by_row_modification_yaml_file`:
-    * No default value. The script contains functionality for changing values by column and row using this yaml configuration [`python/configurations/row_by_row_modification.yaml`](https://github.com/cfpb/hmda-test-files/blob/master/2018/python/configurations/row_by_row_modification.yaml). The path to the row by row configuration file can be added here to implement the data changing functionality. This is an optional parameter.
+    * No default value. The script contains functionality for changing values by column and row using the [2018 yaml configuration](https://github.com/cfpb/hmda-test-files/blob/master/2018/python/configurations/row_by_row_modification.yaml) or the [2019 yaml configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/row_by_row_modification.yaml). The path to the row by row configuration file can be added here to implement the data changing functionality. This is an optional parameter.
 * `bank_name`: "Bank1"
 * `lei`: BANK1LEIFORTEST12345
 * `tax_id`: 02-1234567
