@@ -458,7 +458,7 @@ class lar_constraints(object):
 		if row["app_sex_basis"] == "2" and row["app_sex"] not in ("1", "2", "3", "6"):
 			row["app_sex"] = random.choice(("1", "2", "3", "6"))
 		if row["app_sex"] == "6":
-			row["app_sex_basis"] = random.choice("2", "3")
+			row["app_sex_basis"] = random.choice(("2", "3"))
 		return row
 
 	def v645_const(self, row):

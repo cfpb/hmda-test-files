@@ -3468,3 +3468,35 @@ class test_data(object):
 
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q646_a(self):
+		"""
+		Set Street Address, City, and Zip Code to 'Exempt'.
+		"""
+		name = "q646_a.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+
+		lar.street_address = 'Exempt'
+		lar.city = 'Exempt'
+		lar.zip_code = 'Exempt'
+
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q646_b(self):
+		"""
+		Set Submission of Application and Initially Payable to 1111.
+		"""
+		name = "q646_b.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+
+		lar.app_submission = '1111'
+		lar.initially_payable = '1111'
+
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
