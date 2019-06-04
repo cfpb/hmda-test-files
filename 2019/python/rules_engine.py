@@ -2372,15 +2372,7 @@ class rules_engine(object):
 		1) Automated Underwriting System: 1 must equal 1, 2, 3, 4, 5, or 6, and cannot be left blank.
 		Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4;
 		and Automated Underwriting System: 5 must equal 1, 2, 3, 4, 5, or be left blank.
-
-
-		Impact of S2155: Update to: 
-		1) Automated Underwriting System: 1 must equal 1111, 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated Underwriting System: 2; 
-		Automated Underwriting System: 3; Automated Underwriting System: 4; and Automated Underwriting System: 5 
-		must equal 1, 2, 3, 4, 5, or be left blank. 
-
-	
-"""
+		"""
 		field = "AUS 1-5"
 		edit_name = "v696_1"
 		fail_df = self.lar_df[~(self.lar_df.aus_1.isin(("1111", "1", "2", "3", "4", "5", "6")))|
@@ -3378,4 +3370,22 @@ class rules_engine(object):
 		fail_df = self.lar_df.copy()
 		fail_df = fail_df[(fail_df.values == 'Exempt').any(1) | (fail_df.values == '1111').any(1)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def q647(self):
+		"""
+		If Federal Agency equals 7, indicating a non-depository
+		institution, exemption codes should not be used in the
+		Loan/Application Register. Your data indicates that at
+		least one exemption code was used.
+		"""
+		field = "Federal Agency; Any field eligible for exemption code."
+		edit_name = "q647"
+		if self.ts_df['federal_agency'][0] == '7':
+			fail_df = self.lar_df.copy()
+			fail_df = fail_df[(fail_df.values == 'Exempt').any(1) | (fail_df.values == '1111').any(1)]
+			self.update_results(edit_name=edit_name, edit_field_results='failed', row_type="TS/LAR", 
+				fields=field, row_ids=list(fail_df.uli), fail_count=len(fail_df))
+		else:
+			result = "passed"
+			self.update_results(edit_name=edit_name, edit_field_results=result, row_type="TS/LAR", fields=field)
 
