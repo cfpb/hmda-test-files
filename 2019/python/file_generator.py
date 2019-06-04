@@ -360,8 +360,8 @@ class FileGenerator(object):
 			res_df = pd.DataFrame(checker.results)
 			new_df = res_df[(res_df['status']=='failed')]
 
-			# The function would ignore TS edits. The edit
-			# report would need to drop edits related only to TS. 
+			# The function ignores TS edits and drops results related
+			# to edit fails from the TS.  
 			new_df = new_df[new_df['row_ids'] != 'TS']
 
 			if len(new_df) == 0:
