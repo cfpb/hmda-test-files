@@ -2372,7 +2372,14 @@ class rules_engine(object):
 		1) Automated Underwriting System: 1 must equal 1, 2, 3, 4, 5, or 6, and cannot be left blank.
 		Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4;
 		and Automated Underwriting System: 5 must equal 1, 2, 3, 4, 5, or be left blank.
-		"""
+
+
+		Impact of S2155: Update to: 
+		1) Automated Underwriting System: 1 must equal 1111, 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated Underwriting System: 2; 
+		Automated Underwriting System: 3; Automated Underwriting System: 4; and Automated Underwriting System: 5 
+		must equal 1, 2, 3, 4, 5, or be left blank. 
+	
+"""
 		field = "AUS 1-5"
 		edit_name = "v696_1"
 		fail_df = self.lar_df[~(self.lar_df.aus_1.isin(("1111", "1", "2", "3", "4", "5", "6")))|
