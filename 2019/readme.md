@@ -1,6 +1,6 @@
 # 2019 File Generation Features
 
-## The FileGenerator Class 
+## Overview
 The scripts used in this repository for generating clean files, edit files, and edit reports use methods from the FileGenerator class. Clean files will pass syntax and validity edits. Edit test files will fail at least one (and sometimes more than one) edit. These files will be used as a double check for the implementation of the HMDA edits for the 2019 HMDA Platform. Creating edit test files is a two step process. The generation of edit test files requires a clean data file to be present. If edit files already exist with the same names as those produced by this script, they will be overwritten.
 
 The `FileGenerator()` class is located in [`file_generator.py`](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/file_generator.py) and can be instantiated without any inputs. The class uses data stored with yaml configuration files in the [`python/configurations/`](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations) directory. 
