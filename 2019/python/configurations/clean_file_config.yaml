@@ -1,11 +1,11 @@
     clean_file:
      desc: The file used to create error files
      type: File
-     value: "clean_file_10_rows_Bank1.txt"
+     value: "clean_file_100_rows_Bank1.txt"
     file_length:
       desc: "The number of lines in the clean data file"
       type: Integer
-      value: 10
+      value: 100
     name:
       desc: The name of the institution filing data
       type: String
@@ -21,7 +21,7 @@
     calendar_year:
       desc: The year of activity
       type: String
-      value: 2018
+      value: 2019
     calendar_quarter:
       desc: The calendar quarter to which the filing relates
       type: Integer
