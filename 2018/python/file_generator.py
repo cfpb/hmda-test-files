@@ -328,7 +328,11 @@ class FileGenerator(object):
 
 		The file is then saved in a new directory for quality edit test files 
 		that also pass syntax and validity edits.  
+
+		NOTE: This function works to allow LAR rows to pass syntax and validity edits and 
+		does not validate the TS sheet. 
 		"""
+		
 		try: 
 			#Instantiates an edit checker object with rules_engine.
 			checker = rules_engine(lar_schema=self.lar_schema_df, 
@@ -356,11 +360,15 @@ class FileGenerator(object):
 			res_df = pd.DataFrame(checker.results)
 			new_df = res_df[(res_df['status']=='failed')]
 
-			#If there are no syntax or validity edits,
-			#the data is written to a new directory for quality 
-			#test files that pass syntax and validity edits. 
+			# The function ignores TS edits and drops results related
+			# to the edit fails from the TS. 
+			new_df = new_df[new_df['row_ids'] != 'TS']
 
 			if len(new_df) == 0:
+				#If there are no syntax or validity edits
+				#the data is written to a new directory for quality 
+				#test files that pass syntax and validity edits. 
+
 				utils.write_file(path=self.filepaths['quality_pass_s_v_filepath'].format(
 					bank_name=self.data_map['name']['value']), 
 					ts_input=ts_df, 
