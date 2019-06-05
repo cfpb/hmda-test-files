@@ -10,15 +10,15 @@ This repository contains code used to generate synthetic LAR files. Currently, t
 ## Repository Structure
 Each year listed in the parent directory contains its own codebase for running test files for that submission year. Users should navigate to each year directory to run scripts and view code.  
 - [2018/python](https://github.com/cfpb/hmda-test-files/tree/master/2018/python) and [2019/python](https://github.com/cfpb/hmda-test-files/tree/master/2019/python):
-    - Contains the notebooks and python scripts used to generate synthetic LAR data, perturb the data so that it fails specific business rules, and code to check that the produced files fail edits as expected.
+     - Contains the notebooks and python scripts used to generate synthetic LAR data, perturb the data so that it fails specific business rules, and code to check that the produced files fail edits as expected.
 
 - [2018/schemas](https://github.com/cfpb/hmda-test-files/tree/master/2018/schemas) and [2019/schemas](https://github.com/cfpb/hmda-test-files/tree/master/2019/schemas)
     - Contains JSON objects that represent the data structures for LAR and Transmittal Sheet as defined by the [2018 HMDA FIG](https://s3.amazonaws.com/cfpb-hmda-public/prod/help/2018-hmda-fig-2018-hmda-rule.pdf) and the [2019 HMDA FIG](https://s3.amazonaws.com/cfpb-hmda-public/prod/help/2019-hmda-fig.pdf)
 
 - [2018/dependencies](https://github.com/cfpb/hmda-test-files/tree/master/2018/dependencies) and [2019/dependencies](https://github.com/cfpb/hmda-test-files/tree/master/2019/dependencies)
-    	- Contains files used in the generation of synthetic LAR data
-        - Tract to CBSA data.
-        - A file containing a list of US ZIP codes
+     - Contains files used in the generation of synthetic LAR data
+       - Tract to CBSA data
+       - A file containing a list of US ZIP codes
 
 The links below contain a discussion of file generation features by year:
 
@@ -32,12 +32,12 @@ The links below contain a discussion of file generation features by year:
 ## Generating Clean Files
 Clean files will pass the HMDA edits (business rules for data submission). These files are used as the base for generating files that will fail edits. Running the following scripts will create the edits_files directory and a data file that will pass the HMDA edit checks. The file will have a number of rows set in a YAML clean file configuration for each directory. Other variables, such as data ranges can also be set in the configuration files.
 
-The default configuration for the test bank, filename, and row count contain the following values:
-* `name`: "Bank 1"
-* `lei`: BANK1LEIFORTEST12345
-* `tax_id`: 02-1234567
-* `file_length`: 10
-* `clean_file`: "clean_file_10_rows_Bank1.txt
+The default configuration for the test bank, filename, and row count contain the following values: 
+- name: `Bank 1`
+- lei: `BANK1LEIFORTEST12345`
+- tax_id: `02-1234567`
+- file_length: `10`
+- clean_file: `clean_file_10_rows_Bank1.txt`
 
 These default values can be changed using the [2019 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/clean_file_config.yaml) or the [2018 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/clean_file_config.yaml). 
 
@@ -88,16 +88,18 @@ Large files are used during load testing. Large test files are created using a c
  [2018 Large File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/test_filepaths.yaml).
 
 Configuration options include (with defaulted values): 
-* `source_filepath`: #Specify source filepath.  
-* `source_filename`: #Specify source filename.
-* `output_filepath`: "../edits_files/large_test_files/" 
-* `output_filename`: "large_file_10000_rows.txt"
-* `row_by_row_modification_yaml_file`:
-    * No default value. The script contains functionality for changing values by column and row using the [2018 yaml configuration](https://github.com/cfpb/hmda-test-files/blob/master/2018/python/configurations/row_by_row_modification.yaml) or the [2019 yaml configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/row_by_row_modification.yaml). The path to the row by row configuration file can be added here to implement the data changing functionality. This is an optional parameter.
-* `bank_name`: "Bank1"
-* `lei`: BANK1LEIFORTEST12345
-* `tax_id`: 02-1234567
-* `row_count`: 10000
+- source_filepath: #Specify source filepath.  
+- source_filename: #Specify source filename.
+- output_filepath: `../edits_files/large_test_files/` 
+- output_filename: `large_file_10000_rows.txt`
+- *`row_by_row_modification_yaml_file`:
+    * The script contains functionality for changing values by column and row using the [2018 yaml configuration](https://github.com/cfpb/hmda-test-files/blob/master/2018/python/configurations/row_by_row_modification.yaml) or the [2019 yaml configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/row_by_row_modification.yaml). The path to the row by row configuration file can be added here to implement the data changing functionality. There is no default value.
+- bank_name: `Bank1`
+- lei: `BANK1LEIFORTEST12345`
+- tax_id: `02-1234567`
+- row_count: `10000`
+
+*Optional parameter.
 
 Note: Source filepath and source filename will need to be specified in the configuration before running the [2019 large test files script](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations/large_test_files_script.py) or the [2018 large test files script](https://github.com/cfpb/hmda-test-files/tree/master/2018/python/configurations/large_test_files_script.py). 
 
@@ -113,14 +115,14 @@ To generate large files for 2018:
 ----
 ## Data Generation Notes:
 The default values for Bank0 are listed below. 
-- Name: Bank0
-- LEI: B90YWS6AFX2LGWOXJ1LD
-- Tax ID: 01-0123456
+- Name: `Bank0`
+- LEI: `B90YWS6AFX2LGWOXJ1LD`
+- Tax ID: `01-0123456`
 
 The default values for Bank1 are listed below. 
-- Name: Bank1
-- LEI: BANK1LEIFORTEST12345
-- Tax ID: 02-1234567
+- Name: `Bank1`
+- LEI: `BANK1LEIFORTEST12345`
+- Tax ID: `02-1234567`
 
 These files must be changed separately for each year.
 - For 2019, use [this configuration file](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/clean_file_config.yaml)
