@@ -3500,3 +3500,39 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def q647_a(self):
+		"""
+		Set Agency code for TS to 7. Set Street Address, City, and 
+		Zip Code in LAR to 'Exempt'.
+		"""
+		name = "q647_a.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+
+		ts.agency_code = '7'
+		lar.street_address = 'Exempt'
+		lar.city = 'Exempt'
+		lar.zip_code = 'Exempt'
+
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+
+	def q647_b(self):
+		"""
+		Set Agency code for TS to 7. 
+		Set Submission of Application and Initially Payable to 1111.
+		"""
+		name = "q647_b.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+
+		ts.agency_code = '7'
+		lar.app_submission = '1111'
+		lar.initially_payable = '1111'
+
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+

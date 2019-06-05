@@ -3380,3 +3380,21 @@ class rules_engine(object):
 		fail_df = fail_df[(fail_df.values == 'Exempt').any(1) | (fail_df.values == '1111').any(1)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+	def q647(self):
+		"""
+		If Federal Agency equals 7, indicating a non-depository
+		institution, exemption codes should not be used in the
+		Loan/Application Register. Your data indicates that at
+		least one exemption code was used.
+		"""
+		field = "Federal Agency; Any field eligible for exemption code."
+		edit_name = "q647"
+		if self.ts_df['federal_agency'][0] == '7':
+			fail_df = self.lar_df.copy()
+			fail_df = fail_df[(fail_df.values == 'Exempt').any(1) | (fail_df.values == '1111').any(1)]
+			self.update_results(edit_name=edit_name, edit_field_results='failed', row_type="TS/LAR", 
+				fields=field, row_ids=list(fail_df.uli), fail_count=len(fail_df))
+		else:
+			result = "passed"
+			self.update_results(edit_name=edit_name, edit_field_results=result, row_type="TS/LAR", fields=field)
+
