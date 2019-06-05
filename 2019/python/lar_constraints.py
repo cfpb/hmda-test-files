@@ -997,7 +997,7 @@ class lar_constraints(object):
 		result_enums = ("1111","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14","15", "16", 
 			"17", "18", "19", "20", "21", "22", "23", "24", "")
 		for i in range(1, len(aus_sys)):
-			if aus_sys[i] in ("1", "2", "3", "4", "5", "6") and aus_results[i] not in result_enums:
+			if aus_sys[i] in ("1", "2", "3", "4", "5", "6", "") and aus_results[i] not in result_enums:
 				row["aus_result_"+str(i+1)] = random.choice(result_enums[:-1])
 		return row
 
