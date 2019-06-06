@@ -62,22 +62,22 @@
     "field": "street_address",
     "dtypes_": ["string"],
     "data_type": "alphanumeric",
-    "valid_vals": ["Exempt"]
+    "valid_vals": ["NA", "Exempt"]
 }, {
     "field": "city",
     "dtypes_": ["string"],
     "data_type": "alphanumeric",
-    "valid_vals": ["Exempt"]
+    "valid_vals": ["NA", "Exempt"]
 }, {
     "field": "state",
     "dtypes_": ["string"],
     "data_type": "alphanumeric",
-    "valid_vals": []
+    "valid_vals": ["NA"]
 }, {
     "field": "zip_code",
     "dtypes_": ["string"],
     "data_type": "alphanumeric",
-    "valid_vals": ["Exempt"]
+    "valid_vals": ["NA", "Exempt"]
 }, {
     "field": "county",
     "dtypes_": ["string"],
@@ -507,27 +507,32 @@
     "field": "aus_result_1",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    "valid_vals": [1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 
+        12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 }, {
     "field": "aus_result_2",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+    "valid_vals": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 
+        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 }, {
     "field": "aus_result_3",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+    "valid_vals": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 
+        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 }, {
     "field": "aus_result_4",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+    "valid_vals": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 
+        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 }, {
     "field": "aus_result_5",
     "dtypes_": ["int"],
     "data_type": "numeric",
-    "valid_vals": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+    "valid_vals": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 
+        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 }, {
     "field": "aus_code_16",
     "dtypes_": ["string"],
