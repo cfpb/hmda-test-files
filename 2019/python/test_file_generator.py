@@ -82,12 +82,12 @@ class test_data(object):
 		utils.write_file(name="s301.txt", path="../edits_files/syntax/", ts_input=ts, lar_input=lar)
 
 	def s302_file(self):
-		"""Sets the year of submission to 2016"""
+		"""Sets the year of submission to 2017"""
 		name = "s302.txt"
 		path = self.syntax_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		ts.calendar_year = "2016"
+		ts.calendar_year = "2017"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2834,7 +2834,7 @@ class test_data(object):
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.app_date = "20150101"
+		lar.app_date = "20160101"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 

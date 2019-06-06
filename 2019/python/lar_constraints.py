@@ -96,11 +96,11 @@ class lar_constraints(object):
 			row["const_method"] = "2"
 		return row
 
-	def v619_const(self, row, reporting_year="2018"):
+	def v619_const(self, row, reporting_year="2019"):
 		"""2) The Action Taken Date must be in the reporting year.
 		3) The Action Taken Date must be on or after the Application Date."""
-		if row["action_date"][:4] != "2018":
-			row["action_date"] = "2018" + row["action_date"][4:]
+		if row["action_date"][:4] != "2019":
+			row["action_date"] = "2019" + row["action_date"][4:]
 		if row["action_date"] != "NA" and row["app_date"] != "NA":
 			if int(row["action_date"]) < int(row["app_date"]):
 				row["action_date"] = row["app_date"]

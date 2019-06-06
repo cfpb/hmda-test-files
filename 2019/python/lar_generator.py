@@ -62,7 +62,7 @@ class lar_gen(object):
 		self.prop_val_max = data_map["prop_val_max"]["value"]
 		self.prop_val_min = data_map["prop_val_min"]["value"]
 
-	def date_gen(self, year=2018, valid=True):
+	def date_gen(self, year=2019, valid=True):
 		"""Generates and returns a semi-valid date string or an invalid date string. Does not check days per month."""
 		months = list(range(1,13))
 		days = list(range(1,32))
