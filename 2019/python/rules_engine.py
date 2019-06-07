@@ -2416,7 +2416,7 @@ class rules_engine(object):
 		fields_1 = ["aus_1", "aus_2", "aus_3", "aus_4", "aus_5"]
 		fields_2 = ["aus_result_1", "aus_result_2", "aus_result_3", "aus_result_4", "aus_result_5"]
 		vals_1 = ("1", "2", "3", "4", "5", "6")
-		vals_2 = ("1111", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", 
+		vals_2 = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", 
 			"16", "17", "18", "19", "20", "21", "22", "23", "24")
 		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.check_counts(x, fields_1=fields_1, fields_2=fields_2, vals_1=vals_1, 
 			vals_2=vals_2),axis=1)==False)]
@@ -3404,4 +3404,5 @@ class rules_engine(object):
 		else:
 			result = "passed"
 			self.update_results(edit_name=edit_name, edit_field_results=result, row_type="TS/LAR", fields=field)
+
 
