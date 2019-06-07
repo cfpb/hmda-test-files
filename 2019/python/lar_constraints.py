@@ -992,8 +992,6 @@ class lar_constraints(object):
 			row["aus_5"] = ""
 
 		#number of reported systems must match the number of reported results
-
-		#number of reported systems must match the number of reported results
 		result_enums = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14","15", "16", 
 			"17", "18", "19", "20", "21", "22", "23", "24")
 		for i in range(1, len(aus_sys)):
