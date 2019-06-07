@@ -2369,56 +2369,55 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v696_1(self):
-		"""An invalid Automated Underwriting System data field was reported.
-		1) Automated Underwriting System: 1 must equal 1, 2, 3, 4, 5, or 6, and cannot be left blank.
-		Automated Underwriting System: 2; Automated Underwriting System: 3; Automated Underwriting System: 4;
-		and Automated Underwriting System: 5 must equal 1, 2, 3, 4, 5, or be left blank.
-
-
-		Impact of S2155: Update to: 
+		"""An invalid Automated Underwriting System data field was reported. 
 		1) Automated Underwriting System: 1 must equal 1111, 1, 2, 3, 4, 5, or 6, and cannot be left blank. Automated Underwriting System: 2; 
 		Automated Underwriting System: 3; Automated Underwriting System: 4; and Automated Underwriting System: 5 
 		must equal 1, 2, 3, 4, 5, or be left blank. 
-
-	
-"""
+		"""
 		field = "AUS 1-5"
 		edit_name = "v696_1"
 		fail_df = self.lar_df[~(self.lar_df.aus_1.isin(("1111", "1", "2", "3", "4", "5", "6")))|
-			(~self.lar_df.aus_2.isin(("1", "2", "3", "4", "5","")))|(~self.lar_df.aus_3.isin(("1", "2", "3", "4", "5","")))|
-			(~self.lar_df.aus_4.isin(("1", "2", "3", "4", "5","")))|(~self.lar_df.aus_5.isin(("1", "2", "3", "4", "5","")))]
+			(~self.lar_df.aus_2.isin(("1", "2", "3", "4", "5","")))|
+			(~self.lar_df.aus_3.isin(("1", "2", "3", "4", "5","")))|
+			(~self.lar_df.aus_4.isin(("1", "2", "3", "4", "5","")))|
+			(~self.lar_df.aus_5.isin(("1", "2", "3", "4", "5","")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v696_2(self):
-		"""An invalid Automated Underwriting System data field was reported.
-		2) Automated Underwriting System Result: 1 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or 17,
-		and cannot be left blank.
-		Automated Underwriting System Result: 2; Automated Underwriting System Result: 3;
-		Automated Underwriting System Result: 4; and Automated Underwriting System Result: 5
-		must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or be left blank.
-
-		Impact of S2155: Update to: 
-		2) Automated Underwriting System Result: 1 must equal 1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or 17, 
-		and cannot be left blank. 
-		Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; 
-		and Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, or be left blank. """
+		"""
+		2) Automated Underwriting System Result: 1 must
+		equal 1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+		15, 16, 17, 18, 19, 20, 21, 22, 23, or 24 and cannot
+		be left blank. Automated Underwriting System
+		Result: 2; Automated Underwriting System Result: 3;
+		Automated Underwriting System Result: 4; and
+		Automated Underwriting System Result: 5 must
+		equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+		16, 17, 18, 19, 20, 21, 22, 23, 24 or be left blank.
+		"""
 		field = "AUS 1-5 Result"
 		edit_name = "v696_2"
-		aus_1_results = ["1111", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"]
-		aus_n_results = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", ""]
+		aus_1_results = ["1111", "1", "2", "3", "4", "5", "6", "7", 
+		"8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+		"21", "22", "23","24"]
+		aus_n_results = ["1", "2", "3", "4", "5", "6", "7", 
+		"8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+		"21", "22", "23","24", ""]
 		fail_df = self.lar_df[~(self.lar_df.aus_result_1.isin(aus_1_results))|(~self.lar_df.aus_result_2.isin(aus_n_results))|(~self.lar_df.aus_result_3.isin(aus_n_results))
 		|(~self.lar_df.aus_result_4.isin(aus_n_results))|(~self.lar_df.aus_result_5.isin(aus_n_results))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v696_3(self):
 		"""An invalid Automated Underwriting System data field was reported.
-		3) The number of reported Automated Underwriting Systems must equal the number of reported Automated Underwriting System Results."""
+		3) The number of reported Automated Underwriting Systems must 
+		equal the number of reported Automated Underwriting System Results."""
 		field = "AUS Systems and Results"
 		edit_name = "v696_3"
 		fields_1 = ["aus_1", "aus_2", "aus_3", "aus_4", "aus_5"]
 		fields_2 = ["aus_result_1", "aus_result_2", "aus_result_3", "aus_result_4", "aus_result_5"]
-		vals_1 = ("1", "2", "3", "4", "5")
-		vals_2 = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16")
+		vals_1 = ("1", "2", "3", "4", "5", "6")
+		vals_2 = ("1111", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", 
+			"16", "17", "18", "19", "20", "21", "22", "23", "24")
 		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.check_counts(x, fields_1=fields_1, fields_2=fields_2, vals_1=vals_1, 
 			vals_2=vals_2),axis=1)==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)

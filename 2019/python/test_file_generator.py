@@ -2384,15 +2384,15 @@ class test_data(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v696_2(self):
-		"""Set AUS result 1 to blank and set AUS 2-5 to 17."""
+		"""Set AUS result 1 to blank and set AUS 2-5 to 25."""
 		name = "v696_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.aus_result_2 = "17"
-		lar.aus_result_3 = "17"
-		lar.aus_result_4 = "17"
-		lar.aus_result_5 = "17"
+		lar.aus_result_2 = "25"
+		lar.aus_result_3 = "25"
+		lar.aus_result_4 = "25"
+		lar.aus_result_5 = "25"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
