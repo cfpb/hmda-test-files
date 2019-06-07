@@ -13,7 +13,7 @@ import utils
 
 class rules_engine(object):
 	"""docstring for ClassName"""
-	def __init__(self, lar_schema=None, ts_schema=None, year=2018, crosswalk_data=None):#tracts=None, counties=None, small_counties=None):
+	def __init__(self, lar_schema=None, ts_schema=None, year=2019, crosswalk_data=None):#tracts=None, counties=None, small_counties=None):
 		#lar and TS field names (load from schema names?)
 		
 		#Loading yaml for geographic data.
