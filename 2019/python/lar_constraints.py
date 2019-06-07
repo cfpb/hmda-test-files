@@ -957,6 +957,14 @@ class lar_constraints(object):
 		aus_sys = [row["aus_1"], row["aus_2"], row["aus_3"], row["aus_4"], row["aus_5"]]
 		aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
 
+		#The following are aus and aus result values excluding blanks and exemption codes. 
+		aus_1_vals = ['1', '2', '3', '4', '5', '6']
+
+		aus_2_5_vals = ['1', '2', '3', '4', '5']
+
+		aus_results = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 
+		'12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
+
 		#set Not applicable and blanks correctly
 		if row["aus_1"] == "6":
 			row["aus_result_1"] ="17"
@@ -983,6 +991,33 @@ class lar_constraints(object):
 			row["aus_4"] = ""
 			row["aus_5"] = ""
 
+		#number of reported systems must match the number of reported results
+
+		if (row["aus_1"] in aus_1_vals and row['aus_result_1'] == '') or (row["aus_1"] == '' and row['aus_result_1'] in aus_results): 
+
+			row["aus_1"] = random.choice(aus_1_vals)
+			row["aus_result_1"] = random.choice(aus_results)
+
+		if (row["aus_2"] in aus_2_5_vals and row["aus_result_2"] == '') or (row["aus_2"] == '' and row["aus_result_2"] in aus_results): 
+			
+			row["aus_2"] = random.choice(aus_2_5_vals)
+			row["aus_result_2"] = random.choice(aus_results)
+
+		if (row["aus_3"] in aus_2_5_vals and row["aus_result_3"] == '') or (row["aus_3"] == '' and row["aus_result_3"] in aus_results): 
+			
+			row["aus_3"] = random.choice(aus_2_5_vals)
+			row["aus_result_3"] = random.choice(aus_results)
+
+		if (row["aus_4"] in aus_2_5_vals and row["aus_result_4"] == '') or (row["aus_4"] == '' and row["aus_result_4"] in aus_results): 
+			
+			row["aus_4"] = random.choice(aus_2_5_vals)
+			row["aus_result_4"] = random.choice(aus_results)
+
+		if (row["aus_5"] in aus_2_5_vals and row["aus_result_5"] == '') or (row["aus_5"] == '' and row["aus_result_5"] in aus_results): 
+			
+			row["aus_5"] = random.choice(aus_2_5_vals)
+			row["aus_5_result"] = random.choice(aus_results)
+			
 		#Ensure code 5 free form text is marked if the text field is populated
 		if (row["aus_1"]  != "5" and row["aus_2"] != "5" and row["aus_3"] != "5" and row["aus_4"] != "5" and row["aus_5"] != "5") and \
 		row["aus_code_5"] != "":
@@ -993,12 +1028,6 @@ class lar_constraints(object):
 		and row["aus_result_5"] != "16" and row["aus_code_16"] !="":
 			row["aus_code_16"] = ""
 
-		#number of reported systems must match the number of reported results
-		result_enums = ("1111","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14","15", "16", 
-			"17", "18", "19", "20", "21", "22", "23", "24", "")
-		for i in range(1, len(aus_sys)):
-			if aus_sys[i] in ("1", "2", "3", "4", "5", "6", "") and aus_results[i] not in result_enums:
-				row["aus_result_"+str(i+1)] = random.choice(result_enums[:-1])
 		return row
 
 	def v697_const(self, row): 
