@@ -544,11 +544,8 @@ class FileGenerator(object):
 			#the data is written to a new directory for quality 
 			#test files that pass syntax and validity edits. 
 
-			utils.write_file(path=self.filepaths['quality_pass_s_v_filepath'].format(
-				bank_name=self.data_map['name']['value']), 
-				ts_input=ts_df, 
-				lar_input=lar_df, 
-				name=quality_filename)
+			#Takes the first row of data. 
+			lar_row = lar_df[0:1]
 
 		#The case if there are rows that failed syntax or validity edits.
 		
