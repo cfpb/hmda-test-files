@@ -552,13 +552,15 @@ class FileGenerator(object):
 		else: 
 			#Creates a list of ULI's corresponding to rows where 
 			#syntax or validity edits have failed. 
+
+			#The resulting list is a list of lists, a list of ulis failed for each
+			#edit failed. 
 			uli_list = list(report_df.row_ids)
 
-			#Converts a list of lists to a single list. 
+			#Converts the list of lists to a single list.
 			single_uli_list = []
-			for i in range(len(uli_list)):
-				for n in range(len(uli_list[i])):
-					single_uli_list.append(uli_list[i][n])
+			for i in uli_list:
+				single_uli_list = single_uli_list + i
 
 			#Creates a list that removes ULI's that are repeated. 
 			unique_uli_list = set(single_uli_list)
