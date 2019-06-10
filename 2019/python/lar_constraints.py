@@ -997,7 +997,7 @@ class lar_constraints(object):
 		
 		for i in range(1, len(aus_sys)):
 			if aus_sys[i] in ("1", "2", "3", "4", "5") and aus_results[i] not in result_enums:
-				row[aus_sys[i]] = random.choice(result_enums[:-1])
+				aus_sys[i] = random.choice(result_enums[:-1])
 			
 		#Ensure code 5 free form text is marked if the text field is populated
 		if (row["aus_1"]  != "5" and row["aus_2"] != "5" and row["aus_3"] != "5" and row["aus_4"] != "5" and row["aus_5"] != "5") and \
