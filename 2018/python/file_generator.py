@@ -357,14 +357,14 @@ class FileGenerator(object):
 			
 			#Creates a results dataframe and keeps the results that 
 			#have failed. 
-			res_df = pd.DataFrame(checker.results)
-			new_df = res_df[(res_df['status']=='failed')]
+			report_df = pd.DataFrame(checker.results)
+			report_df = report_df[(report_df['status']=='failed')]
 
 			# The function ignores TS edits and drops results related
 			# to the edit fails from the TS. 
-			new_df = new_df[new_df['row_ids'] != 'TS']
+			report_df = report_df[report_df['row_ids'] != 'TS']
 
-			if len(new_df) == 0:
+			if len(report_df) == 0:
 				#If there are no syntax or validity edits
 				#the data is written to a new directory for quality 
 				#test files that pass syntax and validity edits. 
@@ -384,7 +384,7 @@ class FileGenerator(object):
 
 				#Iterates through each row and appends the list of ULI's
 				#of rows where syntax or validity edits have failed. 
-				for index, row in new_df.iterrows():
+				for index, row in report_df.iterrows():
 					uli_list.append(row.row_ids)
 
 				#Drops not-a-numbers from the ULI list. 
@@ -468,10 +468,10 @@ class FileGenerator(object):
 				getattr(checker, func)()
 
 		#Creates a dataframe of results from the checker. 
-		res_df = pd.DataFrame(checker.results)
+		report_df = pd.DataFrame(checker.results)
 
 		#Filters the results for edits that have failed. 
-		res_df = res_df[(res_df['status']=='failed')]
+		report_df = report_df[(report_df['status']=='failed')]
 
 		#Writes the report to the filepath and name designated in 
 		#the test_fielpaths yaml
@@ -480,7 +480,7 @@ class FileGenerator(object):
 		if not os.path.exists(edit_report_path):
 			os.makedirs(edit_report_path)
 
-		res_df.to_csv(edit_report_path +self.edit_report_config['edit_report_output_filename'])
+		report_df.to_csv(edit_report_path +self.edit_report_config['edit_report_output_filename'])
 
 		#Logs the result.
 		logging.info("Edit Report has been created in {filepath}".format(
@@ -532,14 +532,14 @@ class FileGenerator(object):
 		
 		#Creates a results dataframe and keeps the results that 
 		#have failed. 
-		res_df = pd.DataFrame(checker.results)
-		new_df = res_df[(res_df['status']=='failed')]
+		report_df = pd.DataFrame(checker.results)
+		report_df = report_df[(report_df['status']=='failed')].copy()
 
 		# The function ignores TS edits and drops results related
 		# to edit fails from the TS.  
-		new_df = new_df[new_df['row_ids'] != 'TS']
+		report_df = report_df[report_df['row_ids'] != 'TS']
 
-		if len(new_df) == 0:
+		if len(report_df) == 0:
 			#If there are no syntax or validity edits
 			#the data is written to a new directory for quality 
 			#test files that pass syntax and validity edits. 
@@ -550,28 +550,19 @@ class FileGenerator(object):
 		#The case if there are rows that failed syntax or validity edits.
 		
 		else: 
-			#Creates an empty list for storing row numbers
-			#where edits have failed. 
-			uli_list = []
+			#Creates a list of ULI's corresponding to rows where 
+			#syntax or validity edits have failed. 
+			uli_list = list(report_df.row_ids)
 
-			#Iterates through each row and appends the list of ULI's
-			#of rows where syntax or validity edits have failed. 
-			for index, row in new_df.iterrows():
-				uli_list.append(row.row_ids)
-
-			#Drops not-a-numbers from the ULI list. 
-			if np.nan in uli_list:
-				uli_list.remove(np.nan)
-
-			#Creates a new list to store the ULI's without nested brackets. 
-			new_list = []
+			#Converts a list of lists to a single list. 
+			single_list = []
 			for i in range(len(uli_list)):
 				for n in range(len(uli_list[i])):
-					new_list.append(uli_list[i][n])
+					single_list.append(uli_list[i][n])
 
 			#Creates a list that removes ULI's that are repeated. 
 			unique_list = []
-			for i in new_list:
+			for i in single_list:
 				if i not in unique_list:
 					unique_list.append(i)
 
