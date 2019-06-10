@@ -468,10 +468,15 @@ class FileGenerator(object):
 				getattr(checker, func)()
 
 		#Creates a dataframe of results from the checker. 
-		res_df = pd.DataFrame(checker.results)
+		report_df = pd.DataFrame(checker.results)
 
-		#Filters the results for edits that have failed. 
-		res_df = res_df[(res_df['status']=='failed')]
+		#Creating a report based on the status of the edits failed.
+		if self.edit_report_config['status'] == 'failed':
+			report_df = report_df[(report_df['status']=='failed')]
+		elif self.edit_report_config['status'] == 'passed':
+			report_df = report_df[(report_df['status']=='passed')]
+		else:
+			pass
 
 		#Writes the report to the filepath and name designated in 
 		#the test_fielpaths yaml
@@ -480,7 +485,7 @@ class FileGenerator(object):
 		if not os.path.exists(edit_report_path):
 			os.makedirs(edit_report_path)
 
-		res_df.to_csv(edit_report_path +self.edit_report_config['edit_report_output_filename'])
+		report_df.to_csv(edit_report_path +self.edit_report_config['edit_report_output_filename'])
 
 		#Logs the result.
 		logging.info("Edit Report has been created in {filepath}".format(

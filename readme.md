@@ -112,6 +112,9 @@ To generate large files for 2018:
 1. Navigate to the 2018/python directory.
 2. Adjust the [2018 File Large File Script Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/test_filepaths.yaml) to specify bank name, lei, tax id, row count, output filepath, and output filename. 
 3. Run `python3 large_test_files_script.py` to produce the large file. 
+
+## Generating Edit Reports
+Edit reports provide a summary of which rows in a submission file have failed syntax, validity, or quality edits. 
 ----
 ## Data Generation Notes:
 The default values for Bank0 are listed below. 
