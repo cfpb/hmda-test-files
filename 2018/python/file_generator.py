@@ -495,7 +495,7 @@ class FileGenerator(object):
 		existing clean file, filters the modified file for clean rows, 
 		and then pulls the first row from the file. 
 		Pulls rows from the clean file last generated. Suggestion that 
-		the file pulled should be 1000 original rows or greater, to ensure
+		the file pulled should be 100 original rows or greater, to ensure
 		that modified clean rows can be found. 
 		"""
 		#Creates a TS and LAR dataframe from the clean filepath and name
@@ -555,26 +555,39 @@ class FileGenerator(object):
 			uli_list = list(report_df.row_ids)
 
 			#Converts a list of lists to a single list. 
-			single_list = []
+			single_uli_list = []
 			for i in range(len(uli_list)):
 				for n in range(len(uli_list[i])):
-					single_list.append(uli_list[i][n])
+					single_uli_list.append(uli_list[i][n])
 
 			#Creates a list that removes ULI's that are repeated. 
-			unique_list = []
-			for i in single_list:
-				if i not in unique_list:
-					unique_list.append(i)
+			unique_uli_list = set(single_uli_list)
 
 			#Drops rows in the data containing syntax or validity edits.
-			lar_df = lar_df[lar_df.uli.isin(unique_list)].copy()
+			lar_df = lar_df[lar_df.uli.isin(unique_uli_list)].copy()
 
-			#Takes the first row of data. 
+			#Only one row is needed for output. 
+			#The following, takes the first row of data from the clean dataframe 
 			lar_row = lar_df[0:1]
 
-			print('Length of data to be added: ' + str(len(lar_row.index)))
-
 		return(lar_row)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
