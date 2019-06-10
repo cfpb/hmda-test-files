@@ -575,17 +575,8 @@ class FileGenerator(object):
 				if i not in unique_list:
 					unique_list.append(i)
 
-			#Creates a list of row numbers corresponding to the
-			#ULI's that have failed syntax or validity edits. 
-			bad_rows = []
-			for index, row in lar_df.iterrows():
-				if row['uli'] in unique_list:
-					failed_uli = row['uli']
-					bad_rows.append(lar_df[lar_df['uli']==failed_uli].index.values.astype(int)[0])
-
-			#Drops all rows that failed syntax or validity edits
-			#from the original LAR dataframe. 
-			lar_df = lar_df.drop(bad_rows)
+			#Drops rows in the data containing syntax or validity edits.
+			lar_df = lar_df[lar_df.uli.isin(unique_list)].copy()
 
 			#Takes the first row of data. 
 			lar_row = lar_df[0:1]
