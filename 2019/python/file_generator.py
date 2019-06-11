@@ -357,14 +357,14 @@ class FileGenerator(object):
 			
 			#Creates a results dataframe and keeps the results that 
 			#have failed. 
-			res_df = pd.DataFrame(checker.results)
-			new_df = res_df[(res_df['status']=='failed')]
+			report_df = pd.DataFrame(checker.results)
+			report_df = report_df[(report_df['status']=='failed')]
 
 			# The function ignores TS edits and drops results related
 			# to edit fails from the TS.  
-			new_df = new_df[new_df['row_ids'] != 'TS']
+			report_df = report_df[report_df['row_ids'] != 'TS']
 
-			if len(new_df) == 0:
+			if len(report_df) == 0:
 				#If there are no syntax or validity edits
 				#the data is written to a new directory for quality 
 				#test files that pass syntax and validity edits. 
@@ -384,7 +384,7 @@ class FileGenerator(object):
 
 				#Iterates through each row and appends the list of ULI's
 				#of rows where syntax or validity edits have failed. 
-				for index, row in new_df.iterrows():
+				for index, row in report_df.iterrows():
 					uli_list.append(row.row_ids)
 
 				#Drops not-a-numbers from the ULI list. 
@@ -398,16 +398,16 @@ class FileGenerator(object):
 						new_list.append(uli_list[i][n])
 
 				#Creates a list that removes ULI's that are repeated. 
-				unique_list = []
+				unique_uli_list = []
 				for i in new_list:
-					if i not in unique_list:
-						unique_list.append(i)
+					if i not in unique_uli_list:
+						unique_uli_list.append(i)
 
 				#Creates a list of row numbers corresponding to the
 				#ULI's that have failed syntax or validity edits. 
 				bad_rows = []
 				for index, row in lar_df.iterrows():
-					if row['uli'] in unique_list:
+					if row['uli'] in unique_uli_list:
 						failed_uli = row['uli']
 						bad_rows.append(lar_df[lar_df['uli']==failed_uli].index.values.astype(int)[0])
 
@@ -469,10 +469,10 @@ class FileGenerator(object):
 				getattr(checker, func)()
 
 		#Creates a dataframe of results from the checker. 
-		res_df = pd.DataFrame(checker.results)
+		report_df = pd.DataFrame(checker.results)
 
 		#Filters the results for edits that have failed. 
-		res_df = res_df[(res_df['status']=='failed')]
+		report_df = report_df[(report_df['status']=='failed')]
 
 		#Writes the report to the filepath and name designated in 
 		#the test_fielpaths yaml
@@ -481,11 +481,98 @@ class FileGenerator(object):
 		if not os.path.exists(edit_report_path):
 			os.makedirs(edit_report_path)
 
-		res_df.to_csv(edit_report_path +self.edit_report_config['edit_report_output_filename'])
+		report_df.to_csv(edit_report_path +self.edit_report_config['edit_report_output_filename'])
 
 		#Logs the result.
 		logging.info("Edit Report has been created in {filepath}".format(
 			filepath=edit_report_path))
+
+	def create_custom_row(self, dictionary, clean_filepath, clean_filename):
+
+		"""
+		Creates a custom clean LAR row by passing in a dictionary of columns 
+		and new values to modify all the rows of an 
+		existing clean file, filters the modified file for clean rows, 
+		and then pulls the first row from the file. 
+		Pulls rows from the clean file last generated. Suggestion that 
+		the file pulled should be 1000 original rows or greater, to ensure
+		that modified clean rows can be found. 
+		"""
+		#Creates a TS and LAR dataframe from the clean filepath and name
+		#specified. 
+		ts_df, lar_df = utils.read_data_file(
+					path=clean_filepath,
+					data_file=clean_filename)
+
+		#Changes each column (key in the dictionary) to the new value in 
+		# the dictionary.
+		for key, value in dictionary.items():
+			lar_df[key] = value
+
+		checker = rules_engine(lar_schema=self.lar_schema_df, 
+					ts_schema=self.ts_schema_df, 
+					crosswalk_data=self.crosswalk_data)
+
+		#Produces a report as to which syntax or validity
+		#edits have passed or failed based on logic in the rules_engine.
+		#Loads the TS and LAR dataframes into the checker object. 
+
+		checker.load_data_frames(ts_df, lar_df)
+
+		for func in dir(checker):
+			if func[:1] in ("s", "v") and func[1:4].isdigit()==True:
+				getattr(checker, func)()
+
+	
+		#Produces a report as to which syntax or validity
+		#edits have passed or failed based on logic in the rules_engine.
+		for func in dir(checker):
+			if func[:1] in ("s", "v") and func[1:4].isdigit()==True:
+				getattr(checker, func)()
+		
+		#Creates a results dataframe and keeps the results that 
+		#have failed. 
+		report_df = pd.DataFrame(checker.results)
+		report_df = report_df[(report_df['status']=='failed')].copy()
+
+		# The function ignores TS edits and drops results related
+		# to edit fails from the TS.  
+		report_df = report_df[report_df['row_ids'] != 'TS']
+
+		if len(report_df) == 0:
+			#If there are no syntax or validity edits
+			#the data is written to a new directory for quality 
+			#test files that pass syntax and validity edits. 
+
+			#Takes the first row of data. 
+			lar_row = lar_df[0:1]
+
+		#The case if there are rows that failed syntax or validity edits.
+		
+		else: 
+			#Creates a list of ULI's corresponding to rows where 
+			#syntax or validity edits have failed. 
+
+			#The resulting list is a list of lists, a list of ulis failed for each
+			#edit failed. 
+			uli_list = list(report_df.row_ids)
+
+			#Converts the list of lists to a single list.
+			single_uli_list = []
+			for i in uli_list:
+				single_uli_list = single_uli_list + i
+
+			#Creates a list that removes ULI's that are repeated. 
+			unique_uli_list = set(single_uli_list)
+
+			#Drops rows in the data containing syntax or validity edits.
+			lar_df = lar_df[lar_df.uli.isin(unique_uli_list)].copy()
+
+			#Only one row is needed for output. 
+			#The following, takes the first row of data from the clean dataframe 
+			lar_row = lar_df[0:1]
+
+		return(lar_row)
 
 
 
