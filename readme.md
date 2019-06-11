@@ -87,34 +87,62 @@ Large files are used during load testing. Large test files are created using a c
  [2019 Large File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/test_filepaths.yaml).
  [2018 Large File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/test_filepaths.yaml).
 
-Configuration options include (with defaulted values): 
-- source_filepath: #Specify source filepath.  
-- source_filename: #Specify source filename.
-- output_filepath: `../edits_files/large_test_files/` 
-- output_filename: `large_file_10000_rows.txt`
-- *`row_by_row_modification_yaml_file`:
-    * The script contains functionality for changing values by column and row using the [2018 yaml configuration](https://github.com/cfpb/hmda-test-files/blob/master/2018/python/configurations/row_by_row_modification.yaml) or the [2019 yaml configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/row_by_row_modification.yaml). The path to the row by row configuration file can be added here to implement the data changing functionality. There is no default value.
-- bank_name: `Bank1`
-- lei: `BANK1LEIFORTEST12345`
-- tax_id: `02-1234567`
-- row_count: `10000`
+Configuration options include (with defaulted values):
+
+|Key|Default Value|Data Type|Expanation|
+|:-------|:-------------|:--------|:--------|
+source_filepath|`../edits_files/clean_files/Bank1/`|String|Filepath for the source clean file. 
+source_filename|`clean_file_100_rows_Bank1.txt`|String|Filename for the source clean file. 
+output_filepath|`../edits_files/large_test_files/`|String|Filepath for storing generated large files. 
+output_filename|`large_file_10000_rows.txt`|String|Filename for the generated large file. 
+*row_by_row_modification_yaml_file| |String|The script contains functionality for changing values by column and row using the [2018 yaml configuration](https://github.com/cfpb/hmda-test-files/blob/master/2018/python/configurations/row_by_row_modification.yaml) or the [2019 yaml configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/row_by_row_modification.yaml). The path to the row by row configuration file can be added here to implement the data changing functionality. There is no default value.|
+bank_name|`Bank1`|String|Bank name for the generated large file.
+lei|`BANK1LEIFORTEST12345`|String|LEI for the generated large file.
+tax_id|`02-1234567`|String|Tax ID for the generated large file. 
+row_count|`10000`|Integer|The number of rows for the generated large file. 
 
 *Optional parameter.
 
-Note: Source filepath and source filename will need to be specified in the configuration before running the [2019 large test files script](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations/large_test_files_script.py) or the [2018 large test files script](https://github.com/cfpb/hmda-test-files/tree/master/2018/python/configurations/large_test_files_script.py). 
-
 To generate large files for 2019: 
 1. Navigate to the 2019/python directory.
-2. Adjust the [2019 File Large File Script Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/test_filepaths.yaml) to specify bank name, lei, tax id, row count, output filepath, and output filename. 
+2. Adjust the [2019 File Large File Script Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations/test_filepaths.yaml) to specify bank name, lei, tax id, row count, output filepath, and output filename. 
 3. Run `python3 large_test_files_script.py` to produce the large file. 
 
 To generate large files for 2018: 
 1. Navigate to the 2018/python directory.
-2. Adjust the [2018 File Large File Script Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/test_filepaths.yaml) to specify bank name, lei, tax id, row count, output filepath, and output filename. 
+2. Adjust the [2018 File Large File Script Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/python/configurations/test_filepaths.yaml) to specify bank name, lei, tax id, row count, output filepath, and output filename. 
 3. Run `python3 large_test_files_script.py` to produce the large file. 
 
 ## Generating Edit Reports
-Edit reports provide a summary of which rows in a submission file have failed syntax, validity, or quality edits. 
+Edit reports provide a summary of the syntax, validity, or quality edits passed or failed in a test submission file. The edit report contains the following fields. 
+
+* edit name
+* status (pass/fail)
+* number of rows failed
+* ULIs/NULIs of rows that failed (as a list). 
+
+Edit reports can be generated for any synthetic submission file. Configuration options include (with defaulted values):
+
+|Key|Default Value|Data Type| Expanation |
+|:-------|:-------------|:--------|:--------|
+data_filepath|`../edits_files/clean_files/Bank1/`|String|Filepath to the submission file for the report.| 
+data_filename|`clean_file_100_rows_Bank1.txt`|String|Filename of the submission file for the report.|
+edit_report_output_filepath|`../edits_files/`|String|Filepath for storing generated edit reports.|
+edit_report_output_filename|`edit_report.csv`|String|Filename for generated edit reports.|
+*status|`failed`|String|Specifies whether edits reported are `passed` or `failed`. 
+
+*Optional parameter: if status is blank in the configuration, the report contains both passed and failed edits. 
+
+To generate edit reports for 2019:  
+1. Navigate to the 2019/python directory.
+2. Adjust the [2019 Edit Report Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations/edit_report_config.yaml) to specify output. 
+3. Run `python3 generate_edit_report.py` to produce the edit report in the directory according to the configuration file. 
+
+To generate edit reports for 2018:  
+1. Navigate to the 2018/python directory.
+2. Adjust the [2018 Edit Report Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/python/configurations/edit_report_config.yaml) to specify output. 
+3. Run `python3 generate_edit_report.py` to produce the edit report in the directory according to the configuration file. 
+
 ----
 ## Data Generation Notes:
 The default values for Bank0 are listed below. 
