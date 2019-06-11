@@ -486,7 +486,7 @@ class FileGenerator(object):
 		if not os.path.exists(edit_report_path):
 			os.makedirs(edit_report_path)
 
-		res_df.to_csv(edit_report_path +self.edit_report_config['edit_report_output_filename'])
+		report_df.to_csv(edit_report_path +self.edit_report_config['edit_report_output_filename'])
 
 		#Logs the result.
 		logging.info("Edit Report has been created in {filepath}".format(
