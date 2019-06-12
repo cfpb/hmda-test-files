@@ -2422,40 +2422,6 @@ class rules_engine(object):
 			vals_2=vals_2),axis=1)==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v697(self):
-		"""An invalid Automated Underwriting System data field was reported.
-		1) If Automated Underwriting System: 1, Automated Underwriting System: 2;
-		Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 1,
-		then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
-		Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
-		Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, or 7."""
-		field = "AUS and Results"
-		edit_name = "v697"
-		aus_results = ("1", "2", "3", "4", "5", "6", "7")
-		fail_df = self.lar_df[((self.lar_df.aus_1=="1")&(~self.lar_df.aus_result_1.isin(aus_results)))|
-			((self.lar_df.aus_2=="1")&(~self.lar_df.aus_result_2.isin(aus_results)))|
-			((self.lar_df.aus_3=="1")&(~self.lar_df.aus_result_3.isin(aus_results)))|
-			((self.lar_df.aus_4=="1")&(~self.lar_df.aus_result_4.isin(aus_results)))|
-			((self.lar_df.aus_5=="1")&(~self.lar_df.aus_result_5.isin(aus_results)))]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
-	def v698(self):
-		"""An invalid Automated Underwriting System data field was reported.
-		1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3;
-		Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 2,
-		then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
-		Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5
-		must equal 8, 9, 10, 11, or 12."""
-		field = "AUS and Results"
-		edit_name = "v698"
-		aus_results = ("8", "9", "10", "11", "12")
-		fail_df = self.lar_df[((self.lar_df.aus_1=="2")&(~self.lar_df.aus_result_1.isin(aus_results)))|
-			((self.lar_df.aus_2=="2")&(~self.lar_df.aus_result_2.isin(aus_results)))|
-			((self.lar_df.aus_3=="2")&(~self.lar_df.aus_result_3.isin(aus_results)))|
-			((self.lar_df.aus_4=="2")&(~self.lar_df.aus_result_4.isin(aus_results)))|
-			((self.lar_df.aus_5=="2")&(~self.lar_df.aus_result_5.isin(aus_results)))]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
 	def v699(self):
 		"""
 		If Automated Underwriting System: 1; Automated

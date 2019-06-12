@@ -1011,36 +1011,6 @@ class lar_constraints(object):
 
 		return row
 
-	def v697_const(self, row): 
-		"""1) If Automated Underwriting System: 1, Automated Underwriting System: 2; Automated Underwriting
-			System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 1,
-			then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
-			Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
-			Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, or 7."""
-		aus_sys = [row["aus_1"], row["aus_2"], row["aus_3"], row["aus_4"], row["aus_5"]]
-		aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
-
-		for i in range(len(aus_sys)):
-			if aus_sys[i] == "1":
-				if aus_results[i] not in ("1", "2", "3", "4", "5", "6", "7"):
-					row["aus_result_"+str(i+1)] = random.choice(("1", "2", "3", "4", "5", "6", "7"))
-		return row
-
-	def v698_const(self, row): 
-		"""1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting
-			System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 2, then the
-			corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
-			Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
-			Automated Underwriting System Result: 5 must equal 8, 9, 10, 11, or 12."""
-		aus_sys = [row["aus_1"], row["aus_2"], row["aus_3"], row["aus_4"], row["aus_5"]]
-		aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
-
-		for i in range(len(aus_sys)):
-			if aus_sys[i] == "2":
-				if aus_results[i] not in ("8","9", "10", "11", "12"):
-					row["aus_result_"+str(i+1)] = random.choice(("8","9", "10", "11", "12"))
-		return row
-
 	def v699_const(self, row): 
 		"""1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting
 			System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 5,
