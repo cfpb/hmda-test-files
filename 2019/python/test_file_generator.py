@@ -3345,7 +3345,7 @@ class test_data(object):
 
 	def q639(self):
 		"""Set preapproval = 1.
-		Set action taken to 1-6.
+		Set action taken to 1-2.
 		Note: this edit will only trigger for files with records of more than 1000 
 		rows (in addition to the preapproval condition).
 		If the length of the LAR dataframe is less than or equal to 1000, the resulting 
@@ -3357,8 +3357,11 @@ class test_data(object):
 		lar = self.lar_df.copy()
 		lar.preapproval = "1"
 		#Conforming to pass v612_2. This allows for less syntax and validity edits to fail
-		#so that a clean test file can be produced.
+		#so that a clean q639.txt file can be produced.
 		lar.loan_purpose = "1"
+		#Setting action taken either to 1 or 2 to conform to v613_4. 
+		#This allows for less syntax and validity edits to fail
+		#so that a clean q639.txt file can be produced.
 		lar.action_taken = lar.action_taken.map(lambda x: random.choice(["1","2"]))
 		if len(lar) <= 1000:
 			ts, lar = utils.new_lar_rows(row_count=1001, lar_df=lar, ts_df=ts)
