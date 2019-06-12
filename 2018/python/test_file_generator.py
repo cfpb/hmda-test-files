@@ -2922,13 +2922,13 @@ class test_data(object):
 
 	def q608(self):
 		"""Set action taken to 1.
-		Set action taken date before application date."""
+		Set action taken date the same day as the application date."""
 		name = "q608.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.action_taken = "1"
-		lar.action_date = "20161231"
+		lar.action_date = "20181231"
 		lar.app_date = "20181231"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
