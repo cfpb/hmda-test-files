@@ -2996,7 +2996,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.business_purpose = "1"				
-		lar.loan_purpose = "4'"
+		lar.loan_purpose = "4"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
