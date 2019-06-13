@@ -23,6 +23,14 @@ class test_data(object):
 		#Loads the filepath configuration. 
 		with open('configurations/test_filepaths.yaml') as f:
 			filepaths = yaml.safe_load(f)
+
+		#Loads geographic configuration file. 
+		with open('configurations/geographic_data.yaml') as f:
+			self.geographic = yaml.safe_load(f)
+
+		#Loading in state codes. 
+		self.state_codes = self.geographic['state_codes']
+		self.state_abbrev = self.geographic['state_FIPS_to_abbreviation']
 		
 		self.clean_file_path = filepaths['clean_filepath'].format(bank_name=data_map["name"]["value"])
 		self.validity_path = filepaths['validity_filepath'].format(bank_name=data_map["name"]["value"])
@@ -33,7 +41,7 @@ class test_data(object):
 		self.ts_field_names = list(ts_schema.field)
 
 		self.crosswalk_data = crosswalk_data
-	
+
 	def load_data_frames(self, ts_data, lar_data):
 		"""Receives dataframes for TS and LAR and writes them as object attributes"""
 		self.ts_df = ts_data
@@ -2866,11 +2874,16 @@ class test_data(object):
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.state = lar.state.map(lambda x: random.choice(list(self.crosswalk_data.stateCode)))
+		lar.state = lar.state.map(lambda x: self.state_abbrev[random.choice(list(self.crosswalk_data.stateCode))])
+		print(lar.state)
 		#this implemenation sets all state codes to the same code and uses that to make a county list 
 		for index, row in lar.iterrows():
-			row["state"] = random.choice(list(self.crosswalk_data.stateCode))
-			row["county"] = random.choice(list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode!=row["state"]]))
+			state_code = random.choice(list(self.crosswalk_data.stateCode))
+			state_abbrev = self.state_abbrev[state_code]
+			row["state"] = state_abbrev
+			row["county"] = random.choice(list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode!=state_code]))
+			#Conforming the census tract to the new county code to pass v625 and v627. 
+			row["tract"] = row["county"] + random.choice(list(self.crosswalk_data.tracts[(self.crosswalk_data.countyFips == row["county"])]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
