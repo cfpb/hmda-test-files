@@ -1,5 +1,6 @@
 import random
 import string
+import utils
 
 class lar_constraints(object):
 
@@ -130,8 +131,10 @@ class lar_constraints(object):
 			   unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other
 			   Hispanic or Latino."""
 		eth_enums = ["1", "11", "12", "13", "14", "2", "3", "4"]
-		if row["app_eth_1"] =="" and row["app_eth_free"] =="":
+		if row["app_eth_free"] == "" and row["app_eth_1"] not in eth_enums:
 			row["app_eth_1"] = random.choice(eth_enums)
+		if row["app_eth_free"] != "" and row["app_eth_1"] in eth_enums:
+			row["app_eth_free"] = ''
 		return row
 
 	def v628_2_const(self, row):
