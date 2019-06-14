@@ -313,7 +313,7 @@ class rules_engine(object):
 		edit_name = "v608_1"
 		field = "ULI"
 		#Obtaining subset of LAR that have ULIs rather than NULIs.
-		lei = self.lar_df.lei.iloc[0] 
+		lei = self.lar_df.lei.iloc[0]
 		uli_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]==lei))].copy()
 		#filter each df for failures
 		fail_df = uli_check_df[(uli_check_df.uli.map(lambda x: len(x)<23))|
@@ -333,7 +333,7 @@ class rules_engine(object):
 		loan_id_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]!=lei))].copy()
 		fail_df = loan_id_check_df[(loan_id_check_df.uli=="")|
 					(loan_id_check_df.uli.apply(lambda x: len(x)>22))].copy()
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)me=field, fail_df=fail_df)
 
 	def v609(self):
 		"""An invalid ULI was reported. Please review the information below and update your file accordingly.
@@ -1198,12 +1198,8 @@ class rules_engine(object):
 
 	def v652_2(self):
 		"""An invalid Age of Co-Applicant or Co-Borrower was reported.
-		2) If the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; 
-		and Race of Co-Applicant or Co-Borrower: 1 equals 7;
-		and Sex of Co-Applicant or Co-Borrower: 1 equals 4;
-		and Action Taken does not equal 6, 
-		indicating that the co-applicant or 
-		co-borrower is a non-natural person,
+		2) If the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7;
+		and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is a non-natural person,
 		then Age of Co- Applicant or Co-Borrower must equal 8888."""
 		field = "Co-Applicant Age"
 		edit_name = "v652_2"

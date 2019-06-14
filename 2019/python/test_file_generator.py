@@ -219,7 +219,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar['uli'] = random.choice([lar.lei + "DCM78AVG3FFL1YB5H2BR2EDJK", lar.lei])
-		lar['uli'] = utils.check_digit_gen(valid=True, ULI=lar['uli'][0])
+		lar['uli'] = lar['uli'] + utils.check_digit_gen(valid=True, ULI=lar['uli'][0])
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
