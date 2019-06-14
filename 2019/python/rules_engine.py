@@ -305,31 +305,34 @@ class rules_engine(object):
 		fail_df = self.lar_df[self.lar_df.duplicated(keep=False)==True] #pull frame of duplicates
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v608(self):
+	def v608_1(self):
 		"""A ULI with an invalid format was provided.
 		1) The required format for ULI is alphanumeric with at least 23 characters and up to 45 characters, 
 		and it cannot be left blank.
-		Exempt Filers:
-		If your institution is reporting a Loan/Application Number, the required format for Loan/Application Number 
-		is alphanumeric with at least 1 character and no more than 22 characters, and it cannot be left blank."""
-
-		edit_name = "v608"
+		"""
+		edit_name = "v608_1"
 		field = "ULI"
-		#if length not between 23 and 45 or if ULI is blank
-		#get subset of LAR dataframe that fails ULI conditions
-		#check if LEI present as first 20 digits of ULI
-		lei = self.lar_df.lei.iloc[0]
-		#get seperate dataframes for ULI and Loan ID 
+		#Obtaining subset of LAR that have ULIs rather than NULIs.
+		lei = self.lar_df.lei.iloc[0] 
 		uli_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]==lei))].copy()
-		loan_id_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]!=lei))].copy()
 		#filter each df for failures
-		uli_fail_df = uli_check_df[(uli_check_df.uli.map(lambda x: len(x)<23))|
+		fail_df = uli_check_df[(uli_check_df.uli.map(lambda x: len(x)<23))|
 			(uli_check_df.uli.map(lambda x: len(x))>45)|(uli_check_df.uli=="")].copy()
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-		loan_id_fail_df = loan_id_check_df[(loan_id_check_df.uli=="")|
-			(loan_id_check_df.uli.apply(lambda x: len(x)>22))].copy()
-		#recombine dfs
-		fail_df = pd.concat([uli_fail_df, loan_id_fail_df])
+	def v608_2(self):
+		"""
+		A ULI with an invalid format was provided. 
+		2) The required format for NULI is alphanumeric with at least 1 character 
+		and no more than 22 characters, and it cannot be left blank. 
+		"""
+		edit_name = "v608_2"
+		field = "ULI"
+		##Obtaining subset of LAR that have NULIs rather than ULIs.
+		lei = self.lar_df.lei.iloc[0]
+		loan_id_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]!=lei))].copy()
+		fail_df = loan_id_check_df[(loan_id_check_df.uli=="")|
+					(loan_id_check_df.uli.apply(lambda x: len(x)>22))].copy()
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v609(self):
@@ -1195,8 +1198,12 @@ class rules_engine(object):
 
 	def v652_2(self):
 		"""An invalid Age of Co-Applicant or Co-Borrower was reported.
-		2) If the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7;
-		and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or co- borrower is a non-natural person,
+		2) If the Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; 
+		and Race of Co-Applicant or Co-Borrower: 1 equals 7;
+		and Sex of Co-Applicant or Co-Borrower: 1 equals 4;
+		and Action Taken does not equal 6, 
+		indicating that the co-applicant or 
+		co-borrower is a non-natural person,
 		then Age of Co- Applicant or Co-Borrower must equal 8888."""
 		field = "Co-Applicant Age"
 		edit_name = "v652_2"
