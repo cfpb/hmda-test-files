@@ -333,7 +333,7 @@ class rules_engine(object):
 		loan_id_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]!=lei))].copy()
 		fail_df = loan_id_check_df[(loan_id_check_df.uli=="")|
 					(loan_id_check_df.uli.apply(lambda x: len(x)>22))].copy()
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)me=field, fail_df=fail_df)
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v609(self):
 		"""An invalid ULI was reported. Please review the information below and update your file accordingly.
