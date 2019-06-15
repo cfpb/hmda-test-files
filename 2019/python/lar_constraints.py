@@ -462,12 +462,10 @@ class lar_constraints(object):
 		return row
 
 	def v645_const(self, row):
-		"""1) If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3,
-			then Sex of Applicant or Borrower must equal 3 or 4.
-		2) If Sex of Applicant or Borrower equals 4, then Sex of Applicant or Borrower Collected on the Basis of
-			Visual Observation or Surname must equal 3."""
-		if row["app_sex_basis"] == "3" and row["app_sex"] not in ("3", "4"):
-			row["app_sex"] = random.choice(("3", "4"))
+		"""
+		If Sex of Applicant or Borrower equals 4, then Sex of Applicant or Borrower Collected on the Basis of
+			Visual Observation or Surname must equal 3.
+		"""
 		if row["app_sex"] == "4":
 			row["app_sex_basis"] = "3"
 		return row
