@@ -268,12 +268,9 @@ class lar_constraints(object):
 	def v633_const(self, row):
 		"""1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4, then Ethnicity of Co-Applicant or CoBorrower
 			Collected on the Basis of Visual Observation or Surname must equal 3. 
-		2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3; 
-			then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 3 or 4."""
+		"""
 		if row["co_app_eth_1"] == "4":
 			row["co_app_eth_basis"] = "3"
-		if row["co_app_eth_basis"] == "3" and row["co_app_eth_1"] not in ("3", "4"):
-			row["co_app_eth_1"] = random.choice(("3", "4"))
 		return row
 
 	def v634_const(self, row):

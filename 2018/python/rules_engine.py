@@ -779,22 +779,13 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.co_app_eth_basis=="2")&(~self.lar_df.co_app_eth_1.isin(("1", "11", "12", "13", "14", "2", "3")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v633_1(self):
+	def v633(self):
 		"""An invalid Ethnicity data field was reported.
 		1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4,
 		then Ethnicity of Co-Applicant or Co- Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
 		field = "Co-App Ethnicity basis"
 		edit_name = "v633_1"
 		fail_df = self.lar_df[(self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_eth_basis!="3")]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
-	def v633_2(self):
-		"""An invalid Ethnicity data field was reported.
-		2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3;
-		then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 3 or 4."""
-		field = "Co-App Ethnicity Basis"
-		edit_name = "v633_2"
-		fail_df = self.lar_df[(self.lar_df.co_app_eth_basis=="3")&(~self.lar_df.co_app_eth_1.isin(("3", "4")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v634(self):
