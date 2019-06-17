@@ -312,8 +312,8 @@ class rules_engine(object):
 		"""
 		edit_name = "v608_1"
 		field = "ULI"
-		#Obtaining subset of LAR that have ULIs rather than NULIs.
 		lei = self.lar_df.lei.iloc[0]
+		#Obtaining subset of LAR that have ULIs rather than NULIs.
 		uli_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]==lei))].copy()
 		#filter each df for failures
 		fail_df = uli_check_df[(uli_check_df.uli.map(lambda x: len(x)<23))|
