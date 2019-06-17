@@ -635,10 +635,11 @@ class rules_engine(object):
 		unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other Hispanic or Latino."""
 		field = "app_eth_1"
 		edit_name = "v628_1"
-		fail_df = self.lar_df[((~self.lar_df.app_eth_1.isin(("1","11", "12", "13", "14", "2", "3","4"))) & 
+		fail_df = self.lar_df[((~self.lar_df.app_eth_1.isin(("1","11", "12", "13", "2", "3","4"))) & 
 								(self.lar_df.app_eth_free == ''))|
-							  ((self.lar_df.app_eth_1.isin(("1","11", "12", "13", "14", "2", "3","4"))) & 
-								(self.lar_df.app_eth_free != ''))]
+							  ((self.lar_df.app_eth_1.isin(("1","11", "12", "13", "2", "3","4"))) & 
+								(self.lar_df.app_eth_free != ''))|
+							  ((self.lar_df.app_eth_1.isin(("14",""))) & (self.lar_df.app_eth_free == ''))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v628_2(self):

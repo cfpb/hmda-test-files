@@ -1,5 +1,6 @@
 import random
 import string
+import utils
 
 class lar_constraints(object):
 
@@ -129,11 +130,13 @@ class lar_constraints(object):
 		"""1) Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, or 4, and cannot be left blank,
 			   unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other
 			   Hispanic or Latino."""
-		eth_enums = ["1", "11", "12", "13", "14", "2", "3", "4"]
+		eth_enums = ["1", "11", "12", "13", "2", "3", "4"]
 		if row["app_eth_free"] == "" and row["app_eth_1"] not in eth_enums:
 			row["app_eth_1"] = random.choice(eth_enums)
 		if row["app_eth_free"] != "" and row["app_eth_1"] in eth_enums:
-			row["app_eth_free"] = ''
+			row["app_eth_free"] = ""
+		if (row["app_eth_1"] in ["14", ""]):
+			row["app_eth_free"] = utils.char_string_gen(random.choice(range(100)))
 		return row
 
 	def v628_2_const(self, row):
