@@ -31,6 +31,10 @@ class test_data(object):
 		#Loads the filepath configuration. 
 		with open('configurations/test_filepaths.yaml') as f:
 			filepaths = yaml.safe_load(f)
+
+		#Loads geographic configuration file. 
+		with open('configurations/geographic_data.yaml') as f:
+			self.geographic = yaml.safe_load(f)
 		
 		self.clean_file_path = filepaths['clean_filepath'].format(bank_name=data_map["name"]["value"])
 		self.validity_path = filepaths['validity_filepath'].format(bank_name=data_map["name"]["value"])
@@ -220,27 +224,26 @@ class test_data(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v608_1_file(self):
-		"""Set a ULI to be a random choice of 22 characters or 46 characters"""
-		name = "v608_1.txt"
-		path = self.validity_path
-		ts = self.ts_df.copy()
-		lar = self.lar_df.copy()
-		lar['action_taken'] = random.choice(['1','2','3','4','5','7','8'])
-		lar['uli'] = random.choice([lar.lei + utils.char_string_gen(26), lar.lei + utils.char_string_gen(2)])
-		lar['uli'] = lar['uli'] + utils.check_digit_gen(valid=True, ULI=lar['uli'][0])
-		print("writing {name}".format(name=name))
-		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+	# under construction
+	# def v608_1_file(self):
+	# 	"""Set a ULI to be a random choice of 22 characters or 46 characters"""
+	# 	name = "v608_1.txt"
+	# 	path = self.validity_path
+	# 	ts = self.ts_df.copy()
+	# 	lar = self.lar_df.copy()
+	# 	lar['uli'] = random.choice([lar.lei + "DCM78AVG3FFL1YB5H2BR2EDJKLMNO", lar.lei+"AB"])
+	# 	print("writing {name}".format(name=name))
+	# 	utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v608_2_file(self):
-		"""Set a NULI to be greater than 22 characters."""
-		name = "v608_2.txt"
-		path = self.validity_path
-		ts = self.ts_df.copy()
-		lar = self.lar_df.copy()
-		lar["uli"] = utils.char_string_gen(25)
-		print("writing {name}".format(name=name))
-		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+	# def v608_2_file(self):
+	# 	"""Set a NULI to be greater than 22 characters."""
+	# 	name = "v608_2.txt"
+	# 	path = self.validity_path
+	# 	ts = self.ts_df.copy()
+	# 	lar = self.lar_df.copy()
+	# 	lar["uli"] = "DCM78AVG3FFL1YB5H2BR2EDJKLMNO"
+	# 	print("writing {name}".format(name=name))
+	# 	utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 
 	def v609_file(self):
