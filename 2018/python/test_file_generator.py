@@ -2878,11 +2878,16 @@ class test_data(object):
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.state = lar.state.map(lambda x: random.choice(list(self.crosswalk_data.stateCode)))
-		#this implemenation sets all state codes to the same code and uses that to make a county list 
+		lar.state = lar.state.map(lambda x: self.geographic['state_FIPS_to_abbreviation'][random.choice(list(self.crosswalk_data.stateCode))])
+		print(lar.state)
+		#This implemenation sets state codes in the LAR to the same code and uses that to make a county list 
 		for index, row in lar.iterrows():
-			row["state"] = random.choice(list(self.crosswalk_data.stateCode))
-			row["county"] = random.choice(list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode!=row["state"]]))
+			state_code = random.choice(list(self.crosswalk_data.stateCode))
+			state_abbrev = self.geographic['state_FIPS_to_abbreviation'][state_code]
+			row["state"] = state_abbrev
+			row["county"] = random.choice(list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode!=state_code]))
+			#forces the census tract to conform to an appropriate subset of county codes in order to pass v625 and v627. 
+			row["tract"] = row["county"] + random.choice(list(self.crosswalk_data.tracts[(self.crosswalk_data.countyFips == row["county"])]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
