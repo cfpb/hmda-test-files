@@ -34,10 +34,6 @@ class test_data(object):
 		with open('configurations/geographic_data.yaml') as f:
 			self.geographic = yaml.safe_load(f)
 
-		#Loading in state codes. 
-		self.state_codes = self.geographic['state_codes']
-		self.state_abbrev = self.geographic['state_FIPS_to_abbreviation']
-		
 		self.clean_file_path = filepaths['clean_filepath'].format(bank_name=data_map["name"]["value"])
 		self.validity_path = filepaths['validity_filepath'].format(bank_name=data_map["name"]["value"])
 		self.syntax_path = filepaths['syntax_filepath'].format(bank_name=data_map["name"]["value"])
@@ -48,7 +44,6 @@ class test_data(object):
 
 		self.crosswalk_data = crosswalk_data
 
-	
 	def load_data_frames(self, ts_data, lar_data):
 		"""Receives dataframes for TS and LAR and writes them as object attributes"""
 		self.ts_df = ts_data
@@ -2885,12 +2880,12 @@ class test_data(object):
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.state = lar.state.map(lambda x: self.state_abbrev[random.choice(list(self.crosswalk_data.stateCode))])
+		lar.state = lar.state.map(lambda x: self.geographic['state_FIPS_to_abbreviation'][random.choice(list(self.crosswalk_data.stateCode))])
 		print(lar.state)
 		#this implemenation sets all state codes to the same code and uses that to make a county list 
 		for index, row in lar.iterrows():
 			state_code = random.choice(list(self.crosswalk_data.stateCode))
-			state_abbrev = self.state_abbrev[state_code]
+			state_abbrev = self.geographic['state_FIPS_to_abbreviation'][state_code]
 			row["state"] = state_abbrev
 			row["county"] = random.choice(list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode!=state_code]))
 			#forces the census tract to conform to an appropriate subset of county codes in order to pass v625 and v627. 
