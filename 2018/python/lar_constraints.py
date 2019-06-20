@@ -129,7 +129,16 @@ class lar_constraints(object):
 	def v628_1_const(self, row):
 		"""1) Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, or 4, and cannot be left blank,
 			   unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other
-			   Hispanic or Latino."""
+			   Hispanic or Latino.
+			   
+			Note: Changes to LAR constraint v628_1 were necessary to remove edit v630_2. 
+			Removing edit v630_2 from the LAR constraints allowed more randomization in 
+			the value for Applicant Ethnicity 1, and caused the program to stall. 
+			This behavior exposed a flaw in LAR constraint v628_1. 
+			Originally, V628_1 did not include a contrapositive condition in the constraint, 
+			which when removing v630_2, caused the program to take a prohibitively longer time 
+			to validate the correct ethnicity codes.
+		"""
 		eth_enums = ["1", "11", "12", "13", "2", "3", "4"]
 		if row["app_eth_free"] == "" and row["app_eth_1"] not in eth_enums:
 			row["app_eth_1"] = random.choice(eth_enums)
