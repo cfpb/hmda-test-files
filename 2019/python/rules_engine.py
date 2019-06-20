@@ -313,12 +313,18 @@ class rules_engine(object):
 		edit_name = "v608_1"
 		field = "ULI"
 		lei = self.lar_df.lei.iloc[0]
-		#Obtaining subset of LAR that have ULIs rather than NULIs.
-		uli_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]==lei))].copy()
-		#filter each df for failures
-		fail_df = uli_check_df[(uli_check_df.uli.map(lambda x: len(x)<23))|
-			(uli_check_df.uli.map(lambda x: len(x))>45)|(uli_check_df.uli=="")].copy()
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+		#Obtaining subset of LAR that would have ULIs rather than NULIs.
+		#Purchase loan ULIs would not necessarily contain the LEI in its first 20
+		#characters. 
+		if self.lar_df.action_taken.all() == '6':
+			pass
+		else:
+			uli_check_df = self.lar_df[self.lar_df.action_taken != '6']
+			uli_check_df = uli_check_df[(uli_check_df.uli.apply(lambda x: str(x)[:20]==lei))].copy()
+			#filter each df for failures
+			fail_df = uli_check_df[(uli_check_df.uli.map(lambda x: len(x)<23))|
+				(uli_check_df.uli.map(lambda x: len(x))>45)|(uli_check_df.uli=="")].copy()
+			self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v608_2(self):
 		"""
@@ -328,12 +334,18 @@ class rules_engine(object):
 		"""
 		edit_name = "v608_2"
 		field = "ULI"
-		##Obtaining subset of LAR that have NULIs rather than ULIs.
 		lei = self.lar_df.lei.iloc[0]
-		loan_id_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]!=lei))].copy()
-		fail_df = loan_id_check_df[(loan_id_check_df.uli=="")|
-					(loan_id_check_df.uli.apply(lambda x: len(x)>22))].copy()
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+		#Obtaining subset of LAR that would have NULIs rather than ULIs.
+		#Purchase loan ULIs would not necessarily contain the LEI in its first 20
+		#characters. 
+		if self.lar_df.action_taken.all() == '6':
+			pass
+		else:
+			loan_id_check_df = self.lar_df[self.lar_df.action_taken != '6']
+			loan_id_check_df = loan_id_check_df[(loan_id_check_df.uli.apply(lambda x: str(x)[:20]!=lei))].copy()
+			fail_df = loan_id_check_df[(loan_id_check_df.uli=="")|
+						(loan_id_check_df.uli.apply(lambda x: len(x)>22))].copy()
+			self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v609(self):
 		"""An invalid ULI was reported. Please review the information below and update your file accordingly.
