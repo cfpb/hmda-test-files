@@ -16,7 +16,8 @@ class test_data(object):
 		The crosswak_data variable contains the filepath and name for geographic 
 		cross walk data located in the dependencies folder. The crosswalk data file contains 
 		relationships between variables such as state, county, census tract, MSA, and 
-		population that are used to generate clean files and edit files.
+		population that are used to generate clean files and edit files. The file 
+		is located in "dependencies/census_2018_MSAMD_name.txt."
 		"""
 
 		#load configuration data from YAML file
