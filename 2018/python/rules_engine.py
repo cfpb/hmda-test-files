@@ -2781,7 +2781,7 @@ class rules_engine(object):
 		self.lar_df['fail_flag'] = "" #set flag to filter lar_df by fail rows
 		#iterate over lar to match state code with list of counties inside the state
 		for index, row in self.lar_df.iterrows():
-			county_list = list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode==row["state"]])
+			county_list = list(self.crosswalk_data.county_fips[self.crosswalk_data.state_code==row["state"]])
 			if row["county"] not in county_list:
 				self.lar_df.at[index,'fail_flag'] = "1"
 		fail_df = self.lar_df[(self.lar_df.fail_flag=="1")]

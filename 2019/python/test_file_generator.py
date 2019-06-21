@@ -2881,16 +2881,16 @@ class test_data(object):
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.state = lar.state.map(lambda x: self.geographic['state_FIPS_to_abbreviation'][random.choice(list(self.crosswalk_data.stateCode))])
+		lar.state = lar.state.map(lambda x: self.geographic['state_FIPS_to_abbreviation'][random.choice(list(self.crosswalk_data.state_code))])
 		print(lar.state)
 		#Sets a state code for each LAR and a county code that does not match the state code. 
 		for index, row in lar.iterrows():
-			state_code = random.choice(list(self.crosswalk_data.stateCode))
+			state_code = random.choice(list(self.crosswalk_data.state_code))
 			state_abbrev = self.geographic['state_FIPS_to_abbreviation'][state_code]
 			row["state"] = state_abbrev
-			row["county"] = random.choice(list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode!=state_code]))
+			row["county"] = random.choice(list(self.crosswalk_data.county_fips[self.crosswalk_data.state_code!=state_code]))
 			#forces the census tract to conform to an appropriate subset of county codes in order to pass v625 and v627. 
-			row["tract"] = row["county"] + random.choice(list(self.crosswalk_data.tracts[(self.crosswalk_data.countyFips == row["county"])]))
+			row["tract"] = row["county"] + random.choice(list(self.crosswalk_data.tracts[(self.crosswalk_data.county_fips == row["county"])]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 

@@ -1,8 +1,8 @@
 crosswalk_data_file: '../dependencies/census_2018_MSAMD_name.txt'
 zip_code_file: "../dependencies/zip_codes.json"
-file_columns: ['CollectionYear', 'MSA/MD', 'stateCode', 'county', 'tracts', 'FFIECMedianFamilyIncome', 
-                'Population','MinorityPopulation%', 'NumberOfOwnerOccupiedUnits', 'NumberOf1To4FamilyUnits', 
-                'TractMFI', 'TractToMSAIncome%', 'MedianAge', 'smallCounty', 'MSA/MD Name']
+file_columns: ['collection_year', 'msa_md', 'state_code', 'county', 'tracts', 'ffiec_median_family_income', 
+                'population','minority_population_%', 'number_of_owner_occupied_units', 'number_of_1_to_4_family_units', 
+                'tract_mfi', 'tract_to_msa_income_%', 'median_age', 'small_county', 'msa_md_name']
 state_codes: {
   'AL':'01', 'AK':'02', 'AZ':'04', 'AR':'05', 'CA':'06', 'CO':'08','CT':'09', 
   'DE':'10', 'DC':'11', 'FL':'12', 'GA':'13', 'HI':'15', 'ID':'16', 'IL':'17',
