@@ -11,7 +11,15 @@ class test_data(object):
 	edits as well."""
 
 	def __init__(self, ts_schema, lar_schema, crosswalk_data):
-		"""Set initial class variables"""
+		"""
+		Set initial class variables.
+
+		The crosswak_data variable contains the filepath and name for geographic 
+		cross walk data located in the dependencies folder. The crosswalk data file contains 
+		relationships between variables such as state, county, census tract, MSA, and 
+		population that are used to generate clean files and edit files. The file 
+		is located in "dependencies/census_2018_MSAMD_name.txt."
+		"""
 
 		#load configuration data from YAML file
 		#use safe_load instead load
@@ -23,6 +31,10 @@ class test_data(object):
 		#Loads the filepath configuration. 
 		with open('configurations/test_filepaths.yaml') as f:
 			filepaths = yaml.safe_load(f)
+
+		#Loads geographic configuration file. 
+		with open('configurations/geographic_data.yaml') as f:
+			self.geographic = yaml.safe_load(f)
 		
 		self.clean_file_path = filepaths['clean_filepath'].format(bank_name=data_map["name"]["value"])
 		self.validity_path = filepaths['validity_filepath'].format(bank_name=data_map["name"]["value"])
@@ -2854,7 +2866,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.tract = "NA"
-		big_counties = list(self.crosswalk_data.countyFips[self.crosswalk_data.smallCounty!="1"])
+		big_counties = list(self.crosswalk_data.county_fips[self.crosswalk_data.small_county!="1"])
 		lar.county = lar.county.map(lambda x: random.choice(big_counties))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
@@ -2866,11 +2878,15 @@ class test_data(object):
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.state = lar.state.map(lambda x: random.choice(list(self.crosswalk_data.stateCode)))
-		#this implemenation sets all state codes to the same code and uses that to make a county list 
+		lar.state = lar.state.map(lambda x: self.geographic['state_FIPS_to_abbreviation'][random.choice(list(self.crosswalk_data.state_code))])
+		#Sets a state code for each LAR and a county code that does not match the state code. 
 		for index, row in lar.iterrows():
-			row["state"] = random.choice(list(self.crosswalk_data.stateCode))
-			row["county"] = random.choice(list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode!=row["state"]]))
+			state_code = random.choice(list(self.crosswalk_data.state_code))
+			state_abbrev = self.geographic['state_FIPS_to_abbreviation'][state_code]
+			row["state"] = state_abbrev
+			row["county"] = random.choice(list(self.crosswalk_data.county_fips[self.crosswalk_data.state_code!=state_code]))
+			#forces the census tract to conform to an appropriate subset of county codes in order to pass v625 and v627. 
+			row["tract"] = row["county"] + random.choice(list(self.crosswalk_data.tracts[(self.crosswalk_data.county_fips == row["county"])]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 

@@ -22,9 +22,9 @@ class rules_engine(object):
 			geographic = yaml.safe_load(f)
 
 		self.year = year
-		self.tracts = list(crosswalk_data.tractFips)#tracts #instantiate valid Census tracts
-		self.counties = list(crosswalk_data.countyFips) #instantiate valid Census counties
-		self.small_counties = crosswalk_data[crosswalk_data.smallCounty=="1"]#small_counties #instantiate list of small counties
+		self.tracts = list(crosswalk_data.tract_fips)#tracts #instantiate valid Census tracts
+		self.counties = list(crosswalk_data.county_fips) #instantiate valid Census counties
+		self.small_counties = crosswalk_data[crosswalk_data.small_county=="1"]#small_counties #instantiate list of small counties
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 		self.crosswalk_data = crosswalk_data
@@ -2766,7 +2766,7 @@ class rules_engine(object):
 		self.lar_df['fail_flag'] = "" #set flag to filter lar_df by fail rows
 		#iterate over lar to match state code with list of counties inside the state
 		for index, row in self.lar_df.iterrows():
-			county_list = list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode==row["state"]])
+			county_list = list(self.crosswalk_data.county_fips[self.crosswalk_data.state_code==row["state"]])
 			if row["county"] not in county_list:
 				self.lar_df.at[index,'fail_flag'] = "1"
 		fail_df = self.lar_df[(self.lar_df.fail_flag=="1")]

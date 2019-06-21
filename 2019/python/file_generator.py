@@ -58,11 +58,11 @@ class FileGenerator(object):
 			delimiter='|', header=None, names=file_cols, dtype=str)
 
 		#Creates county, tract, and small county data from the file containing geographic crosswalk data. 
-		self.crosswalk_data['countyFips'] = self.crosswalk_data['stateCode'] + self.crosswalk_data['county']
-		self.crosswalk_data["tractFips"] = self.crosswalk_data.countyFips + self.crosswalk_data.tracts
-		self.counties = list(self.crosswalk_data.countyFips)
-		self.tracts = list(self.crosswalk_data.tractFips)
-		self.small_counties = list(self.crosswalk_data.countyFips[self.crosswalk_data.smallCounty=="S"])
+		self.crosswalk_data['county_fips'] = self.crosswalk_data['state_code'] + self.crosswalk_data['county']
+		self.crosswalk_data["tract_fips"] = self.crosswalk_data.county_fips + self.crosswalk_data.tracts
+		self.counties = list(self.crosswalk_data.county_fips)
+		self.tracts = list(self.crosswalk_data.tract_fips)
+		self.small_counties = list(self.crosswalk_data.county_fips[self.crosswalk_data.small_county=="S"])
 
 		#Loads schemas for LAR and TS.
 		#Schemas contain valid enumerations, including NA values, for each 
