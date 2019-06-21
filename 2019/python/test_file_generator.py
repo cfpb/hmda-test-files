@@ -2869,7 +2869,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.tract = "NA"
-		big_counties = list(self.crosswalk_data.countyFips[self.crosswalk_data.smallCounty!="1"])
+		big_counties = list(self.crosswalk_data.county_fips[self.crosswalk_data.small_county!="1"])
 		lar.county = lar.county.map(lambda x: random.choice(big_counties))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
