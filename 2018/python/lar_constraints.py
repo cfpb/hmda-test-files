@@ -417,8 +417,7 @@ class lar_constraints(object):
 	def v640_const(self, row):
 		"""1) If Race of Co-Applicant or Co-Borrower: 1 equals 7, then Race of Co-Applicant or Co-Borrower Collected 
 			on the Basis of Visual Observation or Surname must equal 3.
-		2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname
-			equals 3, then Race of Co-Applicant or Co-Borrower: 1 must equal 6 or 7."""
+		"""
 		if row["co_app_race_1"] =="7":
 			row["co_app_race_basis"] = "3"
 		if row["co_app_race_basis"] == "3" and row["co_app_race_1"] not in ("6","7"):
