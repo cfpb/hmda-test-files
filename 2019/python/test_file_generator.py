@@ -218,7 +218,7 @@ class test_data(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar['uli'] = random.choice([lar.lei + utils.char_string_gen(25), lar.lei])
+		lar['uli'] = random.choice([lar.lei + utils.char_string_gen(26), utils.char_string_gen(22)])
 		lar['uli'] = lar['uli'] + utils.check_digit_gen(valid=True, ULI=lar['uli'][0])
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
