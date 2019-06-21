@@ -1,5 +1,6 @@
 import random
 import string
+import utils
 
 class lar_constraints(object):
 
@@ -286,9 +287,31 @@ class lar_constraints(object):
 		"""1) Race of Applicant or Borrower: 1 must equal 1, 2, 21, 22, 23, 24, 25, 26, 27, 3, 4, 41, 42, 43, 44, 5, 6, or 7,
 			and cannot be left blank, unless a race is provided in Race of Applicant or Borrower: Free Form Text
 			Field for American Indian or Alaska Native Enrolled or Principal Tribe, Race of Applicant or Borrower:
-			Free Form Text Field for Other Asian, or Race of Applicant or Borrower: Free Form Text Field for Other Pacific Islander."""
-		if row["app_race_1"] ==  "" and row["app_race_native_text"]== "" and row["app_race_asian_text"]== "" and row["app_race_islander_text"] == "":
-			row["app_race_1"] = random.choice(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7"))
+			Free Form Text Field for Other Asian, or Race of Applicant or Borrower: Free Form Text Field for Other Pacific Islander.
+
+			Note: Changes to LAR constraint v635_1 were necessary to remove edit v637_2. 
+			Removing edit v637_2 from the LAR constraints allowed more randomization in 
+			the value for Race of Applicant or Borrower: 1, and caused the program to stall. 
+			This behavior exposed a flaw in LAR constraint v635_1. 
+			Originally, V635_1 did not include a contrapositive condition in the constraint, 
+			which when removing v637_2, caused the program to take a prohibitively longer time 
+			to validate the correct applicant race codes.
+		"""
+		race_enums = ["2", "21", "22", "23", "24", "25", "26", "3", "4", "41", "42", "43", "5", "6", "7"]
+		text_field_list = [row["app_race_native_text"], row["app_race_asian_text"], row["app_race_islander_text"]]
+		if row["app_race_native_text"]== "" and row["app_race_asian_text"]== "" and row["app_race_islander_text"] == "" and row["app_race_1"] not in race_enums:
+			row["app_race_1"] = random.choice(race_enums)
+		if row["app_race_native_text"] != "" or row["app_race_asian_text"] != "" or row["app_race_islander_text"] != "" and row["app_race_1"] in race_enums:
+			row["app_race_native_text"] = ""
+			row["app_race_asian_text"]  = ""
+			row["app_race_islander_text"] = ""
+		if  row["app_race_1"] == "27":
+			row["app_race_asian_text"] = utils.char_string_gen(random.choice(range(100)))
+		if  row["app_race_1"] == "44":
+			row["app_race_islander_text"] = utils.char_string_gen(random.choice(range(100)))
+		if row["app_race_1"] == '':
+			text_field = random.choice(text_field_list)
+			text_field = utils.char_string_gen(random.choice(range(100)))
 		return row
 
 	def v635_2_const(self, row):
@@ -348,15 +371,11 @@ class lar_constraints(object):
 		return row
 
 	def v637_const(self, row):
-		"""1) If Race of Applicant or Borrower: 1 equals 7, then Race of Applicant or Borrower Collected on the Basis of Visual Observation 
+		"""If Race of Applicant or Borrower: 1 equals 7, then Race of Applicant or Borrower Collected on the Basis of Visual Observation 
 			or Surname must equal 3.
-		2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3; then Race of Applicant or 
-			Borrower: 1 must equal 6 or 7. """
+		"""
 		if row["app_race_1"] == "7":
 			row["app_race_basis"] = "3"
-		if row["app_race_basis"] == "3":
-			if row["app_race_1"] not in ("6", "7"):
-				row["app_race_1"] = random.choice(("6", "7"))
 		return row
 
 	def v638_const(self, row):

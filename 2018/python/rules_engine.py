@@ -805,8 +805,11 @@ class rules_engine(object):
 		Race of Applicant or Borrower: Free Form Text Field for Other Asian, or Race of Applicant or Borrower: Free Form Text Field for Other Pacific Islander."""
 		field = "App Race 1"
 		edit_name = "v635_1"
-		fail_df = self.lar_df[(~self.lar_df.app_race_1.isin(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7")))|
-		((self.lar_df.app_race_1=="")&((self.lar_df.app_race_native_text=="")&(self.lar_df.app_race_islander_text=="")&(self.lar_df.app_race_asian_text=="")))]
+
+		fail_df = self.lar_df[((~self.lar_df.app_race_1.isin(("1", "2", "21", "22", "23", "24", "25", "26", "27", "3", "4", "41", "42", "43", "44", "5", "6", "7"))) & 
+								((self.lar_df.app_race_native_text=="")&(self.lar_df.app_race_islander_text=="")&(self.lar_df.app_race_asian_text=="")))|
+							  ((self.lar_df.app_race_1=="")&
+							  	((self.lar_df.app_race_native_text=="")&(self.lar_df.app_race_islander_text=="")&(self.lar_df.app_race_asian_text=="")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v635_2(self):
@@ -876,20 +879,12 @@ class rules_engine(object):
 			(~self.lar_df.app_race_4.isin(app_n_races))|(~self.lar_df.app_race_4.isin(app_n_races)))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v637_1(self):
+	def v637(self):
 		"""An invalid Race data field was reported.
-		1) If Race of Applicant or Borrower: 1 equals 7, then Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
+		If Race of Applicant or Borrower: 1 equals 7, then Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
 		field = "Applicant Race Basis"
 		edit_name = "v637_1"
 		fail_df = self.lar_df[(self.lar_df.app_race_1=="7")&(self.lar_df.app_race_basis!="3")]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
-	def v637_2(self):
-		"""An invalid Race data field was reported.
-		2) If Race of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3; then Race of Applicant or Borrower: 1 must equal 6 or 7."""
-		field = "Applicant Race 1"
-		edit_name ="v637_2"
-		fail_df = self.lar_df[(self.lar_df.app_race_basis=="3")&(~self.lar_df.app_race_1.isin(("6", "7")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v638_1(self):
