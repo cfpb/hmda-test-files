@@ -2882,7 +2882,6 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.state = lar.state.map(lambda x: self.geographic['state_FIPS_to_abbreviation'][random.choice(list(self.crosswalk_data.state_code))])
-		print(lar.state)
 		#Sets a state code for each LAR and a county code that does not match the state code. 
 		for index, row in lar.iterrows():
 			state_code = random.choice(list(self.crosswalk_data.state_code))
