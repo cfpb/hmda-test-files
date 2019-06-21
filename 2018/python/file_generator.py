@@ -485,7 +485,6 @@ class FileGenerator(object):
 
 
 	def create_custom_row(self, dictionary, clean_filepath, clean_filename):
-
 		"""
 		Creates a custom clean LAR row by passing in a dictionary of columns 
 		and new values to modify all the rows of an 

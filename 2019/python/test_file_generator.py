@@ -11,7 +11,14 @@ class test_data(object):
 	edits as well."""
 
 	def __init__(self, ts_schema, lar_schema, crosswalk_data):
-		"""Set initial class variables"""
+		"""Set initial class variables.
+
+		The crosswak_data variable contains the filepath and name for geographic 
+		cross walk data located in the dependencies folder. The crosswalk data file contains 
+		relationships between variables such as state, county, census tract, MSA, and 
+		population that are used to generate clean files and edit files. The file 
+		is located in "dependencies/census_2018_MSAMD_name.txt."
+		"""
 
 		#load configuration data from YAML file
 		#use safe_load instead load
@@ -23,7 +30,11 @@ class test_data(object):
 		#Loads the filepath configuration. 
 		with open('configurations/test_filepaths.yaml') as f:
 			filepaths = yaml.safe_load(f)
-		
+
+		#Loads geographic configuration file. 
+		with open('configurations/geographic_data.yaml') as f:
+			self.geographic = yaml.safe_load(f)
+
 		self.clean_file_path = filepaths['clean_filepath'].format(bank_name=data_map["name"]["value"])
 		self.validity_path = filepaths['validity_filepath'].format(bank_name=data_map["name"]["value"])
 		self.syntax_path = filepaths['syntax_filepath'].format(bank_name=data_map["name"]["value"])
@@ -33,7 +44,7 @@ class test_data(object):
 		self.ts_field_names = list(ts_schema.field)
 
 		self.crosswalk_data = crosswalk_data
-	
+
 	def load_data_frames(self, ts_data, lar_data):
 		"""Receives dataframes for TS and LAR and writes them as object attributes"""
 		self.ts_df = ts_data
@@ -2858,7 +2869,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.tract = "NA"
-		big_counties = list(self.crosswalk_data.countyFips[self.crosswalk_data.smallCounty!="1"])
+		big_counties = list(self.crosswalk_data.county_fips[self.crosswalk_data.small_county!="1"])
 		lar.county = lar.county.map(lambda x: random.choice(big_counties))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
@@ -2870,11 +2881,15 @@ class test_data(object):
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.state = lar.state.map(lambda x: random.choice(list(self.crosswalk_data.stateCode)))
-		#this implemenation sets all state codes to the same code and uses that to make a county list 
+		lar.state = lar.state.map(lambda x: self.geographic['state_FIPS_to_abbreviation'][random.choice(list(self.crosswalk_data.state_code))])
+		#Sets a state code for each LAR and a county code that does not match the state code. 
 		for index, row in lar.iterrows():
-			row["state"] = random.choice(list(self.crosswalk_data.stateCode))
-			row["county"] = random.choice(list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode!=row["state"]]))
+			state_code = random.choice(list(self.crosswalk_data.state_code))
+			state_abbrev = self.geographic['state_FIPS_to_abbreviation'][state_code]
+			row["state"] = state_abbrev
+			row["county"] = random.choice(list(self.crosswalk_data.county_fips[self.crosswalk_data.state_code!=state_code]))
+			#forces the census tract to conform to an appropriate subset of county codes in order to pass v625 and v627. 
+			row["tract"] = row["county"] + random.choice(list(self.crosswalk_data.tracts[(self.crosswalk_data.county_fips == row["county"])]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -2926,14 +2941,14 @@ class test_data(object):
 
 	def q608(self):
 		"""Set action taken to 1.
-		Set action taken date before application date."""
+		Set action taken date the same day as the application date."""
 		name = "q608.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.action_taken = "1"
-		lar.action_date = "20161231"
-		lar.app_date = "20181231"
+		lar.action_date = "20191231"
+		lar.app_date = "20191231"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -3000,7 +3015,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.business_purpose = "1"				
-		lar.loan_purpose = "4'"
+		lar.loan_purpose = "4"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -3345,14 +3360,26 @@ class test_data(object):
 
 	def q639(self):
 		"""Set preapproval = 1.
-		Set action taken to 1-6.
-		Note: this edit will only trigger for files with 1000 or more records (in addition to the preapproval condition)."""
+		Set action taken to 1-2.
+		Note: this edit will only trigger for files with records of more than 1000 
+		rows (in addition to the preapproval condition).
+		If the length of the LAR dataframe is less than or equal to 1000, the resulting 
+		test file will be made to have 1001 rows. 
+		"""
 		name = "q639.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.preapproval = "1"
-		lar.action_taken = lar.action_taken.map(lambda x: random.choice(["1","2","3","4","5","6"]))
+		#Conforming to pass v612_2. This allows for less syntax and validity edits to fail
+		#so that a clean q639.txt file can be produced.
+		lar.loan_purpose = "1"
+		#Setting action taken either to 1 or 2 to conform to v613_4. 
+		#This allows for less syntax and validity edits to fail
+		#so that a clean q639.txt file can be produced.
+		lar.action_taken = lar.action_taken.map(lambda x: random.choice(["1","2"]))
+		if len(lar) <= 1000:
+			ts, lar = utils.new_lar_rows(row_count=1001, lar_df=lar, ts_df=ts)
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 

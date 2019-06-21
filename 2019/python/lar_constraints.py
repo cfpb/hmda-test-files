@@ -268,12 +268,9 @@ class lar_constraints(object):
 	def v633_const(self, row):
 		"""1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4, then Ethnicity of Co-Applicant or CoBorrower
 			Collected on the Basis of Visual Observation or Surname must equal 3. 
-		2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3; 
-			then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 3 or 4."""
+		"""
 		if row["co_app_eth_1"] == "4":
 			row["co_app_eth_basis"] = "3"
-		if row["co_app_eth_basis"] == "3" and row["co_app_eth_1"] not in ("3", "4"):
-			row["co_app_eth_1"] = random.choice(("3", "4"))
 		return row
 
 	def v634_const(self, row):
@@ -462,25 +459,20 @@ class lar_constraints(object):
 		return row
 
 	def v645_const(self, row):
-		"""1) If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3,
-			then Sex of Applicant or Borrower must equal 3 or 4.
-		2) If Sex of Applicant or Borrower equals 4, then Sex of Applicant or Borrower Collected on the Basis of
-			Visual Observation or Surname must equal 3."""
-		if row["app_sex_basis"] == "3" and row["app_sex"] not in ("3", "4"):
-			row["app_sex"] = random.choice(("3", "4"))
+		"""
+		If Sex of Applicant or Borrower equals 4, then Sex of Applicant or Borrower Collected on the Basis of
+			Visual Observation or Surname must equal 3.
+		"""
 		if row["app_sex"] == "4":
 			row["app_sex_basis"] = "3"
 		return row
 
 	def v647_const(self, row):
-		"""1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 1,
+		"""If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 1,
 			then Sex of Co-Applicant or Co-Borrower must equal 1 or 2.
-		2) If Sex of Co-Applicant or Co-Borrower equals 1 or 2, then Sex of Co-Applicant or Co-Borrower Collected
-			on the Basis of Visual Observation or Surname must equal 1 or 2."""
+		"""
 		if row["co_app_sex_basis"] == "1" and row["co_app_sex"] not in ("1", "2"):
 			row["co_app_sex"] = random.choice(("1", "2"))
-		if row["co_app_sex"] in ("1", "2") and row["co_app_sex_basis"] not in ("1", "2"):
-			row["co_app_sex_basis"] = random.choice(("1", "2"))
 		return row
 
 	def v648_const(self, row):
@@ -997,7 +989,7 @@ class lar_constraints(object):
 		
 		for i in range(1, len(aus_sys)):
 			if aus_sys[i] in ("1", "2", "3", "4", "5") and aus_results[i] not in result_enums:
-				row[aus_sys[i]] = random.choice(result_enums[:-1])
+				aus_sys[i] = random.choice(result_enums[:-1])
 			
 		#Ensure code 5 free form text is marked if the text field is populated
 		if (row["aus_1"]  != "5" and row["aus_2"] != "5" and row["aus_3"] != "5" and row["aus_4"] != "5" and row["aus_5"] != "5") and \
@@ -1009,36 +1001,6 @@ class lar_constraints(object):
 		and row["aus_result_5"] != "16" and row["aus_code_16"] !="":
 			row["aus_code_16"] = ""
 
-		return row
-
-	def v697_const(self, row): 
-		"""1) If Automated Underwriting System: 1, Automated Underwriting System: 2; Automated Underwriting
-			System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 1,
-			then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
-			Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
-			Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, or 7."""
-		aus_sys = [row["aus_1"], row["aus_2"], row["aus_3"], row["aus_4"], row["aus_5"]]
-		aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
-
-		for i in range(len(aus_sys)):
-			if aus_sys[i] == "1":
-				if aus_results[i] not in ("1", "2", "3", "4", "5", "6", "7"):
-					row["aus_result_"+str(i+1)] = random.choice(("1", "2", "3", "4", "5", "6", "7"))
-		return row
-
-	def v698_const(self, row): 
-		"""1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting
-			System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 2, then the
-			corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
-			Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
-			Automated Underwriting System Result: 5 must equal 8, 9, 10, 11, or 12."""
-		aus_sys = [row["aus_1"], row["aus_2"], row["aus_3"], row["aus_4"], row["aus_5"]]
-		aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
-
-		for i in range(len(aus_sys)):
-			if aus_sys[i] == "2":
-				if aus_results[i] not in ("8","9", "10", "11", "12"):
-					row["aus_result_"+str(i+1)] = random.choice(("8","9", "10", "11", "12"))
 		return row
 
 	def v699_const(self, row): 

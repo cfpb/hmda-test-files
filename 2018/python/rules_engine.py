@@ -22,9 +22,9 @@ class rules_engine(object):
 			geographic = yaml.safe_load(f)
 
 		self.year = year
-		self.tracts = list(crosswalk_data.tractFips)#tracts #instantiate valid Census tracts
-		self.counties = list(crosswalk_data.countyFips) #instantiate valid Census counties
-		self.small_counties = crosswalk_data[crosswalk_data.smallCounty=="1"]#small_counties #instantiate list of small counties
+		self.tracts = list(crosswalk_data.tract_fips)#tracts #instantiate valid Census tracts
+		self.counties = list(crosswalk_data.county_fips) #instantiate valid Census counties
+		self.small_counties = crosswalk_data[crosswalk_data.small_county=="1"]#small_counties #instantiate list of small counties
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 		self.crosswalk_data = crosswalk_data
@@ -779,22 +779,13 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.co_app_eth_basis=="2")&(~self.lar_df.co_app_eth_1.isin(("1", "11", "12", "13", "14", "2", "3")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v633_1(self):
+	def v633(self):
 		"""An invalid Ethnicity data field was reported.
 		1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4,
 		then Ethnicity of Co-Applicant or Co- Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
 		field = "Co-App Ethnicity basis"
 		edit_name = "v633_1"
 		fail_df = self.lar_df[(self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_eth_basis!="3")]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
-	def v633_2(self):
-		"""An invalid Ethnicity data field was reported.
-		2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3;
-		then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 3 or 4."""
-		field = "Co-App Ethnicity Basis"
-		edit_name = "v633_2"
-		fail_df = self.lar_df[(self.lar_df.co_app_eth_basis=="3")&(~self.lar_df.co_app_eth_1.isin(("3", "4")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v634(self):
@@ -1062,18 +1053,9 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.app_sex=="6")&(self.lar_df.app_sex_basis!="2")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v645_1(self):
+	def v645(self):
 		"""An invalid Sex data field was reported.
-		1) If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3,
-		then Sex of Applicant or Borrower must equal 3 or 4."""
-		field = "Applicant Sex"
-		edit_name = "v645_1"
-		fail_df = self.lar_df[(self.lar_df.app_sex_basis=="3")&(~self.lar_df.app_sex.isin(("3", "4")))]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
-	def v645_2(self):
-		"""An invalid Sex data field was reported.
-		2) If Sex of Applicant or Borrower equals 4, then Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
+		If Sex of Applicant or Borrower equals 4, then Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
 		field = "Applicant Sex Basis"
 		edit_name = "v645_2"
 		fail_df = self.lar_df[(self.lar_df.app_sex=="4")&(self.lar_df.app_sex_basis!="3")]
@@ -1096,22 +1078,13 @@ class rules_engine(object):
 		fail_df = self.lar_df[~(self.lar_df.co_app_sex_basis.isin(("1", "2", "3", "4")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v647_1(self):
+	def v647(self):
 		"""An invalid Sex data field was reported.
 		1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 1, then
 		Sex of Co-Applicant or Co-Borrower must equal 1 or 2."""
 		field = "Co-Applicant Sex"
 		edit_name = "v647_1"
 		fail_df = self.lar_df[(self.lar_df.co_app_sex_basis=="1")&(~self.lar_df.co_app_sex.isin(("1", "2")))]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
-	def v647_2(self):
-		"""An invalid Sex data field was reported.
-		2) If Sex of Co-Applicant or Co-Borrower equals 1 or 2, then
-		Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 1 or 2."""
-		field = "Co-Applicant Sex Basis"
-		edit_name = "v647_2"
-		fail_df = self.lar_df[(self.lar_df.co_app_sex.isin(("1", "2")))&(~self.lar_df.co_app_sex_basis.isin(("1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v648_1(self):
@@ -2418,40 +2391,6 @@ class rules_engine(object):
 			vals_2=vals_2),axis=1)==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v697(self):
-		"""An invalid Automated Underwriting System data field was reported.
-		1) If Automated Underwriting System: 1, Automated Underwriting System: 2;
-		Automated Underwriting System: 3; Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 1,
-		then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
-		Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or
-		Automated Underwriting System Result: 5 must equal 1, 2, 3, 4, 5, 6, or 7."""
-		field = "AUS and Results"
-		edit_name = "v697"
-		aus_results = ("1", "2", "3", "4", "5", "6", "7")
-		fail_df = self.lar_df[((self.lar_df.aus_1=="1")&(~self.lar_df.aus_result_1.isin(aus_results)))|
-			((self.lar_df.aus_2=="1")&(~self.lar_df.aus_result_2.isin(aus_results)))|
-			((self.lar_df.aus_3=="1")&(~self.lar_df.aus_result_3.isin(aus_results)))|
-			((self.lar_df.aus_4=="1")&(~self.lar_df.aus_result_4.isin(aus_results)))|
-			((self.lar_df.aus_5=="1")&(~self.lar_df.aus_result_5.isin(aus_results)))]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
-	def v698(self):
-		"""An invalid Automated Underwriting System data field was reported.
-		1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3;
-		Automated Underwriting System: 4; or Automated Underwriting System: 5 equals 2,
-		then the corresponding Automated Underwriting System Result: 1; Automated Underwriting System Result: 2;
-		Automated Underwriting System Result: 3; Automated Underwriting System Result: 4; or Automated Underwriting System Result: 5
-		must equal 8, 9, 10, 11, or 12."""
-		field = "AUS and Results"
-		edit_name = "v698"
-		aus_results = ("8", "9", "10", "11", "12")
-		fail_df = self.lar_df[((self.lar_df.aus_1=="2")&(~self.lar_df.aus_result_1.isin(aus_results)))|
-			((self.lar_df.aus_2=="2")&(~self.lar_df.aus_result_2.isin(aus_results)))|
-			((self.lar_df.aus_3=="2")&(~self.lar_df.aus_result_3.isin(aus_results)))|
-			((self.lar_df.aus_4=="2")&(~self.lar_df.aus_result_4.isin(aus_results)))|
-			((self.lar_df.aus_5=="2")&(~self.lar_df.aus_result_5.isin(aus_results)))]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
 	def v699(self):
 		"""An invalid Automated Underwriting System data field was reported.
 		1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3;
@@ -2815,7 +2754,7 @@ class rules_engine(object):
 		self.lar_df['fail_flag'] = "" #set flag to filter lar_df by fail rows
 		#iterate over lar to match state code with list of counties inside the state
 		for index, row in self.lar_df.iterrows():
-			county_list = list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode==row["state"]])
+			county_list = list(self.crosswalk_data.county_fips[self.crosswalk_data.state_code==row["state"]])
 			if row["county"] not in county_list:
 				self.lar_df.at[index,'fail_flag'] = "1"
 		fail_df = self.lar_df[(self.lar_df.fail_flag=="1")]
