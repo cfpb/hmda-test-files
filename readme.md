@@ -84,8 +84,8 @@ Note: the filepath and filename for test files can be adjusted in the [2018 Test
 
 ## Generating Large Files 
 Large files are used during load testing. Large test files are created using a clean test file base and the user-specified row count in each year's large file configuration:
- [2019 Large File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/test_filepaths.yaml).
- [2018 Large File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/test_filepaths.yaml).
+- [2019 Large File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/test_filepaths.yaml).
+- [2018 Large File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/test_filepaths.yaml).
 
 Configuration options include (with defaulted values):
 
