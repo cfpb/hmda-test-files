@@ -22,9 +22,9 @@ class rules_engine(object):
 			geographic = yaml.safe_load(f)
 
 		self.year = year
-		self.tracts = list(crosswalk_data.tractFips)#tracts #instantiate valid Census tracts
-		self.counties = list(crosswalk_data.countyFips) #instantiate valid Census counties
-		self.small_counties = crosswalk_data[crosswalk_data.smallCounty=="1"]#small_counties #instantiate list of small counties
+		self.tracts = list(crosswalk_data.tract_fips)#tracts #instantiate valid Census tracts
+		self.counties = list(crosswalk_data.county_fips) #instantiate valid Census counties
+		self.small_counties = crosswalk_data[crosswalk_data.small_county=="1"]#small_counties #instantiate list of small counties
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 		self.crosswalk_data = crosswalk_data
