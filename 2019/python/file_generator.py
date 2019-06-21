@@ -436,7 +436,6 @@ class FileGenerator(object):
 			print("Sorry no clean file available for {file}.".format(file=quality_filename))
 
 	def edit_report(self):
-
 		"""
 		This function takes in a filepath and name, producing a report on
 		whether any rows of the data failed syntax, validity or quality edits.
@@ -470,9 +469,6 @@ class FileGenerator(object):
 
 		#Creates a dataframe of results from the checker. 
 		report_df = pd.DataFrame(checker.results)
-
-		#Filters the results for edits that have failed. 
-		report_df = report_df[(report_df['status']=='failed')]
 
 		#Writes the report to the filepath and name designated in 
 		#the test_fielpaths yaml

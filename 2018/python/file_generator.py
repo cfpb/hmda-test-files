@@ -470,9 +470,6 @@ class FileGenerator(object):
 		#Creates a dataframe of results from the checker. 
 		report_df = pd.DataFrame(checker.results)
 
-		#Filters the results for edits that have failed. 
-		report_df = report_df[(report_df['status']=='failed')]
-
 		#Writes the report to the filepath and name designated in 
 		#the test_fielpaths yaml
 		edit_report_path = self.edit_report_config['edit_report_output_filepath']
@@ -488,7 +485,6 @@ class FileGenerator(object):
 
 
 	def create_custom_row(self, dictionary, clean_filepath, clean_filename):
-
 		"""
 		Creates a custom clean LAR row by passing in a dictionary of columns 
 		and new values to modify all the rows of an 

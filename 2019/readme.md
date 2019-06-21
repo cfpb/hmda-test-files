@@ -53,8 +53,6 @@ The following yaml configuration files and values can be changed to alter the ou
 | quality_pass_s_v_filepath|`../edits_files/test_files/{bank_name}/quality_pass_s_v/`|String| Filepath for generated quality edit test files that also pass syntax and validity edits. Note: the filepath needs to contain `{bank_name}` for formatting the institution name to the path |
 ts_schema_json | `../schemas/ts_schema.json`|String|Filename for the Transmital Sheet schema. 
 lar_schema_json| `../schemas/lar_schema.json`|String|Filename for the Loan Application Register schema. |
-edit_report_filepath| `../edits_files/`|String|Filepath for storing generated edit reports.|
-edit_report_filename| `edit_report.csv`|String|Filename for generated edit reports.|
 log_filename | `"clean_files_log.txt"` |String|Filename for the log file detailing iterations in the file creation process.|
 log_mode|`'w'`|String|The mode for logging files. Currently, the log mode is set to writer over the previous file (`'a'`). This configuration can be changed to append log entries to the same file (`'a'`).
 
