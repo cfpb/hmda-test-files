@@ -89,7 +89,7 @@ Large files are used during load testing. Large test files are created using a c
 
 Configuration options include (with defaulted values):
 
-|Key|Default Value|Data Type|Expanation|
+|Key|Default Value|Data Type|Explanation|
 |:-------|:-------------|:--------|:--------|
 source_filepath|`../edits_files/clean_files/Bank1/`|String|Filepath for the source clean file. 
 source_filename|`clean_file_100_rows_Bank1.txt`|String|Filename for the source clean file. 
@@ -123,7 +123,7 @@ Edit reports provide a summary of the syntax, validity, or quality edits passed 
 
 Edit reports can be generated for any synthetic submission file. Configuration options include (with defaulted values):
 
-|Key|Default Value|Data Type| Expanation |
+|Key|Default Value|Data Type| Explanation |
 |:-------|:-------------|:--------|:--------|
 data_filepath|`../edits_files/clean_files/Bank1/`|String|Filepath to the submission file for the report.| 
 data_filename|`clean_file_100_rows_Bank1.txt`|String|Filename of the submission file for the report.|
