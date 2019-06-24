@@ -1105,18 +1105,9 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.co_app_sex=="6")&(self.lar_df.co_app_sex_basis!="2")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v649_1(self):
+	def v649(self):
 		"""An invalid Sex data field was reported.
-		1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3,
-		then Sex of Co-Applicant or Co-Borrower must equal 3 or 4."""
-		field = "Co-Applicant Sex"
-		edit_name = "v649_1"
-		fail_df = self.lar_df[(self.lar_df.co_app_sex_basis=="3")&(~self.lar_df.co_app_sex.isin(("3", "4")))]
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
-
-	def v649_2(self):
-		"""An invalid Sex data field was reported.
-		2) If Sex of Co-Applicant or Co-Borrower equals 4, then
+		If Sex of Co-Applicant or Co-Borrower equals 4, then
 		Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
 		field = "Co-Applicant Sex Basis"
 		edit_name = "v649_2"
