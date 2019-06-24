@@ -22,9 +22,9 @@ class rules_engine(object):
 			geographic = yaml.safe_load(f)
 
 		self.year = year
-		self.tracts = list(crosswalk_data.tract_fips)#tracts #instantiate valid Census tracts
-		self.counties = list(crosswalk_data.county_fips) #instantiate valid Census counties
-		self.small_counties = crosswalk_data[crosswalk_data.small_county=="1"]#small_counties #instantiate list of small counties
+		self.tracts = list(crosswalk_data.tractFips)#tracts #instantiate valid Census tracts
+		self.counties = list(crosswalk_data.countyFips) #instantiate valid Census counties
+		self.small_counties = crosswalk_data[crosswalk_data.smallCounty=="1"]#small_counties #instantiate list of small counties
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 		self.crosswalk_data = crosswalk_data
@@ -305,32 +305,50 @@ class rules_engine(object):
 		fail_df = self.lar_df[self.lar_df.duplicated(keep=False)==True] #pull frame of duplicates
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v608(self):
+	def v608_1(self):
 		"""A ULI with an invalid format was provided.
 		1) The required format for ULI is alphanumeric with at least 23 characters and up to 45 characters, 
 		and it cannot be left blank.
-		Exempt Filers:
-		If your institution is reporting a Loan/Application Number, the required format for Loan/Application Number 
-		is alphanumeric with at least 1 character and no more than 22 characters, and it cannot be left blank."""
-
-		edit_name = "v608"
+		"""
+		edit_name = "v608_1"
 		field = "ULI"
-		#if length not between 23 and 45 or if ULI is blank
-		#get subset of LAR dataframe that fails ULI conditions
-		#check if LEI present as first 20 digits of ULI
 		lei = self.lar_df.lei.iloc[0]
-		#get seperate dataframes for ULI and Loan ID 
-		uli_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]==lei))].copy()
-		loan_id_check_df = self.lar_df[(self.lar_df.uli.apply(lambda x: str(x)[:20]!=lei))].copy()
-		#filter each df for failures
-		uli_fail_df = uli_check_df[(uli_check_df.uli.map(lambda x: len(x)<23))|
-			(uli_check_df.uli.map(lambda x: len(x))>45)|(uli_check_df.uli=="")].copy()
+		#Obtaining subset of LAR that would have ULIs rather than NULIs.
+		#Purchase loan ULIs would not necessarily contain the LEI in its first 20
+		#characters. 
+		if self.lar_df.action_taken.all() == '6':
+			fail_df = uli_check_df[(uli_check_df.uli.map(lambda x: len(x)<23))|
+				(uli_check_df.uli.map(lambda x: len(x))>45)|(uli_check_df.uli=="")].copy()
+		else:
+			uli_check_df = self.lar_df[self.lar_df.action_taken != '6']
+			uli_check_df = uli_check_df[(uli_check_df.uli.apply(lambda x: str(x)[:20]==lei))].copy()
+			#filter each df for failures
+			fail_df = uli_check_df[(uli_check_df.uli.map(lambda x: len(x)<23))|
+				(uli_check_df.uli.map(lambda x: len(x))>45)|(uli_check_df.uli=="")].copy()
+			self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-		loan_id_fail_df = loan_id_check_df[(loan_id_check_df.uli=="")|
+	def v608_2(self):
+		"""
+		A ULI with an invalid format was provided. 
+		2) The required format for NULI is alphanumeric with at least 1 character 
+		and no more than 22 characters, and it cannot be left blank. 
+		"""
+		edit_name = "v608_2"
+		field = "ULI"
+		lei = self.lar_df.lei.iloc[0]
+		#Obtaining subset of LAR that would have NULIs rather than ULIs.
+		#Purchase loan ULIs would not necessarily contain the LEI in its first 20
+		#characters. 
+		if self.lar_df.action_taken.all() == '6':
+			fail_df = loan_id_check_df[(loan_id_check_df.uli=="")|
 			(loan_id_check_df.uli.apply(lambda x: len(x)>22))].copy()
-		#recombine dfs
-		fail_df = pd.concat([uli_fail_df, loan_id_fail_df])
-		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+			
+		else:
+			loan_id_check_df = self.lar_df[self.lar_df.action_taken != '6']
+			loan_id_check_df = loan_id_check_df[(loan_id_check_df.uli.apply(lambda x: str(x)[:20]!=lei))].copy()
+			fail_df = loan_id_check_df[(loan_id_check_df.uli=="")|
+						(loan_id_check_df.uli.apply(lambda x: len(x)>22))].copy()
+			self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v609(self):
 		"""An invalid ULI was reported. Please review the information below and update your file accordingly.
@@ -779,13 +797,22 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.co_app_eth_basis=="2")&(~self.lar_df.co_app_eth_1.isin(("1", "11", "12", "13", "14", "2", "3")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v633(self):
+	def v633_1(self):
 		"""An invalid Ethnicity data field was reported.
 		1) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4,
 		then Ethnicity of Co-Applicant or Co- Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
 		field = "Co-App Ethnicity basis"
 		edit_name = "v633_1"
 		fail_df = self.lar_df[(self.lar_df.co_app_eth_1=="4")&(self.lar_df.co_app_eth_basis!="3")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v633_2(self):
+		"""An invalid Ethnicity data field was reported.
+		2) If Ethnicity of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3;
+		then Ethnicity of Co-Applicant or Co-Borrower: 1 must equal 3 or 4."""
+		field = "Co-App Ethnicity Basis"
+		edit_name = "v633_2"
+		fail_df = self.lar_df[(self.lar_df.co_app_eth_basis=="3")&(~self.lar_df.co_app_eth_1.isin(("3", "4")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v634(self):
@@ -974,13 +1001,22 @@ class rules_engine(object):
 		(~self.lar_df.co_app_race_5.isin(race_n)))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v640(self):
+	def v640_1(self):
 		"""An invalid Race data field was reported.
-		If Race of Co-Applicant or Co-Borrower: 1 equals 7, then
+		1) If Race of Co-Applicant or Co-Borrower: 1 equals 7, then
 		Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
 		field = "Co-Applicant Race Basis"
 		edit_name = "v640_1"
 		fail_df = self.lar_df[(self.lar_df.co_app_race_1=="7")&(self.lar_df.co_app_race_basis!="3")]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v640_2(self):
+		"""An invalid Race data field was reported.
+		2) If Race of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3, then
+		Race of Co-Applicant or Co-Borrower: 1 must equal 6 or 7."""
+		field = "Co-Applicant Race Basis"
+		edit_name = "v640_2"
+		fail_df = self.lar_df[(self.lar_df.co_app_race_basis=="3")&(~self.lar_df.co_app_race_1.isin(("6", "7")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v641(self):
@@ -1009,13 +1045,21 @@ class rules_engine(object):
 		fail_df = self.lar_df[(~self.lar_df.app_sex_basis.isin(("1", "2", "3")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v643(self):
+	def v643_1(self):
 		"""An invalid Sex data field was reported.
-		If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1,
+		1) If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 1,
 		then Sex of Applicant or Borrower must equal 1 or 2."""
 		field = "Applicant Sex Basis"
 		edit_name = "v643_1"
 		fail_df = self.lar_df[(self.lar_df.app_sex_basis=="1")&(~self.lar_df.app_sex.isin(("1", "2")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+	def v643_2(self):
+		"""An invalid Sex data field was reported.
+		2) If Sex of Applicant or Borrower equals 1 or 2, then the Sex of Applicant or Borrower Collected on the
+		Basis of Visual Observation or Surname must equal 1 or 2."""
+		field = "Applicant Sex Basis"
+		edit_name = "v643_2"
+		fail_df = self.lar_df[(self.lar_df.app_sex.isin(("1","2")))&(~self.lar_df.app_sex_basis.isin(("1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v644_1(self):
@@ -1036,9 +1080,18 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.app_sex=="6")&(self.lar_df.app_sex_basis!="2")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v645(self):
+	def v645_1(self):
 		"""An invalid Sex data field was reported.
-		If Sex of Applicant or Borrower equals 4, then Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
+		1) If Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3,
+		then Sex of Applicant or Borrower must equal 3 or 4."""
+		field = "Applicant Sex"
+		edit_name = "v645_1"
+		fail_df = self.lar_df[(self.lar_df.app_sex_basis=="3")&(~self.lar_df.app_sex.isin(("3", "4")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v645_2(self):
+		"""An invalid Sex data field was reported.
+		2) If Sex of Applicant or Borrower equals 4, then Sex of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
 		field = "Applicant Sex Basis"
 		edit_name = "v645_2"
 		fail_df = self.lar_df[(self.lar_df.app_sex=="4")&(self.lar_df.app_sex_basis!="3")]
@@ -1061,13 +1114,22 @@ class rules_engine(object):
 		fail_df = self.lar_df[~(self.lar_df.co_app_sex_basis.isin(("1", "2", "3", "4")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v647(self):
+	def v647_1(self):
 		"""An invalid Sex data field was reported.
 		1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 1, then
 		Sex of Co-Applicant or Co-Borrower must equal 1 or 2."""
 		field = "Co-Applicant Sex"
 		edit_name = "v647_1"
 		fail_df = self.lar_df[(self.lar_df.co_app_sex_basis=="1")&(~self.lar_df.co_app_sex.isin(("1", "2")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v647_2(self):
+		"""An invalid Sex data field was reported.
+		2) If Sex of Co-Applicant or Co-Borrower equals 1 or 2, then
+		Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 1 or 2."""
+		field = "Co-Applicant Sex Basis"
+		edit_name = "v647_2"
+		fail_df = self.lar_df[(self.lar_df.co_app_sex.isin(("1", "2")))&(~self.lar_df.co_app_sex_basis.isin(("1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v648_1(self):
@@ -1088,9 +1150,18 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.co_app_sex=="6")&(self.lar_df.co_app_sex_basis!="2")]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v649(self):
+	def v649_1(self):
 		"""An invalid Sex data field was reported.
-		If Sex of Co-Applicant or Co-Borrower equals 4, then
+		1) If Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname equals 3,
+		then Sex of Co-Applicant or Co-Borrower must equal 3 or 4."""
+		field = "Co-Applicant Sex"
+		edit_name = "v649_1"
+		fail_df = self.lar_df[(self.lar_df.co_app_sex_basis=="3")&(~self.lar_df.co_app_sex.isin(("3", "4")))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+	def v649_2(self):
+		"""An invalid Sex data field was reported.
+		2) If Sex of Co-Applicant or Co-Borrower equals 4, then
 		Sex of Co-Applicant or Co-Borrower Collected on the Basis of Visual Observation or Surname must equal 3."""
 		field = "Co-Applicant Sex Basis"
 		edit_name = "v649_2"
@@ -2728,7 +2799,7 @@ class rules_engine(object):
 		self.lar_df['fail_flag'] = "" #set flag to filter lar_df by fail rows
 		#iterate over lar to match state code with list of counties inside the state
 		for index, row in self.lar_df.iterrows():
-			county_list = list(self.crosswalk_data.county_fips[self.crosswalk_data.state_code==row["state"]])
+			county_list = list(self.crosswalk_data.countyFips[self.crosswalk_data.stateCode==row["state"]])
 			if row["county"] not in county_list:
 				self.lar_df.at[index,'fail_flag'] = "1"
 		fail_df = self.lar_df[(self.lar_df.fail_flag=="1")]
