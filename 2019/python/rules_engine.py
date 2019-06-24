@@ -314,7 +314,7 @@ class rules_engine(object):
 		field = "ULI"
 		#Obtaining subset of LAR that would have ULIs rather than NULIs.
 		fail_df = self.lar_df[self.lar_df.uli.map(lambda x: len(x) >= 23)].copy()
-		fail_df = fail_df[(fail_df.uli.map(lambda x: len(x))>45)|(uli_check_df.uli=="")].copy()
+		fail_df = fail_df[(fail_df.uli.map(lambda x: len(x))>45)|(fail_df.uli=="")].copy()
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v608_2(self):
@@ -326,7 +326,7 @@ class rules_engine(object):
 		field = "ULI"
 		#Obtaining subset of LAR that would have NULIs rather than ULIs.
 		fail_df = self.lar_df[self.lar_df.uli.map(lambda x: len(x) < 23)].copy()
-		fail_df = fail_df[(uli_check_df.uli=="")].copy()
+		fail_df = fail_df[(fail_df.uli=="")].copy()
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v609(self):
