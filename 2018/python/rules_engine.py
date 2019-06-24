@@ -317,7 +317,8 @@ class rules_engine(object):
 		#Purchase loan ULIs would not necessarily contain the LEI in its first 20
 		#characters. 
 		if self.lar_df.action_taken.all() == '6':
-			pass
+			fail_df = uli_check_df[(uli_check_df.uli.map(lambda x: len(x)<23))|
+				(uli_check_df.uli.map(lambda x: len(x))>45)|(uli_check_df.uli=="")].copy()
 		else:
 			uli_check_df = self.lar_df[self.lar_df.action_taken != '6']
 			uli_check_df = uli_check_df[(uli_check_df.uli.apply(lambda x: str(x)[:20]==lei))].copy()
@@ -339,7 +340,9 @@ class rules_engine(object):
 		#Purchase loan ULIs would not necessarily contain the LEI in its first 20
 		#characters. 
 		if self.lar_df.action_taken.all() == '6':
-			pass
+			fail_df = loan_id_check_df[(loan_id_check_df.uli=="")|
+			(loan_id_check_df.uli.apply(lambda x: len(x)>22))].copy()
+			
 		else:
 			loan_id_check_df = self.lar_df[self.lar_df.action_taken != '6']
 			loan_id_check_df = loan_id_check_df[(loan_id_check_df.uli.apply(lambda x: str(x)[:20]!=lei))].copy()
