@@ -155,6 +155,12 @@ The default values for Bank1 are listed below.
 - LEI: `BANK1LEIFORTEST12345`
 - Tax ID: `02-1234567`
 
+Other test bank LEIs:
+- BANK3LEIFORTEST12345
+- BANK4LEIFORTEST12345
+- 999999LE3ZOZXUS7W648
+- 28133080042813308004
+
 These files must be changed separately for each year.
 - For 2019, use [this configuration file](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/clean_file_config.yaml)
 - For 2018, use [this configuration file](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/clean_file_config.yaml)
