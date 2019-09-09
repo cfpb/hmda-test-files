@@ -90,7 +90,7 @@ class test_data(object):
 		while lar.lei[0] == self.ts_df.lei[0]:
 			lar.lei = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(20))
 		print("writing {name}".format(name=name))
-		utils.write_file(name="s301.txt", path="../edits_files/syntax/", ts_input=ts, lar_input=lar)
+		utils.write_file(name="s301.txt", path=path, ts_input=ts, lar_input=lar)
 
 	def s302_file(self):
 		"""Sets the year of submission to 2017"""
