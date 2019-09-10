@@ -1,13 +1,25 @@
-## Repository Purpose:
+## Table of Contents
+- [Purpose](https://github.com/cfpb/hmda-test-files#purpose)
+- [Use Cases](https://github.com/cfpb/hmda-test-files#-use-cases)
+- [Structure](https://github.com/cfpb/hmda-test-files#structure)
+- [Dependancies](https://github.com/cfpb/hmda-test-files#dependencies)
+- [Generating Clean Files](https://github.com/cfpb/hmda-test-files#generating-clean-files)
+- [Generating Test Files](https://github.com/cfpb/hmda-test-files#generating-test-files)
+- [Generating Large Files](https://github.com/cfpb/hmda-test-files#generating-large-files)
+- [Generating Edit Reports](https://github.com/cfpb/hmda-test-files#generating-edit-reports)
+- [Data Generation Notes](https://github.com/cfpb/hmda-test-files#data-generation-notes)
+
+
+## Purpose:
 This repository contains code used to generate synthetic LAR files. Currently, the test files repository supports file creation for submission years, 2018 and 2019. The success of the HMDA program requires that the data submitted meet the technical and business requirements of the HMDA Platform. The code and test files in this repository will provide a standardized means of checking the implementation of business rules for data submission in the HMDA Platform.
 
-## Repository Use Cases:
+## Use Cases:
 - Enable business analysts to test the HMDA Platform 
 - Provide files to check API returns
 - Provide a resource for developers to use while implementing business rules in code
 - Provide synthetic data files meeting HMDA schemas for 2018 and 2019 to be used in training
 
-## Repository Structure
+## Structure
 Each year listed in the parent directory contains its own codebase for running test files for that submission year. Users should navigate to each year directory to run scripts and view code.  
 - [2018/python](https://github.com/cfpb/hmda-test-files/tree/master/2018/python) and [2019/python](https://github.com/cfpb/hmda-test-files/tree/master/2019/python):
      - Contains the notebooks and python scripts used to generate synthetic LAR data, perturb the data so that it fails specific business rules, and code to check that the produced files fail edits as expected.
@@ -24,10 +36,13 @@ The links below contain a discussion of file generation features by year:
 
 [2018 File Generation Features](https://github.com/cfpb/hmda-test-files/tree/master/2018/2018_File_Generation_Features.md)
 [2019 File Generation Features](https://github.com/cfpb/hmda-test-files/tree/master/2019/2019_File_Generation_Features.md) 
+
+
 ## Dependencies
 - Python 3.5 or greater
 - [Jupyter Notebooks](http://jupyter.org/): `pip install jupyter`
 - [Pandas](http://pandas.pydata.org/): `pip install pandas`
+
 
 ## Generating Clean Files
 Clean files will pass the HMDA edits (business rules for data submission). These files are used as the base for generating files that will fail edits. Running the following scripts will create the edits_files directory and a data file that will pass the HMDA edit checks. The file will have a number of rows set in a YAML clean file configuration for each directory. Other variables, such as data ranges can also be set in the configuration files.
@@ -101,7 +116,7 @@ lei|`BANK1LEIFORTEST12345`|String|LEI for the generated large file.
 tax_id|`02-1234567`|String|Tax ID for the generated large file. 
 row_count|`10000`|Integer|The number of rows for the generated large file. 
 
-*Optional parameter.
+*Optional parameter.*
 
 To generate large files for 2019: 
 1. Navigate to the 2019/python directory.
@@ -131,7 +146,7 @@ edit_report_output_filepath|`../edits_files/`|String|Filepath for storing genera
 edit_report_output_filename|`edit_report.csv`|String|Filename for generated edit reports.|
 *status|`failed`|String|Specifies whether edits reported are `passed` or `failed`. 
 
-*Optional parameter: if status is blank in the configuration, the report contains both passed and failed edits. 
+*Optional parameter: if status is blank in the configuration, the report contains both passed and failed edits.*
 
 To generate edit reports for 2019:  
 1. Navigate to the 2019/python directory.
