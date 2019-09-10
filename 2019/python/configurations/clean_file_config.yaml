@@ -1,11 +1,3 @@
-    clean_file:
-     desc: The file used to create error files
-     type: File
-     value: "clean_file_100_rows_Bank1.txt"
-    file_length:
-      desc: "The number of lines in the clean data file"
-      type: Integer
-      value: 100
     name:
       desc: The name of the institution filing data
       type: String
@@ -22,6 +14,18 @@
       desc: The year of activity
       type: String
       value: 2019
+    file_length:
+      desc: "The number of lines in the clean data file"
+      type: Integer
+      value: 100
+    large_file_base_length:
+      desc: "the row count of the clean file to use as a base for the large clean file"
+      type: Integer
+      value: 100
+    large_file_write_length:
+      desc: "The number of lines in the large clean file"
+      type: Integer
+      value: 100000
     calendar_quarter:
       desc: The calendar quarter to which the filing relates
       type: Integer

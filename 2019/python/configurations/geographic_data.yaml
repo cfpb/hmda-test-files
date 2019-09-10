@@ -1,4 +1,4 @@
-crosswalk_data_file: '../dependencies/census_2018_MSAMD_name.txt'
+geographic_data_file: '../dependencies/census_2018_MSAMD_name.txt'
 zip_code_file: "../dependencies/zip_codes.json"
 file_columns: ['collection_year', 'msa_md', 'state_code', 'county', 'tracts', 'ffiec_median_family_income', 
                 'population','minority_population_%', 'number_of_owner_occupied_units', 'number_of_1_to_4_family_units', 
