@@ -293,6 +293,7 @@ class FileGenerator(object):
 			ts_data, lar_data = utils.read_data_file(
 				path=self.filepaths['clean_filepath'].format(
 					bank_name=self.clean_config["name"]["value"]),
+				
 				data_file=self.filepaths["clean_filename"].format(
 					bank_name=self.clean_config["name"]["value"], 
 					n=self.clean_config["file_length"]["value"])) 
