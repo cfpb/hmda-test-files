@@ -10,11 +10,11 @@ class test_data(object):
 	altered file to fail the specified edit. Modified files may fail other 
 	edits as well."""
 
-	def __init__(self, ts_schema, lar_schema, crosswalk_data):
+	def __init__(self, ts_schema, lar_schema, geographic_data):
 		"""Set initial class variables.
 
 		The crosswak_data variable contains the filepath and name for geographic 
-		cross walk data located in the dependencies folder. The crosswalk data file contains 
+		cross walk data located in the dependencies folder. The geographic data file contains 
 		relationships between variables such as state, county, census tract, MSA, and 
 		population that are used to generate clean files and edit files. The file 
 		is located in "dependencies/census_2018_MSAMD_name.txt."
@@ -25,7 +25,7 @@ class test_data(object):
 		
 		#Loads the clean file configuration. 
 		with open('configurations/clean_file_config.yaml') as f:
-			data_map = yaml.safe_load(f)
+			clean_config = yaml.safe_load(f)
 
 		#Loads the filepath configuration. 
 		with open('configurations/test_filepaths.yaml') as f:
@@ -35,15 +35,15 @@ class test_data(object):
 		with open('configurations/geographic_data.yaml') as f:
 			self.geographic = yaml.safe_load(f)
 
-		self.clean_file_path = filepaths['clean_filepath'].format(bank_name=data_map["name"]["value"])
-		self.validity_path = filepaths['validity_filepath'].format(bank_name=data_map["name"]["value"])
-		self.syntax_path = filepaths['syntax_filepath'].format(bank_name=data_map["name"]["value"])
-		self.quality_path = filepaths['quality_filepath'].format(bank_name=data_map["name"]["value"])
+		self.clean_file_path = filepaths['clean_filepath'].format(bank_name=clean_config["name"]["value"])
+		self.validity_path = filepaths['validity_filepath'].format(bank_name=clean_config["name"]["value"])
+		self.syntax_path = filepaths['syntax_filepath'].format(bank_name=clean_config["name"]["value"])
+		self.quality_path = filepaths['quality_filepath'].format(bank_name=clean_config["name"]["value"])
 		
 		self.lar_field_names = list(lar_schema.field)
 		self.ts_field_names = list(ts_schema.field)
 
-		self.crosswalk_data = crosswalk_data
+		self.geographic_data = geographic_data
 
 	def load_data_frames(self, ts_data, lar_data):
 		"""Receives dataframes for TS and LAR and writes them as object attributes"""
@@ -57,9 +57,11 @@ class test_data(object):
 	def load_ts_data(self, ts_df=None):
 		"""Takes a dataframe of TS data and stores it as a class variable. TS data must be a single row."""
 		self.ts_df = ts_df
+
 	#edits will be broken out into sub parts as in the rules_engine.py class. This will allow test files to be generated such that they fail conditions inside each edit.
 	#When possible each file will only fail the condition listed in the file name. There will be cases when test files fail additional edits, these cases will be documented
 	#to the extent possible.
+
 	def s300_1_file(self):
 		"""Sets the first character of the first row of the file to 3."""
 		name = "s300_1.txt"
@@ -2869,7 +2871,7 @@ class test_data(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.tract = "NA"
-		big_counties = list(self.crosswalk_data.county_fips[self.crosswalk_data.small_county!="1"])
+		big_counties = list(self.geographic_data.county_fips[self.geographic_data.small_county!="1"])
 		lar.county = lar.county.map(lambda x: random.choice(big_counties))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
@@ -2881,15 +2883,15 @@ class test_data(object):
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.state = lar.state.map(lambda x: self.geographic['state_FIPS_to_abbreviation'][random.choice(list(self.crosswalk_data.state_code))])
+		lar.state = lar.state.map(lambda x: self.geographic['state_FIPS_to_abbreviation'][random.choice(list(self.geographic_data.state_code))])
 		#Sets a state code for each LAR and a county code that does not match the state code. 
 		for index, row in lar.iterrows():
-			state_code = random.choice(list(self.crosswalk_data.state_code))
+			state_code = random.choice(list(self.geographic_data.state_code))
 			state_abbrev = self.geographic['state_FIPS_to_abbreviation'][state_code]
 			row["state"] = state_abbrev
-			row["county"] = random.choice(list(self.crosswalk_data.county_fips[self.crosswalk_data.state_code!=state_code]))
+			row["county"] = random.choice(list(self.geographic_data.county_fips[self.geographic_data.state_code!=state_code]))
 			#forces the census tract to conform to an appropriate subset of county codes in order to pass v625 and v627. 
-			row["tract"] = row["county"] + random.choice(list(self.crosswalk_data.tracts[(self.crosswalk_data.county_fips == row["county"])]))
+			row["tract"] = row["county"] + random.choice(list(self.geographic_data.tracts[(self.geographic_data.county_fips == row["county"])]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -3379,7 +3381,7 @@ class test_data(object):
 		#so that a clean q639.txt file can be produced.
 		lar.action_taken = lar.action_taken.map(lambda x: random.choice(["1","2"]))
 		if len(lar) <= 1000:
-			ts, lar = utils.new_lar_rows(row_count=1001, lar_df=lar, ts_df=ts)
+			ts, lar = utils.new_lar_rows(final_row_count=1001, lar_df=lar, ts_df=ts)
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 

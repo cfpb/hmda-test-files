@@ -132,7 +132,7 @@ def new_lar_rows(final_row_count=None, lar_df=None, ts_df=None):
     
     #Drops the number of rows to the count specified. 
     if (final_row_count % current_row) != 0:
-        drop_rows = current_row - (row_count % current_row)
+        drop_rows = current_row - (final_row_count % current_row)
         new_lar_df = new_lar_df[: - (drop_rows)]
     
     #Applies the unique_uli function to the new LAR dataframe 

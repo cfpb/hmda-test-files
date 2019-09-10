@@ -15,7 +15,7 @@ file.create_files(kind='error_files')
 
 #The following code validates quality edits to pass syntax and validity edits. 
 #Stores a list of filenames from the quality edits directory. 
-quality_files = os.listdir(file.filepaths['quality_filepath'].format(bank_name=file.data_map['name']['value']))
+quality_files = os.listdir(file.filepaths['quality_filepath'].format(bank_name=file.clean_config['name']['value']))
 
 #Validates quality edits and stores them in a new directory specified in the test filepaths configuration. 
 for quality_file in quality_files:
