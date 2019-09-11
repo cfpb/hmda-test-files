@@ -1,27 +1,31 @@
-    clean_file:
-     desc: The file used to create error files
-     type: File
-     value: "clean_file_100_rows_Bank1.txt"
-    file_length:
-      desc: "The number of lines in the clean data file"
-      type: Integer
-      value: 100
     name:
       desc: The name of the institution filing data
       type: String
-      value: "Bank1"
+      value: Bank1
     lei:
       desc: The Legal Entity Identifier of the institution
       type: String
-      value: "BANK1LEIFORTEST12345"
+      value: BANK1LEIFORTEST12345
     tax_id:
       desc: The federal tax ID of the filing institution
       type: String
       value: 02-1234567
     calendar_year:
       desc: The year of activity
-      type: String
+      type: Integer
       value: 2019
+    file_length:
+      desc: The number of lines in the clean or test data file
+      type: Integer
+      value: 3
+    large_file_base_length:
+      desc: the row count of the clean file to use as a base for the large clean file
+      type: Integer
+      value: 100
+    large_file_write_length:
+      desc: The number of lines in the large clean file
+      type: Integer
+      value: 500000
     calendar_quarter:
       desc: The calendar quarter to which the filing relates
       type: Integer
@@ -62,23 +66,23 @@
       type: Integer
       value: 110
     max_amount:
-      desc: "Maximum loan amount in dollars"
+      desc: Maximum loan amount in dollars
       type: Integer
       value: 467000
     max_income:
-      desc: "Maximum applicant income in thousands"
+      desc: Maximum applicant income in thousands
       type: Integer
       value: 300
     max_rs:
-      desc: "Maximum rate spread"
+      desc: Maximum rate spread
       type: Integer
       value: 100
     max_credit_score:
-      desc: "Maximum credit score"
+      desc: Maximum credit score
       type: Integer
       value: 840
     min_credit_score:
-      desc: "Minimum credit score"
+      desc: Minimum credit score
       type: Integer
       value: 650
     loan_costs:
@@ -86,55 +90,55 @@
       type: Integer
       value: 10000
     points_and_fees:
-      desc: "Maximum points and fees"
+      desc: Maximum points and fees
       type: Integer
       value: 10000
     orig_charges:
-      desc: "Maximum origination charges"
+      desc: Maximum origination charges
       type: Integer
       value: 10000
     discount_points:
-      desc: "Maximum discount points cost"
+      desc: Maximum discount points cost
       type: Integer
       value: 10000
     lender_credits:
-      desc: "Maximum lender credits"
+      desc: Maximum lender credits
       type: Integer
       value: 10000
     interest_rate:
-      desc: "Maximum interest rate"
+      desc: Maximum interest rate
       type: Integer
       value: 25
     penalty_max:
-      desc: "Maximum prepayment penalty term"
+      desc: Maximum prepayment penalty term
       type: Integer
       value: 36
     dti:
-      desc: "Maximum debt to income ratio"
+      desc: Maximum debt to income ratio
       type: Integer
       value: 100
     cltv:
-      desc: "Combinted loan to value ratio"
+      desc: Combinted loan to value ratio
       type: Integer
       value: 120
     loan_term:
-      desc: "Maximum loan term"
+      desc: Maximum loan term
       type: Integer
       value: 360
     intro_rate:
-      desc: "Maximum introductory rate period"
+      desc: Maximum introductory rate period
       type: Intger
       value: 36
     max_units:
-      desc: "Maximum total units"
+      desc: Maximum total units
       type: Integer
       value: 30
     prop_val_max:
-      desc: "Maximum property value in dollars"
+      desc: Maximum property value in dollars
       type: Integer
       value: 1000000
     prop_val_min:
-      desc: "Minimum property value in dollars"
+      desc: Minimum property value in dollars
       type: Integer
       value: 100000
     

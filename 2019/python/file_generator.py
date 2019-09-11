@@ -1,19 +1,16 @@
-#The following functions help to produce data generation for the script below. 
-
-#Imports the required packages
-import os
+import glob
 import json
-import pandas as pd
-import yaml
 import logging
-import numpy as np
+import os
 
-#Imports custom packages. 
+import pandas as pd
+import numpy as np
+import yaml
+
 import lar_constraints
 import lar_generator
 from rules_engine import rules_engine
 from test_file_generator import test_data
-import glob
 import utils
 
 class FileGenerator(object):
@@ -33,14 +30,14 @@ class FileGenerator(object):
 		#Loads the clean file configuration. 
 		with open('configurations/clean_file_config.yaml') as f:
 			# Uses safe_load instead of load.
-			self.data_map = yaml.safe_load(f)
+			self.clean_config = yaml.safe_load(f)
 
 		#Loads the edit report configuration.
 		with open('configurations/edit_report_config.yaml') as f:
 			# Uses safe_load instead of load.
 			self.edit_report_config = yaml.safe_load(f) 
 
-		#Stores the column names for the file containing geographic crosswalk data. 
+		#Stores the column names for the file containing geographic geographic data. 
 		file_cols = self.geographic['file_columns']
 
 		#Sets the logging parameters.
@@ -52,17 +49,17 @@ class FileGenerator(object):
                 	filemode=self.filepaths['log_mode'],
                 	level=logging.INFO)
 
-		#Loads geographic crosswalk data from filepaths named in the test_filepaths
+		#Loads geographic geographic data from filepaths named in the test_filepaths
 		#yaml file. 
-		self.crosswalk_data = pd.read_csv(self.geographic['crosswalk_data_file'], 
+		self.geographic_data = pd.read_csv(self.geographic['geographic_data_file'], 
 			delimiter='|', header=None, names=file_cols, dtype=str)
 
-		#Creates county, tract, and small county data from the file containing geographic crosswalk data. 
-		self.crosswalk_data['county_fips'] = self.crosswalk_data['state_code'] + self.crosswalk_data['county']
-		self.crosswalk_data["tract_fips"] = self.crosswalk_data.county_fips + self.crosswalk_data.tracts
-		self.counties = list(self.crosswalk_data.county_fips)
-		self.tracts = list(self.crosswalk_data.tract_fips)
-		self.small_counties = list(self.crosswalk_data.county_fips[self.crosswalk_data.small_county=="S"])
+		#Creates county, tract, and small county data from the file containing geographic geographic data. 
+		self.geographic_data['county_fips'] = self.geographic_data['state_code'] + self.geographic_data['county']
+		self.geographic_data["tract_fips"] = self.geographic_data.county_fips + self.geographic_data.tracts
+		self.counties = list(self.geographic_data.county_fips)
+		self.tracts = list(self.geographic_data.tract_fips)
+		self.small_counties = list(self.geographic_data.county_fips[self.geographic_data.small_county=="S"])
 
 		#Loads schemas for LAR and TS.
 		#Schemas contain valid enumerations, including NA values, for each 
@@ -87,14 +84,15 @@ class FileGenerator(object):
 		#lar_validator checks a dataframe and returns a JSON with 
 		#edit pass/fail results. 
 		self.lar_validator = rules_engine(lar_schema=self.lar_schema_df, 
-			ts_schema=self.ts_schema_df, crosswalk_data=self.crosswalk_data)
+			ts_schema=self.ts_schema_df, geographic_data=self.geographic_data)
 					#tracts=tracts, counties=counties, small_counties=small_counties) 
 
 		#Stores the number of rows in the test file
-		self.file_length = self.data_map["file_length"]["value"] 
+		self.file_length = self.clean_config["file_length"]["value"] 
 
 		#Stores the LEI for the test file. 
-		self.lei = self.data_map["lei"]["value"]
+		self.lei = self.clean_config["lei"]["value"]
+
 
 	def get_const_list(self):
 		
@@ -169,7 +167,7 @@ class FileGenerator(object):
 		#Instantiates a rules checker to check the row against
 		#edits in the rules engine. 
 		rules_check = rules_engine(lar_schema=self.lar_schema_df, 
-			ts_schema=self.ts_schema_df, crosswalk_data=self.crosswalk_data)
+			ts_schema=self.ts_schema_df, geographic_data=self.geographic_data)
 			#tracts=tracts, counties=counties) #instantiate edits rules engine
 
 		#Loads LAR and TS data to the rules engine. 
@@ -191,7 +189,7 @@ class FileGenerator(object):
 		dictionary object.
 		"""
 		
-		self.ts_row = self.lar_gen.make_ts_row(self.data_map)
+		self.ts_row = self.lar_gen.make_ts_row(self.clean_config)
 
 		return self.ts_row
 
@@ -275,9 +273,9 @@ class FileGenerator(object):
 			#configuration.  
 			utils.write_file(ts_input=ts_df, lar_input=lar_frame, 
 				path=self.filepaths['clean_filepath'].format(
-					bank_name=self.data_map["name"]["value"]),
+					bank_name=self.clean_config["name"]["value"]),
 				name=self.filepaths['clean_filename'].format(
-					n=self.file_length, bank_name=self.data_map["name"]["value"]))
+					n=self.file_length, bank_name=self.clean_config["name"]["value"]))
 
 		#For error files. 
 		if kind == 'error_files':
@@ -287,17 +285,18 @@ class FileGenerator(object):
 			
 			#Instantiates the edit file maker.
 			file_maker = test_data(ts_schema=self.ts_schema_df, 
-				lar_schema=self.lar_schema_df, 
-				crosswalk_data=self.crosswalk_data) 
+								   lar_schema=self.lar_schema_df, 
+								   geographic_data=self.geographic_data) 
 
 			#Pulls in the clean data filepath and name from the
 			#test filepaths yaml file. 
 			ts_data, lar_data = utils.read_data_file(
 				path=self.filepaths['clean_filepath'].format(
-					bank_name=self.data_map["name"]["value"]),
+					bank_name=self.clean_config["name"]["value"]),
+				
 				data_file=self.filepaths["clean_filename"].format(
-					bank_name=self.data_map["name"]["value"], 
-					n=self.data_map["file_length"]["value"])) 
+					bank_name=self.clean_config["name"]["value"], 
+					n=self.clean_config["file_length"]["value"])) 
 					
 
 			#Passes clean file data to the file maker object.
@@ -314,6 +313,7 @@ class FileGenerator(object):
 					print("applying:", func)
 					#Applies data modification functions and produces files.
 					getattr(file_maker, func)()
+
 
 	def validate_quality_edit_file(self, quality_filename):
 		"""
@@ -336,11 +336,11 @@ class FileGenerator(object):
 		try: 
 			#Instantiates an edit checker object with rules_engine.
 			checker = rules_engine(lar_schema=self.lar_schema_df, 
-				ts_schema=self.ts_schema_df, crosswalk_data=self.crosswalk_data)
+				ts_schema=self.ts_schema_df, geographic_data=self.geographic_data)
 
 			#Reads the files and separates data into TS and LAR frames.
 			ts_df, lar_df = utils.read_data_file(
-				path=self.filepaths['quality_filepath'].format(bank_name=self.data_map['name']['value']), 
+				path=self.filepaths['quality_filepath'].format(bank_name=self.clean_config['name']['value']), 
 				data_file=quality_filename)
 
 			#Stores the original length of the file. 
@@ -370,7 +370,7 @@ class FileGenerator(object):
 				#test files that pass syntax and validity edits. 
 
 				utils.write_file(path=self.filepaths['quality_pass_s_v_filepath'].format(
-					bank_name=self.data_map['name']['value']), 
+					bank_name=self.clean_config['name']['value']), 
 					ts_input=ts_df, 
 					lar_input=lar_df, 
 					name=quality_filename)
@@ -417,17 +417,17 @@ class FileGenerator(object):
 
 				#Creates new lar rows to the original length of the file
 				#using the utils new lar rows function. 
-				ts_df, lar_df = utils.new_lar_rows(row_count=original_length, 
+				ts_df, lar_df = utils.new_lar_rows(final_row_count=original_length, 
 					lar_df=lar_df, ts_df=ts_df)
 
 				#Writes the file to the new path for quality test files
 				#that pass syntax and validity edits. 
-				utils.write_file(path=self.filepaths['quality_pass_s_v_filepath'].format(bank_name=self.data_map['name']['value']), 
+				utils.write_file(path=self.filepaths['quality_pass_s_v_filepath'].format(bank_name=self.clean_config['name']['value']), 
 					ts_input=ts_df, lar_input=lar_df, name=quality_filename)
 
 				#Prints to the console the name of the file being changed. 
 				print("Adjusting {file} to pass syntax and validity edits.".format(file=quality_filename))
-				print("File saved in {path}".format(path=self.filepaths['quality_pass_s_v_filepath'].format(bank_name=self.data_map['name']['value'])))
+				print("File saved in {path}".format(path=self.filepaths['quality_pass_s_v_filepath'].format(bank_name=self.clean_config['name']['value'])))
 		
 		#The condition where there are no clean rows present in the file. 
 		except ZeroDivisionError as e:
@@ -449,9 +449,9 @@ class FileGenerator(object):
 		"""
 
 		#Instantiates the rules engine class as a checker object with a
-		#LAR schema, a TS schema, and geographic crosswalk data. 
+		#LAR schema, a TS schema, and geographic geographic data. 
 		checker = rules_engine(lar_schema=self.lar_schema_df, 
-			ts_schema=self.ts_schema_df, crosswalk_data=self.crosswalk_data)
+			ts_schema=self.ts_schema_df, geographic_data=self.geographic_data)
 
 		#Seperates data from the filepath and filename into a TS dataframe
 		#and a LAR dataframe. 
@@ -507,7 +507,7 @@ class FileGenerator(object):
 
 		checker = rules_engine(lar_schema=self.lar_schema_df, 
 					ts_schema=self.ts_schema_df, 
-					crosswalk_data=self.crosswalk_data)
+					geographic_data=self.geographic_data)
 
 		#Produces a report as to which syntax or validity
 		#edits have passed or failed based on logic in the rules_engine.
