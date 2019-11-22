@@ -6,7 +6,6 @@ import yaml
 from lar_constraints import lar_data_constraints
 import lar_generator
 from rules_engine import rules_engine
-from test_file_generator import test_data
 import utils
 
 config_file = 'configurations/clean_file_config.yaml'
