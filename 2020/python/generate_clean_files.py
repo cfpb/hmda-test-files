@@ -48,7 +48,7 @@ geographic_data = pd.read_csv(geo_config['geographic_data_file'], delimiter='|',
 #create 11 digit Census Tract codes from 5 digit county and 6 digit tract
 geographic_data['county_fips'] = geographic_data.apply(lambda x: str(x.state_code) + str(x.county), axis=1)
 geographic_data["tract_fips"] = geographic_data.apply(lambda x: str(x.county_fips) + str(x.tracts), axis=1)
-		
+
 with open(geo_config["zip_code_file"], 'r') as f:
 	zip_codes = json.load(f)
 zip_codes.append("Exempt")
@@ -126,8 +126,5 @@ clean_filepath = filepaths["clean_filepath"].format(bank_name=bank_config_data["
 if not os.path.exists(clean_filepath):
 	os.makedirs(clean_filepath)
 
-lar_rows_df.to_csv(clean_filepath+clean_filename, sep="|", index=False)
+utils.write_file(path=clean_filepath, name=clean_filename, ts_input=pd.DataFrame(ts_row, index=[0]), lar_input=lar_rows_df)
 
-#TODO
-#enable logging
-#sort out configurations to do stuff more betterrer
