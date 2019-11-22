@@ -11,6 +11,7 @@ from rules_engine import rules_engine
 import utils
 
 config_file = 'configurations/clean_file_config.yaml'
+bank_config = 'configurations/bank1_config.yaml'
 geo_config_file='configurations/geographic_data.yaml'
 filepaths_file = 'configurations/test_filepaths.yaml'
 lar_schema_file="../schemas/lar_schema.json"
@@ -29,6 +30,9 @@ with open(filepaths_file, 'r') as f:
 print("loading geo data")
 with open(geo_config_file, 'r') as f:
 	geo_config = yaml.safe_load(f)
+
+with open(bank_config, 'r') as f:
+	bank_config_data = yaml.safe_load(f)
 
 DEBUG = False
 
@@ -63,11 +67,11 @@ lar_constraints = lar_data_constraints(lar_file_config=lar_file_config_data, geo
 
 #store original row for diff comparison to see what elements are being changed
 
-ts_row = lar_gen.make_ts_row(lar_file_config=lar_file_config_data) #create TS row, we only need one
+ts_row = lar_gen.make_ts_row(bank_file_config=bank_config_data) #create TS row, we only need one
 rules_engine.load_ts_data(ts_row) #loading ts_row to rules_engine converts it to a dataframe for value checking
 lar_rows = [] #list to hold all OrderedDict LAR records before writing to file
 
-for i in range(lar_file_config_data["file_length"]["value"]):
+for i in range(bank_config_data["file_length"]["value"]):
 	print("generating row {count}".format(count=i))
 	#create initial LAR row
 	lar_row = lar_gen.make_row(lar_file_config=lar_file_config_data, geographic_data=geographic_data, state_codes=geo_config["state_codes_rev"], zip_code_list=zip_codes)
@@ -114,8 +118,8 @@ if DEBUG:
 
 
 
-clean_filename = filepaths["clean_filename"].format(bank_name=lar_file_config_data["name"]["value"], row_count=lar_file_config_data["file_length"]["value"])
-clean_filepath = filepaths["clean_filepath"].format(bank_name=lar_file_config_data["name"]["value"])
+clean_filename = filepaths["clean_filename"].format(bank_name=bank_config_data["name"]["value"], row_count=bank_config_data["file_length"]["value"])
+clean_filepath = filepaths["clean_filepath"].format(bank_name=bank_config_data["name"]["value"])
 
 
 #create directory for test files if it does not exist

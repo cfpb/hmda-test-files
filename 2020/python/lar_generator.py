@@ -144,24 +144,24 @@ class lar_gen(object):
 		valid_tracts = [tract for tract in self.tract_list if tract[:5]==county]
 		return random.choice(valid_tracts)
 
-	def make_ts_row(self, lar_file_config):
+	def make_ts_row(self, bank_file_config):
 		"""Creates a TS row as a dictionary and returns it."""
 		ts_row = OrderedDict()
 		ts_row["record_id"] ="1"
-		ts_row["inst_name"] = lar_file_config["name"]["value"]
-		ts_row["calendar_year"] = lar_file_config["activity_year"]["value"]
-		ts_row["calendar_quarter"] = lar_file_config["calendar_quarter"]["value"]
-		ts_row["contact_name"] = lar_file_config["contact_name"]["value"]
-		ts_row["contact_tel"] = lar_file_config["contact_tel"]["value"]
-		ts_row["contact_email"] = lar_file_config["contact_email"]["value"]
-		ts_row["contact_street_address"] = lar_file_config["street_addy"]["value"]
-		ts_row["office_city"] = lar_file_config["city"]["value"]
-		ts_row["office_state"] = lar_file_config["state"]["value"]
-		ts_row["office_zip"] = lar_file_config["zip_code"]["value"]
-		ts_row["federal_agency"] = lar_file_config["agency_code"]["value"]
-		ts_row["lar_entries"]= str(lar_file_config["file_length"]["value"])
-		ts_row["tax_id"] = lar_file_config["tax_id"]["value"]
-		ts_row["lei"] = lar_file_config["lei"]["value"]
+		ts_row["inst_name"] = bank_file_config["name"]["value"]
+		ts_row["calendar_year"] = bank_file_config["activity_year"]["value"]
+		ts_row["calendar_quarter"] = bank_file_config["calendar_quarter"]["value"]
+		ts_row["contact_name"] = bank_file_config["contact_name"]["value"]
+		ts_row["contact_tel"] = bank_file_config["contact_tel"]["value"]
+		ts_row["contact_email"] = bank_file_config["contact_email"]["value"]
+		ts_row["contact_street_address"] = bank_file_config["street_addy"]["value"]
+		ts_row["office_city"] = bank_file_config["city"]["value"]
+		ts_row["office_state"] = bank_file_config["state"]["value"]
+		ts_row["office_zip"] = str(bank_file_config["zip_code"]["value"])
+		ts_row["federal_agency"] = bank_file_config["agency_code"]["value"]
+		ts_row["lar_entries"]= str(bank_file_config["file_length"]["value"])
+		ts_row["tax_id"] = bank_file_config["tax_id"]["value"]
+		ts_row["lei"] = bank_file_config["lei"]["value"]
 		return ts_row
 
 	#all valid values, including blanks and NAs, are included in the selection lists.
@@ -191,7 +191,6 @@ class lar_gen(object):
 		valid_lar_row["tract"] = random.choice(geographic_data["tract_fips"])
 		valid_lar_row["state"] = state_codes[str(valid_lar_row["tract"][:2])]
 		valid_lar_row["county"] = valid_lar_row["tract"][:5]
-
 		valid_lar_row["app_eth_1"] = str(random.choice(self.get_schema_list(field="app_eth_1", empty=True)))
 		valid_lar_row["app_eth_2"] = str(random.choice(self.get_schema_list(field="app_eth_2", empty=True)))
 		valid_lar_row["app_eth_3"] = str(random.choice(self.get_schema_list(field="app_eth_3", empty=True)))
