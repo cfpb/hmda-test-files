@@ -12,28 +12,29 @@ import utils
 class lar_gen(object):
 	""""""
 	def __init__(self, LAR_df=None, TS_df=None, counties=None, tracts=None):
-		
+
 		self.LAR_df = LAR_df
 		self.TS_df = TS_df
 		#external data lists
-		
+
 		#list of counties from the geographic crosswalk data file, dtype string
-		self.county_list = counties 
+		self.county_list = counties
 		#list of tracts from the geographic crosswalk data file, dtype string
-		self.tract_list = tracts 
+		self.tract_list = tracts
+		self.track_list_backup = tracts
 		#list of valid state and territory codes (two digit letter)
-		self.state_codes = [] 
-		
+		self.state_codes = []
+
 		with open('configurations/clean_file_config.yaml') as f:
 			# use safe_load instead load
 			data_map = yaml.safe_load(f)
-		#Loads geographic configuration file. 
+		#Loads geographic configuration file.
 		with open('configurations/geographic_data.yaml') as f:
 			geographic = yaml.safe_load(f)
 
-		#Loading in state codes. 
+		#Loading in state codes.
 		self.state_codes = geographic['state_codes']
-		
+
 		#load TS data
 		self.street_addy = data_map['street_addy']["value"]
 		self.city = data_map["city"]["value"]
@@ -103,7 +104,7 @@ class lar_gen(object):
 				schema_enums = self.LAR_df.valid_vals[self.LAR_df.field==field].iloc[0]
 				schema_enums.append("")
 				return schema_enums
-			else: 
+			else:
 				return self.LAR_df.valid_vals[self.LAR_df.field==field].iloc[0]
 		elif schema=="TS":
 			if empty:
@@ -130,7 +131,11 @@ class lar_gen(object):
 	def tract_from_county(self, county):
 		"""Returns a Census Tract FIPS that is valid for the passed county."""
 		valid_tracts = [tract for tract in self.tract_list if tract[:5]==county ]
-		return random.choice(valid_tracts)
+		try:
+			rtn = random.choice(valid_tracts)
+		except:
+			rtn = []
+		return rtn
 
 	def float_gen(self):
 		pass
@@ -163,8 +168,8 @@ class lar_gen(object):
 	#Some of these values are added using helper functions if they are not present in the JSON schema.
 	def make_row(self, lei=None):
 		"""Make num_rows LAR rows and return them as a list of ordered dicts"""
-		valid_lar_row = OrderedDict() 
-		valid_lar_row["record_id"] = str(self.LAR_df.valid_vals[self.LAR_df.field=="record_id"].iloc[0][0])	
+		valid_lar_row = OrderedDict()
+		valid_lar_row["record_id"] = str(self.LAR_df.valid_vals[self.LAR_df.field=="record_id"].iloc[0][0])
 		valid_lar_row["lei"] = lei
 		valid_lar_row["uli"] = valid_lar_row['lei'] + utils.char_string_gen(23)
 		valid_lar_row["uli"] = valid_lar_row["uli"] + utils.check_digit_gen(ULI=valid_lar_row["uli"])
