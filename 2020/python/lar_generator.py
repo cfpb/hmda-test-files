@@ -168,7 +168,6 @@ class lar_gen(object):
 	#Some of these values are added using helper functions if they are not present in the JSON schema.
 	def make_row(self, lar_file_config, geographic_data, state_codes, zip_code_list):
 		"""Make num_rows LAR rows and return them as a list of ordered dicts"""
-		print("starting make row")
 		valid_lar_row = OrderedDict() 
 		valid_lar_row["record_id"] = str(self.lar_schema_df.valid_vals[self.lar_schema_df.field=="record_id"].iloc[0][0])
 		valid_lar_row["lei"] = lar_file_config["lei"]["value"]
@@ -285,5 +284,5 @@ class lar_gen(object):
 		valid_lar_row["reverse_mortgage"] = str(random.choice(self.get_schema_list(field="reverse_mortgage")))
 		valid_lar_row["open_end_credit"] = str(random.choice(self.get_schema_list(field="open_end_credit")))
 		valid_lar_row["business_purpose"] = str(random.choice(self.get_schema_list(field="business_purpose")))
-		print("done in make row")
+
 		return valid_lar_row

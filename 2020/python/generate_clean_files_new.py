@@ -1,4 +1,5 @@
 import json
+import os
 
 import pandas as pd
 import yaml
@@ -10,14 +11,19 @@ import utils
 
 config_file = 'configurations/clean_file_config.yaml'
 geo_config_file='configurations/geographic_data.yaml'
+filepaths_file = 'configurations/test_filepaths.yaml'
 lar_schema_file="../schemas/lar_schema.json"
 ts_schema_file="../schemas/ts_schema.json"
 
+DEBUG = False
 #load config data
 print("start initialization of LAR generator")
-with open(config_file) as f:
+with open(config_file, 'r') as f:
 	# use safe_load instead load
 	lar_file_config_data = yaml.safe_load(f)
+
+with open(filepaths_file, 'r') as f:
+	filepaths = yaml.safe_load(f)
 
 #load geographic configuration and census data
 print("loading geo data")
@@ -61,7 +67,8 @@ for i in range(lar_file_config_data["file_length"]["value"]):
 
 	#generate error report
 	edit_report_df = rules_engine.create_edit_report()
-	print(edit_report_df)
+	if DEBUG:
+		print(edit_report_df)
 
 	#apply constraints to force conformity with FIG schema for LAR data
 	while len(edit_report_df[edit_report_df.fail_count>0]):
@@ -71,13 +78,22 @@ for i in range(lar_file_config_data["file_length"]["value"]):
 		rules_engine.reset_results()
 		rules_engine.load_lar_data(lar_row)
 		edit_report_df = rules_engine.create_edit_report()
-		print(len(edit_report_df[edit_report_df.fail_count>0]))
-		print(edit_report_df[edit_report_df.fail_count>0])
+		if DEBUG:
+			print(len(edit_report_df[edit_report_df.fail_count>0]))
+			print(edit_report_df[edit_report_df.fail_count>0])
 	lar_rows.append(lar_row)
 
 lar_rows_df = pd.DataFrame(lar_rows)
-print(lar_rows_df.head())
-lar_rows_df.to_csv("test_lar.txt", sep="|", index=False)
+
+
+clean_filename = filepaths["clean_filename"].format(bank_name=lar_file_config_data["name"]["value"], row_count=lar_file_config_data["file_length"]["value"])
+clean_filepath = filepaths["clean_filepath"].format(bank_name=lar_file_config_data["name"]["value"])
+
+#create directory for test files if it does not exist
+if not os.path.exists(clean_filepath):
+	os.makedirs(clean_filepath)
+
+lar_rows_df.to_csv(clean_filepath+clean_filename, sep="|", index=False)
 
 #TODO
 #enable logging
