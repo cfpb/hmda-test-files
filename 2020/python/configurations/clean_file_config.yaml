@@ -10,14 +10,14 @@
       desc: The federal tax ID of the filing institution
       type: String
       value: 02-1234567
-    calendar_year:
+    activity_year:
       desc: The year of activity
       type: Integer
-      value: 2019
+      value: 2020
     file_length:
       desc: The number of lines in the clean or test data file
       type: Integer
-      value: 100
+      value: 25
     large_file_base_length:
       desc: the row count of the clean file to use as a base for the large clean file
       type: Integer
