@@ -21,12 +21,12 @@ class FileGenerator(object):
 	def __init__(self,filename=''):
 
 		#Loads the filepath configuration.
-		with open('/Users/StoutB/hmda/hmda-test-files/2018/python/configurations/test_filepaths.yaml') as f:
+		with open('configurations/test_filepaths.yaml') as f:
 			#Uses safe_load instead of load.
 			self.filepaths = yaml.safe_load(f)
 
 		#Loads the geographic file configuration.
-		with open('/Users/StoutB/hmda/hmda-test-files/2018/python/configurations/geographic_data.yaml') as f:
+		with open('configurations/geographic_data.yaml') as f:
 			# Uses safe_load instead of load.
 			self.geographic = yaml.safe_load(f)
 
@@ -36,7 +36,7 @@ class FileGenerator(object):
 			self.data_map = yaml.safe_load(f)
 
 		#Loads the edit report configuration.
-		with open('/Users/StoutB/hmda/hmda-test-files/2018/python/configurations/edit_report_config.yaml') as f:
+		with open('configurations/edit_report_config.yaml') as f:
 			# Uses safe_load instead of load.
 			self.edit_report_config = yaml.safe_load(f)
 
