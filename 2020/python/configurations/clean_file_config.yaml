@@ -17,7 +17,7 @@
     file_length:
       desc: The number of lines in the clean or test data file
       type: Integer
-      value: 25
+      value: 10
     large_file_base_length:
       desc: the row count of the clean file to use as a base for the large clean file
       type: Integer

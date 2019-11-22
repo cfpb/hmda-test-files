@@ -7,24 +7,11 @@ import yaml
 
 class lar_data_constraints(object):
 
-	def __init__(self, lar_file_config, geographic_data):#, geo_config_file='configurations/geographic_data.yaml', config_file='configurations/clean_file_config.yaml'):
-		#load geographic configuration and census data
-		print("loading geo data")
-		#with open(geo_config_file, 'r') as f:
-		#	self.geo_config = yaml.safe_load(f)
-
-		#self.geographic_data = pd.read_csv(self.geo_config['geographic_data_file'], delimiter='|', header=0,
-		#	names=self.geo_config['file_columns'], dtype=object) #instantiate Census file data as dataframe
-		
-		#create 5 digit County Codes from 2 digit state and 3 digit county
-		#self.geographic_data['county_fips'] = self.geographic_data.apply(lambda x: str(x.state_code) + str(x.county), axis=1)
-		#create 11 digit Census Tract codes from 5 digit county and 6 digit tract
-		#self.geographic_data["tract_fips"] = self.geographic_data.apply(lambda x: str(x.county_fips) + str(x.tracts), axis=1)
-
-		#with open(config_file) as f:
-			# use safe_load instead load
-		#	self.config_data = yaml.safe_load(f)
-
+	def __init__(self, lar_file_config, geographic_data):
+		"""
+		lar_file_cnfig is a dictionary like object usually loaded from clean_file_config.yaml
+		geographic_data is the HMDA Ops cut of the FFIEC Census Flat File
+		"""
 		self.config_data = lar_file_config
 		self.geographic_data = geographic_data
 		#create list of LAR data constraint functions
