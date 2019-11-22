@@ -4,13 +4,18 @@
 #This script must be run before generate_error_files.py as that script relies on the presence of a clean file to modify.
 #2018 Filing Instruction Guide: https://www.consumerfinance.gov/data-research/hmda/static/for-filers/2018/2018-HMDA-FIG.pdf
 
-from file_generator import FileGenerator 
+import sys
+from file_generator import FileGenerator
 
-#Instantiating the file generator. 
-file = FileGenerator()
+def runGenerator(filename=''):
 
-file.create_files(kind='clean_file')
+    #Instantiating the file generator.
+    file = FileGenerator(filename)
+    file.create_files(kind='clean_file')
 
+if __name__ == '__main__':
 
-
-
+    # check to see if filename is passed in
+    if len(sys.argv) == 2: filename = sys.argv[1]
+    else: filename = 'b.yaml'#'configurations/clean_file_config.yaml'
+    runGenerator(filename)
