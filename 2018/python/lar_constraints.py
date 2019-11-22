@@ -1,5 +1,6 @@
 import random
 import string
+import utils
 
 class lar_constraints(object):
 
@@ -128,10 +129,23 @@ class lar_constraints(object):
 	def v628_1_const(self, row):
 		"""1) Ethnicity of Applicant or Borrower: 1 must equal 1, 11, 12, 13, 14, 2, 3, or 4, and cannot be left blank,
 			   unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other
-			   Hispanic or Latino."""
-		eth_enums = ["1", "11", "12", "13", "14", "2", "3", "4"]
-		if row["app_eth_1"] =="" and row["app_eth_free"] =="":
+			   Hispanic or Latino.
+			   
+			Note: Changes to LAR constraint v628_1 were necessary to remove edit v630_2. 
+			Removing edit v630_2 from the LAR constraints allowed more randomization in 
+			the value for Applicant Ethnicity 1, and caused the program to stall. 
+			This behavior exposed a flaw in LAR constraint v628_1. 
+			Originally, V628_1 did not include a contrapositive condition in the constraint, 
+			which when removing v630_2, caused the program to take a prohibitively longer time 
+			to validate the correct ethnicity codes.
+		"""
+		eth_enums = ["1", "11", "12", "13", "2", "3", "4"]
+		if row["app_eth_free"] == "" and row["app_eth_1"] not in eth_enums:
 			row["app_eth_1"] = random.choice(eth_enums)
+		if row["app_eth_free"] != "" and row["app_eth_1"] in eth_enums:
+			row["app_eth_free"] = ""
+		if (row["app_eth_1"] in ["14", ""]):
+			row["app_eth_free"] = utils.char_string_gen(random.choice(range(100)))
 		return row
 
 	def v628_2_const(self, row):
@@ -192,12 +206,9 @@ class lar_constraints(object):
 	def v630_const(self, row):
 		"""1) If Ethnicity of Applicant or Borrower: 1 equals 4, then Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname 
 			must equal 3.
-		2) If Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname equals 3, then Ethnicity of Applicant or Borrower: 1 
-			must equal 3 or 4."""
+		"""
 		if row["app_eth_1"] == "4":
 			row["app_eth_basis"] = "3"
-		if row["app_eth_basis"] == "3" and row["app_eth_1"] not in ("3", "4"):
-			row["app_eth_1"] = random.choice(("3", "4"))
 		return row
 
 	def v631_1_const(self, row):
