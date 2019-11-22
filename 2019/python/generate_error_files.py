@@ -13,11 +13,13 @@ file = FileGenerator()
 #in the edits_files directory
 file.create_files(kind='error_files')
 
-#The following code validates quality edits to pass syntax and validity edits. 
+#validates quality edits to pass syntax and validity edits. 
 #Stores a list of filenames from the quality edits directory. 
 quality_files = os.listdir(file.filepaths['quality_filepath'].format(bank_name=file.clean_config['name']['value']))
 
 #Validates quality edits and stores them in a new directory specified in the test filepaths configuration. 
+#FIXME: this creates a quality edit file that passes S/V for every file in the directory
+#FIXME: change this to only reference the quality files with the current clean file row count
 for quality_file in quality_files:
 	file.validate_quality_edit_file(quality_filename=quality_file)
 
