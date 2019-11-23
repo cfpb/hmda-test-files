@@ -31,23 +31,7 @@ class lar_gen(object):
 		geo_config_file: the FFIEC flat file with census data used in the HMDA Platform see https://github.com/cfpb/hmda-census
 		"""
 		print("start initialization of LAR generator")
-		#with open(config_file) as f:
-			# use safe_load instead load
-		#	lar_file_config = yaml.safe_load(f)
 
-		#load geographic configuration and census data
-		#print("loading geo data")
-		#with open(geo_config_file, 'r') as f:
-		#	self.geo_config = yaml.safe_load(f)
-
-		#self.geographic_data = pd.read_csv(self.geo_config['geographic_data_file'], delimiter='|', header=0,
-		#	names=self.geo_config['file_columns'], dtype=object) #instantiate Census file data as dataframe
-		
-		#create 5 digit County Codes from 2 digit state and 3 digit county
-		#self.geographic_data['county_fips'] = self.geographic_data.apply(lambda x: str(x.state_code) + str(x.county), axis=1)
-		#create 11 digit Census Tract codes from 5 digit county and 6 digit tract
-		#self.geographic_data["tract_fips"] = self.geographic_data.apply(lambda x: str(x.county_fips) + str(x.tracts), axis=1)
-		#print("geo data loaded")
 		#load Schemas for valid values for fields for LAR and TS
 		with open(lar_schema_file, 'r') as f:
 			lar_schema_json = json.load(f)

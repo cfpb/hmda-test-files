@@ -54,15 +54,6 @@ def write_file(path=None, ts_input=None, lar_input=None, name="test_file.txt"):
 		for line in lar:
 			final_file.write("{line}".format(line=line))
 
-def read_data_frames(ts_df=None, lar_df=None):
-	"""Receives two pandas dataframes (one TS and one LAR) and stores 
-	them as class objects."""
-	if ts_df is not None:
-		self.ts_df = ts_df
-	if lar_df is not None:
-		self.lar_df = lar_df
-	if ts_df is None and lar_df is None:
-		raise ValueError("No data passed.\nNo data written to object.")
 
 def read_data_file(path, data_file, lar_schema=None, ts_schema=None):
 	"""
@@ -86,14 +77,12 @@ def read_data_file(path, data_file, lar_schema=None, ts_schema=None):
 			#split LAR rows from file
 			lar_rows = infile.readlines()
 			lar_data = [line.strip("\n").split("|") for line in lar_rows]
-			#print(ts_data)
-			#create dataframes of TS and LAR data
-			ts_df = pd.DataFrame(data=ts_data, dtype=object, 
-				columns=ts_schema.field)
 
-			lar_df  = pd.DataFrame(data=lar_data, dtype=object, 
-				columns=lar_schema.field)
-			return (ts_df, lar_df)
+			#create dataframes of TS and LAR data
+			ts_df = pd.DataFrame(data=ts_data, dtype=object, columns=ts_schema.field)
+			lar_df  = pd.DataFrame(data=lar_data, dtype=object, columns=lar_schema.field)
+			
+			return ts_df, lar_df
 	else:
 		raise ValueError("A data file must be passed.")
 

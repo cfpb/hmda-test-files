@@ -116,11 +116,8 @@ if DEBUG:
 	logging.info(edit_report_df)
 	print(edit_report_df)
 
-
-
 clean_filename = filepaths["clean_filename"].format(bank_name=bank_config_data["name"]["value"], row_count=bank_config_data["file_length"]["value"])
 clean_filepath = filepaths["clean_filepath"].format(bank_name=bank_config_data["name"]["value"])
-
 
 #create directory for test files if it does not exist
 if not os.path.exists(clean_filepath):

@@ -50,6 +50,7 @@ class rules_engine(object):
 	def load_lar_data(self, lar_df):
 		"""
 		Takes a dataframe of LAR data and stores it as a class variable.
+		attempts a converstion to dataframe if passed object is not a dataframe
 		"""
 		if type(lar_df) != "pandas.core.frame.DataFrame":
 			try: 
@@ -61,6 +62,7 @@ class rules_engine(object):
 	def load_ts_data(self, ts_df):
 		"""
 		Takes a dataframe of TS data and stores it as a class variable. TS data must be a single row.
+		attempts a converstion to dataframe if passed object is not a dataframe
 		"""
 		if type(ts_df) != "pandas.core.frame.DataFrame":
 			try:
