@@ -2811,11 +2811,10 @@ class rules_engine(object):
 	def v717(self):
 		"""
 		The required format for the Contact Person’s Email Address is name@example.com, and it cannot be left blank.
+		a contact email must have @ and . characters and not be blank
 		"""
 		edit_name = "v717"
 		field = "contact_email"
-		#must have @ and . characters and not be blank
-
 		fail_df = self.ts_df[~self.ts_df.contact_email.apply(lambda x: "@" in x and "." in x)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
