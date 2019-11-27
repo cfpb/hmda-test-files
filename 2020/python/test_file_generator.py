@@ -3061,11 +3061,12 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v715_c(self):
-		"""Set Interest-Only Payments to Exempt ("1111"); set 
+		"""
+		Set Interest-Only Payments to Exempt ("1111"); set 
 		Balloon Payments, Negative Amortizing Features, and Other Non-Amortizing Features 
-		to 1."""
-		name = "v715_c.txt"
-		name = self.name_prefix + name
+		to 1.
+		"""
+		name = self.name_prefix + "v715_c.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -3077,11 +3078,12 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v715_d(self):
-		"""Set Negative Amortizing Features to Exempt ("1111"); set 
+		"""
+		Set Negative Amortizing Features to Exempt ("1111"); set 
 		Balloon Payments, Negative Amortizing Features, and Other Non-Amortizing Features 
-		to 1."""
-		name = "v715_d.txt"
-		name = self.name_prefix + name
+		to 1.
+		"""
+		name = self.name_prefix + "v715_d.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -3092,10 +3094,48 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def v717_a(self):
+		"""
+		Set email address to blank
+		"""
+
+		name = self.name_prefix + "v717_a.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		ts["contact_email"] = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v717_b(self):
+		"""
+		Remove @ symbol from email address
+		"""
+		name = self.name_prefix + "v717_b.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		ts["contact_email"] = ts["contact_email"].apply(lambda x: x.replace("@", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+		
+	def v717_c(self):
+		"""
+		Remove . symbol from email address
+		"""
+		name = self.name_prefix + "v717_c.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		ts["contact_email"] = ts["contact_email"].apply(lambda x: x.replace(".", ""))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+		
 	def q600(self):
-		"""Set all ULIs to same value."""
-		name = "q600.txt"
-		name = self.name_prefix + name
+		"""
+		Set all ULIs to same value.
+		"""
+		name = self.name_prefix + "q600.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -3142,28 +3182,6 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	#def q604(self):
-		"""
-		Set state to != NA.
-		Set county to an invalid code for the chosen state.
-		"""
-	#	name = "q604.txt"
-	#	name = self.name_prefix + name
-	#	path = self.quality_path
-	#	ts = self.ts_df.copy()
-	#	lar = self.lar_df.copy()
-	#	lar.state = lar.state.map(lambda x: self.geographic_config['state_FIPS_to_abbreviation'][random.choice(list(self.geographic_data.state_code))])
-		
-		#Sets a state code for each LAR and a county code that does not match the state code. 
-	#	for index, row in lar.iterrows():
-	#		state_code = random.choice(list(self.geographic_data.state_code))
-	#		state_abbrev = self.geographic_config['state_FIPS_to_abbreviation'][state_code]
-	#		row["state"] = state_abbrev
-	#		row["county"] = random.choice(list(self.geographic_data.county_fips[self.geographic_data.state_code!=state_code]))
-			#forces the census tract to conform to an appropriate subset of county codes in order to pass v625 and v627. 
-	#		row["tract"] = row["county"] + random.choice(list(self.geographic_data.tracts[(self.geographic_data.county_fips == row["county"])]))
-	#	print("writing {name}".format(name=name))
-	#	utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def q605_1(self):
 		"""Set purchaser to 1 or 3.
