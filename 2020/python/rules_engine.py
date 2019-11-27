@@ -3033,7 +3033,6 @@ class rules_engine(object):
 		then the Combined Loan-to Value Ratio generally should be greater than or equal to the Loan to-Value Ratio 
 		(calculated as Loan Amount divided by the Property Value).
 		"""
-
 		field = "cltv, Loan Amount, and Property Value"
 		edit_name = "q617"
 		fail_df = self.lar_df[(~self.lar_df.cltv.isin(["NA", "Exempt", ""]))&(~self.lar_df.property_value.isin(["NA", "Exempt",""]))].copy()
@@ -3453,12 +3452,14 @@ class rules_engine(object):
 		field = "app credit score"
 		edit_name = "q649_1"
 		fail_df = self.lar_df[~self.lar_df.app_credit_score.isin(["7777", "8888", "1111"])].copy()
+		fail_df.app_credit_score = fail_df.app_credit_score.apply(lambda x: int(x))
 		fail_df = fail_df[~fail_df.app_credit_score.apply(lambda x: 300 < float(x) < 900)]
 		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
 
 	def q649_2(self):
 		"""
-		If Credit Score of Co-Applicant or Co-Borrower does not equal 7777, 8888, 9999, or 1111, Credit Score should generally be between 300 and 900.
+		If Credit Score of Co-Applicant or Co-Borrower does not equal 7777, 8888, 9999, or 1111, 
+		Credit Score should generally be between 300 and 900.
 		"""
 		field = "app credit score"
 		edit_name = "q649_2"
@@ -3472,7 +3473,8 @@ class rules_engine(object):
 		"""
 		field = "interest rate"
 		edit_name = "q650"
-		fail_df = self.lar_df[self.lar_df.interest_rate.apply(lambda x: 0 < float(x) < 0.5)]
+		fail_df = lar_df[~lar_df.interest_rate.isin(["Exempt", "NA"])]
+		fail_df = self.fail_df[self.fail_df.interest_rate.apply(lambda x: 0 < float(x) < 0.5)]
 		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
 
 	def q651(self):
@@ -3481,6 +3483,7 @@ class rules_engine(object):
 		"""
 		field = "cltv"
 		edit_name = "q651"
+		fail_df = self.lar_df[~self.lar_df.cltv.isin(["NA", "Exempt"])]
 		fail_df = self.lar_df[self.lar_df.cltv.apply(lambda x: 0 < float(x) < 1)]
 		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
 
@@ -3490,6 +3493,7 @@ class rules_engine(object):
 		"""
 		field = "dti"
 		edit_name = "q652"
+		fail_df = self.lar_df[~self.lar_df.dti.isin(["NA", "Exempt"])]
 		fail_df = self.lar_df[self.lar_df.dti.apply(lambda x: 0 < float(x) < 1)]
 		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
 
@@ -3499,16 +3503,18 @@ class rules_engine(object):
 		"""
 		field = "cltv"
 		edit_name = "q653_1"
-		fail_df = self.lar_df[((self.lar_df.action_taken.isin(["1", "2", "8"])&~(self.lar_df.cltv.apply(lambda x: 0.0 < float(x) < 250))))]
+		fail_df = self.lar_df[~self.lar_df.cltv.isin(["NA", "Exempt"])]
+		fail_df = fail_df[((fail_df.action_taken.isin(["1", "2", "8"])&~(fail_df.cltv.apply(lambda x: 0.0 < float(x) < 250))))]
 		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
 
-	def q653_1(self):
+	def q653_2(self):
 		"""
 		If Action Taken equals 3, 4, 5, 6, or 7, the CLTV should generally be between 0 and 1,000.
 		"""
 		field = "cltv"
 		edit_name = "q653_2"
-		fail_df = self.lar_df[((self.lar_df.action_taken.isin("3", "4", "5", "6", "7"))&~(self.lar_df.cltv.apply(lambda x: 0 < float(x) < 1000)))]
+		fail_df = self.lar_df[~self.lar_df.cltv.isin(["NA", "Exempt"])]
+		fail_df = fail_df[((fail_df.action_taken.isin("3", "4", "5", "6", "7"))&~(fail_df.cltv.apply(lambda x: 0 < float(x) < 1000)))]
 		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
 
 	def q654(self):

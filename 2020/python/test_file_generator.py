@@ -84,6 +84,15 @@ class test_data_creator(object):
 				print("must pass a dataframe or convertable structure")
 		self.ts_df = ts_in_df
 
+	def get_different_state_code(self, state):
+		"""
+		Returns a random choice of a state letter code that is different from the original
+		"""
+		state_abbrevs = list(self.state_codes.keys())
+		state_abbrevs.remove(state)
+		new_state = random.choice(state_abbrevs)
+		return random.choice(state_abbrevs)
+
 	#edits will be broken out into sub parts as in the rules_engine.py class. 
 	#This will allow test files to be generated that fail conditions inside each edit.
 
@@ -99,9 +108,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=self.syntax_path, ts_input=ts, lar_input=lar)
 
 	def s300_2_file(self):
-		""""Sets the first character of each LAR row to 3."""
-		name = "s300_2.txt"
-		name = self.name_prefix + name
+		""""
+		Sets the first character of each LAR row to 3.
+		"""
+		name = self.name_prefix + "s300_2.txt"
 		path = self.syntax_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy() #set to local data from class data object
@@ -113,19 +123,20 @@ class test_data_creator(object):
 		"""
 		Changes the LEI of a LAR file such that it does not match the TS.
 		"""
-		name = "s301.txt"
-		name = self.name_prefix + name
+		name = self.name_prefix + "s301.txt"
 		path = self.syntax_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.lei = "KUGELSCHREIBER123456"
 		print("writing {name}".format(name=name))
-		utils.write_file(name="s301.txt", path=path, ts_input=ts, lar_input=lar)
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def s302_file(self):
-		"""Sets the year of submission to 2017"""
-		name = "s302.txt"
-		name = self.name_prefix + name
+		"""
+		Sets the year of submission to 2017
+		"""
+
+		name = self.name_prefix + "s302.txt"
 		path = self.syntax_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -133,10 +144,23 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def s306_file(self):
+		"""
+		Create duplicate ULIs in LAR data
+		"""
+		name = self.name_prefix + "s306.txt"
+		path = self.syntax_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.uli = "BANK1LEIFORTEST1234509275VSFL41TP9CR2BYRXW507"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
 	def v600_file(self):
-		"""Modifies the LEI of TS and LAR so that they do not meed schema requirements"""
-		name = "v600.txt"
-		name = self.name_prefix + name
+		"""
+		Modifies the LEI of TS and LAR so that they do not meed schema requirements
+		"""
+		name = self.name_prefix + "v600.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -146,9 +170,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def s304_file(self):
-		"""Changes the number of entries data so that it does not match the number of LAR rows in the file."""
-		name = "s304.txt"
-		name = self.name_prefix + name
+		"""
+		Changes the number of entries data so that it does not match the number of LAR rows in the file.
+		"""
+		name = self.name_prefix + "s304.txt"
 		path = self.syntax_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -157,9 +182,11 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v601_1_file(self):
-		"""Modifies the TS to blank the FI name."""
-		name = "v601_1.txt"
-		name = self.name_prefix + name
+		"""
+		Modifies the TS to blank the FI name.
+		"""
+
+		name = self.name_prefix + "v601_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -168,9 +195,11 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v601_2_file(self):
-		"""Modify the TS by blanking out the contact person's name."""
-		name = "v601_2.txt"
-		name = self.name_prefix + name
+		"""
+		Modify the TS by blanking out the contact person's name.
+		"""
+
+		name = self.name_prefix + "v601_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -179,9 +208,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v601_3_file(self):
-		"""Modify the TS by blanking the contact person's E-mail address."""
-		name = "v601_3.txt"
-		name = self.name_prefix + name
+		"""
+		Modify the TS by blanking the contact person's E-mail address.
+		"""
+		name = self.name_prefix + "v601_3.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -190,9 +220,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v601_4_file(self):
-		"""Modify the TS so to blank out the contact person's office street address."""
-		name = "v601_4.txt"
-		name = self.name_prefix + name
+		"""
+		Modify the TS so to blank out the contact person's office street address.
+		"""
+		name = self.name_prefix + "v601_4.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -201,9 +232,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v602_file(self):
-		"""Changes TS calendar quarter to 5."""
-		name = "v602.txt"
-		name = self.name_prefix + name
+		"""
+		Changes TS calendar quarter to 5.
+		"""
+		name = self.name_prefix + "v602.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -212,9 +244,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v603_file(self):
-		"""Changes contact number to alphanumeric string."""
-		name = "v603.txt"
-		name = self.name_prefix + name
+		"""
+		Changes contact number to alphanumeric string.
+		"""
+		name = self.name_prefix + "v603.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -223,9 +256,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v604_file(self):
-		"""Converts contact person's office state to two digit number."""
-		name = "v604.txt"
-		name = self.name_prefix + name
+		"""
+		Converts contact person's office state to two digit number.
+		"""
+		name = self.name_prefix + "v604.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -234,9 +268,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v605_file(self):
-		"""Convert contact person's ZIP to string of letters."""
-		name = "v605.txt"
-		name = self.name_prefix + name
+		"""
+		Convert contact person's ZIP to string of letters.
+		"""
+		name = self.name_prefix + "v605.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -245,9 +280,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v606_file(self):
-		"""Convert number of entries to a negative number."""
-		name = "v606.txt"
-		name = self.name_prefix + name
+		"""
+		Convert number of entries to a negative number.
+		"""
+		name = self.name_prefix + "v606.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -256,9 +292,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v607_file(self):
-		"""Changes tax ID to string of letters."""
-		name = "v607.txt"
-		name = self.name_prefix + name
+		"""
+		Changes tax ID to string of letters.
+		"""
+		name = self.name_prefix + "v607.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -266,34 +303,47 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	# under construction
-	# def v608_1_file(self):
-	# 	"""Set a ULI to be a random choice of 22 characters or 46 characters"""
-	# 	name = "v608_1.txt"
-	#   name = self.name_prefix + name
-	# 	path = self.validity_path
-	# 	ts = self.ts_df.copy()
-	# 	lar = self.lar_df.copy()
-	# 	lar['uli'] = random.choice([lar.lei + "DCM78AVG3FFL1YB5H2BR2EDJKLMNO", lar.lei+"AB"])
-	# 	print("writing {name}".format(name=name))
-	# 	utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	# def v608_2_file(self):
-	# 	"""Set a NULI to be greater than 22 characters."""
-	# 	name = "v608_2.txt"
-	#	name = self.name_prefix + name
-	# 	path = self.validity_path
-	# 	ts = self.ts_df.copy()
-	# 	lar = self.lar_df.copy()
-	# 	lar["uli"] = "DCM78AVG3FFL1YB5H2BR2EDJKLMNO"
-	# 	print("writing {name}".format(name=name))
-	# 	utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+	def v608_1_file(self):
+		"""
+		Set a ULI to be a random choice of 22 characters or 49 characters
+		eithr LEI + 29 characters or LEI + 2 characters
+
+		The required format for ULI is alphanumeric with at least 23 characters and up to 45 characters, and it
+		cannot be left blank. 
+
+		The platform checks V608 in two parts depending on if the first 20 characters of the ULI/NULI are the LEI
+		"""
+
+		name = self.name_prefix + "v608_1.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar['uli'] = random.choice([lar.lei + "DCM78AVG3FFL1YB5H2BR2EDJKLMNO", lar.lei+"AB"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v608_2_file(self):
+		"""
+		Set a NULI to be 29 characters.
+
+		The required format for NULI is alphanumeric with at least 1 character and no more than 22 characters,
+		and it cannot be left blank.
+		"""
+		name = self.name_prefix + "v608_2.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar["uli"] = "DCM78AVG3FFL1YB5H2BR2EDJKLMNO"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 
 	def v609_file(self):
-		"""Change check digit on each row. Ensure that the new check digit fails."""
-		name = "v609.txt"
-		name = self.name_prefix + name
+		"""
+		Change check digit on each row. Ensure that the new check digit fails.
+		"""
+		name = self.name_prefix + "v609.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -303,9 +353,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v610_1_file(self):
-		"""Change application date to nine 2's."""
-		name = "v610_1.txt"
-		name = self.name_prefix + name
+		"""
+		Change application date to nine 2's.
+		"""
+		name = self.name_prefix + "v610_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -314,9 +365,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v610_2_file(self):
-		"""Set each row to action taken = 3 and application date = NA."""
-		name = "v610_2.txt"
-		name = self.name_prefix + name
+		"""
+		Set each row to action taken = 3 and application date = NA.
+		"""
+		name = self.name_prefix + "v610_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -326,9 +378,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def s305_file(self):
-		"""Copies the first line of the file into all subsequent lines."""
-		name = "s305.txt"
-		name = self.name_prefix + name
+		"""
+		Copies the first line of the file into all subsequent lines.
+		"""
+		name = self.name_prefix + "s305.txt"
 		path = self.syntax_path
 		ts = self.ts_df.copy()
 		lar_start = self.lar_df.copy()
@@ -340,9 +393,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v611_file(self):
-		"""Sets loan type to 5."""
-		name = "v611.txt"
-		name = self.name_prefix + name
+		"""
+		Sets loan type to 5.
+		"""
+		name = self.name_prefix + "v611.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -351,9 +405,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v612_1_file(self):
-		"""Set loan purpose to 3."""
-		name = "v612_1.txt"
-		name = self.name_prefix + name
+		"""
+		Set loan purpose to 3.
+		"""
+		name = self.name_prefix + "v612_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -362,9 +417,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v612_2_file(self):
-		"""Set preapproval to 1 and loan purpose to a random enumeration that is not 1."""
-		name = "v612_2.txt"
-		name = self.name_prefix + name
+		"""
+		Set preapproval to 1 and loan purpose to a random enumeration that is not 1.
+		"""
+		name = self.name_prefix + "v612_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -374,9 +430,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v613_1_file(self):
-		"""Set preapproval to 3."""
-		name = "v613_1.txt"
-		name = self.name_prefix + name
+		"""
+		Set preapproval to 3.
+		"""
+		name = self.name_prefix + "v613_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -385,9 +442,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v613_2_file(self):
-		"""Set action to 7 or 8, set preapproval to 2."""
-		name = "v613_2.txt"
-		name = self.name_prefix + name
+		"""
+		Set action to 7 or 8, set preapproval to 2.
+		"""
+		name = self.name_prefix + "v613_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -397,9 +455,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v613_3_file(self):
-		"""Set action to random 3, 4, 5, or 6 and preapproval to 1."""
-		name = "v613_3.txt"
-		name = self.name_prefix + name
+		"""
+		Set action to random 3, 4, 5, or 6 and preapproval to 1.
+		"""
+		name = self.name_prefix + "v613_3.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -409,9 +468,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v613_4_file(self):
-		"""Set preapproval to 1 and action taken to random 0, 3, 4, 5, 6."""
-		name = "v613_4.txt"
-		name = self.name_prefix + name
+		"""
+		Set preapproval to 1 and action taken to random 0, 3, 4, 5, 6.
+		"""
+		name = self.name_prefix + "v613_4.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -421,9 +481,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v614_1_file(self):
-		"""Set loan purpose to random 2, 4, 31, 32, or 5 and preapproval to 1."""
-		name = "v614_1.txt"
-		name = self.name_prefix + name
+		"""
+		Set loan purpose to random 2, 4, 31, 32, or 5 and preapproval to 1.
+		"""
+		name = self.name_prefix + "v614_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -433,9 +494,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v614_2_file(self):
-		"""Set affordable units to 1 and preapproval to 1."""
-		name = "v614_2.txt"
-		name = self.name_prefix + name
+		"""
+		Set affordable units to 1 and preapproval to 1.
+		"""
+		name = self.name_prefix + "v614_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -445,9 +507,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v614_3_file(self):
-		"""Set reverse mortgage to 1 and preapproval to 1."""
-		name = "v614_3.txt"
-		name = self.name_prefix + name
+		"""
+		Set reverse mortgage to 1 and preapproval to 1.
+		"""
+		name = self.name_prefix + "v614_3.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -3094,6 +3157,21 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def v716_file(self):
+		"""
+		Set state and county to invalid combination
+
+		The reported State and County are not a valid combination. If neither State nor County were
+		reported NA, then the County must be located within the State.
+		"""
+		name = self.name_prefix + "v716.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.state = lar.state.apply(lambda x: self.get_different_state_code(x))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
 	def v717_a(self):
 		"""
 		Set email address to blank
@@ -3210,13 +3288,13 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def q606(self):
-		"""Set income to 4000."""
+		"""Set income to 40000."""
 		name = "q606.txt"
 		name = self.name_prefix + name
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.income = "4000"
+		lar.income = "40000"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -3307,10 +3385,11 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def q613(self):
-		"""Set business purpose to 1.
-		Set loan purpose to 4."""
-		name = "q613.txt"
-		name = self.name_prefix + name
+		"""
+		Set business purpose to 1.
+		Set loan purpose to 4.
+		"""
+		name = self.name_prefix + "q613.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -3319,10 +3398,9 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def q614(self):
+	def q614_1(self):
 		"""Set borrower age to 240"""
-		name = "q614.txt"
-		name = self.name_prefix + name
+		name = self.name_prefix + "q614.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -3330,10 +3408,23 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def q614_2(self):
+		"""
+		Set co_borrower age to 240
+		"""
+		name = self.name_prefix + "q614_2.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_age = "240"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
 	def q615_1(self):
-		"""Set total loan costs to 1000 and origination charges to 500."""
-		name = "q615_1.txt"
-		name = self.name_prefix + name
+		"""
+		Set total loan costs to 1000 and origination charges to 500.
+		"""
+		name = self.name_prefix + "q615_1.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -3379,13 +3470,19 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def q617(self):
-		"""Set CLTV lower than LTV (using loan_amount/property_value)."""
-		name = "q617.txt"
-		name = self.name_prefix + name
+		"""
+		Set CLTV lower than LTV (using loan_amount/property_value).
+
+		If Loan Type equals 1 and Combined Loan-to-Value Ratio and Property Value are not reported NA or Exempt, 
+		then the Combined Loan-to Value Ratio generally should be greater than or equal to the Loan to-Value Ratio 
+		(calculated as Loan Amount divided by the Property Value).
+		"""
+		name = self.name_prefix + "q617.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.cltv = "1.0"
+		lar.loan_type = "1"
+		lar.cltv = ".08"
 		lar.loan_amount = "240000"
 		lar.property_value = "240000"
 		print("writing {name}".format(name=name))
@@ -3869,17 +3966,14 @@ class test_data_creator(object):
 		Set Agency code for TS to 7. Set Street Address, City, and 
 		Zip Code in LAR to 'Exempt'.
 		"""
-		name = "q647_a.txt"
-		name = self.name_prefix + name
+		name = self.name_prefix + "q647_a.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-
 		ts.agency_code = '7'
 		lar.street_address = 'Exempt'
 		lar.city = 'Exempt'
 		lar.zip_code = 'Exempt'
-
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -3889,16 +3983,145 @@ class test_data_creator(object):
 		Set Agency code for TS to 7. 
 		Set Submission of Application and Initially Payable to 1111.
 		"""
-		name = "q647_b.txt"
-		name = self.name_prefix + name
+		name = self.name_prefix + "q647_b.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-
 		ts.agency_code = '7'
 		lar.app_submission = '1111'
 		lar.initially_payable = '1111'
-
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
+	def q648(self):
+		"""
+		Set action taken to 6 and set the first 20 characters of the ULI to != the LEI
+		If Action Taken equals 1, 2, 3, 4, 5, 7, or 8, the first 20 characters of the ULI should match the reported LEI.
+		"""
+		name = self.name_prefix + "q648.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.uli = "KUGELSCHREIBER123456"
+		lar.action_taken = random.choice(["1", "2", "3", "4", "5", "7", "8"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q649_1(self):
+		"""
+		Set app credit score to random choice of 200 or 1000
+
+		If Credit Score of Applicant or Borrower does not equal 7777, 8888, or 1111, Credit Score should
+		generally be between 300 and 900.
+		"""
+		name = self.name_prefix + "q649_1.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.app_credit_score = random.choice(["200", "1000"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q649_2(self):
+		"""
+		Set co app credit score to random choice of 200 or 1000
+
+		If Credit Score of Co-Applicant or Co-Borrower does not equal 7777, 8888, 9999, or 1111, 
+		Credit Score should generally be between 300 and 900.
+		"""
+		name = self.name_prefix + "q649_2.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.co_app_credit_score = random.choice(["200", "1000"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q650(self):
+		"""
+		Set interest rate to .1
+
+		The Interest Rate reported is greater than 0 but less than 0.5, which may indicate a misplaced decimal point.
+		"""
+		name = self.name_prefix + "q650.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.interest_rate = "0.1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q651(self):
+		"""
+		Set CLTV to .1
+
+		The CLTV reported is greater than 0 but less than 1, which may indicate a misplaced decimal point.
+		"""
+		name = self.name_prefix + "q651.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.cltv = "0.1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q652(self):
+		"""
+		Set DTI to 0.1
+
+		The DTI reported is greater than 0 but less than 1, which may indicate a misplaced decimal point.
+		"""
+		name = self.name_prefix + "q652.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.dti = "0.1"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q653_1(self):
+		"""
+		Set action taken to random choice of 1, 2, or 8 and CLTV to random choice of 0 or 300
+
+		If Action Taken equals 1, 2, or 8, the CLTV should generally be between 0 and 250.
+		"""
+		name = self.name_prefix + "q653_1.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(["1", "2", "8"])
+		lar.cltv = random.choice(["0", "250"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q653_2(self):
+		"""
+		Set action taken to random choice of 3, 4, 5, 6, or 7 and CLTV to 0 or 1100
+
+		If Action Taken equals 3, 4, 5, 6, or 7, the CLTV should generally be between 0 and 1,000.
+		"""
+		name = self.name_prefix + "q653_2.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.action_taken = random.choice(["3", "4", "5", "6", "7"])
+		lar.cltv = random.choice(["0", "1100"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q654(self):
+		"""
+		Set income to 6000, Action Taken to random choice of 1, 2, or 8 and DTI to 0 or 90
+
+		If Income is greater than $5,000 (reported as 5) and Action Taken equals 1, 2, or 8, the DTI should
+		generally be between 0 and 80.
+		"""
+		name = self.name_prefix + "q654.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.income = "6000"
+		lar.action_taken = random.choice(["1", "2", "8"])
+		lar.dti = random.choice(["0", "90"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
