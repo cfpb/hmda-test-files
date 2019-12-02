@@ -4,6 +4,7 @@
 #input to the class will be a pandas dataframe
 
 from collections import OrderedDict
+from datetime import datetime
 import json
 import string
 import time
@@ -44,6 +45,12 @@ class rules_engine(object):
 		print("schema loaded")
 		self.results = []
 
+		self.svq_edit_functions = []
+
+		for func in dir(self):
+			if func[:1] in ("s", "v", "q") and func[1:4].isdigit()==True:
+				self.svq_edit_functions.append(func)
+
 		print("rules engine finished initializing")
 
 
@@ -52,23 +59,24 @@ class rules_engine(object):
 		Takes a dataframe of LAR data and stores it as a class variable.
 		attempts a converstion to dataframe if passed object is not a dataframe
 		"""
-		if type(lar_df) != "pandas.core.frame.DataFrame":
-			try: 
-				lar_df = pd.DataFrame(lar_df, index=[1])
-			except:
-				print("must pass a dataframe or convertable structure")
+	
+		try: 
+			lar_df = pd.DataFrame(lar_df)
+		except:
+			lar_df = pd.DataFrame(lar_df, index=[1])
+
 		self.lar_df = lar_df
 
 	def load_ts_data(self, ts_df):
 		"""
 		Takes a dataframe of TS data and stores it as a class variable. TS data must be a single row.
 		attempts a converstion to dataframe if passed object is not a dataframe
-		"""
-		if type(ts_df) != "pandas.core.frame.DataFrame":
-			try:
-				ts_df = pd.DataFrame(ts_df, index=[0])
-			except:
-				print("must pass a dataframe or convertable structure")
+		"""	
+		try:
+			self.ts_df = ts_df
+		except:
+			ts_df = pd.DataFrame(ts_df, index=[0])
+			
 		self.ts_df = ts_df
 
 	def reset_results(self):
@@ -77,7 +85,7 @@ class rules_engine(object):
 		"""
 		self.results = []
 
-	def split_ts_row(self, data_file):
+	def split_ts_row(self, data_file, load=True):
 		"""
 		Separates TS and LAR portions of a file and returns each as a dataframe.
 		"""
@@ -86,10 +94,16 @@ class rules_engine(object):
 			ts_row = infile.readline().strip("\n")
 			ts_data = []
 			ts_data.append(ts_row.split("|"))
+
 			lar_rows = infile.readlines()
 			lar_data = [line.strip("\n").split("|") for line in lar_rows]
+
 			ts_df = pd.DataFrame(data=ts_data, dtype=object, columns=list(self.ts_schema_df.field))
 			lar_df  = pd.DataFrame(data=lar_data, dtype=object, columns=list(self.lar_schema_df.field))
+		if load == True:	
+			self.lar_df = lar_df
+			self.ts_df = ts_df
+		
 		return ts_df, lar_df
 
 	def create_edit_report(self):
@@ -212,6 +226,17 @@ class rules_engine(object):
 			return True
 		else:
 			return False
+
+	def years_between(self, date1, date2):
+		"""
+		date1: initial date (application date)
+		date2: second date (action date)
+
+		Returns a year approximation of the time between two dates
+		"""
+		date1 = datetime.strptime(date1, "%Y%m%d")
+		date2 = datetime.strptime(date2, "%Y%m%d")
+		return abs((date2 - date1).days)/365
 
 	#### Edit Rules from FIG
 	def s300_1(self):
@@ -2819,22 +2844,29 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	def q600(self):
-		"""1) A duplicate ULI was reported. """
+		"""
+		1) A duplicate ULI was reported. 
+		"""
 		field = "ULI"
 		edit_name = "q600"
 		fail_df = self.lar_df[self.lar_df.duplicated(keep=False, subset='uli')==True]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q601(self):
-		"""1) Application Date occurs more than two years prior to Action Taken Date. """
+		"""
+		1) Application Date occurs more than two years prior to Action Taken Date. 
+		"""
 		field = "Application Date"
 		edit_name = "q601"
 		fail_df = self.lar_df[self.lar_df.app_date!="NA"].copy()
-		fail_df = fail_df[(fail_df.app_date.apply(lambda x: int(x[:4])<2016))]
+		fail_df = fail_df[fail_df.apply(lambda x: self.years_between(x.app_date, x.action_date)<2.0, axis=1)]
+		#fail_df = fail_df[(fail_df.app_date.apply(lambda x: int(str(x)[:4])<2017))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q602(self):
-		"""Street Address was reported NA, however City, State and Zip Code were provided. """
+		"""
+		Street Address was reported NA, however City, State and Zip Code were provided. 
+		"""
 		field = "Street Address"
 		edit_name = "q602"
 		fail_df = self.lar_df[(self.lar_df.street_address=="NA")&
@@ -2842,9 +2874,11 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q603(self):
-		"""1) The County has a population of greater than 30,000
+		"""
+		1) The County has a population of greater than 30,000
 			according to the most recent decennial census and
-			was not reported NA; however Census Tract was reported NA"""
+			was not reported NA; however Census Tract was reported NA
+		"""
 		field = "County/Census Tract"
 		edit_name = "q603"
 		fail_df = self.lar_df[(self.lar_df.tract=="NA")&(~self.lar_df.county.isin(self.geographic_data[self.geographic_data.small_county=="1"]))]
@@ -3438,11 +3472,11 @@ class rules_engine(object):
 		"""
 		If Action Taken equals 1, 2, 3, 4, 5, 7, or 8, the first 20 characters of the ULI should match the reported LEI.
 		"""
-		name = "q648"
+		edit_name = "q648"
 		field = "uli"
 		fail_df = self.lar_df[(self.lar_df.action_taken.isin(["1", "2", "3", "4", "5", "7", "8"]))&
 							   self.lar_df.apply(lambda x: x.uli[:20] != x.lei, axis=1)]
-		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q649_1(self):
 		"""
@@ -3454,7 +3488,7 @@ class rules_engine(object):
 		fail_df = self.lar_df[~self.lar_df.app_credit_score.isin(["7777", "8888", "1111"])].copy()
 		fail_df.app_credit_score = fail_df.app_credit_score.apply(lambda x: int(x))
 		fail_df = fail_df[~fail_df.app_credit_score.apply(lambda x: 300 < float(x) < 900)]
-		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q649_2(self):
 		"""
@@ -3465,7 +3499,7 @@ class rules_engine(object):
 		edit_name = "q649_2"
 		fail_df = self.lar_df[~self.lar_df.co_app_credit_score.isin(["7777", "8888", "1111"])].copy()
 		fail_df = fail_df[~fail_df.app_credit_score.apply(lambda x: 300 < float(x) < 900)]
-		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)		
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)		
 
 	def q650(self):
 		"""
@@ -3473,9 +3507,9 @@ class rules_engine(object):
 		"""
 		field = "interest rate"
 		edit_name = "q650"
-		fail_df = lar_df[~lar_df.interest_rate.isin(["Exempt", "NA"])]
-		fail_df = self.fail_df[self.fail_df.interest_rate.apply(lambda x: 0 < float(x) < 0.5)]
-		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
+		fail_df = self.lar_df[~self.lar_df.interest_rate.isin(["Exempt", "NA"])]
+		fail_df = fail_df[fail_df.interest_rate.apply(lambda x: 0 < float(x) < 0.5)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q651(self):
 		"""
@@ -3483,9 +3517,9 @@ class rules_engine(object):
 		"""
 		field = "cltv"
 		edit_name = "q651"
-		fail_df = self.lar_df[~self.lar_df.cltv.isin(["NA", "Exempt"])]
-		fail_df = self.lar_df[self.lar_df.cltv.apply(lambda x: 0 < float(x) < 1)]
-		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
+		fail_df = self.lar_df[~self.lar_df.cltv.isin(["NA", "Exempt"])].copy()
+		fail_df = fail_df[fail_df.cltv.apply(lambda x: 0 < float(x) < 1)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q652(self):
 		"""
@@ -3493,9 +3527,9 @@ class rules_engine(object):
 		"""
 		field = "dti"
 		edit_name = "q652"
-		fail_df = self.lar_df[~self.lar_df.dti.isin(["NA", "Exempt"])]
-		fail_df = self.lar_df[self.lar_df.dti.apply(lambda x: 0 < float(x) < 1)]
-		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
+		fail_df = self.lar_df[~self.lar_df.dti.isin(["NA", "Exempt"])].copy()
+		fail_df = fail_df[fail_df.dti.apply(lambda x: 0 < float(x) < 1)]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q653_1(self):
 		"""
@@ -3503,9 +3537,9 @@ class rules_engine(object):
 		"""
 		field = "cltv"
 		edit_name = "q653_1"
-		fail_df = self.lar_df[~self.lar_df.cltv.isin(["NA", "Exempt"])]
+		fail_df = self.lar_df[~self.lar_df.cltv.isin(["NA", "Exempt"])].copy()
 		fail_df = fail_df[((fail_df.action_taken.isin(["1", "2", "8"])&~(fail_df.cltv.apply(lambda x: 0.0 < float(x) < 250))))]
-		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q653_2(self):
 		"""
@@ -3513,9 +3547,9 @@ class rules_engine(object):
 		"""
 		field = "cltv"
 		edit_name = "q653_2"
-		fail_df = self.lar_df[~self.lar_df.cltv.isin(["NA", "Exempt"])]
-		fail_df = fail_df[((fail_df.action_taken.isin("3", "4", "5", "6", "7"))&~(fail_df.cltv.apply(lambda x: 0 < float(x) < 1000)))]
-		self.results_wrapper(edit_name=edit_name, field_name=field_name, fail_df=fail_df)
+		fail_df = self.lar_df[~self.lar_df.cltv.isin(["NA", "Exempt"])].copy()
+		fail_df = fail_df[((fail_df.action_taken.isin(("3", "4", "5", "6", "7")))&~(fail_df.cltv.apply(lambda x: 0 < float(x) < 1000)))]
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q654(self):
 		"""
@@ -3527,7 +3561,10 @@ class rules_engine(object):
 		field = "DTI"
 		edit_name = "q654"
 		fail_df = self.lar_df.copy()
-		fail_df = fail_df[~fail_df.dti.isin(["NA", "Exempt"])] #filter exemptions
-		fail_df = fail_df[(fail_df.income>5)&(fail_df.action_taken.isin([1,2,8]))&~(fail_df.dti.apply(lambda x: 0.0 < float(x) < 80))]
+		fail_df = fail_df[~fail_df.dti.isin(["NA", "Exempt"])].copy() #filter exemptions
+		fail_df = fail_df[fail_df.income!="NA"]
+		fail_df = fail_df[(fail_df.income.apply(lambda x: float(x)>5))&(fail_df.action_taken.isin(["1","2","8"]))&~(fail_df.dti.apply(lambda x: 0.0 < float(x) < 80))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+
 
