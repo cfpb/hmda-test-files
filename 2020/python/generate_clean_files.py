@@ -68,7 +68,8 @@ lar_constraints = lar_data_constraints(lar_file_config=lar_file_config_data, geo
 #store original row for diff comparison to see what elements are being changed
 
 ts_row = lar_gen.make_ts_row(bank_file_config=bank_config_data) #create TS row, we only need one
-rules_engine.load_ts_data(ts_row) #loading ts_row to rules_engine converts it to a dataframe for value checking
+ts_df = pd.DataFrame(ts_row, index=[0])
+rules_engine.load_ts_data(ts_df) #loading ts_row to rules_engine converts it to a dataframe for value checking
 lar_rows = [] #list to hold all OrderedDict LAR records before writing to file
 
 for i in range(bank_config_data["file_length"]["value"]):

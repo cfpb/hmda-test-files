@@ -3211,10 +3211,7 @@ class rules_engine(object):
 			Underwriting System Result: 5 should equal 1, 2, 3, 4,
 			8, 13, 18, 19 or 16.
 		"""
-		field = """Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; 
-				Automated Underwriting System: 4; Automated Underwriting System: 5; Automated Underwriting System Result: 1; 
-				Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; 
-				Automated Underwriting System Result: 4; Automated Underwriting System Result: 5"""
+		field = "AUS1; AUS2; AUS3; AUS4; AUS5; AUS_Result1; AUS_Result2; AUS_Result3; AUS_Result4; AUS_Result5"
 		edit_name = "q632"
 		fail_df = self.lar_df[
 			((self.lar_df.aus_1=="3")&(~self.lar_df.aus_result_1.isin(["1","2","3","4","8","13","16","18","19"])))|
@@ -3236,10 +3233,7 @@ class rules_engine(object):
 				Underwriting System Result: 5 should equal 3, 4, 10,
 				15, 18, 19, 20, 21, 22, 23, 24 or 16.
 		"""
-		field = """Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; 
-				Automated Underwriting System: 4; Automated Underwriting System: 5; Automated Underwriting System Result: 1; 
-				Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; 
-				Automated Underwriting System Result: 4; Automated Underwriting System Result: 5"""
+		field = "AUS1; AUS2; AUS3; AUS4; AUS5; AUS_Result1; AUS_Result2; AUS_Result3; AUS_Result4; AUS_Result5"
 		edit_name = "q633"
 		fail_df = self.lar_df[
 			((self.lar_df.aus_1=="4")&(~self.lar_df.aus_result_1.isin(["3","4","10","15","16","18","19","20",
@@ -3349,25 +3343,28 @@ class rules_engine(object):
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q642_1(self):
-		"""1) If Credit Score of Applicant or Borrower equals 7777 indicating a credit score that is not a number, 
-		then Applicant or Borrower, Name and Version of Credit Scoring Model should equal 7 or 8. """
-		field = """Credit Score of Applicant or Borrower; Applicant or Borrower, Name and Version of Credit Scoring Model; 
-		Credit Score of CoApplicant or CoBorrower; CoApplicant or CoBorrower, Name and Version of Credit Scoring Model"""
+		"""
+		1) If Credit Score of Applicant or Borrower equals 7777 indicating a credit score that is not a number, 
+		then Applicant or Borrower, Name and Version of Credit Scoring Model should equal 7 or 8. 
+		"""
+		field = "app credit score/model"
 		edit_name = "q642_1"
 		fail_df = self.lar_df[(self.lar_df.app_credit_score=="7777")&(~self.lar_df.app_score_name.isin(["7","8"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q642_2(self):
-		"""If Credit Score of Co-Applicant or Co-Borrower equals 7777 indicating a credit score that is not a number, 
-		then Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model should equal 7 or 8."""
-		field = """Credit Score of Applicant or Borrower; Applicant or Borrower, Name and Version of Credit Scoring Model; 
-		Credit Score of CoApplicant or CoBorrower; CoApplicant or CoBorrower, Name and Version of Credit Scoring Model"""
+		"""
+		If Credit Score of Co-Applicant or Co-Borrower equals 7777 indicating a credit score that is not a number, 
+		then Co-Applicant or Co-Borrower, Name and Version of Credit Scoring Model should equal 7 or 8.
+		"""
+		field = "co app credit score/model"
 		edit_name = "q642_2"
 		fail_df = self.lar_df[(self.lar_df.co_app_credit_score=="7777")&(~self.lar_df.co_app_score_name.isin(["7","8"]))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q643(self):
-		"""If Automated Underwriting System: 1;
+		"""
+		If Automated Underwriting System: 1;
 			Automated Underwriting System: 2;
 			Automated Underwriting System: 3;
 			Automated Underwriting System: 4; or
@@ -3378,11 +3375,9 @@ class rules_engine(object):
 			Automated Underwriting System Result: 3;
 			Automated Underwriting System Result: 4; or
 			Automated Underwriting System Result: 5
-			should equal 1, 2, 3, 4, 5, 6, 7, 15, or 16."""
-		field = """Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; 
-			Automated Underwriting System: 4; Automated Underwriting System: 5; Automated Underwriting System Result: 1; 
-			Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; 
-			Automated Underwriting System Result: 4; Automated Underwriting System Result: 5"""
+			should equal 1, 2, 3, 4, 5, 6, 7, 15, or 16.
+			"""
+		field = "AUS1; AUS2; AUS3; AUS4; AUS5; AUS_Result1; AUS_Result2; AUS_Result3; AUS_Result4; AUS_Result5"
 		edit_name = "q643"
 		fail_df = self.lar_df[
 				((self.lar_df.aus_1=="1")&(~self.lar_df.aus_result_1.isin(["1","2","3","4","5","6","7","15", "16"])))|
@@ -3403,10 +3398,7 @@ class rules_engine(object):
 			Underwriting System Result: 4; or Automated
 			Underwriting System Result: 5 should equal 8, 9, 10,
 			11, 12, 13, or 16. """
-		field = """Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting System: 3; 
-			Automated Underwriting System: 4; Automated Underwriting System: 5; Automated Underwriting System Result: 1; 
-			Automated Underwriting System Result: 2; Automated Underwriting System Result: 3; 
-			Automated Underwriting System Result: 4; Automated Underwriting System Result: 5"""
+		field = "AUS1; AUS2; AUS3; AUS4; AUS5; AUS_Result1; AUS_Result2; AUS_Result3; AUS_Result4; AUS_Result5"
 		edit_name = "q644"
 		fail_df = self.lar_df[
 				((self.lar_df.aus_1=="2")&(~self.lar_df.aus_result_1.isin(["8","9","10","11","12","13","16"])))|

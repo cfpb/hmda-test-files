@@ -111,7 +111,7 @@ for file in edit_file_names:
 	rules_engine.reset_results() #clear previous edit report results
 	ts_df, lar_df = rules_engine.split_ts_row(file)
 	for rule in rules_engine.svq_edit_functions:
-		if all_edits == False:
+		if all_edits == False: #only test for the edit in the file name
 			if rule in file:
 				getattr(rules_engine, rule)()
 		else:
@@ -126,19 +126,19 @@ for file in edit_file_names:
 
 print(len(clean_report_df), "clean file edit report rows")
 print(len(edit_report_df), "edit file edit report rows")
-print(edit_report_df)
 
-#report: file_name, edit name, fail count, rows failed
-#create trimmed edit test file report where edit_name = file_name[:-4]
-#loop over edit test files and create report of whether or not they failed the edit with fail lines = TS row count
-#only test for the edit in the file name
-#report: file_name, edit name, fail count, rows not failed (these files should fail all rows for the edit in their name)
-
-print(edit_report_path)
 #save report outputs
 if not os.path.exists(edit_report_path):
 	os.makedirs(edit_report_path)
 
+#reset index to drop starter row
+clean_report_df.reset_index(drop=True, inplace=True)
+edit_report_df.reset_index(drop=True, inplace=True)
+#remove starter row
+clean_report_df.drop(0, inplace=True)
+edit_report_df.drop(0, inplace=True)
+
 clean_report_df.to_csv(edit_report_path + filepaths['clean_file_report_output_filename'].format(bank_name=bank_config_data["name"]["value"])
-	,index=False)
-edit_report_df.to_csv(edit_report_path + filepaths['edit_report_output_filename'].format(bank_name=bank_config_data["name"]["value"]),index=False)
+	,sep="|", index=False)
+edit_report_df.to_csv(edit_report_path + filepaths['edit_report_output_filename'].format(bank_name=bank_config_data["name"]["value"]),
+	 sep="|", index=False)

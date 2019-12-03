@@ -59,30 +59,30 @@ class test_data_creator(object):
 
 		del filepaths
 
-	def load_lar_data(self, lar_in_df):
+	def load_lar_data(self, lar_df):
 		"""
 		Takes a dataframe of LAR data and stores it as a class variable.
 		attempts a converstion to dataframe if passed object is not a dataframe
 		"""
-		if type(lar_in_df) != "pandas.core.frame.DataFrame":
-			try: 
-				lar_in_df = pd.DataFrame(lar_in_df, index=[1])
-			except:
-				print("must pass a dataframe or convertable structure")
-		self.lar_df = lar_in_df
+	
+		try: 
+			lar_df = pd.DataFrame(lar_df)
+		except:
+			lar_df = pd.DataFrame(lar_df, index=[1])
 
-	def load_ts_data(self, ts_in_df):
+		self.lar_df = lar_df
+
+	def load_ts_data(self, ts_df):
 		"""
 		Takes a dataframe of TS data and stores it as a class variable. TS data must be a single row.
 		attempts a converstion to dataframe if passed object is not a dataframe
-		"""
-
-		if type(ts_in_df) != "pandas.core.frame.DataFrame":
-			try:
-				ts_in_df = pd.DataFrame(ts_in_df, index=[0])
-			except:
-				print("must pass a dataframe or convertable structure")
-		self.ts_df = ts_in_df
+		"""	
+		try:
+			self.ts_df = ts_df
+		except:
+			ts_df = pd.DataFrame(ts_df, index=[0])
+			
+		self.ts_df = ts_df
 
 	def get_different_state_code(self, state):
 		"""
