@@ -14,5 +14,5 @@ log_filename: 'clean_files_log.txt'
 log_mode: 'w'
 
 edit_report_output_filepath: "../edit_reports/"
-clean_file_report_output_filename: "{bank_name}_clean_file_report.csv"
-edit_report_output_filename: "{bank_name}_edit_file_report.csv"
+clean_file_report_output_filename: "{bank_name}_clean_file_report.txt"
+edit_report_output_filename: "{bank_name}_edit_file_report.txt"

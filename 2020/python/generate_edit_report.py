@@ -49,7 +49,7 @@ geographic_data["tract_fips"] = geographic_data.apply(lambda x: str(x.county_fip
 
 #instantiate rules engine to test clean and error files
 rules_engine = rules_engine(config_data=lar_file_config_data, state_codes=geo_config["state_codes"], 
-	state_codes_rev=geo_config["state_codes_rev"], geographic_data=geographic_data, full_lar_file_check=False)
+	state_codes_rev=geo_config["state_codes_rev"], geographic_data=geographic_data, full_lar_file_check=True)
 
 #get paths to check for clean files (by bank name)
 bank_clean_dir = filepaths["clean_filepath"].format(bank_name=bank_config_data["name"]["value"])
@@ -90,7 +90,7 @@ edit_report_df = pd.DataFrame([], columns=['file_name', 'edit_name', 'row_type',
 #loop over each clean file and compile report of files that failed edits. 
 #Produce edit report for each file with fails
 
-
+print("starting clean file loop")
 for file in clean_file_names:
 	rules_engine.reset_results() #clear previous edit report results
 	#print(file)
@@ -105,6 +105,7 @@ for file in clean_file_names:
 		new_results_df = new_results_df[['file_name', 'edit_name', 'row_type', 'field', 'fail_count', 'failed_rows']] 
 		clean_report_df = pd.concat([clean_report_df, new_results_df])
 
+print("starting test file loop")
 all_edits = False
 for file in edit_file_names:
 	#print(file)
@@ -113,6 +114,7 @@ for file in edit_file_names:
 	for rule in rules_engine.svq_edit_functions:
 		if all_edits == False: #only test for the edit in the file name
 			if rule in file:
+				#print("in rule", rule)
 				getattr(rules_engine, rule)()
 		else:
 			getattr(rules_engine, rule)()

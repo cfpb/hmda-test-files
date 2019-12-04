@@ -5,4 +5,4 @@
     large_file_write_length:
       desc: The number of lines in the large clean file
       type: Integer
-      value: 500000
+      value: 1000000

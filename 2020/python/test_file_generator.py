@@ -96,7 +96,7 @@ class test_data_creator(object):
 	#edits will be broken out into sub parts as in the rules_engine.py class. 
 	#This will allow test files to be generated that fail conditions inside each edit.
 
-	def s300_1_file(self):
+	def s300_1(self):
 		"""
 		Sets the first character of the first row of the file to 3.
 		"""
@@ -107,7 +107,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=self.syntax_path, ts_input=ts, lar_input=lar)
 
-	def s300_2_file(self):
+	def s300_2(self):
 		""""
 		Sets the first character of each LAR row to 3.
 		"""
@@ -119,7 +119,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def s301_file(self):
+	def s301(self):
 		"""
 		Changes the LEI of a LAR file such that it does not match the TS.
 		"""
@@ -131,7 +131,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def s302_file(self):
+	def s302(self):
 		"""
 		Sets the year of submission to 2017
 		"""
@@ -144,7 +144,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def s306_file(self):
+	def s306(self):
 		"""
 		Create duplicate ULIs in LAR data
 		"""
@@ -156,7 +156,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v600_file(self):
+	def v600(self):
 		"""
 		Modifies the LEI of TS and LAR so that they do not meed schema requirements
 		"""
@@ -169,7 +169,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def s304_file(self):
+	def s304(self):
 		"""
 		Changes the number of entries data so that it does not match the number of LAR rows in the file.
 		"""
@@ -181,7 +181,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v601_1_file(self):
+	def v601_1(self):
 		"""
 		Modifies the TS to blank the FI name.
 		"""
@@ -194,7 +194,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v601_2_file(self):
+	def v601_2(self):
 		"""
 		Modify the TS by blanking out the contact person's name.
 		"""
@@ -207,7 +207,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v601_3_file(self):
+	def v601_3(self):
 		"""
 		Modify the TS by blanking the contact person's E-mail address.
 		"""
@@ -219,7 +219,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v601_4_file(self):
+	def v601_4(self):
 		"""
 		Modify the TS so to blank out the contact person's office street address.
 		"""
@@ -231,7 +231,18 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v602_file(self):
+	def v601_5(self):
+		"""
+		"""
+		name = self.name_prefix + "v601_5.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		ts.office_city = ""
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v602(self):
 		"""
 		Changes TS calendar quarter to 5.
 		"""
@@ -243,7 +254,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v603_file(self):
+	def v603(self):
 		"""
 		Changes contact number to alphanumeric string.
 		"""
@@ -255,7 +266,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v604_file(self):
+	def v604(self):
 		"""
 		Converts contact person's office state to two digit number.
 		"""
@@ -267,7 +278,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v605_file(self):
+	def v605(self):
 		"""
 		Convert contact person's ZIP to string of letters.
 		"""
@@ -279,7 +290,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v606_file(self):
+	def v606(self):
 		"""
 		Convert number of entries to a negative number.
 		"""
@@ -291,7 +302,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v607_file(self):
+	def v607(self):
 		"""
 		Changes tax ID to string of letters.
 		"""
@@ -304,7 +315,7 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 
-	def v608_1_file(self):
+	def v608_1(self):
 		"""
 		Set a ULI to be a random choice of 22 characters or 49 characters
 		eithr LEI + 29 characters or LEI + 2 characters
@@ -323,7 +334,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v608_2_file(self):
+	def v608_2(self):
 		"""
 		Set a NULI to be 29 characters.
 
@@ -339,7 +350,7 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 
-	def v609_file(self):
+	def v609(self):
 		"""
 		Change check digit on each row. Ensure that the new check digit fails.
 		"""
@@ -352,7 +363,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v610_1_file(self):
+	def v610_1(self):
 		"""
 		Change application date to nine 2's.
 		"""
@@ -364,7 +375,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v610_2_file(self):
+	def v610_2(self):
 		"""
 		Set each row to action taken = 3 and application date = NA.
 		"""
@@ -377,7 +388,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def s305_file(self):
+	def s305(self):
 		"""
 		Copies the first line of the file into all subsequent lines.
 		"""
@@ -392,7 +403,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v611_file(self):
+	def v611(self):
 		"""
 		Sets loan type to 5.
 		"""
@@ -404,7 +415,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v612_1_file(self):
+	def v612_1(self):
 		"""
 		Set loan purpose to 3.
 		"""
@@ -416,7 +427,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v612_2_file(self):
+	def v612_2(self):
 		"""
 		Set preapproval to 1 and loan purpose to a random enumeration that is not 1.
 		"""
@@ -429,7 +440,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v613_1_file(self):
+	def v613_1(self):
 		"""
 		Set preapproval to 3.
 		"""
@@ -441,7 +452,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v613_2_file(self):
+	def v613_2(self):
 		"""
 		Set action to 7 or 8, set preapproval to 2.
 		"""
@@ -454,7 +465,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v613_3_file(self):
+	def v613_3(self):
 		"""
 		Set action to random 3, 4, 5, or 6 and preapproval to 1.
 		"""
@@ -467,7 +478,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v613_4_file(self):
+	def v613_4(self):
 		"""
 		Set preapproval to 1 and action taken to random 0, 3, 4, 5, 6.
 		"""
@@ -480,7 +491,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v614_1_file(self):
+	def v614_1(self):
 		"""
 		Set loan purpose to random 2, 4, 31, 32, or 5 and preapproval to 1.
 		"""
@@ -493,7 +504,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v614_2_file(self):
+	def v614_2(self):
 		"""
 		Set affordable units to 1 and preapproval to 1.
 		"""
@@ -506,7 +517,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v614_3_file(self):
+	def v614_3(self):
 		"""
 		Set reverse mortgage to 1 and preapproval to 1.
 		"""
@@ -519,7 +530,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v614_4_file(self):
+	def v614_4(self):
 		"""Set open end credit to 1 and preapproval to 1."""
 		name = "v614_4.txt"
 		name = self.name_prefix + name
@@ -531,7 +542,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v615_1_file(self):
+	def v615_1(self):
 		"""Set construction method to 3."""
 		name = "v615_1.txt"
 		name = self.name_prefix + name
@@ -542,7 +553,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v615_2_file(self):
+	def v615_2(self):
 		"""Set manufactured interest to random 1, 2, 3 or 4 and construction method to 1."""
 		name = "v615_2.txt"
 		name = self.name_prefix + name
@@ -554,7 +565,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v615_3_file(self):
+	def v615_3(self):
 		"""Set manufactured type to 1 or 2 and construction method to 1."""
 		name = "v615_3.txt"
 		name = self.name_prefix + name
@@ -566,7 +577,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v616_file(self):
+	def v616(self):
 		"""Set occupancy to 4."""
 		name = "v616.txt"
 		name = self.name_prefix + name
@@ -577,7 +588,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v617_file(self):
+	def v617(self):
 		"""Set loan amount to 0."""
 		name = "v617.txt"
 		name = self.name_prefix + name
@@ -588,7 +599,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v618_file(self):
+	def v618(self):
 		"""Set action taken to 0 or NA."""
 		name = "v618.txt"
 		name = self.name_prefix + name
@@ -599,7 +610,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v619_1_file(self):
+	def v619_1(self):
 		"""Set action taken date to NA."""
 		name = "v619_1.txt"
 		name = self.name_prefix + name
@@ -610,7 +621,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v619_2_file(self):
+	def v619_2(self):
 		"""Set action taken date to 20160101."""
 		name = "v619_2.txt"
 		name = self.name_prefix + name
@@ -621,7 +632,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v619_3_file(self):
+	def v619_3(self):
 		"""Set action taken date to 20160101"""
 		name = "v619_3.txt"
 		name = self.name_prefix + name
@@ -633,7 +644,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v620_file(self):
+	def v620(self):
 		"""Set street address to blank."""
 		name = "v620.txt"
 		name = self.name_prefix + name
@@ -644,7 +655,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v621_file(self):
+	def v621(self):
 		"""Set city to blank."""
 		name = "v621.txt"
 		name = self.name_prefix + name
@@ -655,7 +666,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v622_1_file(self):
+	def v622_1(self):
 		"""Set street address to random string, set City to NA."""
 		name = "v622_1.txt"
 		name = self.name_prefix + name
@@ -667,7 +678,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v622_2_file(self):
+	def v622_2(self):
 		"""Set street address to random string, set State to NA."""
 		name = "v622_2.txt"
 		name = self.name_prefix + name
@@ -679,7 +690,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v622_3_file(self):
+	def v622_3(self):
 		"""Set street address to random string, set ZIP code to NA."""
 		name = "v622_3.txt"
 		name = self.name_prefix + name
@@ -692,7 +703,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v623_file(self):
+	def v623(self):
 		"""Set state code to blank or 11."""
 		name = "v623.txt"
 		name = self.name_prefix + name
@@ -703,7 +714,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v624_file(self):
+	def v624(self):
 		"""Set ZIP code to blank or random string of letters.
 
 		Impact of S2155: Update to 1) The required format for Zip Code is 12345-1010, 12345, Exempt, or NA, 
@@ -718,7 +729,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v625_1_file(self):
+	def v625_1(self):
 		"""Set Census Tract to blank or 11 digit letter string."""
 		name = "v625_1.txt"
 		name = self.name_prefix + name
@@ -729,7 +740,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v625_2_file(self):
+	def v625_2(self):
 		"""Set Census Tract to 12345679012."""
 		name = "v625_2.txt"
 		name = self.name_prefix + name
@@ -740,7 +751,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v626_file(self):
+	def v626(self):
 		"""Set County to 6 digit number."""
 		name = "v626.txt"
 		name = self.name_prefix + name
@@ -751,7 +762,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v627_file(self):
+	def v627(self):
 		"""Set County and Tract to strings of 5 and 11 digit length."""
 		name = "v627.txt"
 		name = self.name_prefix + name
@@ -763,7 +774,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v628_1_file(self):
+	def v628_1(self):
 		"""Set all applicant ethnicity fields to blank."""
 		name = "v628_1.txt"
 		name = self.name_prefix + name
@@ -779,7 +790,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v628_2_file(self):
+	def v628_2(self):
 		"""Set app ethnicity 2-5 to 3."""
 		name = "v628_2.txt"
 		name = self.name_prefix + name
@@ -793,7 +804,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v628_3_file(self):
+	def v628_3(self):
 		"""Set all applicant ethnicity codes to 1."""
 		name = "v628_3.txt"
 		name = self.name_prefix + name
@@ -808,7 +819,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v628_4_file(self):
+	def v628_4(self):
 		"""Set applicant ethnicity 1 to 3 or 4. Set all other applicant ethnicities to 1."""
 		name = "v628_4.txt"
 		name = self.name_prefix + name
@@ -823,7 +834,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v629_1_file(self):
+	def v629_1(self):
 		"""Set applicant ethnicity basis to 4."""
 		name = "v629_1.txt"
 		name = self.name_prefix + name
@@ -834,7 +845,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v629_2_file(self):
+	def v629_2(self):
 		"""Set applicant ethnicity basis to 1. Set applicant ethnicity 1 = 3. Set all other applicant ethnicities to 1."""
 		name = "v629_2.txt"
 		name = self.name_prefix + name
@@ -850,10 +861,11 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v629_3_file(self):
-		"""Set applicant ethnicity basis to 2. Set applicant ethnicity 1 to 4."""
-		name = "v629_3.txt"
-		name = self.name_prefix + name
+	def v629_3(self):
+		"""
+		Set applicant ethnicity basis to 2. Set applicant ethnicity 1 to 4.
+		"""
+		name = self.name_prefix + "v629_3.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -862,22 +874,27 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v630_file(self):
-		"""Set applicant ethnicity 1 to 4. Set applicant ethnicity basis to 2."""
-		name = "v630.txt"
-		name = self.name_prefix + name
+	def v630(self):
+		"""
+		1) If Ethnicity of Applicant or Borrower: 1 equals 4, 
+		then Ethnicity of Applicant or Borrower Collected on the Basis of Visual Observation or Surname must equal 3.
+
+		Set applicant ethnicity 1 to 4. Set applicant ethnicity basis to 2.
+		"""
+		name = self.name_prefix + "v630.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.app_eth_basis = "2"
 		lar.app_eth_1 = "4"
+		lar.app_eth_basis = "2"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v631_1_file(self):
-		"""Set co-app ethnicity 1 to blank. Set co-app ethnicity free text to blank."""
-		name = "v631_1.txt"
-		name = self.name_prefix + name
+	def v631_1(self):
+		"""
+		Set co-app ethnicity 1 to blank. Set co-app ethnicity free text to blank.
+		"""
+		name = self.name_prefix + "v631_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -886,7 +903,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v631_2_file(self):
+	def v631_2(self):
 		"""Set co-app ethnicity 2-5 to 3."""
 		name = "v631_2.txt"
 		name = self.name_prefix + name
@@ -900,7 +917,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v631_3_file(self):
+	def v631_3(self):
 		"""Set all co-app ethnicities to 1."""
 		name = "v631_3.txt"
 		name = self.name_prefix + name
@@ -915,7 +932,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v631_4_file(self):
+	def v631_4(self):
 		"""Set co-app ethnicity 1 to random choice of 3, 4, 5. Set co-app ethnicity 2-5 to 1."""
 		name = "v631_4.txt"
 		name = self.name_prefix + name
@@ -930,7 +947,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v632_1_file(self):
+	def v632_1(self):
 		"""Set co-app ethnicity basis to 5"""
 		name = "v632_1.txt"
 		name = self.name_prefix + name
@@ -941,7 +958,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v632_2_file(self):
+	def v632_2(self):
 		"""Set co-app ethnicity basis to 1. Set co-app ethnicity 1 to 3. 
 		Set co-app ethnicity 2 to 3. Set co-app ethnicity 3-5 to 1"""
 		name = "v632_2.txt"
@@ -958,7 +975,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v632_3_file(self):
+	def v632_3(self):
 		"""Set co-app ethnicity basis to 2. Set co-app ethnicity 1 to 4."""
 		name = "v632_3.txt"
 		name = self.name_prefix + name
@@ -970,7 +987,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v633_file(self):
+	def v633(self):
 		"""Set co-app ethnicity 1 to 4. Set co-app ethnicity basis to 1."""
 		name = "v633.txt"
 		name = self.name_prefix + name
@@ -982,7 +999,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v634_file(self):
+	def v634(self):
 		"""For the first half of the file:
 		Set co-app ethnicity 1 to 5.
 		Set co-app ethnicity basis to 3
@@ -1002,7 +1019,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v635_1_file(self):
+	def v635_1(self):
 		"""Set app race 1 to blank. Set all race text fields to blank."""
 		name = "v635_1.txt"
 		name = self.name_prefix + name
@@ -1016,7 +1033,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v635_2_file(self):
+	def v635_2(self):
 		"""Set app races 2-5 to 6."""
 		name = "v635_2.txt"
 		name = self.name_prefix + name
@@ -1030,7 +1047,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v635_3_file(self):
+	def v635_3(self):
 		"""Set all applicant race fields to 1."""
 		name = "v635_3.txt"
 		name = self.name_prefix + name
@@ -1045,7 +1062,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v635_4_file(self):
+	def v635_4(self):
 		"""Set app race to 6 or 7. 
 		Set app races 2-5 to random choice of 1-5."""
 		name = "v635_4.txt"
@@ -1061,7 +1078,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v636_1_file(self):
+	def v636_1(self):
 		"""Set app race basis to 4."""
 		name = "v636_1.txt"
 		name = self.name_prefix + name
@@ -1072,7 +1089,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v636_2_file(self):
+	def v636_2(self):
 		"""Set app race basis to 1. Set app race 1 to blank. Set app races 2-5 to 6."""
 		name = "v636_2.txt"
 		name = self.name_prefix + name
@@ -1088,7 +1105,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v636_3_file(self):
+	def v636_3(self):
 		"""Set app race basis to 2. Set app race 1 to blank. Set app races 2-5 to 6."""
 		name = "v636_3.txt"
 		name = self.name_prefix + name
@@ -1104,7 +1121,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v637_file(self):
+	def v637(self):
 		"""Set app race 1 to 7. Set app race basis to 1 or 2."""
 		name = "v637.txt"
 		name = self.name_prefix + name
@@ -1116,7 +1133,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v638_1_file(self):
+	def v638_1(self):
 		"""Set co-app race 1 to blank. Set all co-app race text fields to blank."""
 		name = "v638_1.txt"
 		name = self.name_prefix + name
@@ -1130,7 +1147,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v638_2_file(self):
+	def v638_2(self):
 		"""Set co-applicant races 2-5 to 6."""
 		name = "v638_2.txt"
 		name = self.name_prefix + name
@@ -1144,7 +1161,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v638_3_file(self):
+	def v638_3(self):
 		"""Set all co-applicant race codes to 1."""
 		name = "v638_3.txt"
 		name = self.name_prefix + name
@@ -1159,7 +1176,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v638_4_file(self):
+	def v638_4(self):
 		"""Set co-applicant race 1 to random choice of 6, 7, 8. Set co-applicant races 2-5 to 1."""
 		name = "v638_4.txt"
 		name = self.name_prefix + name
@@ -1174,7 +1191,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v639_1_file(self):
+	def v639_1(self):
 		"""Set co-applicant race basis to 5."""
 		name = "v639_1.txt"
 		name = self.name_prefix + name
@@ -1185,7 +1202,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v639_2_file(self):
+	def v639_2(self):
 		"""Set co_app race basis to 1. Set co-app race 1 to 21. Set co-app races 2-5 to 21."""
 		name = "v639_2.txt"
 		name = self.name_prefix + name
@@ -1201,7 +1218,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v639_3_file(self):
+	def v639_3(self):
 		"""Set co-app race basis to 2. Set co-app race 1 to blank. Set co-app races 2-5 to 6."""
 		name = "v639_3.txt"
 		name = self.name_prefix + name
@@ -1217,7 +1234,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v640_file(self):
+	def v640(self):
 		"""Set co-app race 1 to 7. Set co-app race basis to 1 or 2."""
 		name = "v640.txt"
 		name = self.name_prefix + name
@@ -1229,7 +1246,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v641_file(self):
+	def v641(self):
 		"""Set co-app race 1 = 8. Set co-app race basis to random choice of 1-3."""
 		name = "v641.txt"
 		name = self.name_prefix + name
@@ -1241,7 +1258,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v642_1_file(self):
+	def v642_1(self):
 		"""Set applicant sex to 5."""
 		name = "v642_1.txt"
 		name = self.name_prefix + name
@@ -1252,7 +1269,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v642_2_file(self):
+	def v642_2(self):
 		"""Set applicant sex basis to 5."""
 		name = "v642_2.txt"
 		name = self.name_prefix + name
@@ -1263,10 +1280,11 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v643_1_file(self):
-		"""Set applicant sex basis to 1. Set applicant sex to 3."""
-		name = "v643.txt"
-		name = self.name_prefix + name
+	def v643(self):
+		"""
+		Set applicant sex basis to 1. Set applicant sex to 3.
+		"""
+		name = self.name_prefix + "v643.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -1275,7 +1293,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v644_1_file(self):
+	def v644_1(self):
 		"""Set applicant sex basis to 2. Set applicant sex to 4 or 5."""
 		name = "v644_1.txt"
 		name = self.name_prefix + name
@@ -1287,7 +1305,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v644_2_file(self):
+	def v644_2(self):
 		"""Set applicant sex to 6. Set applicant sex basis to 1."""
 		name = "v644_2.txt"
 		name = self.name_prefix + name
@@ -1299,7 +1317,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v645_file(self):
+	def v645(self):
 		"""Set applicant sex to 4. Set applicant sex basis to 1 or 2."""
 		name = "v645.txt"
 		name = self.name_prefix + name
@@ -1311,7 +1329,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v646_1_file(self):
+	def v646_1(self):
 		"""Set co-applicant sex to 5."""
 		name = "v646_1.txt"
 		name = self.name_prefix + name
@@ -1322,7 +1340,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v646_2_file(self):
+	def v646_2(self):
 		"""Set co-applicant sex basis to 5."""
 		name = "v646_2.txt"
 		name = self.name_prefix + name
@@ -1333,10 +1351,11 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v647_1_file(self):
-		"""Set co-app sex basis to 1. Set co-app sex to 3 or 4."""
-		name = "v647.txt"
-		name = self.name_prefix + name
+	def v647(self):
+		"""
+		Set co-app sex basis to 1. Set co-app sex to 3 or 4.
+		"""
+		name = self.name_prefix + "v647.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -1345,7 +1364,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v648_1_file(self):
+	def v648_1(self):
 		"""Set co-app sex basis to 2. Set co-app sex to 4 or 5."""
 		name = "v648_1.txt"
 		name = self.name_prefix + name
@@ -1357,7 +1376,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v648_2_file(self):
+	def v648_2(self):
 		"""
 		Set co-app sex to 6. Set co app sex basis to random choice of 1, 4.
 
@@ -1373,7 +1392,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v649_file(self):
+	def v649(self):
 		"""Set co-app sex to 4. Set co-app sex basis to 1 or 2."""
 		name = "v649.txt"
 		name = self.name_prefix + name
@@ -1385,7 +1404,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v650_file(self):
+	def v650(self):
 		"""Set co-app sex basis to 4. Set co-app sex to random choice of 1-4."""
 		name = "v650.txt"
 		name = self.name_prefix + name
@@ -1397,7 +1416,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v651_1_file(self):
+	def v651_1(self):
 		"""Set app age to 0."""
 		name = "v651_1.txt"
 		name = self.name_prefix + name
@@ -1408,7 +1427,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v651_2_file(self):
+	def v651_2(self):
 		"""Set app ethnicity 1 to 4. Set app race 1 to 7. Set app sex to 4. Set app age to 42."""
 		name = "v651_2.txt"
 		name = self.name_prefix + name
@@ -1422,7 +1441,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v652_1_file(self):
+	def v652_1(self):
 		"""Set co-app age to 0."""
 		name = "v652_1.txt"
 		name = self.name_prefix + name
@@ -1433,7 +1452,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v652_2_file(self):
+	def v652_2(self):
 		"""Set co-app ethnicity 1 to 4. Set co-app race 1 to 7. Set co-app sex to 4. Set co-app age to 42."""
 		name = "v652_2.txt"
 		name = self.name_prefix + name
@@ -1447,7 +1466,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v654_1_file(self):
+	def v654_1(self):
 		"""Set income to 1.5."""
 		name = "v654_1.txt"
 		name = self.name_prefix + name
@@ -1458,7 +1477,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v654_2_file(self):
+	def v654_2(self):
 		"""Set affordable units to 5. Set income to 42."""
 		name = "v654_2.txt"
 		name = self.name_prefix + name
@@ -1470,7 +1489,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v655_1_file(self):
+	def v655_1(self):
 		"""Set app ethnicity 1 to 4. Set app race 1 to 7. Set app sex to 4. Set income to 42."""
 		name = "v655_1.txt"
 		name = self.name_prefix + name
@@ -1484,7 +1503,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v655_2_file(self):
+	def v655_2(self):
 		"""Set co-app ethnicity 1 to 4. Set co-app race 1 to 7. Set co-app sex to 4. Set income to 42."""
 		name = "v655_2.txt"
 		name = self.name_prefix + name
@@ -1498,7 +1517,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v656_1_file(self):
+	def v656_1(self):
 		"""Set purchaser type to 10."""
 		name = "v656_1.txt"
 		name = self.name_prefix + name
@@ -1509,7 +1528,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v656_2_file(self):
+	def v656_2(self):
 		"""Set action taken to random choice of 2, 3, 4, 5, 7, 8. Set purchaser type to random 1-9."""
 		name = "v656_2.txt"
 		name = self.name_prefix + name
@@ -1521,7 +1540,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v657_1_file(self):
+	def v657_1(self):
 		"""Set rate spread to blank."""
 		name = "v657_1.txt"
 		name = self.name_prefix + name
@@ -1532,7 +1551,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v657_2_file(self):
+	def v657_2(self):
 		"""Set action taken to random choice of 3, 4, 5, 6, 7. Set rate spread to 5.0."""
 		name = "v657_2.txt"
 		name = self.name_prefix + name
@@ -1544,7 +1563,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v657_3_file(self):
+	def v657_3(self):
 		"""Set reverse mortgage to 1. Set rate spread to 5.0."""
 		name = "v657_3.txt"
 		name = self.name_prefix + name
@@ -1556,7 +1575,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v658_1_file(self):
+	def v658_1(self):
 		"""Set HOEPA status to 5."""
 		name = "v658_1.txt"
 		name = self.name_prefix + name
@@ -1567,7 +1586,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v658_2_file(self):
+	def v658_2(self):
 		"""Set action taken to random choice of 2, 3, 4, 5, 7, 8. Set HOEPA to 1 or 2."""
 		name = "v658_2.txt"
 		name = self.name_prefix + name
@@ -1579,7 +1598,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v659_file(self):
+	def v659(self):
 		"""Set lien status to 3."""
 		name = "v659.txt"
 		name = self.name_prefix + name
@@ -1590,7 +1609,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v660_1_file(self):
+	def v660_1(self):
 		"""Set app credit score to "aaa".
 		Set action taken to a random choice of 2, 3, 4, 5, 7, or 8."""
 		name = "v660_1.txt"
@@ -1603,7 +1622,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v660_2_file(self):
+	def v660_2(self):
 		"""Set app credit score model to 10."""
 		name = "v660_2.txt"
 		name = self.name_prefix + name
@@ -1614,7 +1633,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v661_file(self):
+	def v661(self):
 		"""Set app credit score to 8888. Set app score model to random of 1-8."""
 		name = "v661.txt"
 		name = self.name_prefix + name
@@ -1626,7 +1645,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v662_1_file(self):
+	def v662_1(self):
 		"""Set app credit score model to random of 1-7, 9. Set app score model text field to random string."""
 		name = "v662_1.txt"
 		name = self.name_prefix + name
@@ -1638,7 +1657,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v662_2_file(self):
+	def v662_2(self):
 		"""Set app score model to 8. Set app score model text field to blank."""
 		name = "v662_2.txt"
 		name = self.name_prefix + name
@@ -1650,7 +1669,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v663_file(self):
+	def v663(self):
 		""" Set action taken to random of 4, 5, 6. 
 		Set app credit score to 700. 
 		Set app score model to random 1-8.
@@ -1667,7 +1686,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v664_file(self):
+	def v664(self):
 		"""Set action taken to random of 4, 5, 6. 
 		Set co-app score to 700. 
 		Set co-app score model to random 1-8.
@@ -1684,7 +1703,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v665_1_file(self):
+	def v665_1(self):
 		"""Set co-app score to 'aaa'."""
 		name = "v665_1.txt"
 		name = self.name_prefix + name
@@ -1695,7 +1714,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v665_2_file(self):
+	def v665_2(self):
 		"""Set co-app score name to 0."""
 		name = "v665_2.txt"
 		name = self.name_prefix + name
@@ -1706,7 +1725,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v666_1_file(self):
+	def v666_1(self):
 		"""Set co-app credit score to 8888. Set co app score name to random 1-8."""
 		name = "v666_1.txt"
 		name = self.name_prefix + name
@@ -1718,7 +1737,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v666_2_file(self):
+	def v666_2(self):
 		"""Set co-app score to 9999. Set co app score name to random 1-9."""
 		name = "v666_2.txt"
 		name = self.name_prefix + name
@@ -1730,7 +1749,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v667_1_file(self):
+	def v667_1(self):
 		"""Set co-app score name to 1-7, 9, 10. Set co-app score text to random string."""
 		name = "v667_1.txt"
 		name = self.name_prefix + name
@@ -1742,7 +1761,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v667_2_file(self):
+	def v667_2(self):
 		"""Set co-app score name to 8. Set co-app score text to blank."""
 		name = "v667_2.txt"
 		name = self.name_prefix + name
@@ -1754,7 +1773,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v668_1_file(self):
+	def v668_1(self):
 		"""Set app ethnicity 1 to 4. Set app race 1 to 7. Set app sex to 4. Set app credit score to 700."""
 		name = "v668_1.txt"
 		name = self.name_prefix + name
@@ -1768,7 +1787,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v668_2_file(self):
+	def v668_2(self):
 		"""Set co-app ethnicity to 4. Set co-app race to 7. Set co-app sex to 4. Set co-app credit score to 700."""
 		name = "v668_2.txt"
 		name = self.name_prefix + name
@@ -1782,7 +1801,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v669_1_file(self):
+	def v669_1(self):
 		"""Set denial reason 1 to 25."""
 		name = "v669_1.txt"
 		name = self.name_prefix + name
@@ -1793,7 +1812,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v669_2_file(self):
+	def v669_2(self):
 		"""Set denial reason 2-4 to 10 or blank."""
 		name = "v669_2.txt"
 		name = self.name_prefix + name
@@ -1806,7 +1825,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v669_3_file(self):
+	def v669_3(self):
 		"""Set all reasons for denial to 1."""
 		name = "v669_3.txt"
 		name = self.name_prefix + name
@@ -1820,7 +1839,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v669_4_file(self):
+	def v669_4(self):
 		"""Set denial reason 1 to 10. Set denial reasons 2-4 to 2,3,4."""
 		name = "v669_4.txt"
 		name = self.name_prefix + name
@@ -1834,8 +1853,13 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v670_1_file(self):
-		"""Set action taken to 3 or 7. Set denial reason 1 to 10."""
+	def v670_1(self):
+		"""
+		Set action taken to 3 or 7. 
+		Set denial reason 1 to 10.
+
+		1) If Action Taken equals 3 or 7, then the Reason for Denial: 1 must equal 1111, 1, 2, 3, 4, 5, 6, 7, 8, or 9.
+		"""
 		name = "v670_1.txt"
 		name = self.name_prefix + name
 		path = self.validity_path
@@ -1846,22 +1870,58 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v670_2_file(self):
-		"""Set action taken to random 1-6, 8. Set denial 1 to random 1-9."""
+	def v670_2(self):
+		"""
+		Set action taken to random 1-6, 8. 
+		Set denial 1 to random 1-9.
+
+		2) If Reason for Denial: 1 equals 1, 2, 3, 4, 5, 6, 7, 8, or 9, then Action Taken must equal 3 or 7.
+		"""
 		name = "v670_2.txt"
 		name = self.name_prefix + name
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
+		lar.action_taken = lar.action_taken.map(lambda x: random.choice(["1", "2", "4", "5", "6", "8"]))
 		lar.denial_1 = lar.denial_1.map(lambda x: random.choice(["1", "2", "3", "4", "5", "6", "7", "8", "9"]))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v670_3(self):
+		"""
+		Set Denial 1 to random of 1, 2, 3, 4, 5, 6, 7, 8, or 9
+		Set action taken to random of 1, 2, 4, 5, 6, 8
+
+		3) If Action Taken equals 1, 2, 4, 5, 6, or 8, then Reason for Denial: 1 must equal 1111 or 10.
+		"""
+		name = "v670_3.txt"
+		name = self.name_prefix + name
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.denial_1 = random.choice(["1", "2", "3", "4", "5", "6", "7", "8", "9"])
 		lar.action_taken = lar.action_taken.map(lambda x: random.choice(["1", "2", "4", "5", "6", "8"]))
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v671_1_file(self):
-		"""Set denial 1-4 to code 9. Set denial text to blank."""
-		name = "v671_1.txt"
+	def v670_4(self):
+		"""
+
+		4) If Reason for Denial: 1 equals 10, then Action Taken must equal 1, 2, 4, 5, 6, or 8.
+		"""
+		name = "v670_4.txt"
 		name = self.name_prefix + name
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.denial_1 = "10"
+		lar.action_taken = lar.action_taken.map(lambda x: random.choice(["3", "7"]))
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v671_1(self):
+		"""Set denial 1-4 to code 9. Set denial text to blank."""
+		name = self.name_prefix + "v671_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -1873,7 +1933,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v671_2_file(self):
+	def v671_2(self):
 		"""Set denial 1-4 to random 1-8. Set denial text to random string."""
 		name = "v671_2.txt"
 		name = self.name_prefix + name
@@ -1888,7 +1948,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v672_1_file(self):
+	def v672_1(self):
 		"""Set loan costs to -1."""
 		name = "v672_1.txt"
 		name = self.name_prefix + name
@@ -1899,7 +1959,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v672_2_file(self):
+	def v672_2(self):
 		"""Set points and fees to 1. Set loan costs to 500."""
 		name = "v672_2.txt"
 		name = self.name_prefix + name
@@ -1911,7 +1971,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v672_3_file(self):
+	def v672_3(self):
 		"""Set reverse mortgage to 1. Set loan costs to 500."""
 		name = "v672_3.txt"
 		name = self.name_prefix + name
@@ -1923,7 +1983,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v672_4_file(self):
+	def v672_4(self):
 		"""Set open-end-credit to 1. Set loan costs to 500."""
 		name = "v672_4.txt"
 		name = self.name_prefix + name
@@ -1935,7 +1995,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v672_5_file(self):
+	def v672_5(self):
 		"""Set business purpose to 1. Set loan costs to 500."""
 		name = "v672_5.txt"
 		name = self.name_prefix + name
@@ -1947,7 +2007,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v672_6_file(self):
+	def v672_6(self):
 		""" Set action taken to random of 2, 3, 4, 5, 7, 8. Set loan costs to 500."""
 		name = "v672_6.txt"
 		name = self.name_prefix + name
@@ -1959,7 +2019,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v673_1_file(self):
+	def v673_1(self):
 		"""Set points and fees to -1 or blank."""
 		name = "v673_1.txt"
 		name = self.name_prefix + name
@@ -1970,7 +2030,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v673_2_file(self):
+	def v673_2(self):
 		"""Set action taken to random of 2, 3, 4, 5, 6, 7 or 8. Set points and fees to 500."""
 		name = "v673_2.txt"
 		name = self.name_prefix + name
@@ -1982,7 +2042,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v673_3_file(self):
+	def v673_3(self):
 		"""Set reverse mortgage to 1. Set points and fees to 500."""
 		name = "v673_3.txt"
 		name = self.name_prefix + name
@@ -1994,7 +2054,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v673_4_file(self):
+	def v673_4(self):
 		"""Set business purpose to 1. Set points and fees to 500."""
 		name = "v673_4.txt"
 		name = self.name_prefix + name
@@ -2006,7 +2066,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v673_5_file(self):
+	def v673_5(self):
 		"""Set loan costs to 1. Set points and fees to 500."""
 		name = "v673_5.txt"
 		name = self.name_prefix + name
@@ -2018,7 +2078,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v674_1_file(self):
+	def v674_1(self):
 		"""Set origination charges to '-1.'"""
 		name = "v674_1.txt"
 		name = self.name_prefix + name
@@ -2029,7 +2089,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v674_2_file(self):
+	def v674_2(self):
 		"""Set reverse mortgage to 1. Set origination charges to 500."""
 		name = "v674_2.txt"
 		name = self.name_prefix + name
@@ -2041,7 +2101,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v674_3_file(self):
+	def v674_3(self):
 		"""set open-end-credit to 1. Set origination charges to 500."""
 		name = "v674_3.txt"
 		name = self.name_prefix + name
@@ -2053,7 +2113,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v674_4_file(self):
+	def v674_4(self):
 		"""Set business purpose to 1. Set origination charges to 500."""
 		name = "v674_4.txt"
 		name = self.name_prefix + name
@@ -2065,7 +2125,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v674_5_file(self):
+	def v674_5(self):
 		"""Set action taken to random of 2, 3, 4, 5, 7 or 8. Set origination charges to 500."""
 		name = "v674_5.txt"
 		name = self.name_prefix + name
@@ -2077,7 +2137,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v675_1_file(self):
+	def v675_1(self):
 		"""Set discount points to 0."""
 		name = "v675_1.txt"
 		name = self.name_prefix + name
@@ -2088,7 +2148,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v675_2_file(self):
+	def v675_2(self):
 		"""Set reverse mortgage to 1. Set discount points to 500."""
 		name = "v675_2.txt"
 		name = self.name_prefix + name
@@ -2100,7 +2160,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v675_3_file(self):
+	def v675_3(self):
 		"""Set open end credit to 1. Set discount points to 500."""
 		name = "v675_3.txt"
 		name = self.name_prefix + name
@@ -2112,7 +2172,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v675_4_file(self):
+	def v675_4(self):
 		"""Set business purpose to 1. Set discount points to 500."""
 		name = "v675_4.txt"
 		name = self.name_prefix + name
@@ -2124,7 +2184,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v675_5_file(self):
+	def v675_5(self):
 		"""Set action taken to random of 2, 3, 4, 5, 7 or 8. Set discount points to 500."""
 		name = "v675_5.txt"
 		name = self.name_prefix + name
@@ -2136,7 +2196,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v676_1_file(self):
+	def v676_1(self):
 		"""Set lender credits to 0 or -1."""
 		name = "v676_1.txt"
 		name = self.name_prefix + name
@@ -2147,7 +2207,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v676_2_file(self):
+	def v676_2(self):
 		"""Set reverse mortgage to 1. Set lender credits to 500."""
 		name = "v676_2.txt"
 		name = self.name_prefix + name
@@ -2159,7 +2219,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v676_3_file(self):
+	def v676_3(self):
 		"""Set open end credit to 1. Set lender credits to 500."""
 		name = "v676_3.txt"
 		name = self.name_prefix + name
@@ -2171,7 +2231,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v676_4_file(self):
+	def v676_4(self):
 		"""Set business purpose to 1. Set lender credits to 500."""
 		name = "v676_4.txt"
 		name = self.name_prefix + name
@@ -2183,7 +2243,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v676_5_file(self):
+	def v676_5(self):
 		"""Set action taken to random of 2, 3, 4, 5, 7 or 8. Set lender credits to 500."""
 		name = "v676_5.txt"
 		name = self.name_prefix + name
@@ -2195,7 +2255,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v677_1_file(self):
+	def v677_1(self):
 		"""Set interest rate to -1."""
 		name = "v677_1.txt"
 		name = self.name_prefix + name
@@ -2206,7 +2266,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v677_2_file(self):
+	def v677_2(self):
 		"""Set action taken to 3, 4, 5, or 7. Set interest rate to 10.0."""
 		name = "v677_2.txt"
 		name = self.name_prefix + name
@@ -2218,7 +2278,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v678_1_file(self):
+	def v678_1(self):
 		"""Set penalty term to 0 or -1."""
 		name = "v678_1.txt"
 		name = self.name_prefix + name
@@ -2229,7 +2289,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v678_2_file(self):
+	def v678_2(self):
 		"""Set action taken to 6. Set penalty term to 30."""
 		name = "v678_2.txt"
 		name = self.name_prefix + name
@@ -2241,7 +2301,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v678_3_file(self):
+	def v678_3(self):
 		"""Set reverse mortgage to 1. Set penalty term to 30."""
 		name = "v678_3.txt"
 		name = self.name_prefix + name
@@ -2253,7 +2313,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v678_4_file(self):
+	def v678_4(self):
 		"""Set business purpose to 1. Set penalty term to 30."""
 		name = "v678_4.txt"
 		name = self.name_prefix + name
@@ -2265,7 +2325,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v678_5_file(self):
+	def v678_5(self):
 		"""Set penalty term to 360. Set loan term to 30."""
 		name = "v678_5.txt"
 		name = self.name_prefix + name
@@ -2277,7 +2337,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v679_1_file(self):
+	def v679_1(self):
 		"""Set DTI to AA."""
 		name = "v679_1.txt"
 		name = self.name_prefix + name
@@ -2288,7 +2348,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v679_2_file(self):
+	def v679_2(self):
 		"""Set action taken to random of 4, 5, 6. Set DTI to 15."""
 		name = "v679_2.txt"
 		name = self.name_prefix + name
@@ -2300,7 +2360,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v679_3_file(self):
+	def v679_3(self):
 		"""Set affordable units to 1. Set DTI to 15."""
 		name = "v679_3.txt"
 		name = self.name_prefix + name
@@ -2312,7 +2372,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v680_1_file(self):
+	def v680_1(self):
 		"""Set app eth 1 to 4. Set app race 1 to 7. Set app sex to 4. Set co-app eth 1 to 5.
 		Set co-app race 1 to 8. Set co-app sex to 5. Set DTI to 15."""
 		name = "v680_1.txt"
@@ -2330,7 +2390,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v680_2_file(self):
+	def v680_2(self):
 		"""Set app eth 1 to 4. Set app race 1 to 7. Set app sex to 4. Set co-app eth 1 to 4.
 		Set co-app race 1 to 7. Set co-app sex to 4. Set DTI to 15."""
 		name = "v680_2.txt"
@@ -2348,7 +2408,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v681_1_file(self):
+	def v681_1(self):
 		"""Set CLTV to 0 or -1."""
 		name = "v681_1.txt"
 		name = self.name_prefix + name
@@ -2359,7 +2419,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v681_2_file(self):
+	def v681_2(self):
 		"""Set action taken to random of 4, 5, 6. Set CLTV to 15."""
 		name = "v681_2.txt"
 		name = self.name_prefix + name
@@ -2371,7 +2431,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v682_1_file(self):
+	def v682_1(self):
 		"""Set loan term to 0."""
 		name = "v682_1.txt"
 		name = self.name_prefix + name
@@ -2382,7 +2442,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v682_2_file(self):
+	def v682_2(self):
 		"""Set reverse mortgage to 1. Set loan term to 30."""
 		name = "v682_2.txt"
 		name = self.name_prefix + name
@@ -2394,7 +2454,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v683_file(self):
+	def v683(self):
 		"""Set introductory rate period to 0 or -1."""
 		name = "v683.txt"
 		name = self.name_prefix + name
@@ -2405,7 +2465,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v684_file(self):
+	def v684(self):
 		"""Set balloon payment to "3" """
 		name = "v684.txt"
 		name = self.name_prefix + name
@@ -2416,7 +2476,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v685_file(self):
+	def v685(self):
 		"""Set interest only payments to 0."""
 		name = "v685.txt"
 		name = self.name_prefix + name
@@ -2427,7 +2487,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v686_file(self):
+	def v686(self):
 		"""Set negative amortization to 0 or blank."""
 		name = "v686.txt"
 		name = self.name_prefix + name
@@ -2438,7 +2498,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v687_file(self):
+	def v687(self):
 		"""Set Other Non-Amortizing features to 0."""
 		name = "v687.txt"
 		name = self.name_prefix + name
@@ -2449,7 +2509,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v688_1_file(self):
+	def v688_1(self):
 		"""Set property value to 0."""
 		name = "v688_1.txt"
 		name = self.name_prefix + name
@@ -2460,7 +2520,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v688_2_file(self):
+	def v688_2(self):
 		"""Set action taken to 4 or 5. Set property value to 1."""
 		name = "v688_2.txt"
 		name = self.name_prefix + name
@@ -2582,8 +2642,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 	
 	def v692_3(self):
-		"""Set total units to 6.
-		   Set affordable units to 7."""
+		"""
+		Set total units to 6.
+		   Set affordable units to 7.
+		   """
 		name = "v692_3.txt"
 		name = self.name_prefix + name
 		path = self.validity_path
@@ -2595,9 +2657,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v693_1(self):
-		"""Set app submission to 0."""
-		name = "V693_1.txt"
-		name = self.name_prefix + name
+		"""
+		Set app submission to 0.
+		"""
+		name = self.name_prefix + "v693_1.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -2606,10 +2669,11 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v693_2(self):
-		"""Set action taken to 6.
-		   Set app submission to 1 or 2."""
-		name = "V693_2.txt"
-		name = self.name_prefix + name
+		"""
+		Set action taken to 6.
+	   	Set app submission to 1 or 2.
+	   	"""
+		name = self.name_prefix + "v693_2.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -2619,9 +2683,10 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 	def v693_3(self):
-		"""Set app submission to 3 and action taken to != 6"""
-		name = "V693_3.txt"
-		name = self.name_prefix + name
+		"""
+		Set app submission to 3 and action taken to != 6
+		"""
+		name = self.name_prefix + "v693_3.txt"
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -3157,7 +3222,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v716_file(self):
+	def v716(self):
 		"""
 		Set state and county to invalid combination
 
@@ -3400,7 +3465,7 @@ class test_data_creator(object):
 
 	def q614_1(self):
 		"""Set borrower age to 240"""
-		name = self.name_prefix + "q614.txt"
+		name = self.name_prefix + "q614_1.txt"
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
@@ -3922,6 +3987,8 @@ class test_data_creator(object):
 
 	def q646_a(self):
 		"""
+		This tests the TS data condition
+
 		Set Street Address, City, and Zip Code to 'Exempt'.
 		"""
 		name = "q646_a.txt"
@@ -3939,6 +4006,7 @@ class test_data_creator(object):
 
 	def q646_b(self):
 		"""
+		This tests the LAR data condition
 		Set Submission of Application and Initially Payable to 1111.
 		"""
 		name = "q646_b.txt"

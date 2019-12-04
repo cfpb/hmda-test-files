@@ -17,6 +17,7 @@ filepaths_file = 'configurations/test_filepaths.yaml'
 lar_schema_file="../schemas/lar_schema.json"
 ts_schema_file="../schemas/ts_schema.json"
 
+LOGGING = True
 #load config data
 print("start initialization of LAR generator")
 with open(config_file, 'r') as f:
@@ -80,21 +81,23 @@ for i in range(bank_config_data["file_length"]["value"]):
 
 	#generate error report
 	edit_report_df = rules_engine.create_edit_report()
-	logging.info("generating row {count}".format(count=i))
+	if LOGGING:
+		logging.info("generating row {count}".format(count=i))
 	if DEBUG:
 		print(edit_report_df)
 
 	#apply constraints to force conformity with FIG schema for LAR data
 	constraints_iter = 0
 	while len(edit_report_df[edit_report_df.fail_count>0]):
-		logging.info(edit_report_df[edit_report_df.fail_count>0]) #log the edit fails for the row
-		logging.info("constraints iteration {}. checking difference in rows".format(constraints_iter))
+		if LOGGING:
+			logging.info(edit_report_df[edit_report_df.fail_count>0]) #log the edit fails for the row
+			logging.info("constraints iteration {}. checking difference in rows".format(constraints_iter))
 		lar_row_start_items = set(lar_row.items()) #capture initial row data before modifications to log difference between initial and changed row
 		
 		for constraint in lar_constraints.constraints: #loop over all constraint functions to force LAR data to conform to FIG spec
 			lar_row = getattr(lar_constraints, constraint)(lar_row) #lar_row is an ordered dict here
-			
-		logging.info(set(lar_row.items() - lar_row_start_items))
+		if LOGGING:
+			logging.info(set(lar_row.items() - lar_row_start_items))
 		constraints_iter += 1
 		#prepare new edit fails report for checking lar generation process this is the loop break condition
 		rules_engine.reset_results()
@@ -113,8 +116,9 @@ if DEBUG:
 	rules_engine.load_lar_data(lar_rows_df)
 	rules_engine.reset_results()
 	edit_report_df = rules_engine.create_edit_report()
-	logging.info("final edit report for generated LAR file ")
-	logging.info(edit_report_df)
+	if LOGGING:
+		logging.info("final edit report for generated LAR file ")
+		logging.info(edit_report_df)
 	print(edit_report_df)
 
 clean_filename = filepaths["clean_filename"].format(bank_name=bank_config_data["name"]["value"], row_count=bank_config_data["file_length"]["value"])
