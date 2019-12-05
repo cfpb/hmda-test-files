@@ -11,13 +11,13 @@ from rules_engine import rules_engine
 import utils
 
 config_file = 'configurations/clean_file_config.yaml'
-bank_config = 'configurations/bank1_config.yaml'
+bank_config = 'configurations/bank0_config.yaml'
 geo_config_file='configurations/geographic_data.yaml'
 filepaths_file = 'configurations/test_filepaths.yaml'
 lar_schema_file="../schemas/lar_schema.json"
 ts_schema_file="../schemas/ts_schema.json"
 
-LOGGING = True
+LOGGING = False
 #load config data
 print("start initialization of LAR generator")
 with open(config_file, 'r') as f:
@@ -36,10 +36,10 @@ with open(bank_config, 'r') as f:
 	bank_config_data = yaml.safe_load(f)
 
 DEBUG = False
-
 if not os.path.exists(filepaths["log_filepath"]):
 	os.makedirs(filepaths["log_filepath"])
 
+#if LOGGING:
 logging.basicConfig(filename=filepaths["log_filepath"]+filepaths['log_filename'], format='%(asctime)s %(message)s', 
 					datefmt='%m/%d/%Y %I:%M:%S %p', filemode=filepaths['log_mode'], level=logging.INFO)
 
@@ -54,11 +54,11 @@ with open(geo_config["zip_code_file"], 'r') as f:
 	zip_codes = json.load(f)
 zip_codes.append("Exempt")
 
-#convert file_generator.py to this script
-
 #instantiate lar generator to create random LAR and fixed TS data
 lar_gen = lar_generator.lar_gen(lar_schema_file=lar_schema_file, ts_schema_file=ts_schema_file)
 
+#set lar_file_config lei to match bank config data
+lar_file_config_data["lei"]["value"] = bank_config_data["lei"]["value"]
 #instantiate rules engine to check conformity of synthetic data to FIG schema
 rules_engine = rules_engine(config_data=lar_file_config_data, state_codes=geo_config["state_codes"], state_codes_rev=geo_config["state_codes_rev"],
 	geographic_data=geographic_data, full_lar_file_check=False)
@@ -76,11 +76,12 @@ lar_rows = [] #list to hold all OrderedDict LAR records before writing to file
 for i in range(bank_config_data["file_length"]["value"]):
 	print("generating row {count}".format(count=i))
 	#create initial LAR row
-	lar_row = lar_gen.make_row(lar_file_config=lar_file_config_data, geographic_data=geographic_data, state_codes=geo_config["state_codes_rev"], zip_code_list=zip_codes)
+	lar_row = lar_gen.make_row(lar_file_config=lar_file_config_data, geographic_data=geographic_data, 
+							   state_codes=geo_config["state_codes_rev"], zip_code_list=zip_codes)
 	rules_engine.load_lar_data(lar_row) #loading lar_row to rules engine converts it to a dataframe for value checking
 
 	#generate error report
-	edit_report_df = rules_engine.create_edit_report()
+	edit_report_df = rules_engine.create_edit_report(rules_list=["s","v"])
 	if LOGGING:
 		logging.info("generating row {count}".format(count=i))
 	if DEBUG:
