@@ -3432,7 +3432,7 @@ class rules_engine(object):
 				"21", "22", "23", "24"])))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def q634(self):
+	def m634(self):
 		"""
 		If more than 25 loans reported Action Taken equals 1 and Loan Purpose equals 1, 
 		then the number of these loans should be less than or equal to 95% of the loans reported with Loan Purpose equals 1. 
@@ -3448,7 +3448,7 @@ class rules_engine(object):
 			fail_df = fail_df = []
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def q635(self):
+	def m635(self):
 		"""
 		No more than 15% of the loans in the file should report Action Taken equals 2. 
 		xour data indicates a percentage outside of this range.
@@ -3463,7 +3463,7 @@ class rules_engine(object):
 			fail_df = []
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def q636(self):
+	def m636(self):
 		"""
 		No more than 30% of the loans in the file should report Action Taken equals 4. 
 		Your data indicates a percentage outside of this range.
@@ -3478,7 +3478,7 @@ class rules_engine(object):
 			fail_df = []
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def q637(self):
+	def m637(self):
 		"""
 		No more than 15% of the loans in the file should report Action Taken equals 5. 
 		Your data indicates a percentage outside of this range.
@@ -3493,7 +3493,7 @@ class rules_engine(object):
 			fail_df = []
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def q638(self):
+	def m638(self):
 		"""
 		The number of loans in the file that reported Action Taken equals 1 should be greater than or equal to 20% 
 		of the total number of loans that reported Action Taken 1, 2, 3, 4, 5, or 6. 
@@ -3509,7 +3509,7 @@ class rules_engine(object):
 			fail_df = []
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def q639(self):
+	def m639(self):
 		"""
 		If more than 1000 loans were reported with Preapproval equals 1, 
 		then there should be at least 1 loan reported with Action Taken equals 7. 
@@ -3524,7 +3524,7 @@ class rules_engine(object):
 			fail_df = []
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def q640(self):
+	def m640(self):
 		"""
 		No more than 20% of the loans in the file should report Income less than $10 thousand (entered as 10). 
 		Your file indicates a percentage outside of this range.
@@ -3623,7 +3623,7 @@ class rules_engine(object):
 		(self.lar_df.loan_amount.apply(lambda x: int(x) <= 1000))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def q646(self):
+	def m646(self):
 		"""
 		Your file indicates that at least one exemption code was used. 
 		Please verify that your institution is eligible for a partial exemption pursuant to the 2018 HMDA Rule.
@@ -3635,7 +3635,7 @@ class rules_engine(object):
 		fail_df = fail_df[(fail_df.values == 'Exempt').any(1) | (fail_df.values == '1111').any(1)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def q647(self):
+	def m647(self):
 		"""
 		If Federal Agency equals 7, indicating a non-depository institution, exemption codes should not be used in the
 		Loan/Application Register. Your data indicates that at least one exemption code was used.
