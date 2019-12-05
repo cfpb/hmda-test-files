@@ -3789,7 +3789,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def q634(self):
+	def m634(self):
 		"""Set action taken to 1.
 		Set loan purpose to 1.
 		Note: this edit will only trigger for file sizes >= 25."""
@@ -3803,7 +3803,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def q635(self):
+	def m635(self):
 		"""Set action taken = 2."""
 		name = "q635.txt"
 		name = self.name_prefix + name
@@ -3814,7 +3814,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def q636(self):
+	def m636(self):
 		"""Set action taken = 4."""
 		name = "q636.txt"
 		name = self.name_prefix + name
@@ -3825,7 +3825,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def q637(self):
+	def m637(self):
 		"""Set action taken = 5."""
 		name = "q637.txt"
 		name = self.name_prefix + name
@@ -3836,7 +3836,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def q638(self):
+	def m638(self):
 		"""Set action taken = 2."""
 		name = "q638.txt"
 		name = self.name_prefix + name
@@ -3847,7 +3847,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def q639(self):
+	def m639(self):
 		"""
 		Set preapproval = 1.
 		Set action taken to 1-2.
@@ -3865,7 +3865,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def q640(self):
+	def m640(self):
 		"""Set income to 9."""
 		name = "q640.txt"
 		name = self.name_prefix + name
@@ -3985,7 +3985,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def q646_a(self):
+	def m646_a(self):
 		"""
 		This tests the TS data condition
 
@@ -4004,7 +4004,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def q646_b(self):
+	def m646_b(self):
 		"""
 		This tests the LAR data condition
 		Set Submission of Application and Initially Payable to 1111.
@@ -4021,7 +4021,7 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def q647_a(self):
+	def m647_a(self):
 		"""
 		Set Agency code for TS to 7. Set Street Address, City, and 
 		Zip Code in LAR to 'Exempt'.
@@ -4038,7 +4038,7 @@ class test_data_creator(object):
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
 
-	def q647_b(self):
+	def m647_b(self):
 		"""
 		Set Agency code for TS to 7. 
 		Set Submission of Application and Initially Payable to 1111.
