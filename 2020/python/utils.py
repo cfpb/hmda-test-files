@@ -21,13 +21,20 @@ state_codes = {'WA':'53', 'WI':'55', 'WV':'54', 'FL':'12', 'WY':'56',
 'MO':'29', 'MN':'27', 'MI':'26', 'MT':'30', 'MS':'29', 'DC':'11'}
 
 def write_file(path=None, ts_input=None, lar_input=None, name="test_file.txt"):
-	"""Takes a TS row and LAR data as dataframes. Writes LAR data to file and
-	re-reads it to combine with TS data to make a full file."""
+	"""
+	Takes a TS row and LAR data as dataframes. Writes LAR data to file and
+	re-reads it to combine with TS data to make a full file.
+
+	ts_input: DataFrame of a TS row
+	lar_input: DataFrae of one or more LAR rows
+	"""
+	
+	parts_dir = "../edits_files/file_parts/"
+	
 	#make directories for files if they do not exist
 	if not os.path.exists(path):
 		os.makedirs(path)
-	#check existence of file parts directory
-	parts_dir = "../edits_files/file_parts/"
+
 	if not os.path.exists(parts_dir):
 		os.makedirs(parts_dir)
 
@@ -47,59 +54,56 @@ def write_file(path=None, ts_input=None, lar_input=None, name="test_file.txt"):
 		for line in lar:
 			final_file.write("{line}".format(line=line))
 
-def read_data_frames(ts_df=None, lar_df=None):
-	"""Receives two pandas dataframes (one TS and one LAR) and stores 
-	them as class objects."""
-	if ts_df is not None:
-		self.ts_df = ts_df
-	if lar_df is not None:
-		self.lar_df = lar_df
-	if ts_df is None and lar_df is None:
-		raise ValueError("No data passed.\nNo data written to object.")
 
-def read_data_file(path="", data_file=None):
-	"""Reads a complete file (includes LAR and TS rows) into a pandas 
-	dataframe and returns them."""
-	ts_schema = pd.DataFrame(json.load(open("../schemas/ts_schema.json", "r")))
-	lar_schema = pd.DataFrame(json.load(open("../schemas/lar_schema.json", "r")))
+def read_data_file(path, data_file, lar_schema=None, ts_schema=None):
+	"""
+	Reads a complete file (includes LAR and TS rows) into a pandas 
+	dataframe and returns them.
+	"""
+	if lar_schema is None:
+		lar_schema = pd.DataFrame(json.load(open("../schemas/lar_schema.json", "r")))
+	if ts_schema is None:
+		ts_schema = pd.DataFrame(json.load(open("../schemas/ts_schema.json", "r")))
+	
+
 	if data_file is not None:
 		with open(path+data_file, 'r') as infile:
+
 			#split TS row from file
 			ts_row = infile.readline().strip("\n")
 			ts_data = []
 			ts_data.append(ts_row.split("|"))
+
 			#split LAR rows from file
 			lar_rows = infile.readlines()
 			lar_data = [line.strip("\n").split("|") for line in lar_rows]
+
 			#create dataframes of TS and LAR data
-			ts_df = pd.DataFrame(data=ts_data, dtype=object, 
-				columns=ts_schema.field)
-			lar_df  = pd.DataFrame(data=lar_data, dtype=object, 
-				columns=lar_schema.field)
-			return (ts_df, lar_df)
+			ts_df = pd.DataFrame(data=ts_data, dtype=object, columns=ts_schema.field)
+			lar_df  = pd.DataFrame(data=lar_data, dtype=object, columns=lar_schema.field)
+
+			return ts_df, lar_df
 	else:
-		raise ValueError("A data file mus be passed. No data have been written to the object")
+		raise ValueError("A data file must be passed.")
 
 def unique_uli(new_lar_df=None, lei=None):
     """
     Generates a set of unique ULI's for a LAR dataframe.
     """
 
-    #Copying over ULIs with the LEI.
-    new_lar_df["uli"] = new_lar_df["uli"].apply(lambda x: 
-        lei)  
+    #Copy over ULIs with the LEI
+    new_lar_df["uli"] = new_lar_df["uli"].apply(lambda x: lei)  
     
-    #Generates a loan ID as a random 23-character 
-    #string for each LEI.
-    new_lar_df["uli"] = new_lar_df["uli"].apply(lambda x: x + 
-        utils.char_string_gen(23)) 
+    #Generates a loan ID as a random 23-character string for each LEI
+    new_lar_df["uli"] = new_lar_df["uli"].apply(lambda x: x + utils.char_string_gen(23)) 
     
-    #Adds a check digit to each.
-    new_lar_df['uli'] = new_lar_df["uli"].apply(lambda x: x + 
-        utils.check_digit_gen(ULI=x))
+    #Adds a check digit to each ULI
+    new_lar_df['uli'] = new_lar_df["uli"].apply(lambda x: x + utils.check_digit_gen(ULI=x))
 
-    #If ULIs are duplicated, the unique_uli function 
-    #is applied again.  
+    #If ULIs are duplicated, the unique_uli function is applied again.  
+    #FIXME: remove recursion and replace with nexted loops:
+    	#for loop for length of new lar file size
+    	#while loop to create new ULIs and check against an established list for duplication
     if len(new_lar_df['uli']) > len(set(new_lar_df['uli'])):
         print("Re-Running")
         self.unique_uli(new_lar_df)
@@ -118,27 +122,24 @@ def new_lar_rows(final_row_count=None, lar_df=None, ts_df=None):
     #Stores the LAR dataframe as a new LAR dataframe. 
     new_lar_df = lar_df
 
-    #Stores the number of rows currently in the dataframe to calculate the 
-    #new number of rows to concatenate. 
-    current_row = len(new_lar_df.index) 
+    #Stores the number of rows currently in the dataframe to calculate the new number of rows to concatenate. 
+    current_row_count = len(new_lar_df.index) 
     
-    #Calculates a multiplier taking the ceiling function of 
-    #the desired row count over the current row count.
-    multiplier = math.ceil(final_row_count/current_row)
+    #Calculates a multiplier taking the ceiling function of the desired row count over the current row count.
+    multiplier = math.ceil(final_row_count/current_row_count)
     
-    #Concatenates data to produce the number of rows 
-    #by the multiplier in a new LAR dataframe. 
+    #Concatenates data to produce the number of rows by the multiplier in a new LAR dataframe. 
     new_lar_df = pd.concat([new_lar_df]*int(multiplier))
     
     #Drops the number of rows to the count specified. 
-    if (final_row_count % current_row) != 0:
-        drop_rows = current_row - (final_row_count % current_row)
+    #FIXME: reset index and drop anything with index over desired row count
+    if (final_row_count % current_row_count) != 0:
+        drop_rows = current_row - (final_row_count % current_row_count)
         new_lar_df = new_lar_df[: - (drop_rows)]
     
     #Applies the unique_uli function to the new LAR dataframe 
     #to generate a unique set of ULIs. 
-    new_lar_df = utils.unique_uli(new_lar_df=new_lar_df, 
-    	lei=ts_df.iloc[0][14])
+    new_lar_df = utils.unique_uli(new_lar_df=new_lar_df, lei=ts_df.iloc[0][14])
 
     #Modifies TS data for the new number of LAR entries.
     ts_df["lar_entries"] = len(new_lar_df)
@@ -146,8 +147,9 @@ def new_lar_rows(final_row_count=None, lar_df=None, ts_df=None):
     return (ts_df, new_lar_df)
 
 def row_by_row_modification(lar_df, yaml_filepath='configurations/row_by_row_modification.yaml'):
-	"""Uses the inputs from the row_by_row 
-	modification yaml to modify a dataframe"""
+	"""
+	Uses the inputs from the row_by_row modification yaml to modify a dataframe
+	"""
 
 	#Opens the yaml_file. 
 	yaml_file = yaml_filepath
@@ -163,14 +165,13 @@ def row_by_row_modification(lar_df, yaml_filepath='configurations/row_by_row_mod
 
 	return lar_df
 					
-def change_bank(ts_data=None, lar_data=None, new_bank_name=None, 
-	new_lei=None, new_tax_id=None):
-	"""Takes in TS and LAR data of one bank and outputs
-	the same TS and LAR data with specifications for a different
-	bank in the function call. The elements changed are Bank Name in 
-	the TS row, LEI in the TS row and the  
-	LAR rows, and Tax ID in the TS row. ULI's are generated with the 
-	new LEI.
+def change_bank(ts_data=None, lar_data=None, new_bank_name=None, new_lei=None, new_tax_id=None):
+	"""
+	Takes in TS and LAR data of one bank and outputs the same TS and LAR data with specifications 
+	for a different bank in the function call. 
+	The elements changed are Bank Name in the TS row, LEI in the TS row and the  
+	LAR rows, and Tax ID in the TS row. 
+	ULI's are generated with the new LEI.
 	"""
 
 	#Stores original Bank Name.

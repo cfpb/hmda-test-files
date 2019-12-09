@@ -14,34 +14,10 @@
       desc: The year of activity
       type: Integer
       value: 2020
-    file_length:
-      desc: The number of lines in the clean or test data file
-      type: Integer
-      value: 10
-    large_file_base_length:
-      desc: the row count of the clean file to use as a base for the large clean file
-      type: Integer
-      value: 1000
-    large_file_write_length:
-      desc: The number of lines in the large clean file
-      type: Integer
-      value: 500000
     calendar_quarter:
       desc: The calendar quarter to which the filing relates
       type: Integer
       value: 4
-    contact_name:
-      desc: The name of the contact person for the institution
-      type: String
-      value: Mr. Smug Pockets
-    contact_tel:
-      desc: The telephone number of the contact person
-      type: String
-      value: 555-555-5555
-    contact_email:
-      desc: The email of the contact person
-      type: String
-      value: pockets@ficus.com    
     street_addy:
       desc: Property street address
       type: String
@@ -57,11 +33,7 @@
     zip_code:
       desc: Office ZIP code
       type: String
-      value: "84096"
-    agency_code:
-      desc: The agency code of the filing institution
-      type: Integer
-      value: 9
+      value: 84096
     max_age:
       type: Integer
       value: 110

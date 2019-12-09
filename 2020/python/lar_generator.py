@@ -31,23 +31,7 @@ class lar_gen(object):
 		geo_config_file: the FFIEC flat file with census data used in the HMDA Platform see https://github.com/cfpb/hmda-census
 		"""
 		print("start initialization of LAR generator")
-		#with open(config_file) as f:
-			# use safe_load instead load
-		#	lar_file_config = yaml.safe_load(f)
 
-		#load geographic configuration and census data
-		#print("loading geo data")
-		#with open(geo_config_file, 'r') as f:
-		#	self.geo_config = yaml.safe_load(f)
-
-		#self.geographic_data = pd.read_csv(self.geo_config['geographic_data_file'], delimiter='|', header=0,
-		#	names=self.geo_config['file_columns'], dtype=object) #instantiate Census file data as dataframe
-		
-		#create 5 digit County Codes from 2 digit state and 3 digit county
-		#self.geographic_data['county_fips'] = self.geographic_data.apply(lambda x: str(x.state_code) + str(x.county), axis=1)
-		#create 11 digit Census Tract codes from 5 digit county and 6 digit tract
-		#self.geographic_data["tract_fips"] = self.geographic_data.apply(lambda x: str(x.county_fips) + str(x.tracts), axis=1)
-		#print("geo data loaded")
 		#load Schemas for valid values for fields for LAR and TS
 		with open(lar_schema_file, 'r') as f:
 			lar_schema_json = json.load(f)
@@ -144,24 +128,24 @@ class lar_gen(object):
 		valid_tracts = [tract for tract in self.tract_list if tract[:5]==county]
 		return random.choice(valid_tracts)
 
-	def make_ts_row(self, lar_file_config):
+	def make_ts_row(self, bank_file_config):
 		"""Creates a TS row as a dictionary and returns it."""
 		ts_row = OrderedDict()
 		ts_row["record_id"] ="1"
-		ts_row["inst_name"] = lar_file_config["name"]["value"]
-		ts_row["calendar_year"] = lar_file_config["activity_year"]["value"]
-		ts_row["calendar_quarter"] = lar_file_config["calendar_quarter"]["value"]
-		ts_row["contact_name"] = lar_file_config["contact_name"]["value"]
-		ts_row["contact_tel"] = lar_file_config["contact_tel"]["value"]
-		ts_row["contact_email"] = lar_file_config["contact_email"]["value"]
-		ts_row["contact_street_address"] = lar_file_config["street_addy"]["value"]
-		ts_row["office_city"] = lar_file_config["city"]["value"]
-		ts_row["office_state"] = lar_file_config["state"]["value"]
-		ts_row["office_zip"] = lar_file_config["zip_code"]["value"]
-		ts_row["federal_agency"] = lar_file_config["agency_code"]["value"]
-		ts_row["lar_entries"]= str(lar_file_config["file_length"]["value"])
-		ts_row["tax_id"] = lar_file_config["tax_id"]["value"]
-		ts_row["lei"] = lar_file_config["lei"]["value"]
+		ts_row["inst_name"] = bank_file_config["name"]["value"]
+		ts_row["calendar_year"] = bank_file_config["activity_year"]["value"]
+		ts_row["calendar_quarter"] = bank_file_config["calendar_quarter"]["value"]
+		ts_row["contact_name"] = bank_file_config["contact_name"]["value"]
+		ts_row["contact_tel"] = bank_file_config["contact_tel"]["value"]
+		ts_row["contact_email"] = bank_file_config["contact_email"]["value"]
+		ts_row["contact_street_address"] = bank_file_config["street_addy"]["value"]
+		ts_row["office_city"] = bank_file_config["city"]["value"]
+		ts_row["office_state"] = bank_file_config["state"]["value"]
+		ts_row["office_zip"] = str(bank_file_config["zip_code"]["value"])
+		ts_row["federal_agency"] = bank_file_config["agency_code"]["value"]
+		ts_row["lar_entries"]= str(bank_file_config["file_length"]["value"])
+		ts_row["tax_id"] = bank_file_config["tax_id"]["value"]
+		ts_row["lei"] = bank_file_config["lei"]["value"]
 		return ts_row
 
 	#all valid values, including blanks and NAs, are included in the selection lists.
@@ -191,7 +175,6 @@ class lar_gen(object):
 		valid_lar_row["tract"] = random.choice(geographic_data["tract_fips"])
 		valid_lar_row["state"] = state_codes[str(valid_lar_row["tract"][:2])]
 		valid_lar_row["county"] = valid_lar_row["tract"][:5]
-
 		valid_lar_row["app_eth_1"] = str(random.choice(self.get_schema_list(field="app_eth_1", empty=True)))
 		valid_lar_row["app_eth_2"] = str(random.choice(self.get_schema_list(field="app_eth_2", empty=True)))
 		valid_lar_row["app_eth_3"] = str(random.choice(self.get_schema_list(field="app_eth_3", empty=True)))
