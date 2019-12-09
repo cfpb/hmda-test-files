@@ -2665,7 +2665,7 @@ class rules_engine(object):
 		field = "AUS and Results"
 		edit_name = "v699"
 		aus_results = ("1","2","3", "4", "5", "6", "7", "8", "9", "10", 
-			"11", "12","13", "14","15", "16", "17", "18", "19", "20", "21", "22", "23", "24")
+			"11", "12","13", "14","15", "16", "18", "19", "20", "21", "22", "23", "24")
 		fail_df = self.lar_df[((self.lar_df.aus_1=="5")&(~self.lar_df.aus_result_1.isin(aus_results)))|
 			((self.lar_df.aus_2=="5")&(~self.lar_df.aus_result_2.isin(aus_results)))|
 			((self.lar_df.aus_3=="5")&(~self.lar_df.aus_result_3.isin(aus_results)))|
