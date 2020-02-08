@@ -117,25 +117,28 @@ def new_lar_rows(final_row_count=None, lar_df=None, ts_df=None):
     Returns LAR with a specified number of rows. 
     Returns TS data with updated lar entries.
     final_row_count is the LAR record count of the output file
+    new rows are copied from existing rows and given new ULIs with the unique_uli() function
     """
 
     #Stores the LAR dataframe as a new LAR dataframe. 
-    new_lar_df = lar_df
+    if len(lar_df) <=0:
+    	print("LAR data has 0 rows")
+    	return
 
+    new_lar_df = lar_df.copy()
+    print(final_row_count, "target rows")
     #Stores the number of rows currently in the dataframe to calculate the new number of rows to concatenate. 
     current_row_count = len(new_lar_df.index) 
-    
+    print(len(new_lar_df), "lar records in new rows")
     #Calculates a multiplier taking the ceiling function of the desired row count over the current row count.
     multiplier = math.ceil(final_row_count/current_row_count)
-    
+    print(multiplier, "mult")
     #Concatenates data to produce the number of rows by the multiplier in a new LAR dataframe. 
     new_lar_df = pd.concat([new_lar_df]*int(multiplier))
     
     #Drops the number of rows to the count specified. 
     #FIXME: reset index and drop anything with index over desired row count
-    if (final_row_count % current_row_count) != 0:
-        drop_rows = current_row - (final_row_count % current_row_count)
-        new_lar_df = new_lar_df[: - (drop_rows)]
+    new_lar_df = new_lar_df[:final_row_count]
     
     #Applies the unique_uli function to the new LAR dataframe 
     #to generate a unique set of ULIs. 

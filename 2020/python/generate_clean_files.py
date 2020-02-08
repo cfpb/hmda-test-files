@@ -11,7 +11,7 @@ from rules_engine import rules_engine
 import utils
 
 config_file = 'configurations/clean_file_config.yaml'
-bank_config = 'configurations/fake0_config.yaml'
+bank_config = 'configurations/ABHINAYAA_config.yaml'
 geo_config_file='configurations/geographic_data.yaml'
 filepaths_file = 'configurations/test_filepaths.yaml'
 lar_schema_file="../schemas/lar_schema.json"

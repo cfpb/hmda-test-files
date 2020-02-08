@@ -12,7 +12,7 @@ from rules_engine import rules_engine
 
 #load configurations
 lar_config_file = 'configurations/clean_file_config.yaml'
-bank_config = 'configurations/bank1_config.yaml'
+bank_config = 'configurations/fake0_config.yaml'
 geo_config_file='configurations/geographic_data.yaml'
 filepaths_file = 'configurations/test_filepaths.yaml'
 lar_schema_file="../schemas/lar_schema.json"
@@ -57,7 +57,8 @@ bank_clean_dir = filepaths["clean_filepath"].format(bank_name=bank_config_data["
 #get all files in clean folder(s)
 clean_file_names = listdir(bank_clean_dir)
 clean_file_names = [f for f in listdir(bank_clean_dir) if isfile(join(bank_clean_dir, f))]
-clean_file_names.remove('.DS_Store')
+if '.DS_Store' in clean_file_names:
+	clean_file_names.remove('.DS_Store')
 
 #get directories to check for files
 bank_test_v_dir = filepaths["validity_filepath"].format(bank_name=bank_config_data["name"]["value"])
