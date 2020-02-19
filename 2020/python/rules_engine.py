@@ -272,7 +272,7 @@ class rules_engine(object):
 		field = "activity_year"
 		edit_name = "s302"
 		year = str(self.config_data["activity_year"]["value"])
-		fail_df = self.ts_df[self.ts_df.calendar_year != self.config_data["activity_year"]["value"]]
+		fail_df = self.ts_df[self.ts_df.calendar_year.isin([self.config_data["activity_year"]["value"]])]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	#S303 note: this requires panel data to implement the check and is beyond the scope of this project
@@ -502,7 +502,8 @@ class rules_engine(object):
 		"""
 		edit_name = "v610_2"
 		field = "app_date"
-		fail_df = self.lar_df[((self.lar_df.app_date=="NA")&(self.lar_df.action_taken!="6"))|((self.lar_df.action_taken=="6")&(self.lar_df.app_date!="NA"))]
+		fail_df = self.lar_df[((self.lar_df.app_date=="NA")&(self.lar_df.action_taken!="6"))|
+				((self.lar_df.action_taken=="6")&(self.lar_df.app_date!="NA"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v611(self):
@@ -3656,7 +3657,8 @@ class rules_engine(object):
 		edit_name = "q648"
 		field = "uli"
 		fail_df = self.lar_df[(self.lar_df.action_taken.isin(["1", "2", "3", "4", "5", "7", "8"]))&
-							   self.lar_df.apply(lambda x: x.uli[:20] != x.lei, axis=1)]
+							  (self.lar_df.apply(lambda x: x.uli[:20] != x.lei, axis=1))]
+		
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q649_1(self):
