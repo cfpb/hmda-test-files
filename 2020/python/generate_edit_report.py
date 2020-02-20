@@ -38,7 +38,10 @@ with open(geo_config["zip_code_file"], 'r') as f:
 	zip_codes = json.load(f)
 zip_codes.append("Exempt")
 
-edit_report_path = filepaths["edit_report_output_filepath"] #set location for edit report CSV writing
+#set location for edit report CSV writing
+edit_report_path = filepaths["edit_report_output_filepath"] 
+#get paths to check for clean files (by bank name)
+bank_clean_dir = filepaths["clean_filepath"].format(bank_name=bank_config_data["name"]["value"])
 
 geographic_data = pd.read_csv(geo_config['geographic_data_file'], delimiter='|', header=0,
 	names=geo_config['file_columns'], dtype=object) #instantiate Census file data as dataframe
@@ -50,9 +53,6 @@ geographic_data["tract_fips"] = geographic_data.apply(lambda x: str(x.county_fip
 #instantiate rules engine to test clean and error files
 rules_engine = rules_engine(config_data=lar_file_config_data, state_codes=geo_config["state_codes"], 
 	state_codes_rev=geo_config["state_codes_rev"], geographic_data=geographic_data, full_lar_file_check=True)
-
-#get paths to check for clean files (by bank name)
-bank_clean_dir = filepaths["clean_filepath"].format(bank_name=bank_config_data["name"]["value"])
 
 #get all files in clean folder(s)
 clean_file_names = listdir(bank_clean_dir)

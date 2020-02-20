@@ -80,7 +80,7 @@ for i in range(bank_config_data["file_length"]["value"]):
 	rules_engine.load_lar_data(lar_row) #loading lar_row to rules engine converts it to a dataframe for value checking
 
 	#generate error report
-	edit_report_df = rules_engine.create_edit_report(rules_list=["s","v"])
+	edit_report_df = rules_engine.create_edit_report(rules_list=["s", "v", "q"])
 	if LOGGING:
 		logging.info("generating row {count}".format(count=i))
 	if DEBUG:

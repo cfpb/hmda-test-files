@@ -128,6 +128,7 @@ for quality_file in quality_files:
 	bad_uli_list = [uli for sublist in bad_uli_list for uli in sublist]
 	bad_uli_list = set(bad_uli_list) #convert to set to remove duplicates
 	print(len(bad_uli_list), "bad ULIs")
+	print(bad_uli_list)
 	print(len(lar_df), "before dropping bad ulis")
 
 	clean_lar_df = lar_df[~lar_df.uli.isin(bad_uli_list)].copy() #drop rows failing S/V from lar_df

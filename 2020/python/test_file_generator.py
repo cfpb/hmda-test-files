@@ -371,7 +371,7 @@ class test_data_creator(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.app_date = "222222222"
+		lar.app_date = "22222222"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -758,7 +758,7 @@ class test_data_creator(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.county = "654321"
+		lar.county = "024321"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -769,8 +769,8 @@ class test_data_creator(object):
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.county = "654321"
-		lar.tract = "12345678901"
+		counties = list(self.county_df.county_fips[self.county_df.county_fips.isin(list(lar.county))])
+		lar.county = random.choice(counties)
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -4121,6 +4121,8 @@ class test_data_creator(object):
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
+		#fix compatibility with v681-2
+		lar.action_taken[lar.action_taken.isin(["4", "5", "6"])] = random.choice(["1","2","3","7","8"])
 		lar.cltv = "0.1"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
