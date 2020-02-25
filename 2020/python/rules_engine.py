@@ -58,13 +58,17 @@ class rules_engine(object):
 		Takes a dataframe of LAR data and stores it as a class variable.
 		attempts a converstion to dataframe if passed object is not a dataframe
 		"""
+		if type(lar_df) != "pandas.core.frame.DataFrame":
 	
-		try: 
-			lar_df = pd.DataFrame(lar_df)
-		except:
-			lar_df = pd.DataFrame(lar_df, index=[1], keep_default_na=False)
-
-		self.lar_df = lar_df
+			try: 
+				lar_df = pd.DataFrame(lar_df, index=[0])
+				self.lar_df = lar_df
+			except ValueError as e:
+				print("lar data conversion failed, ", e)
+				print(type(lar_df))
+				#lar_df = pd.DataFrame(lar_df, index=[1], keep_default_na=False)
+		else:
+			self.lar_df = lar_df
 
 	def load_ts_data(self, ts_df):
 		"""

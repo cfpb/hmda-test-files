@@ -4062,8 +4062,10 @@ class test_data_creator(object):
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.uli = "KUGELSCHREIBER123456"
+		lar.uli = lar.uli.apply(lambda x: "KUGELSCHREIBER123456" + x[20:])
 		lar.action_taken = random.choice(["1", "2", "3", "4", "5", "7", "8"])
+		#set lar.app_date to other than NA to match removal of 6 from action taken options
+		lar.app_df = "20201017"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
