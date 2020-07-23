@@ -40,7 +40,7 @@ Configuration values for clean files can be changed using the [2019 Clean File C
 
 Additional configuration options are available in the [configuration folder](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations).
 
-For 2019:
+For 2019 and 2020:
 1. Navigate to the 2019/python directory
 2. Run `python3 generate_clean_files.py`
 4. The clean test file will be created with the following path: `2019/edits_files/{bank name}/clean_files/{Bank Name}_clean_{row count}.txt`.
@@ -63,7 +63,7 @@ Existing test files of the same length will be overwritten.
 These filepaths can be changed in [test filepaths configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/test_filepaths.yaml).
 
 
-To create test files for 2019: 
+To create test files for 2019 and 2020: 
 1. Navigate to the 2019/python directory.
 2. Run `python3 generate_2019_error_files.py`
 
