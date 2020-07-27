@@ -11,7 +11,7 @@ from rules_engine import rules_engine
 import utils
 
 config_file = 'configurations/clean_file_config.yaml'
-bank_config = 'configurations/fake0_config.yaml'
+bank_config = 'configurations/bank1_config.yaml'
 geo_config_file='configurations/geographic_data.yaml'
 filepaths_file = 'configurations/test_filepaths.yaml'
 lar_schema_file="../schemas/lar_schema.json"
@@ -80,7 +80,7 @@ for i in range(bank_config_data["file_length"]["value"]):
 	rules_engine.load_lar_data(lar_row) #loading lar_row to rules engine converts it to a dataframe for value checking
 
 	#generate error report
-	edit_report_df = rules_engine.create_edit_report(rules_list=["s","v"])
+	edit_report_df = rules_engine.create_edit_report(rules_list=["s", "v", "q"])
 	if LOGGING:
 		logging.info("generating row {count}".format(count=i))
 	if DEBUG:

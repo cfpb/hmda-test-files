@@ -30,6 +30,7 @@ Each year listed in the parent directory contains its own codebase for creating 
 - [Python 3.5 or greater](https://www.python.org/downloads/)
 - [Jupyter Notebooks](http://jupyter.org/): `pip3 install jupyter`
 - [Pandas](http://pandas.pydata.org/): `pip3 install pandas`
+- Other required Python libraries can be installed with `pip3 install -r requirements.txt`
 
 
 ## Generating Clean Files
@@ -38,15 +39,19 @@ These files are used as the base for generating files that will fail edits. Runn
 
 Configuration values for clean files can be changed using the [2019 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/clean_file_config.yaml) or the [2018 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/clean_file_config.yaml). 
 
-Additional configuration options are available in the [configuration folder](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations).
+Additional configuration options are available in the configuration folders by year:
+- [2020](https://github.com/cfpb/hmda-test-files/tree/master/2020/python/configurations)
+- [2019](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations)
+- [2018](https://github.com/cfpb/hmda-test-files/tree/master/2018/python/configurations)
 
-For 2019:
-1. Navigate to the 2019/python directory
+
+For 2019 and 2020:
+1. Navigate to the `<year>/python` directory
 2. Run `python3 generate_clean_files.py`
 4. The clean test file will be created with the following path: `2019/edits_files/{bank name}/clean_files/{Bank Name}_clean_{row count}.txt`.
 
 For 2018:
-1. Navigate to the 2018/python directory
+1. Navigate to the `2018/python` directory
 2. Run `python3 generate_2018_clean_files.py`
 3. The clean test file will be created in a new edits_files directory under `2018/edits_files/clean_files/{Bank Name}/` with the filename `clean_file_{Number or Rows}_{Bank Name}.txt`
 
@@ -63,12 +68,12 @@ Existing test files of the same length will be overwritten.
 These filepaths can be changed in [test filepaths configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/test_filepaths.yaml).
 
 
-To create test files for 2019: 
-1. Navigate to the 2019/python directory.
+To create test files for 2019 and 2020: 
+1. Navigate to the `<year>/python` directory
 2. Run `python3 generate_2019_error_files.py`
 
 To create test files for 2018: 
-1. Navigate to the 2018/python directory.
+1. Navigate to the `2018/python` directory.
 2. Run `python3 generate_2018_error_files.py`
 3. The error files for testing syntax, validity, and quality edit test files will be created in the following diretories:
 	- Syntax: `2018/edits_files/test_files/{Bank Name}/syntax`
@@ -79,8 +84,8 @@ To create test files for 2018:
 ## Generating Large Files 
 Due to code design and the edit rules for the LAR data generating synthetic data files of large size was time prohibitive. The [large file generation script](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/generate_large_files.py) takes a different approach by using a clean file base and copying rows until the desired file size is created.
 
-To generate large files for 2019: 
-1. Navigate to the 2019/python directory
+To generate large files for 2019 and 2020: 
+1. Navigate to the `<year>/python` directory
 2. Run `python3 generate_large_files.py` 
 
 To set the large file size edit the `large_file_write_length` value in the [clean configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/clean_file_config.yaml).
@@ -88,7 +93,7 @@ To set the base file used to create large files edit the `large_file_base_length
 
 *Note: the 2018 process is different than 2019.*
 To generate large files for 2018: 
-1. Navigate to the 2018/python directory.
+1. Navigate to the `2018/python` directory.
 2. Adjust the [2018 File Large File Script Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/python/configurations/test_filepaths.yaml) to specify bank name, lei, tax id, row count, output filepath, and output filename. 
 3. Run `python3 large_test_files_script.py` to produce the large file. 
 
@@ -103,9 +108,11 @@ Edit reports provide a summary of the syntax, validity, or quality edits passed 
 
 Edit reports can be generated for any synthetic submission file. Configuration options include (with defaulted values):
 
-To generate edit reports for 2019:  
-1. Navigate to the 2019/python directory.
-2. Adjust the [2019 Edit Report Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations/edit_report_config.yaml) to specify output. 
+To generate edit reports for 2019 and 2020:  
+1. Navigate to the `<year>/python` directory.
+2. Adjust the Edit Report Configuration to specify output. 
+	- [2020](https://github.com/cfpb/hmda-test-files/tree/master/2020/python/configurations/edit_report_config.yaml)
+	- [2019](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations/edit_report_config.yaml)
 3. Run `python3 generate_edit_report.py` to produce the edit report in the directory according to the configuration file. 
 
 To generate edit reports for 2018:  

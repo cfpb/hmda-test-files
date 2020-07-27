@@ -58,13 +58,17 @@ class rules_engine(object):
 		Takes a dataframe of LAR data and stores it as a class variable.
 		attempts a converstion to dataframe if passed object is not a dataframe
 		"""
+		if type(lar_df) != "pandas.core.frame.DataFrame":
 	
-		try: 
-			lar_df = pd.DataFrame(lar_df)
-		except:
-			lar_df = pd.DataFrame(lar_df, index=[1])
-
-		self.lar_df = lar_df
+			try: 
+				lar_df = pd.DataFrame(lar_df, index=[0])
+				self.lar_df = lar_df
+			except ValueError as e:
+				print("lar data conversion failed, ", e)
+				print(type(lar_df))
+				#lar_df = pd.DataFrame(lar_df, index=[1], keep_default_na=False)
+		else:
+			self.lar_df = lar_df
 
 	def load_ts_data(self, ts_df):
 		"""
@@ -74,7 +78,7 @@ class rules_engine(object):
 		try:
 			self.ts_df = ts_df
 		except:
-			ts_df = pd.DataFrame(ts_df, index=[0])
+			ts_df = pd.DataFrame(ts_df, index=[0], keep_default_na=False)
 			
 		self.ts_df = ts_df
 
@@ -114,7 +118,9 @@ class rules_engine(object):
 		data_fields
 		Row IDS (as ULI or TS)
 		"""
-		for rule in dir(self):
+		rules = dir(self)
+		rules = [rule for rule in rules if rule[:1] in rules_list]
+		for rule in rules:
 			if rule[:1] in rules_list and rule[1:4].isdigit()==True:
 				getattr(self, rule)()
 		res_df = pd.DataFrame(self.results)
@@ -178,20 +184,29 @@ class rules_engine(object):
 						result = "fail"
 		return result
 
-	def check_number(self, field, min_val=None):
+	def check_number(self, field, min_val=None, max_val=None):
 		"""
 		Checks if a passed field contains only digits.
 		Optionally a minimum value can be checked as well
 		"""
 		try:
 			digit = field.replace(".","").isdigit() #check if data field is a digit
-			if min_val is not None: #min_val was passed
+			if min_val is not None and max_val is not None:
+				if digit == True and float(field) < max_val and float(field) > min_val:
+					return True
+
+			elif max_val is not None and min_val is None:
+				if digit == True and float(field) < max_val:
+					return True #value is a digit and greater than max_val
+
+			elif min_val is not None and max_val is None: #min_val was passed
 				if digit == True and float(field) > min_val:
-					return True #digit and min_val are True
+					return True #value is a digit and less than min_val 
 				else:
 					return False #digit is True, min_val is False
 			else:
 				return digit #no min value passed
+			
 		except:
 			return False #passed value is not a number
 
@@ -226,16 +241,21 @@ class rules_engine(object):
 		else:
 			return False
 
-	def years_between(self, date1, date2):
+	def years_between(self, date1, date2, thresh=2):
 		"""
 		date1: initial date (application date)
 		date2: second date (action date)
 
 		Returns a year approximation of the time between two dates
 		"""
-		date1 = datetime.strptime(date1, "%Y%m%d")
-		date2 = datetime.strptime(date2, "%Y%m%d")
-		return abs((date2 - date1).days)/365
+		if self.valid_date(date1) and self.valid_date(date2):
+			date1 = datetime.strptime(date1, "%Y%m%d")
+			date2 = datetime.strptime(date2, "%Y%m%d")
+			delta_years = abs((date2 - date1).days)/365
+			if delta_years > thresh:
+				return False
+		else:
+			return True
 
 	#### Edit Rules from FIG
 	def s300_1(self):
@@ -272,7 +292,8 @@ class rules_engine(object):
 		field = "activity_year"
 		edit_name = "s302"
 		year = str(self.config_data["activity_year"]["value"])
-		fail_df = self.ts_df[self.ts_df.calendar_year != self.config_data["activity_year"]["value"]]
+		self.ts_df.calendar_year = self.ts_df.calendar_year.apply(str)
+		fail_df = self.ts_df[self.ts_df.calendar_year.isin([self.config_data["activity_year"]["value"]])]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df, row_type="TS")
 
 	#S303 note: this requires panel data to implement the check and is beyond the scope of this project
@@ -502,7 +523,8 @@ class rules_engine(object):
 		"""
 		edit_name = "v610_2"
 		field = "app_date"
-		fail_df = self.lar_df[((self.lar_df.app_date=="NA")&(self.lar_df.action_taken!="6"))|((self.lar_df.action_taken=="6")&(self.lar_df.app_date!="NA"))]
+		fail_df = self.lar_df[((self.lar_df.app_date=="NA")&(self.lar_df.action_taken!="6"))|
+				((self.lar_df.action_taken=="6")&(self.lar_df.app_date!="NA"))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v611(self):
@@ -3017,7 +3039,8 @@ class rules_engine(object):
 		field = "Application Date"
 		edit_name = "q601"
 		fail_df = self.lar_df[self.lar_df.app_date!="NA"].copy()
-		fail_df = fail_df[fail_df.apply(lambda x: self.years_between(x.app_date, x.action_date)>2.0, axis=1)]
+		#true return in years_between() indicates that the delta between years is greater than threshold
+		fail_df = fail_df[fail_df.apply(lambda x: self.years_between(x.app_date, x.action_date, thresh=2.0)==True, axis=1)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q602(self):
@@ -3065,7 +3088,7 @@ class rules_engine(object):
 		field = "Income"
 		edit_name = "q606"
 		fail_df = self.lar_df[(self.lar_df.income!="NA")].copy()
-		fail_df = fail_df[(fail_df.income.apply(lambda x: int(x)>=10000))]
+		fail_df = fail_df[(fail_df.income.apply(lambda x: float(x)>=10000))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q607(self):
@@ -3186,9 +3209,13 @@ class rules_engine(object):
 		edit_name = "q615_2"
 		fail_df = self.lar_df[(~self.lar_df.origination_fee.isin(["NA", "Exempt", ""]))&
 							  (~self.lar_df.points_fees.isin(["NA", "Exempt"]))].copy()
+		#remove blanks to allow float conversion in failure test
+		blanks = fail_df[fail_df.points_fees.isin([""])].copy()
+		fail_df = fail_df[~fail_df.points_fees.isin([""])]
 		fail_df.origination_fee = fail_df.origination_fee.apply(lambda x: float(x))
 		fail_df.points_fees = fail_df.points_fees.apply(lambda x: float(x))
 		fail_df = fail_df[fail_df.points_fees < fail_df.origination_fee]
+		fail_df = pd.concat([fail_df, blanks]) #add blanks back to fail_df for results reporting
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q616_1(self):
@@ -3218,9 +3245,13 @@ class rules_engine(object):
 		edit_name = "q616_2"
 		fail_df = self.lar_df[(~self.lar_df.points_fees.isin(["Exempt", "NA"]))&
 							  (~self.lar_df.discount_points.isin(["NA", "Exempt"]))].copy()
+		#remove blanks to allow float conversion in failure test
+		blanks = fail_df[fail_df.points_fees.isin([""])].copy()
+		fail_df = fail_df[~fail_df.points_fees.isin([""])]
 		fail_df.points_fees = fail_df.points_fees.apply(lambda x: float(x))
 		fail_df.discount_points = fail_df.discount_points.apply(lambda x: float(x))
 		fail_df = fail_df[(fail_df.discount_points>fail_df.points_fees)]
+		fail_df = pd.concat([fail_df, blanks]) #add blanks back to fail_df for results reporting
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 		
 	def q617(self):
@@ -3296,7 +3327,7 @@ class rules_engine(object):
 		edit_name = "q623"
 		fail_df = self.lar_df[self.lar_df.income!="NA"]
 		fail_df = fail_df[(fail_df.total_units.apply(lambda x: int(x)<=4))&
-				 (fail_df.income.apply(lambda x: int(x) <=200))&
+				 (fail_df.income.apply(lambda x: float(x) <=200))&
 			 	 (fail_df.loan_amount.apply(lambda x: int(x)>=2000000))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
@@ -3503,8 +3534,11 @@ class rules_engine(object):
 		edit_name = "q638"
 		action_1 = len(self.lar_df[self.lar_df.action_taken=="1"])
 		denom_count = len(self.lar_df[self.lar_df.action_taken.isin(["1","2","3","4","5","6"])])
-		if (action_1 * 1.0) / denom_count < .20:
-			fail_df = self.lar_df[self.lar_df.action_taken.isin(["1","2","3","4","5","6"])]
+		if denom_count > 0:
+			if ((action_1 * 1.0) / denom_count) < .20:
+				fail_df = self.lar_df[self.lar_df.action_taken.isin(["1","2","3","4","5","6"])]
+			else:
+				fail_df = []
 		else:
 			fail_df = []
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
@@ -3532,7 +3566,7 @@ class rules_engine(object):
 		field = "Income; Total Number of Entries Contained in Submission"
 		edit_name = "q640"
 		income_less_10k = self.lar_df[self.lar_df.income!="NA"].copy()
-		income_less_10k_ct = len(income_less_10k[income_less_10k.income.apply(lambda x: int(x)<10)])
+		income_less_10k_ct = len(income_less_10k[income_less_10k.income.apply(lambda x: float(x)<10)])
 		denom_count = len(self.lar_df)
 		if (income_less_10k_ct * 1.0) / denom_count > .20:
 			fail_df = income_less_10k
@@ -3656,7 +3690,8 @@ class rules_engine(object):
 		edit_name = "q648"
 		field = "uli"
 		fail_df = self.lar_df[(self.lar_df.action_taken.isin(["1", "2", "3", "4", "5", "7", "8"]))&
-							   self.lar_df.apply(lambda x: x.uli[:20] != x.lei, axis=1)]
+							  (self.lar_df.apply(lambda x: x.uli[:20] != x.lei, axis=1))]
+		
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q649_1(self):
@@ -3667,8 +3702,10 @@ class rules_engine(object):
 		field = "app credit score"
 		edit_name = "q649_1"
 		fail_df = self.lar_df[~self.lar_df.app_credit_score.isin(["7777", "8888", "1111"])].copy()
-		fail_df.app_credit_score = fail_df.app_credit_score.apply(lambda x: int(x))
-		fail_df = fail_df[~fail_df.app_credit_score.apply(lambda x: 300 < float(x) < 900)]
+		#fail_df.app_credit_score = fail_df.app_credit_score.apply(lambda x: int(x))
+		fail_df = fail_df[fail_df.app_credit_score.apply(lambda x: self.check_number(x, 
+			min_val=301, max_val=901)==False)]
+		#fail_df = fail_df[fail_df.apply(self.check_number(fail_df.app_credit_score, min_val=301, max_val=901)==False, axis=1)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q649_2(self):
@@ -3676,10 +3713,12 @@ class rules_engine(object):
 		If Credit Score of Co-Applicant or Co-Borrower does not equal 7777, 8888, 9999, or 1111, 
 		Credit Score should generally be between 300 and 900.
 		"""
-		field = "app credit score"
+		field = "co app credit score"
 		edit_name = "q649_2"
 		fail_df = self.lar_df[~self.lar_df.co_app_credit_score.isin(["7777", "8888", "1111"])].copy()
-		fail_df = fail_df[~fail_df.app_credit_score.apply(lambda x: 300 < float(x) < 900)]
+		#fail_df = fail_df[~fail_df.app_credit_score.apply(lambda x: 300 < float(x) < 900)]
+		fail_df = fail_df[fail_df.co_app_credit_score.apply(lambda x: self.check_number(x, 
+			min_val=301, max_val=901)==False)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)		
 
 	def q650(self):
@@ -3709,7 +3748,8 @@ class rules_engine(object):
 		field = "dti"
 		edit_name = "q652"
 		fail_df = self.lar_df[~self.lar_df.dti.isin(["NA", "Exempt"])].copy()
-		fail_df = fail_df[fail_df.dti.apply(lambda x: 0 < float(x) < 1)]
+		fail_df = fail_df[fail_df.dti.apply(lambda x: self.check_number(x, min_val=0, max_val=1)==False)]
+		#fail_df = fail_df[fail_df.dti.apply(lambda x: 0 < float(x) < 1)]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q653_1(self):
@@ -3746,5 +3786,9 @@ class rules_engine(object):
 		fail_df = fail_df[fail_df.income!="NA"]
 		fail_df = fail_df[(fail_df.income.apply(lambda x: float(x)>5))&
 						  (fail_df.action_taken.isin(["1","2","8"]))&
-						 ~(fail_df.dti.apply(lambda x: 0.0 < float(x) < 80))]
+						  (fail_df.dti.apply(lambda x: self.check_number(x, min_val=0.0, max_val=80)))]
+		#fail_df = fail_df[(fail_df.income.apply(lambda x: float(x)>5))&
+		#				  (fail_df.action_taken.isin(["1","2","8"]))&
+		#				 ~(fail_df.dti.apply(lambda x: 0.0 < float(x) < 80))]
+
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
