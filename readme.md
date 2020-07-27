@@ -84,8 +84,8 @@ To create test files for 2018:
 ## Generating Large Files 
 Due to code design and the edit rules for the LAR data generating synthetic data files of large size was time prohibitive. The [large file generation script](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/generate_large_files.py) takes a different approach by using a clean file base and copying rows until the desired file size is created.
 
-To generate large files for 2019: 
-1. Navigate to the 2019/python directory
+To generate large files for 2019 and 2020: 
+1. Navigate to the `<year>/python` directory
 2. Run `python3 generate_large_files.py` 
 
 To set the large file size edit the `large_file_write_length` value in the [clean configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/clean_file_config.yaml).
@@ -93,7 +93,7 @@ To set the base file used to create large files edit the `large_file_base_length
 
 *Note: the 2018 process is different than 2019.*
 To generate large files for 2018: 
-1. Navigate to the 2018/python directory.
+1. Navigate to the `2018/python` directory.
 2. Adjust the [2018 File Large File Script Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/python/configurations/test_filepaths.yaml) to specify bank name, lei, tax id, row count, output filepath, and output filename. 
 3. Run `python3 large_test_files_script.py` to produce the large file. 
 
@@ -108,9 +108,11 @@ Edit reports provide a summary of the syntax, validity, or quality edits passed 
 
 Edit reports can be generated for any synthetic submission file. Configuration options include (with defaulted values):
 
-To generate edit reports for 2019:  
-1. Navigate to the 2019/python directory.
-2. Adjust the [2019 Edit Report Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations/edit_report_config.yaml) to specify output. 
+To generate edit reports for 2019 and 2020:  
+1. Navigate to the `<year>/python` directory.
+2. Adjust the Edit Report Configuration to specify output. 
+	- [2020](https://github.com/cfpb/hmda-test-files/tree/master/2020/python/configurations/edit_report_config.yaml)
+	- [2019](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations/edit_report_config.yaml)
 3. Run `python3 generate_edit_report.py` to produce the edit report in the directory according to the configuration file. 
 
 To generate edit reports for 2018:  
