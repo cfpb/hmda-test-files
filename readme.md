@@ -30,6 +30,7 @@ Each year listed in the parent directory contains its own codebase for creating 
 - [Python 3.5 or greater](https://www.python.org/downloads/)
 - [Jupyter Notebooks](http://jupyter.org/): `pip3 install jupyter`
 - [Pandas](http://pandas.pydata.org/): `pip3 install pandas`
+- Other required Python libraries can be installed with `pip3 install -r requirements.txt`
 
 
 ## Generating Clean Files
@@ -38,15 +39,19 @@ These files are used as the base for generating files that will fail edits. Runn
 
 Configuration values for clean files can be changed using the [2019 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2019/configurations/clean_file_config.yaml) or the [2018 Clean File Configuration](https://github.com/cfpb/hmda-test-files/tree/master/2018/configurations/clean_file_config.yaml). 
 
-Additional configuration options are available in the [configuration folder](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations).
+Additional configuration options are available in the configuration folders by year:
+- [2020](https://github.com/cfpb/hmda-test-files/tree/master/2020/python/configurations)
+- [2019](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations)
+- [2018](https://github.com/cfpb/hmda-test-files/tree/master/2018/python/configurations)
+
 
 For 2019 and 2020:
-1. Navigate to the 2019/python directory
+1. Navigate to the `<year>/python` directory
 2. Run `python3 generate_clean_files.py`
 4. The clean test file will be created with the following path: `2019/edits_files/{bank name}/clean_files/{Bank Name}_clean_{row count}.txt`.
 
 For 2018:
-1. Navigate to the 2018/python directory
+1. Navigate to the `2018/python` directory
 2. Run `python3 generate_2018_clean_files.py`
 3. The clean test file will be created in a new edits_files directory under `2018/edits_files/clean_files/{Bank Name}/` with the filename `clean_file_{Number or Rows}_{Bank Name}.txt`
 
@@ -64,11 +69,11 @@ These filepaths can be changed in [test filepaths configuration](https://github.
 
 
 To create test files for 2019 and 2020: 
-1. Navigate to the 2019/python directory.
+1. Navigate to the `<year>/python` directory
 2. Run `python3 generate_2019_error_files.py`
 
 To create test files for 2018: 
-1. Navigate to the 2018/python directory.
+1. Navigate to the `2018/python` directory.
 2. Run `python3 generate_2018_error_files.py`
 3. The error files for testing syntax, validity, and quality edit test files will be created in the following diretories:
 	- Syntax: `2018/edits_files/test_files/{Bank Name}/syntax`
