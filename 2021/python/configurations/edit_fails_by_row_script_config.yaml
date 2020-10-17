@@ -1,0 +1,11 @@
+bank_name: "Bank1"
+lei: "BANK1LEIFORTEST12345"
+tax_id: "02-1234567"
+rows_failed: 50
+rows_total: 100
+passes_all_filepath: #Specify passes_all filepath
+passes_all_filename: #Specify passes_all filename
+fails_all_filepath: #Specify fails_all filepath
+fails_all_filename: #Specify fails_all filename
+output_filepath: "../edits_files/edit_fails_by_row/Bank1/"
+output_filename: "50_rows_failed_100_rows_total.txt"
