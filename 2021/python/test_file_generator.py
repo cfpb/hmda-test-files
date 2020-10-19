@@ -2730,14 +2730,30 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
-	def v695(self):
-		"""Set NMLSR ID to blank."""
-		name = "v695.txt"
+	def v695_1(self):
+		"""
+		Set NMLSR ID to blank, alpha, alpha numeric.
+		"""
+
+		name = "v695_1.txt"
 		name = self.name_prefix + name
 		path = self.validity_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.mlo_id = ""
+		lar.mlo_id = random.choice(["abara662", "smug pockets", ""])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def v695_2(self):
+		"""
+		Set NMLSR ID to 0.
+		"""
+		name = "v695_2.txt"
+		name = self.name_prefix + name
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		lar.mlo_id = "0"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -3274,6 +3290,19 @@ class test_data_creator(object):
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 		
+	def v719(self):
+		"""
+		Convert TS name to numeric characters only.
+		"""
+		name = self.name_prefix + "v719.txt"
+		path = self.validity_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+		ts["bank_name"] = "123456"
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+
 	def q600(self):
 		"""
 		Set all ULIs to same value.
@@ -3494,7 +3523,7 @@ class test_data_creator(object):
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
 		lar.loan_costs = "1000"
-		lar.origination_fee = "500"
+		lar.origination_fee = "5000"
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
 
@@ -4187,5 +4216,93 @@ class test_data_creator(object):
 		lar.income = "6000"
 		lar.action_taken = random.choice(["1", "2", "8"])
 		lar.dti = random.choice(["0", "90"])
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+
+	def q655(self):
+		"""
+		1) If Total Units is greater than or equal to 5 
+		and the record relates to a multifamily property, 
+		then Multifamily Affordable Units should generally be 0 or an integer.
+		"""
+
+		name = self.name_prefix + "q655.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+
+		#set total units to >= 5 for multifamily
+		lar.total_units = lar.total_units.apply(lambda x: random.choice(range(5, 4000)))
+		#set affordable units to an invalid value for multifamily (NA) or a percentage format which is invalid
+		lar.affordable_units = lar.affordable_units.apply(lambda x: random.choice(["NA", ".25", "25%"]))
+
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+
+	def q656(self):
+		"""
+		Set Exempt text fields to 1111.
+		Use 1 field per record
+		Loop over records and pop a field from the list to set it to 1111
+		"""
+
+		exempt_str_fields = ["state", "rate_spread", "loan_costs", "points_fees", 
+							 "origination_fee", "discount_points", "lender_credits", 
+							 "interest_rate", "prepayment_penalty", "dti", 
+							 "cltv", "loan_term", "intro_rate", 
+							 "property_value", "affordable_units", "street_address", 
+							 "city", "zip_code", "mlo_id"]
+
+		name = self.name_prefix + "q656.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+
+		for index, row in lar.iterrows():
+			change_field = exempt_str_fields.pop(0) #return first element of list an remove it from remaining
+			lar.at[index, change_field] = "1111"
+			if len(exempt_str_fields) == 0:
+				#reset values if all were used
+				exempt_str_fields = ["state", "rate_spread", "loan_costs", "points_fees", 
+					 "origination_fee", "discount_points", "lender_credits", 
+					 "interest_rate", "prepayment_penalty", "dti", 
+					 "cltv", "loan_term", "intro_rate", 
+					 "property_value", "affordable_units", "street_address", 
+					 "city", "zip_code", "mlo_id"]
+
+		print("writing {name}".format(name=name))
+		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)
+
+	def q657(self):
+		"""
+		Set continuous integer or float fields to 1111.
+		Use 1 field per record
+		Loop over records and pop a field from the list to set it to 1111
+		"""
+
+		cont_int_fields = ["rate_spread", "loan_costs", "points_fees", 
+						   "origination_fee", "discount_points", "lender_credits",
+						   "interest_rate", "prepayment_penalty", "dti",
+						   "cltv", "loan_term", "intro_rate", 
+						   "property_value", "affordable_units", "mlo_id"]
+
+		name = self.name_prefix + "q657.txt"
+		path = self.quality_path
+		ts = self.ts_df.copy()
+		lar = self.lar_df.copy()
+
+		for index, row in lar.iterrows():
+			change_field = cont_int_fields.pop(0) #return first element of list an remove it from remaining
+			lar.at[index, change_field] = "1111"
+			if len(cont_int_fields) == 0:
+				#reset values if all were used
+				cont_int_fields = ["rate_spread", "loan_costs", "points_fees", 
+						   "origination_fee", "discount_points", "lender_credits",
+						   "interest_rate", "prepayment_penalty", "dti",
+						   "cltv", "loan_term", "intro_rate", 
+						   "property_value", "affordable_units", "mlo_id"]
+
 		print("writing {name}".format(name=name))
 		utils.write_file(name=name, path=path, ts_input=ts, lar_input=lar)

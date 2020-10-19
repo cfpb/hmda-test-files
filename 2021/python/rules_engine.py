@@ -2634,15 +2634,34 @@ class rules_engine(object):
 		fail_df = self.lar_df[(self.lar_df.action_taken=="1")&(~self.lar_df.initially_payable.isin(("1111", "1", "2")))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
-	def v695(self):
+	def v695_1(self):
 		"""
 		An invalid NMLSR Identifier was reported.
-		1) NMLSR Identifier cannot be left blank.
+		1) NMLSR Identifier must be a valid NMLSR ID in integer format, NA, or Exempt, 
+		and cannot be left blank. 
 		"""
 
 		field = "NMLS ID"
-		edit_name = "v695"
-		fail_df = self.lar_df[(self.lar_df.mlo_id=="")]
+		edit_name = "v695_1"
+
+		fail_df = self.lar_df[(self.lar_df.mlo_id=="")|
+							  ((self.lar_df.mlo_id.apply(lambda x: x.isdigit()==False))&
+							  (~self.lar_df.mlo_id.isin(["Exempt", "NA"])))|
+							  (self.lar_df.mlo_id.apply(lambda x: "." in str(x)))]
+
+		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
+
+	def v695_2(self):
+		"""
+		2) NMLSR Identifier must not contain only the number zero (0) as a value. 
+		"""
+
+		field = "NMLS ID"
+		edit_name = "v695_2"
+
+		fail_df = self.lar_df[(self.lar_df.mlo_id=="0")]
+
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v696_1(self):
@@ -3242,70 +3261,80 @@ class rules_engine(object):
 	def q615_1(self):
 		"""
 		1) If Total Loan Costs and Origination Charges are not reported NA or Exempt, 
+		and both are nonzero numbers
 		then Total Loan Costs generally should be greater than Origination Charges. 
 		"""
-		field = "Origination Charges/Total Loan Costs/Total Points and Fees"
+
+		field = "Origination Charges/Total Loan Costs"
 		edit_name = "q615_1"
-		fail_df = self.lar_df[(~self.lar_df.origination_fee.isin(["NA", "Exempt", "0"]))&(~self.lar_df.loan_costs.isin(["NA", "Exempt", "0"]))].copy()
-		fail_df = fail_df[(fail_df.loan_costs<fail_df.origination_fee)]
+		fail_df = self.lar_df[(~self.lar_df.origination_fee.isin(["NA", "Exempt", "0"]))&
+							  (~self.lar_df.loan_costs.isin(["NA", "Exempt", "0"]))].copy()
+
+		fail_df.origination_fee = fail_df.origination_fee.apply(lambda x: float(x))
+		fail_df.loan_costs = fail_df.loan_costs.apply(lambda x: float(x))
+							  
+		fail_df = fail_df[(fail_df.loan_costs < fail_df.origination_fee)]
+
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 
 	def q615_2(self):
 		"""
-		2) If Total Points and Fees and Origination Charges are not reported NA or Exempt, then Total Points and Fees
-		generally should be greater than Origination Charges
+		2) If Total Points and Fees and Origination Charges are not reported NA or Exempt, 
+		and are both nonzero numbers, then 
+		Total Points and Fees generally should be greater than Origination Charges.
 		"""
-		field = "Origination Charges/Total Loan Costs/Total Points and Fees"
+
+		field = "Origination Charges/Total Points and Fees"
 		edit_name = "q615_2"
 		fail_df = self.lar_df[(~self.lar_df.origination_fee.isin(["NA", "Exempt", "0"]))&
 							  (~self.lar_df.points_fees.isin(["NA", "Exempt", "0"]))].copy()
-		#remove blanks to allow float conversion in failure test
-		blanks = fail_df[fail_df.points_fees.isin([""])].copy()
-		fail_df = fail_df[~fail_df.points_fees.isin([""])]
+
 		fail_df.origination_fee = fail_df.origination_fee.apply(lambda x: float(x))
 		fail_df.points_fees = fail_df.points_fees.apply(lambda x: float(x))
+
 		fail_df = fail_df[fail_df.points_fees < fail_df.origination_fee]
-		fail_df = pd.concat([fail_df, blanks]) #add blanks back to fail_df for results reporting
+
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def q616_1(self):
 		"""
 		1) If Total Loan Costs and Discount Points are not reported NA or Exempt, 
-		then Total Loan Costs generally should be greater than Discount Points. 
+		and are both nonzero numbers, then 
+		Total Loan Costs generally should be greater than Discount Points. 
 		"""
-		field = "Discount Points; Total Loan Costs; Total Points and Fees"
+
+		field = "Discount Points; Total Loan Costs"
 		edit_name = "q616_1"
 		fail_df = self.lar_df[(~self.lar_df.loan_costs.isin(["NA", "Exempt", "0"]))&
 				(~self.lar_df.discount_points.isin(["NA", "Exempt", "0"]))].copy()
-		
-		#fail_df.loan_costs = fail_df.loan_costs.map({"": 0.0})
-		#fail_df.discount_points = fail_df.discount_points.map({"": 0.0})
 
 		fail_df.loan_costs = fail_df.loan_costs.apply(lambda x: float(x))
 		fail_df.discount_points = fail_df.discount_points.apply(lambda x: float(x))
+
 		fail_df = fail_df[(fail_df.loan_costs<fail_df.discount_points)]
 
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 
 	def q616_2(self):
 		"""
 		2) If Total Points and Fees and Discount Points are not reported NA or Exempt, 
 		and are both nonzero numbers, then 
-		Total Points and Fees generally should be greater than Discount Points
+		Total Points and Fees generally should be greater than Discount Points.
 		"""
-		field = "Discount Points; Total Loan Costs; Total Points and Fees"
+
+		field = "Discount Points; Total Points and Fees"
 		edit_name = "q616_2"
-		fail_df = self.lar_df[(~self.lar_df.points_fees.isin(["Exempt", "NA", "0"]))&
-							  (~self.lar_df.discount_points.isin(["NA", "Exempt", "0"]))].copy()
-		#remove blanks to allow float conversion in failure test
-		#blanks = fail_df[fail_df.discount_points.isin([""])].copy()
-		fail_df = fail_df[~fail_df.discount_points.isin([""])]
+		fail_df = self.lar_df[(~self.lar_df.points_fees.isin(["NA", "Exempt", "0"]))&
+							  (~self.lar_df.discount_points.isin(["NA", "Exempt", "0", ""]))].copy()
+
 		fail_df.points_fees = fail_df.points_fees.apply(lambda x: float(x))
 		fail_df.discount_points = fail_df.discount_points.apply(lambda x: float(x))
 		fail_df = fail_df[(fail_df.discount_points>fail_df.points_fees)]
-		#fail_df = pd.concat([fail_df, blanks]) #add blanks back to fail_df for results reporting
 
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 		
 	def q617(self):
 		"""
@@ -3776,7 +3805,7 @@ class rules_engine(object):
 
 	def q650_1(self):
 		"""
-		The Interest Rate reported is greater than 0 but less than 0.5, 
+		1) The Interest Rate reported is greater than 0 but less than 0.5, 
 		which may indicate a misplaced decimal point
 		"""
 		field = "interest rate"

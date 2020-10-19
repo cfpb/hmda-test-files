@@ -233,7 +233,7 @@ class lar_gen(object):
 		valid_lar_row["points_fees"] = str(random.choice(self.range_and_enum(field="points_fees", rng_max=lar_file_config["points_and_fees"]["value"])))
 		valid_lar_row["origination_fee"] = str(random.choice(self.range_and_enum(field="origination_fee", rng_max=lar_file_config["orig_charges"]["value"])))
 		valid_lar_row["discount_points"] = str(random.choice(self.range_and_enum(field="discount_points", rng_max=lar_file_config["discount_points"]["value"], empty=True)))
-		valid_lar_row["lender_credits"] = str(random.choice(self.range_and_enum(field="lender_credits", rng_max=lar_file_config["lender_credits"]["value"])))
+		valid_lar_row["lender_credits"] = str(random.choice(self.range_and_enum(field="lender_credits", rng_max=lar_file_config["lender_credits"]["value"], empty=True)))
 		valid_lar_row["interest_rate"] = str(random.choice(self.range_and_enum(field="interest_rate", rng_max=lar_file_config["interest_rate"]["value"], dtype="float")))
 		valid_lar_row["prepayment_penalty"] = str(random.choice(self.range_and_enum(field="prepayment_penalty", rng_max=lar_file_config["penalty_max"]["value"])))
 		valid_lar_row["dti"] = str(random.choice(self.range_and_enum(field="dti", rng_max=lar_file_config["dti"]["value"])))
