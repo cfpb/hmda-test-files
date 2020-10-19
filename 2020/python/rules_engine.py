@@ -3189,70 +3189,80 @@ class rules_engine(object):
 		fail_df = fail_df[~(fail_df.co_app_age.apply(lambda x: 18 <= int(x) <= 100))]
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
+
 	def q615_1(self):
 		"""
 		1) If Total Loan Costs and Origination Charges are not reported NA or Exempt, 
 		then Total Loan Costs generally should be greater than Origination Charges. 
 		"""
-		field = "Origination Charges/Total Loan Costs/Total Points and Fees"
+		field = "Origination Charges/Total Loan Costs"
 		edit_name = "q615_1"
-		fail_df = self.lar_df[(~self.lar_df.origination_fee.isin(["NA", "Exempt"]))&(~self.lar_df.loan_costs.isin(["NA", "Exempt"]))].copy()
-		fail_df = fail_df[(fail_df.loan_costs<fail_df.origination_fee)]
+		fail_df = self.lar_df[(~self.lar_df.origination_fee.isin(["NA", "Exempt", "0"]))&
+							  (~self.lar_df.loan_costs.isin(["NA", "Exempt", "0"]))].copy()
+
+		fail_df.origination_fee = fail_df.origination_fee.apply(lambda x: float(x))
+		fail_df.loan_costs = fail_df.loan_costs.apply(lambda x: float(x))
+							  
+		fail_df = fail_df[(fail_df.loan_costs < fail_df.origination_fee)]
+
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 
 	def q615_2(self):
 		"""
 		2) If Total Points and Fees and Origination Charges are not reported NA or Exempt, then Total Points and Fees
 		generally should be greater than Origination Charges
 		"""
-		field = "Origination Charges/Total Loan Costs/Total Points and Fees"
+		field = "Origination Charges/Total Points and Fees"
 		edit_name = "q615_2"
-		fail_df = self.lar_df[(~self.lar_df.origination_fee.isin(["NA", "Exempt", ""]))&
-							  (~self.lar_df.points_fees.isin(["NA", "Exempt"]))].copy()
-		#remove blanks to allow float conversion in failure test
-		blanks = fail_df[fail_df.points_fees.isin([""])].copy()
-		fail_df = fail_df[~fail_df.points_fees.isin([""])]
+		fail_df = self.lar_df[(~self.lar_df.origination_fee.isin(["NA", "Exempt", "0"]))&
+							  (~self.lar_df.points_fees.isin(["NA", "Exempt", "0"]))].copy()
+
 		fail_df.origination_fee = fail_df.origination_fee.apply(lambda x: float(x))
 		fail_df.points_fees = fail_df.points_fees.apply(lambda x: float(x))
+		
 		fail_df = fail_df[fail_df.points_fees < fail_df.origination_fee]
-		fail_df = pd.concat([fail_df, blanks]) #add blanks back to fail_df for results reporting
+
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 
 	def q616_1(self):
 		"""
 		1) If Total Loan Costs and Discount Points are not reported NA or Exempt, 
 		then Total Loan Costs generally should be greater than Discount Points. 
 		"""
-		field = "Discount Points; Total Loan Costs; Total Points and Fees"
+
+		field = "Discount Points; Total Loan Costs"
 		edit_name = "q616_1"
-		fail_df = self.lar_df[(~self.lar_df.loan_costs.isin(["NA", "Exempt"]))&
-				(~self.lar_df.discount_points.isin(["NA", "Exempt"]))].copy()
-		
-		#fail_df.loan_costs = fail_df.loan_costs.map({"": 0.0})
-		#fail_df.discount_points = fail_df.discount_points.map({"": 0.0})
+		fail_df = self.lar_df[(~self.lar_df.loan_costs.isin(["NA", "Exempt", "0"]))&
+				(~self.lar_df.discount_points.isin(["NA", "Exempt", "0"]))].copy()
 
 		fail_df.loan_costs = fail_df.loan_costs.apply(lambda x: float(x))
 		fail_df.discount_points = fail_df.discount_points.apply(lambda x: float(x))
-		fail_df = fail_df[(fail_df.loan_costs<fail_df.discount_points)]
+
+		fail_df = fail_df[(fail_df.loan_costs < fail_df.discount_points)]
+
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+
 
 	def q616_2(self):
 		"""
 		2) If Total Points and Fees and Discount Points are not reported NA or Exempt, 
 		then Total Points and Fees generally should be greater than Discount Points.
 		"""
-		field = "Discount Points; Total Loan Costs; Total Points and Fees"
+		
+		field = "Discount Points; Total Points and Fees"
 		edit_name = "q616_2"
-		fail_df = self.lar_df[(~self.lar_df.points_fees.isin(["Exempt", "NA"]))&
-							  (~self.lar_df.discount_points.isin(["NA", "Exempt"]))].copy()
-		#remove blanks to allow float conversion in failure test
-		blanks = fail_df[fail_df.points_fees.isin([""])].copy()
-		fail_df = fail_df[~fail_df.points_fees.isin([""])]
+		fail_df = self.lar_df[(~self.lar_df.points_fees.isin(["NA", "Exempt", "0"]))&
+							  (~self.lar_df.discount_points.isin(["NA", "Exempt", "0", ""]))].copy()
+
 		fail_df.points_fees = fail_df.points_fees.apply(lambda x: float(x))
 		fail_df.discount_points = fail_df.discount_points.apply(lambda x: float(x))
-		fail_df = fail_df[(fail_df.discount_points>fail_df.points_fees)]
-		fail_df = pd.concat([fail_df, blanks]) #add blanks back to fail_df for results reporting
+		
+		fail_df = fail_df[(fail_df.discount_points > fail_df.points_fees)]
+
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
+		
 		
 	def q617(self):
 		"""
