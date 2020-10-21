@@ -138,7 +138,7 @@ class lar_data_constraints(object):
 			if row["tract"] not in list(self.geographic_data["tract_fips"]) or row["county"] not in list(self.geographic_data['county_fips']):
 				row["tract"] = random.choice(self.geographic_data["tract_fips"])
 				row["county"] = row["tract"][:5]
-				print(row["tract"], row["county"])
+
 		return row
 
 	def v628_1_const(self, row):
@@ -146,7 +146,7 @@ class lar_data_constraints(object):
 			   unless an ethnicity is provided in Ethnicity of Applicant or Borrower: Free Form Text Field for Other
 			   Hispanic or Latino."""
 		eth_enums = ["1", "11", "12", "13", "14", "2", "3", "4"]
-		if row["app_eth_1"] =="" and row["app_eth_free"] =="":
+		if row["app_eth_1"] == "" and row["app_eth_free"] == "":
 			row["app_eth_1"] = random.choice(eth_enums)
 		return row
 
@@ -535,7 +535,7 @@ class lar_data_constraints(object):
 
 	def v654_const(self,row):
 		"""1) If Multifamily Affordable Units is a number, then Income must be NA."""
-		if row["affordable_units"] != "NA" and row["affordable_units"] !="":
+		if row["affordable_units"] != "NA" and row["affordable_units"] != "":
 			row["income"] = "NA"
 		return row
 
@@ -545,9 +545,10 @@ class lar_data_constraints(object):
 		2) If Ethnicity of Co-Applicant or Co-Borrower: 1 equals 4; and Race of Co-Applicant or Co-Borrower: 1 equals 7;
 			and Sex of Co-Applicant or Co-Borrower: 1 equals 4 indicating that the co-applicant or coborrower is a non-natural person,
 			then Income must be NA. """
-		if row["app_eth_1"] == "4" and row["app_race_1"] == "7" and row["app_sex"] == "4":
+		if row["app_eth_1"] == "4" and row["app_race_1"] == "7" and row["app_sex"] == "4" and row["action_taken"] != "6":
 			row["income"] = "NA"
-		if row["co_app_eth_1"] == "4" and row["co_app_race_1"] == "7" and row["co_app_sex"] == "4":
+
+		if row["co_app_eth_1"] == "4" and row["co_app_race_1"] == "7" and row["co_app_sex"] == "4" and row["action_taken"] != "6":
 			row["income"] = "NA"
 		return row
 
@@ -724,12 +725,14 @@ class lar_data_constraints(object):
 		4) If Open-End Line of Credit equals 1, then Total Loan Costs must be NA.
 		5) If Business or Commercial Purpose equals 1, then Total Loan Costs must be NA.
 		6) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Total Loan Costs must be NA."""
-		if row["loan_costs"] !="NA":
-			if float(row["loan_costs"]) <0:
-				row["loan_costs"] = "10"
-		if row["points_fees"] != "NA":
-			if float(row["points_fees"] )>=0:
+		if row["loan_costs"] not in ("NA", "Exempt"):
+			if float(row["loan_costs"]) < 0:
+				row["loan_costs"] = "1000"
+
+		if row["points_fees"] not in ("NA", "Exempt"):
+			if float(row["points_fees"] ) >= 0:
 				row["loan_costs"] = "NA"
+
 		if row["reverse_mortgage"] == "1":
 			row["loan_costs"] = "NA"
 		if row["open_end_credit"] == "1":
@@ -753,7 +756,7 @@ class lar_data_constraints(object):
 		if row["business_purpose"] == "1":
 			row["points_fees"] = "NA"
 		if row["loan_costs"] != "NA":
-			if float(row["loan_costs"]) >=0:
+			if float(row["loan_costs"]) >= 0:
 				row["points_fees"] = "NA"
 		return row
 
@@ -773,12 +776,30 @@ class lar_data_constraints(object):
 			row["origination_fee"] = "NA"
 		return row
 
-	def v675_const(self, row):
-		"""1) Discount Points must be a number greater than 0, blank, or NA.
+	def v675_1_const(self, row):
+		"""
+		1) Discount Points must be a number greater than 0, blank, or NA.
+		"""
+		if row["discount_points"] not in ("Exempt", "NA", ""):
+			if row["loan_costs"].isdigit() == True and row["points_fees"].isdigit() != True:
+				row["discount_points"] = str(random.choice(range(1, int(row["loan_costs"])-100)))
+
+			if row["loan_costs"].isdigit() != True and row["points_fees"].isdigit() == True:
+				row["discount_points"] = str(random.choice(range(1, int(row["points_fees"])-100)))
+
+			else:
+				row["loan_costs"] = random.choice(["Exempt", "NA"])
+
+		return row
+
+
+	def v675_2_5_const(self, row):
+		"""
 		2) If Reverse Mortgage equals 1, then Discount Points must be NA.
 		3) If Open-End Line of Credit equals 1, then Discount Points must be NA.
 		4) If Business or Commercial Purpose equals 1, then Discount Points must be NA.
-		5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Discount Points must be NA."""
+		5) If Action Taken equals 2, 3, 4, 5, 7 or 8, then Discount Points must be NA.
+		"""
 		if row["reverse_mortgage"] == "1":
 			row["discount_points"] = "NA"
 		if row["open_end_credit"] =="1":
@@ -837,7 +858,7 @@ class lar_data_constraints(object):
 		3) If Multifamily Affordable Units is a number, then Debt-to-Income Ratio must be NA."""
 		if row["action_taken"] in ("4", "5", "6"):
 			row["dti"] = "NA"
-		if row["affordable_units"] !="NA":
+		if row["affordable_units"] != "NA":
 			row["dti"] = "NA"
 		return row
 
@@ -885,38 +906,56 @@ class lar_data_constraints(object):
 		"""1) Manufactured Home Secured Property Type must equal 1, 2 or 3, and cannot be left blank.
 		2) If Multifamily Affordable Units is a number, then Manufactured Home Secured Property Type must equal 3.
 		3) If Construction Method equals 1, then Manufactured Home Secured Property Type must equal 3."""
-		if row["affordable_units"] not in  ["NA", "Exempt"]:
+		if row["affordable_units"] not in ["NA", "Exempt"]:
 			row["manufactured_type"] = "3"
+
 		if row["const_method"] == "1":
 			row["manufactured_type"] = "3"
+
 		return row
 
 	def v690_const(self, row): 
-		"""1) Manufactured Home Land Property Interest must equal 1, 2, 3, 4, or 5, and cannot be left blank.
+		"""
+		1) Manufactured Home Land Property Interest must equal 1, 2, 3, 4, or 5, and cannot be left blank.
 		2) If Multifamily Affordable Units is a number, then Manufactured Home Land Property Interest must equal 5.
-		3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal 5."""
-		if row["affordable_units"] not in  ["NA", "Exempt"]:
-			row["manufactured_interest"] = "5"
+		3) If Construction Method equals 1, then Manufactured Home Land Property Interest must equal 5.
+		"""
+
+		if row["affordable_units"] not in ["NA", "Exempt"] and row["manufactured_interest"] not in ("1111", "5"):
+			row["affordable_units"] = "NA"
+
 		if row["const_method"] == "1":
 			row["manufactured_interest"] = "5"
+
 		return row
 
 	def v692_const(self, row): 
-		"""2) If Total Units is less than 5, then Multifamily Affordable Units must be NA.
+		"""
+		2) If Total Units is less than 5, then Multifamily Affordable Units must be NA.
 		3) If Total Units is greater than or equal to 5, then Multifamily Affordable Units must be less than or
-		equal to Total Units. """
+		equal to Total Units. 
+		"""
 		if int(row["total_units"]) < 5:
 			row["affordable_units"] = random.choice(["NA", "Exempt"])
+
 		if row["affordable_units"] not in ["NA", "Exempt"] and int(row["affordable_units"]) > int(row["total_units"]):
-			row["affordable_units"] = row["total_units"]
+			if int(row["total_units"]) > 4:
+				row["affordable_units"] = random.choice(["Exempt", str(random.choice(range(0, int(row["total_units"]))))])
+			else:
+				row["affordable_units"] = "NA"
+
 		return row
 
 	def v693_const(self, row):
-		"""1) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true."""
+		"""
+		1) If Action Taken equals 6, then Submission of Application must equal 3, and the reverse must be true.
+		"""
 		if row["action_taken"] == "6":
 			row["app_submission"] = "3"
+
 		if row["app_submission"] == "3":
 			row["action_taken"] = "6"
+
 		return row
 
 	def v694_const(self, row): 
@@ -933,29 +972,17 @@ class lar_data_constraints(object):
 		row["mlo_id"] = "NA"
 		return row
 
-	def v696_const(self, row):
-		"""1. Automated Underwriting System: 1 must equal
-			1111, 1, 2, 3, 4, 5, or 6, and cannot be left blank.
-			Automated Underwriting System: 2; Automated
-			Underwriting System: 3; Automated Underwriting
-			System: 4; and Automated Underwriting System: 5
-			must equal 1, 2, 3, 4, 5, or be left blank.
-
-			2. Automated Underwriting System Result: 1 must
-			equal 1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-			15, 16, 17, 18, 19, 20, 21, 22, 23, or 24 and cannot
-			be left blank. Automated Underwriting System
-			Result: 2; Automated Underwriting System Result: 3;
-			Automated Underwriting System Result: 4; and
-			Automated Underwriting System Result: 5 must
-			equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-			16, 17, 18, 19, 20, 21, 22, 23, 24 or be left blank.
-
-			3. The number of reported Automated Underwriting
-			Systems must equal the number of reported
-			Automated Underwriting System Results."""
-		aus_sys = [row["aus_1"], row["aus_2"], row["aus_3"], row["aus_4"], row["aus_5"]]
-		aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
+	def v696_1_const(self, row):
+		"""
+		1) Automated Underwriting System: 1 must equal 1111, 1, 2, 3, 4, 5, 6, or 7 and cannot be left blank. 
+		Automated Underwriting System: 2; 
+		Automated Underwriting System: 3; 
+		Automated Underwriting System: 4; and 
+		Automated Underwriting System: 5 
+		must equal 1, 2, 3, 4, 5, 7 or be left blank.
+		"""
+		#aus_sys = [row["aus_1"], row["aus_2"], row["aus_3"], row["aus_4"], row["aus_5"]]
+		#aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
 
 		#set Not applicable and blanks correctly
 		if row["aus_1"] == "6":
@@ -983,38 +1010,77 @@ class lar_data_constraints(object):
 			row["aus_4"] = ""
 			row["aus_5"] = ""
 
-		#number of reported systems must match the number of reported results
-		result_enums = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", 
-						"11", "12", "13", "14", "15", "17", "18", "19", "20", 
-						"21", "22", "23", "24", "16")
-
-		aus_1_vals = ['1', '2', '3', '4', '5', '6', '7', "1111"]
-
-		if (row["aus_1"] != "" and row['aus_result_1'] == "") or (row["aus_1"] == "" and row['aus_result_1'] != ""): 
-
-			row["aus_1"] = random.choice(aus_1_vals)
-			row["aus_result_1"] = random.choice(result_enums)
-
-		
-		for i in range(1, len(aus_sys)):
-			if aus_sys[i] != "" and aus_results[i] == "":
-				aus_results[i] = random.choice(result_enums[:-1])
-			
-		for i in range(1, len(aus_results)):
-			if aus_sys[i] == "" and aus_results[i] != "":
-				aus_sys[i] = random.choice(aus_1_vals[:-1])
-
-		#Ensure code 5 free form text is marked if the text field is populated
+		#remove code 5 free text if no code 5 aus was chosen
 		if (row["aus_1"]  != "5" and row["aus_2"] != "5" and row["aus_3"] != "5" and row["aus_4"] != "5" and row["aus_5"] != "5") and \
 		row["aus_code_5"] != "":
 			row["aus_code_5"] = ""
 
-		#Ensure code 16 free form text is marked if the text field is populated
+		#remove code 16 free text if no code 16 was chosen
 		if row["aus_result_1"] != "16" and row["aus_result_2"] != "16" and row["aus_result_3"] != "16" and row["aus_result_4"] !="16" \
 		and row["aus_result_5"] != "16" and row["aus_code_16"] !="":
 			row["aus_code_16"] = ""
 
 		return row
+
+	def v696_2_const(self, row):
+		"""
+		2) Automated Underwriting System Result: 1 
+		must equal 1111, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, or 24 
+		and cannot be left blank. 
+
+		Automated Underwriting SystemResult: 2; 
+		Automated Underwriting System Result: 3; 
+		Automated Underwriting System Result: 4; and 
+		Automated Underwriting System Result: 5 
+		must equal 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24 or be left blank.
+		"""
+
+		return row
+
+	def v696_3_const(self, row):
+		"""
+		3) The number of reported Automated Underwriting Systems must equal the number of reported Automated Underwriting System Results.
+		"""
+		aus_sys = [row["aus_1"], row["aus_2"], row["aus_3"], row["aus_4"], row["aus_5"]]
+		aus_results = [row["aus_result_1"], row["aus_result_2"], row["aus_result_3"], row["aus_result_4"], row["aus_result_5"]]
+
+
+		#number of reported systems must match the number of reported results
+		aus_1_results = ["1111", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", 
+						 "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", 
+						 "21", "22", "23","24"]
+
+		aus_n_results = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", 
+						 "11", "12", "13", "14", "15", "16", "18", "19", "20", 
+						 "21", "22", "23","24", ""]
+
+		aus_1_vals = ['1', '2', '3', '4', '5', '6', '7', "1111"]
+		aus_n_vals = ['1', '2', '3', '4', '5', '6', '7', ""]
+
+		"""
+		#ensure alignment of AUS 1 and AUS result 1
+		if (row["aus_1"] != "" and row['aus_result_1'] == "") or (row["aus_1"] == "" and row['aus_result_1'] != ""): 
+
+			row["aus_1"] = random.choice(aus_1_vals)
+			row["aus_result_1"] = random.choice(result_enums)
+		"""
+		
+		for i in range(1, len(aus_sys)):
+			if i == 1 and aus_sys[i] != "" and aus_results[i] == "":
+				aus_results[i] = random.choice(aus_1_results)
+
+			elif aus_sys[i] != "" and aus_results[i] == "":
+				aus_results[i] = random.choice(aus_n_results)
+			
+		for i in range(1, len(aus_results)):
+			if i == 1 and aus_sys[i] == "" and aus_results[i] != "":
+				aus_sys[i] = random.choice(aus_1_vals)
+
+			elif aus_sys[i] == "" and aus_results[i] != "":
+				aus_sys[i] = random.choice(aus_n_vals[:-1])
+
+		return row
+
 
 	def v699_const(self, row): 
 		"""1) If Automated Underwriting System: 1; Automated Underwriting System: 2; Automated Underwriting

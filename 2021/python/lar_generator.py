@@ -55,17 +55,23 @@ class lar_gen(object):
 		"""Generates and returns a semi-valid date string or an invalid date string. Does not check days per month."""
 		months = list(range(1,13))
 		days = list(range(1,32))
+		date = ""
 		if valid:
 			valid_date = False
-			while valid_date == False:
+
+			while valid_date == False or "1111" in date: #stop exempt code from being present in dates
+
 				date = str(activity_year)+str(random.choice(months)).zfill(2)+str(random.choice(days)).zfill(2)
+
 				try:
 					time.strptime(date,'%Y%m%d')
 					valid_date = True
 				except:
 					valid_date = False
+
 		else:
 			date = str(lar_file_config["calendar_year"]["value"])+str(16)+str(33)
+
 		return date
 
 	def get_schema_val(self, schema="LAR", position=0, item=0, field=None):
@@ -113,14 +119,18 @@ class lar_gen(object):
 
 		lst=[]
 		lst = self.get_schema_list(field=field) #get NA values from schema if present
+
 		if dtype=="int":
 			for i in range(rng_min, rng_max):
 				lst.append(i)
+
 		elif dtype=="float":
 			for i in range(rng_min, rng_max):
-				lst.append(i*1.01)
+				lst.append(i*1.00)
+
 		if empty:
 			lst.append("")
+
 		return lst
 
 	def tract_from_county(self, county):
@@ -164,7 +174,7 @@ class lar_gen(object):
 		valid_lar_row["preapproval"] = str(random.choice(self.get_schema_list(field="preapproval")))
 		valid_lar_row["const_method"] = str(random.choice(self.get_schema_list(field="const_method")))
 		valid_lar_row["occ_type"] = str(random.choice(self.get_schema_list(field="occ_type")))
-		valid_lar_row["loan_amount"] = str(random.choice(range(1, lar_file_config["max_amount"]["value"])))
+		valid_lar_row["loan_amount"] = str(random.choice(range(50000, lar_file_config["max_amount"]["value"])))
 		valid_lar_row["action_taken"] = str(random.choice(self.get_schema_list(field='action_taken')))
 		valid_lar_row["action_date"] = str(self.date_gen(activity_year=lar_file_config["activity_year"]["value"]))
 		valid_lar_row["street_address"] = random.choice([lar_file_config["street_addy"]["value"], lar_file_config["street_addy"]["value"], "Exempt"])
@@ -175,13 +185,13 @@ class lar_gen(object):
 		valid_lar_row["tract"] = random.choice(geographic_data["tract_fips"])
 		valid_lar_row["state"] = state_codes[str(valid_lar_row["tract"][:2])]
 		valid_lar_row["county"] = valid_lar_row["tract"][:5]
-		valid_lar_row["app_eth_1"] = str(random.choice(self.get_schema_list(field="app_eth_1", empty=True)))
+		valid_lar_row["app_eth_1"] = str(random.choice(self.get_schema_list(field="app_eth_1")))
 		valid_lar_row["app_eth_2"] = str(random.choice(self.get_schema_list(field="app_eth_2", empty=True)))
 		valid_lar_row["app_eth_3"] = str(random.choice(self.get_schema_list(field="app_eth_3", empty=True)))
 		valid_lar_row["app_eth_4"] = str(random.choice(self.get_schema_list(field="app_eth_4", empty=True)))
 		valid_lar_row["app_eth_5"] = str(random.choice(self.get_schema_list(field="app_eth_5", empty=True)))
 		valid_lar_row["app_eth_free"] = utils.char_string_gen(random.choice(range(100)))
-		valid_lar_row["co_app_eth_1"] = str(random.choice(self.get_schema_list(field="co_app_eth_1", empty=True)))
+		valid_lar_row["co_app_eth_1"] = str(random.choice(self.get_schema_list(field="co_app_eth_1")))
 		valid_lar_row["co_app_eth_2"] = str(random.choice(self.get_schema_list(field="co_app_eth_2", empty=True)))
 		valid_lar_row["co_app_eth_3"] = str(random.choice(self.get_schema_list(field="co_app_eth_3", empty=True)))
 		valid_lar_row["co_app_eth_4"] = str(random.choice(self.get_schema_list(field="co_app_eth_4", empty=True)))
@@ -189,7 +199,7 @@ class lar_gen(object):
 		valid_lar_row["co_app_eth_free"] = utils.char_string_gen(random.choice(range(100)))
 		valid_lar_row["app_eth_basis"] = str(random.choice(self.get_schema_list(field="app_eth_basis")))
 		valid_lar_row["co_app_eth_basis"] = str(random.choice(self.get_schema_list(field="co_app_eth_basis")))
-		valid_lar_row["app_race_1"] = str(random.choice(self.get_schema_list(field="app_race_1", empty=True)))
+		valid_lar_row["app_race_1"] = str(random.choice(self.get_schema_list(field="app_race_1")))
 		valid_lar_row["app_race_2"] = str(random.choice(self.get_schema_list(field="app_race_2", empty=True)))
 		valid_lar_row["app_race_3"] = str(random.choice(self.get_schema_list(field="app_race_3", empty=True)))
 		valid_lar_row["app_race_4"] = str(random.choice(self.get_schema_list(field="app_race_4", empty=True)))
@@ -197,7 +207,7 @@ class lar_gen(object):
 		valid_lar_row["app_race_native_text"] = utils.char_string_gen(random.choice(range(100)))
 		valid_lar_row["app_race_asian_text"] = utils.char_string_gen(random.choice(range(100)))
 		valid_lar_row["app_race_islander_text"] = utils.char_string_gen(random.choice(range(100)))
-		valid_lar_row["co_app_race_1"] = str(random.choice(self.get_schema_list(field="co_app_race_1", empty=True)))
+		valid_lar_row["co_app_race_1"] = str(random.choice(self.get_schema_list(field="co_app_race_1")))
 		valid_lar_row["co_app_race_2"] = str(random.choice(self.get_schema_list(field="co_app_race_2", empty=True)))
 		valid_lar_row["co_app_race_3"] = str(random.choice(self.get_schema_list(field="co_app_race_3", empty=True)))
 		valid_lar_row["co_app_race_4"] = str(random.choice(self.get_schema_list(field="co_app_race_4", empty=True)))
@@ -211,8 +221,8 @@ class lar_gen(object):
 		valid_lar_row["co_app_sex"] = str(random.choice(self.get_schema_list(field="co_app_sex")))
 		valid_lar_row["app_sex_basis"] = str(random.choice(self.get_schema_list(field="app_sex_basis")))
 		valid_lar_row["co_app_sex_basis"] = str(random.choice(self.get_schema_list(field="co_app_sex_basis")))
-		valid_lar_row["app_age"] = str(random.choice(self.range_and_enum(field="app_age", rng_max=lar_file_config["max_age"]["value"])))
-		valid_lar_row["co_app_age"] = str(random.choice(self.range_and_enum(field="co_app_age", rng_max=lar_file_config["max_age"]["value"])))
+		valid_lar_row["app_age"] = str(random.choice(self.range_and_enum(field="app_age", rng_min=18, rng_max=lar_file_config["max_age"]["value"])))
+		valid_lar_row["co_app_age"] = str(random.choice(self.range_and_enum(field="co_app_age", rng_min=18, rng_max=lar_file_config["max_age"]["value"])))
 		valid_lar_row["income"] = str(random.choice(range(1, lar_file_config["max_income"]["value"])))
 		valid_lar_row["purchaser_type"] = str(random.choice(self.get_schema_list(field="purchaser_type")))
 		valid_lar_row["rate_spread"]= str(random.choice(self.range_and_enum(field="rate_spread", rng_max=lar_file_config["max_rs"]["value"], dtype="float")))
@@ -232,12 +242,12 @@ class lar_gen(object):
 		valid_lar_row["loan_costs"] = str(random.choice(self.range_and_enum(field="loan_costs",rng_max=lar_file_config["loan_costs"]["value"])))
 		valid_lar_row["points_fees"] = str(random.choice(self.range_and_enum(field="points_fees", rng_max=lar_file_config["points_and_fees"]["value"])))
 		valid_lar_row["origination_fee"] = str(random.choice(self.range_and_enum(field="origination_fee", rng_max=lar_file_config["orig_charges"]["value"])))
-		valid_lar_row["discount_points"] = str(random.choice(self.range_and_enum(field="discount_points", rng_max=lar_file_config["discount_points"]["value"], empty=True)))
+		valid_lar_row["discount_points"] = str(random.choice(self.range_and_enum(field="discount_points", rng_min=10, rng_max=lar_file_config["discount_points"]["value"], empty=True)))
 		valid_lar_row["lender_credits"] = str(random.choice(self.range_and_enum(field="lender_credits", rng_max=lar_file_config["lender_credits"]["value"], empty=True)))
 		valid_lar_row["interest_rate"] = str(random.choice(self.range_and_enum(field="interest_rate", rng_max=lar_file_config["interest_rate"]["value"], dtype="float")))
 		valid_lar_row["prepayment_penalty"] = str(random.choice(self.range_and_enum(field="prepayment_penalty", rng_max=lar_file_config["penalty_max"]["value"])))
 		valid_lar_row["dti"] = str(random.choice(self.range_and_enum(field="dti", rng_max=lar_file_config["dti"]["value"])))
-		valid_lar_row["cltv"] = str(random.choice(self.range_and_enum(field="cltv", rng_max=lar_file_config["cltv"]["value"])))
+		valid_lar_row["cltv"] = str(random.choice(self.range_and_enum(field="cltv", rng_min=70, rng_max=lar_file_config["cltv"]["value"])))
 		valid_lar_row["loan_term"] = str(random.choice(self.range_and_enum(field="loan_term", rng_max=lar_file_config["loan_term"]["value"])))
 		valid_lar_row["intro_rate"] = str(random.choice(self.range_and_enum(field="intro_rate", rng_max=lar_file_config["intro_rate"]["value"])))
 		valid_lar_row["balloon"] = str(random.choice(self.get_schema_list(field="balloon")))

@@ -6,6 +6,7 @@ import pandas as pd
 import yaml
 
 from lar_constraints import lar_data_constraints
+from quality_constraints import quality_lar_data_constraints
 import lar_generator
 from rules_engine import rules_engine
 import utils
@@ -17,7 +18,10 @@ filepaths_file = 'configurations/test_filepaths.yaml'
 lar_schema_file="../schemas/lar_schema.json"
 ts_schema_file="../schemas/ts_schema.json"
 
-LOGGING = True
+DEBUG = False
+LOGGING = False
+constrain_quality = True
+
 #load config data
 print("start initialization of LAR generator")
 with open(config_file, 'r') as f:
@@ -34,7 +38,7 @@ with open(geo_config_file, 'r') as f:
 with open(bank_config, 'r') as f:
 	bank_config_data = yaml.safe_load(f)
 
-DEBUG = True
+
 if not os.path.exists(filepaths["log_filepath"]):
 	os.makedirs(filepaths["log_filepath"])
 
@@ -64,6 +68,7 @@ rules_engine = rules_engine(config_data=lar_file_config_data, state_codes=geo_co
 
 #instantiate constraints logic to force LAR data to conform to FIG schema
 lar_constraints = lar_data_constraints(lar_file_config=lar_file_config_data, geographic_data=geographic_data)
+quality_constraints = quality_lar_data_constraints(lar_file_config=lar_file_config_data, geographic_data=geographic_data)
 
 #store original row for diff comparison to see what elements are being changed
 
@@ -81,6 +86,7 @@ for i in range(bank_config_data["file_length"]["value"]):
 
 	#generate error report
 	edit_report_df = rules_engine.create_edit_report(rules_list=["s", "v", "q"])
+
 	if LOGGING:
 		logging.info("generating row {count}".format(count=i))
 	if DEBUG:
@@ -92,25 +98,51 @@ for i in range(bank_config_data["file_length"]["value"]):
 		print("entering constraints loop")
 
 	while len(edit_report_df[edit_report_df.fail_count>0]):
+
 		if LOGGING:
 			logging.info(edit_report_df[edit_report_df.fail_count>0]) #log the edit fails for the row
 			logging.info("constraints iteration {}. checking difference in rows".format(constraints_iter))
+		
 		lar_row_start_items = set(lar_row.items()) #capture initial row data before modifications to log difference between initial and changed row
 		
+		edit_fails = edit_report_df["edit_name"][edit_report_df.fail_count>0]
+		edit_fails = [edit[:4] for edit in edit_fails]
+		print("constraints iteration: ", constraints_iter, "for row: ", i)
 		for constraint in lar_constraints.constraints: #loop over all constraint functions to force LAR data to conform to FIG spec
-			lar_row = getattr(lar_constraints, constraint)(lar_row) #lar_row is an ordered dict here
+			#if DEBUG:
+				#print(constraint)
+			if constraint[:4] in edit_fails:
+				if DEBUG:
+					print(constraint)
+				lar_row = getattr(lar_constraints, constraint)(lar_row) #lar_row is an ordered dict here
+			
+		if constrain_quality:
+			for constraint in quality_constraints.constraints:
+
+				if constraint[:4] in edit_fails:
+					if DEBUG:
+						print(constraint)
+					lar_row = getattr(quality_constraints, constraint)(lar_row)
+				
 		if LOGGING:
-			logging.info(set(lar_row.items() - lar_row_start_items))
+			logging.info(set(lar_row.items()) - lar_row_start_items)
+
 		constraints_iter += 1
+		if constraints_iter > 45:
+			DEBUG = True
 		#prepare new edit fails report for checking lar generation process this is the loop break condition
 		rules_engine.reset_results()
 		rules_engine.load_lar_data(lar_row)
-		edit_report_df = rules_engine.create_edit_report() 
-		
+		edit_report_df = rules_engine.create_edit_report(rules_list=["s", "v", "q"]) 
 
 		if DEBUG:
+			print("constraints iteration: ", constraints_iter)
 			print(len(edit_report_df[edit_report_df.fail_count>0]))
 			print(edit_report_df[edit_report_df.fail_count>0])
+			print(set(lar_row.items()) - lar_row_start_items)
+			edit_report_df[edit_report_df.fail_count>0].to_csv("../edit_reports/in_loop_edit_report.txt", index=False, sep="|")
+			pd.DataFrame(lar_rows).to_csv("../output/in_loop_lar.csv", index=False)
+
 	lar_rows.append(lar_row)
 
 lar_rows_df = pd.DataFrame(lar_rows)
@@ -118,7 +150,7 @@ lar_rows_df = pd.DataFrame(lar_rows)
 if DEBUG:
 	rules_engine.load_lar_data(lar_rows_df)
 	rules_engine.reset_results()
-	edit_report_df = rules_engine.create_edit_report()
+	edit_report_df = rules_engine.create_edit_report(rules_list=["s", "v", "q"])
 	if LOGGING:
 		logging.info("final edit report for generated LAR file ")
 		logging.info(edit_report_df)
@@ -131,5 +163,6 @@ clean_filepath = filepaths["clean_filepath"].format(bank_name=bank_config_data["
 if not os.path.exists(clean_filepath):
 	os.makedirs(clean_filepath)
 
+#write TS/LAR submission file to disk
 utils.write_file(path=clean_filepath, name=clean_filename, ts_input=pd.DataFrame(ts_row, index=[0]), lar_input=lar_rows_df)
 

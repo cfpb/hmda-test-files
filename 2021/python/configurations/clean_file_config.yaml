@@ -38,7 +38,7 @@ zip_code:
   value: 84096
 max_age:
   type: Integer
-  value: 110
+  value: 99
 max_amount:
   desc: Maximum loan amount in dollars
   type: Integer
@@ -82,7 +82,7 @@ lender_credits:
 interest_rate:
   desc: Maximum interest rate
   type: Integer
-  value: 25
+  value: 12
 penalty_max:
   desc: Maximum prepayment penalty term
   type: Integer
@@ -93,8 +93,8 @@ dti:
   value: 100
 cltv:
   desc: Combinted loan to value ratio
-  type: Integer
-  value: 120
+  type: Float
+  value: 200
 loan_term:
   desc: Maximum loan term
   type: Integer
@@ -110,11 +110,11 @@ max_units:
 prop_val_max:
   desc: Maximum property value in dollars
   type: Integer
-  value: 1000000
+  value: 15000000
 prop_val_min:
   desc: Minimum property value in dollars
   type: Integer
-  value: 100000
+  value: 1000000
 
 exempt_string_fields: ["state", "rate_spread", "loan_costs", "points_fees", 
                        "origination_fee", "discount_points", "lender_credits", "interest_rate", 
@@ -122,7 +122,7 @@ exempt_string_fields: ["state", "rate_spread", "loan_costs", "points_fees",
                        "property_value", "affordable_units", "street_address", "city", "zip_code", "mlo_id"]
 
 exempt_integer_fields: ["app_score_name", "co_app_score_name", "denial_1", "balloon", "int_only_pmts",
-                        "neg_amort", "neg_amort_features", "manufactured_type", "manufactured_interest",
+                        "neg_amort", "non_amort_features", "manufactured_type", "manufactured_interest",
                         "app_submission", "initially_payable", "aus_1", "reverse_mortgage", "open_end_credit",
                         "business_purpose", "app_credit_score", "co_app_credit_score", "aus_result_1"]
 
