@@ -2395,7 +2395,11 @@ class rules_engine(object):
 		"""
 		field = "dti"
 		edit_name = "v679_1"
-		fail_df = self.lar_df[(self.lar_df.dti.map(lambda x: self.check_number(x))==False)&(~self.lar_df.dti.isin(["NA", "Exempt"]))]
+
+		fail_df = self.lar_df[~self.lar_df.dti.isin(["NA", "Exempt"])].copy()
+		fail_df = fail_df[(fail_df.dti.apply(lambda x: str(x).isdigit()==False))|
+						  (fail_df.dti=="")]
+
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v679_2(self):
@@ -2848,6 +2852,7 @@ class rules_engine(object):
 
 		fail_df = self.lar_df[(self.lar_df.apply(lambda x: self.check_counts(x, fields_1=fields_1, fields_2=fields_2), axis=1)==False)]
 		fail_df.to_csv("../output/test_fail_df.csv", index=False)
+
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
 	def v699(self):
@@ -4164,7 +4169,7 @@ class rules_engine(object):
 		edit_name = "q652"
 
 		fail_df = self.lar_df[~self.lar_df.dti.isin(["NA", "Exempt"])].copy()
-		fail_df = fail_df[fail_df.dti.apply(lambda x: self.check_number(x, min_val=0, max_val=1)==False)]
+		fail_df = fail_df[fail_df.dti.apply(lambda x: 0 < float(x) < 1)]
 
 		self.results_wrapper(edit_name=edit_name, field_name=field, fail_df=fail_df)
 
@@ -4273,6 +4278,9 @@ class rules_engine(object):
 		"""
 		edit_name = "q657"
 		check_fields = set(list(self.lar_df.columns)) - set(self.config_data["exempt_integer_fields"])
+		#remove county and tract
+		check_fields.remove("county")
+		check_fields.remove("tract")
 		
 		fail_df = self.lar_df.copy()
 		fail_df_list = []

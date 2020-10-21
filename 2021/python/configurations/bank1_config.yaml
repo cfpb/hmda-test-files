@@ -45,7 +45,7 @@
   file_length:
     desc: The number of lines in the clean or test data file
     type: Integer
-    value: 100
+    value: 1000
   lei:
     desc: The Legal Entity Identifier of the institution
     type: String

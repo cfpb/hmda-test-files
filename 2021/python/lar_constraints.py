@@ -852,12 +852,24 @@ class lar_data_constraints(object):
 				row["prepayment_penalty"] = row["loan_term"]
 		return row
 
+	def v679_1_const(self, row):
+		"""
+		1) Debt-to-Income Ratio must be either a number or NA, and cannot be left blank.
+		"""
+		if row["dti"] not in ("Exempt", "NA") and row["action_taken"] not in ("4", "5", "6") and row["affordable_units"] != "NA":
+			if str(row["dti"]).isdigit() == False:
+				row["dti"] = str(random.choice(range(40, 70)))
+		return row
+
+
 	def v679_const(self, row): 
-		"""1) Debt-to-Income Ratio must be either a number or NA, and cannot be left blank.
+		"""
 		2) If Action Taken equals 4, 5 or 6, then Debt-to-Income Ratio must be NA.
-		3) If Multifamily Affordable Units is a number, then Debt-to-Income Ratio must be NA."""
+		3) If Multifamily Affordable Units is a number, then Debt-to-Income Ratio must be NA.
+		"""
 		if row["action_taken"] in ("4", "5", "6"):
 			row["dti"] = "NA"
+
 		if row["affordable_units"] != "NA":
 			row["dti"] = "NA"
 		return row
@@ -1067,17 +1079,17 @@ class lar_data_constraints(object):
 		
 		for i in range(1, len(aus_sys)):
 			if i == 1 and aus_sys[i] != "" and aus_results[i] == "":
-				aus_results[i] = random.choice(aus_1_results)
+				row[aus_results[i]] = random.choice(aus_1_results)
 
-			elif aus_sys[i] != "" and aus_results[i] == "":
-				aus_results[i] = random.choice(aus_n_results)
+			elif i > 1 and aus_sys[i] != "" and aus_results[i] == "":
+				row[aus_results[i]] = random.choice(aus_n_results[:-1])
 			
 		for i in range(1, len(aus_results)):
 			if i == 1 and aus_sys[i] == "" and aus_results[i] != "":
-				aus_sys[i] = random.choice(aus_1_vals)
+				row[aus_sys[i]] = random.choice(aus_1_vals)
 
-			elif aus_sys[i] == "" and aus_results[i] != "":
-				aus_sys[i] = random.choice(aus_n_vals[:-1])
+			elif i > 1 and aus_sys[i] == "" and aus_results[i] != "":
+				row[aus_sys[i]] = random.choice(aus_n_vals[:-1])
 
 		return row
 
