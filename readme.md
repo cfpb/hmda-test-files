@@ -38,7 +38,7 @@ Each year listed in the parent directory contains its own codebase for creating 
 These files are used as the base for generating files that will fail edits. Running the following scripts will create the edits_files directory and a data file that will pass the HMDA edit checks. The file will have a number of rows set in a YAML clean file configuration for each directory. Other variables, such as data ranges can also be set in the configuration files.
 
 Configuration values for clean files can be changed using the:
-- [2019 Clean File Configuration](https://github.com/cfpb/hmda-test-files/blob/master/2020/python/configurations/clean_file_config.yaml)
+- [2020 Clean File Configuration](https://github.com/cfpb/hmda-test-files/blob/master/2020/python/configurations/clean_file_config.yaml)
 - [2019 Clean File Configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/clean_file_config.yaml)
 - [2018 Clean File Configuration](https://github.com/cfpb/hmda-test-files/blob/master/2018/python/configurations/clean_file_config.yaml). 
 
