@@ -1,0 +1,35 @@
+    Case 1:
+      row: 0 
+      columns: [
+        loan_amount: 100000,
+        property_value: 200000,
+        cltv: 50.0
+    ]
+    Case 2:
+      row: 1 
+      columns: [
+        loan_amount: 100000,
+        property_value: 200000,
+        cltv: 50.0
+    ]
+    Case 3:
+      row: 2
+      columns: [
+        loan_amount: 100000,
+        property_value: 200000,
+        cltv: 50.0
+    ]
+    Case 4:
+      row: 3
+      columns: [
+        loan_amount: 100000,
+        property_value: 200000,
+        cltv: 50.0
+    ]
+    Case 5:
+        row: 4
+        columns: [
+          loan_amount: 100000,
+          property_value: 200000,
+          cltv: 50.0
+    ]
