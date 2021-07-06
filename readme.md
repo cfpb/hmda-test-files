@@ -78,10 +78,12 @@ To create test files for 2019 and 2020:
 To create test files for 2018: 
 1. Navigate to the `2018/python` directory.
 2. Run `python3 generate_2018_error_files.py`
-3. The error files for testing syntax, validity, and quality edit test files will be created in the following diretories:
-	- Syntax: `2018/edits_files/test_files/{Bank Name}/syntax`
-	- Validity: `2018/edits_files/test_files/{Bank Name}/validity`
-	- Quality: `2018/edits_files/test_files/{Bank Name}/quality`
+
+The error files for testing syntax, validity, and quality edit test files will be created in the following diretories:
+	- Syntax: `{year}/edits_files/test_files/{Bank Name}/syntax`
+	- Validity: `{year}/edits_files/test_files/{Bank Name}/validity`
+	- Quality: `{year}/edits_files/test_files/{Bank Name}/quality`
+	- Quality (Adjusted to pass syntax and validity): `{year}/edits_files/test_files/{Bank Name}/quality_pass_s_v`
 
 
 ## Generating Large Files 
