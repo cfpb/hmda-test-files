@@ -80,10 +80,10 @@ To create test files for 2018:
 2. Run `python3 generate_2018_error_files.py`
 
 The error files for testing syntax, validity, and quality edit test files will be created in the following diretories:  
-	* Syntax: `{year}/edits_files/test_files/{Bank Name}/syntax`  
-	* Validity: `{year}/edits_files/test_files/{Bank Name}/validity`  
-	* Quality: `{year}/edits_files/test_files/{Bank Name}/quality`  
-	* Quality (Adjusted to pass syntax and validity): `{year}/edits_files/test_files/{Bank Name}/quality_pass_s_v`  
+	- Syntax: `{year}/edits_files/test_files/{Bank Name}/syntax`  
+	- Validity: `{year}/edits_files/test_files/{Bank Name}/validity`  
+	- Quality: `{year}/edits_files/test_files/{Bank Name}/quality`  
+	- Quality (Adjusted to pass syntax and validity): `{year}/edits_files/test_files/{Bank Name}/quality_pass_s_v`  
 
 
 ## Generating Large Files 
