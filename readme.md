@@ -51,7 +51,7 @@ Additional configuration options are available in the configuration folders by y
 For 2019 and 2020:
 1. Navigate to the `<year>/python` directory
 2. Run `python3 generate_clean_files.py`
-4. The clean test file will be created with the following path: `2019/edits_files/{bank name}/clean_files/{Bank Name}_clean_{row count}.txt`.
+4. The clean test file will be created with the following path: `{year}/edits_files/{bank name}/clean_files/{Bank Name}_clean_{row count}.txt`.
 
 For 2018:
 1. Navigate to the `2018/python` directory
@@ -72,18 +72,18 @@ These filepaths can be changed in [test filepaths configuration](https://github.
 
 
 To create test files for 2019 and 2020: 
-1. Navigate to the `<year>/python` directory
+1. Navigate to the `<year>/python` directory.
 2. Run `python3 generate_2019_error_files.py`
 
 To create test files for 2018: 
 1. Navigate to the `2018/python` directory.
 2. Run `python3 generate_2018_error_files.py`
 
-The error files for testing syntax, validity, and quality edit test files will be created in the following diretories:
-	- Syntax: `{year}/edits_files/test_files/{Bank Name}/syntax`
-	- Validity: `{year}/edits_files/test_files/{Bank Name}/validity`
-	- Quality: `{year}/edits_files/test_files/{Bank Name}/quality`
-	- Quality (Adjusted to pass syntax and validity): `{year}/edits_files/test_files/{Bank Name}/quality_pass_s_v`
+The error files for testing syntax, validity, and quality edit test files will be created in the following diretories:  
+	- Syntax: `{year}/edits_files/test_files/{Bank Name}/syntax`  
+	- Validity: `{year}/edits_files/test_files/{Bank Name}/validity`  
+	- Quality: `{year}/edits_files/test_files/{Bank Name}/quality`  
+	- Quality (Adjusted to pass syntax and validity): `{year}/edits_files/test_files/{Bank Name}/quality_pass_s_v`  
 
 
 ## Generating Large Files 
