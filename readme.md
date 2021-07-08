@@ -38,17 +38,19 @@ Each year listed in the parent directory contains its own codebase for creating 
 These files are used as the base for generating files that will fail edits. Running the following scripts will create the edits_files directory and a data file that will pass the HMDA edit checks. The file will have a number of rows set in a YAML clean file configuration for each directory. Other variables, such as data ranges can also be set in the configuration files.
 
 Configuration values for clean files can be changed using the:
+- [2021 Clean File Configuration](https://github.com/cfpb/hmda-test-files/blob/master/2021/python/configurations/clean_file_config.yaml)
 - [2020 Clean File Configuration](https://github.com/cfpb/hmda-test-files/blob/master/2020/python/configurations/clean_file_config.yaml)
 - [2019 Clean File Configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/clean_file_config.yaml)
 - [2018 Clean File Configuration](https://github.com/cfpb/hmda-test-files/blob/master/2018/python/configurations/clean_file_config.yaml). 
 
 Additional configuration options are available in the configuration folders by year:
+- [2021](https://github.com/cfpb/hmda-test-files/tree/master/2021/python/configurations)
 - [2020](https://github.com/cfpb/hmda-test-files/tree/master/2020/python/configurations)
 - [2019](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations)
 - [2018](https://github.com/cfpb/hmda-test-files/tree/master/2018/python/configurations)
 
 
-For 2019 and 2020:
+For 2019, 2020, and 2021:
 1. Navigate to the `<year>/python` directory
 2. Run `python3 generate_clean_files.py`
 4. The clean test file will be created with the following path: `{year}/edits_files/{bank name}/clean_files/{Bank Name}_clean_{row count}.txt`.
@@ -71,7 +73,7 @@ Existing test files of the same length will be overwritten.
 These filepaths can be changed in [test filepaths configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/test_filepaths.yaml).
 
 
-To create test files for 2019 and 2020: 
+To create test files for 2019, 2020, and 2021: 
 1. Navigate to the `<year>/python` directory.
 2. Run `python3 generate_2019_error_files.py`
 
@@ -116,6 +118,7 @@ Edit reports can be generated for any synthetic submission file. Configuration o
 To generate edit reports for 2019 and 2020:  
 1. Navigate to the `<year>/python` directory.
 2. Adjust the Edit Report Configuration to specify output. 
+	- [2021](https://github.com/cfpb/hmda-test-files/tree/master/2021/python/configurations/edit_report_config.yaml)
 	- [2020](https://github.com/cfpb/hmda-test-files/tree/master/2020/python/configurations/edit_report_config.yaml)
 	- [2019](https://github.com/cfpb/hmda-test-files/tree/master/2019/python/configurations/edit_report_config.yaml)
 3. Run `python3 generate_edit_report.py` to produce the edit report in the directory according to the configuration file. 
