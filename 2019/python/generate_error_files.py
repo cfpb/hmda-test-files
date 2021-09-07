@@ -7,7 +7,7 @@ import yaml
 from file_generator import FileGenerator
 
 #Instantiating the file generator. 
-file = FileGenerator()
+file = FileGenerator('configurations\clean_file_config.yaml')
 
 #Creates quality that pass syntax and validity for each test file 
 #in the edits_files directory
