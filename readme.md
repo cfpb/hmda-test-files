@@ -38,10 +38,10 @@ Each year listed in the parent directory contains its own codebase for creating 
 These files are used as the base for generating files that will fail edits. Running the following scripts will create the edits_files directory and a data file that will pass the HMDA edit checks. The file will have a number of rows set in a YAML clean file configuration for each directory. Other variables, such as data ranges can also be set in the configuration files.
 
 Configuration values for clean files can be changed using the:
-- [2021 Clean File Configuration](https://github.com/cfpb/hmda-test-files/blob/master/2021/python/configurations/clean_file_config.yaml)
-- [2020 Clean File Configuration](https://github.com/cfpb/hmda-test-files/blob/master/2020/python/configurations/clean_file_config.yaml)
-- [2019 Clean File Configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/clean_file_config.yaml)
-- [2018 Clean File Configuration](https://github.com/cfpb/hmda-test-files/blob/master/2018/python/configurations/clean_file_config.yaml). 
+- [2021 Clean File Configuration](2021/python/configurations/clean_file_config.yaml)
+- [2020 Clean File Configuration](2020/python/configurations/clean_file_config.yaml)
+- [2019 Clean File Configuration](2019/python/configurations/clean_file_config.yaml)
+- [2018 Clean File Configuration](2018/python/configurations/clean_file_config.yaml). 
 
 Additional configuration options are available in the configuration folders by year:
 - [2021](2021/python/configurations)
@@ -64,7 +64,7 @@ For 2018:
 ## Generating Test Files
 The generation of edit test files requires a clean data file to be present.[The steps above](readme.md/#generating-clean-files) outline the process to create the clean data files. 
 
-Test files will be created using a clean file of the length specifid in the `file_length` value fo the [clean file configuration](https://github.com/cfpb/hmda-test-files/blob/master/2019/python/configurations/clean_file_config.yaml).
+Test files will be created using a clean file of the length specifid in the `file_length` value fo the [clean file configuration](2019/python/configurations/clean_file_config.yaml).
 
 Test files will be written to sub directories based on the type of edit they fail:
 `edits_files/{bank name}/test_files/{edit type}/{bank name}_{edit name}_{row count}.txt`
