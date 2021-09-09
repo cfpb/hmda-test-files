@@ -5,7 +5,7 @@
 from file_generator import FileGenerator 
 
 #Instantiating the file generator. 
-file = FileGenerator()
+file = FileGenerator('configurations/clean_file_config.yaml')
 
 #Writing edit report.
 file.edit_report()
