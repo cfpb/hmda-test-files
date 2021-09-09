@@ -42,7 +42,7 @@ if not os.path.exists(filepaths["log_filepath"]):
 logging.basicConfig(filename=filepaths["log_filepath"]+filepaths['log_filename'], format='%(asctime)s %(message)s', 
 					datefmt='%m/%d/%Y %I:%M:%S %p', filemode=filepaths['log_mode'], level=logging.INFO)
 
-geographic_data = pd.read_csv(geo_config['geographic_data_file'], delimiter='|', header=0,
+geographic_data = pd.read_csv(geo_config['geographic_data_file'], delimiter=',', header=0,
 	names=geo_config['file_columns'], dtype=object) #instantiate Census file data as dataframe
 
 #create 11 digit Census Tract codes from 5 digit county and 6 digit tract

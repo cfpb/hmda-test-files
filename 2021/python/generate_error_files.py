@@ -51,7 +51,7 @@ filepaths["quality_filepath"] = filepaths["quality_filepath"].format(bank_name=b
 DEBUG = False
 
 #load geographic data
-geographic_data = pd.read_csv(geo_config['geographic_data_file'], delimiter='|', header=0,
+geographic_data = pd.read_csv(geo_config['geographic_data_file'], delimiter=',', header=0,
 	names=geo_config['file_columns'], dtype=object) #instantiate Census file data as dataframe
 
 #create 11 digit Census Tract codes from 5 digit county and 6 digit tract

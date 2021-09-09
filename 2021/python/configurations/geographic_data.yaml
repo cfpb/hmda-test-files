@@ -1,4 +1,4 @@
-geographic_data_file: '../dependencies/ffiec_census_2019.txt'
+geographic_data_file: '../dependencies/ffiec_census_msamd_names_2020.csv'
 zip_code_file: "../dependencies/zip_codes.json"
 
 file_columns: ['collection_year', 'msa_md', 'state_code', 'county', 'tracts', 'ffiec_median_family_income', 

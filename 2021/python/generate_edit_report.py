@@ -43,7 +43,7 @@ edit_report_path = filepaths["edit_report_output_filepath"]
 #get paths to check for clean files (by bank name)
 bank_clean_dir = filepaths["clean_filepath"].format(bank_name=bank_config_data["name"]["value"])
 
-geographic_data = pd.read_csv(geo_config['geographic_data_file'], delimiter='|', header=0,
+geographic_data = pd.read_csv(geo_config['geographic_data_file'], delimiter=',', header=0,
 	names=geo_config['file_columns'], dtype=object) #instantiate Census file data as dataframe
 
 #create 11 digit Census Tract codes from 5 digit county and 6 digit tract
