@@ -17,5 +17,5 @@ if __name__ == '__main__':
 
     # check to see if filename is passed in
     if len(sys.argv) == 2: filename = sys.argv[1]
-    else: filename = 'b.yaml'#'configurations/clean_file_config.yaml'
+    else: filename = 'configurations/clean_file_config.yaml'
     runGenerator(filename)

@@ -58,6 +58,14 @@ class test_data(object):
 	def load_ts_data(self, ts_df=None):
 		"""Takes a dataframe of TS data and stores it as a class variable. TS data must be a single row."""
 		self.ts_df = ts_df
+
+	def get_random_state_code(self, state_codes):
+		state_code = random.choice(state_codes)
+		if state_code in self.geographic['state_FIPS_to_abbreviation']:
+			return state_code
+		else:
+			return self.get_random_state_code(state_codes)
+
 	#edits will be broken out into sub parts as in the rules_engine.py class. This will allow test files to be generated such that they fail conditions inside each edit.
 	#When possible each file will only fail the condition listed in the file name. There will be cases when test files fail additional edits, these cases will be documented
 	#to the extent possible.
@@ -2878,10 +2886,11 @@ class test_data(object):
 		path = self.quality_path
 		ts = self.ts_df.copy()
 		lar = self.lar_df.copy()
-		lar.state = lar.state.map(lambda x: self.geographic['state_FIPS_to_abbreviation'][random.choice(list(self.crosswalk_data.state_code))])
+		state_codes = list(self.crosswalk_data.state_code)
+		lar.state = lar.state.map(lambda x: self.geographic['state_FIPS_to_abbreviation'][self.get_random_state_code(state_codes)])
 		#Sets a state code for each LAR and a county code that does not match the state code. 
 		for index, row in lar.iterrows():
-			state_code = random.choice(list(self.crosswalk_data.state_code))
+			state_code = self.get_random_state_code(state_codes)
 			state_abbrev = self.geographic['state_FIPS_to_abbreviation'][state_code]
 			row["state"] = state_abbrev
 			row["county"] = random.choice(list(self.crosswalk_data.county_fips[self.crosswalk_data.state_code!=state_code]))
