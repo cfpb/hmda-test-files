@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import sys
 
 import pandas as pd
 import yaml
@@ -10,8 +11,12 @@ import lar_generator
 from rules_engine import rules_engine
 import utils
 
-config_file = 'configurations/clean_file_config.yaml'
-bank_config = 'configurations/bank1_config.yaml'
+if len(sys.argv) == 2:
+	config_file = sys.argv[1]
+	bank_config = sys.argv[1]
+else:
+	config_file = 'configurations/clean_file_config.yaml'
+	bank_config = 'configurations/bank1_config.yaml'
 geo_config_file='configurations/geographic_data.yaml'
 filepaths_file = 'configurations/test_filepaths.yaml'
 lar_schema_file="../schemas/lar_schema.json"
