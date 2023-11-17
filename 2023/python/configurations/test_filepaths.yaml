@@ -1,0 +1,18 @@
+clean_filepath: "2023/edits_files/{bank_name}/clean_files/"
+clean_filename: "{bank_name}_clean_{row_count}_rows.txt"
+edit_file_path: "2023/edits_files/{bank_name}/test_files/"
+
+validity_filepath: "2023/edits_files/{bank_name}/test_files/validity/"
+syntax_filepath: "2023/edits_files/{bank_name}/test_files/syntax/"
+quality_filepath: "2023/edits_files/{bank_name}/test_files/quality/"
+quality_pass_s_v_filepath: "2023/edits_files/{bank_name}/test_files/quality_pass_s_v/"
+row_level_modification_config:
+ts_schema_json: "2023/schemas/ts_schema.json"
+lar_schema_json: "2023/schemas/lar_schema.json"
+log_filepath: "logs/"
+log_filename: 'clean_files_log.txt'
+log_mode: 'w'
+
+edit_report_output_filepath: "2023/edit_reports/"
+clean_file_report_output_filename: "{bank_name}_clean_file_report.txt"
+edit_report_output_filename: "{bank_name}_edit_file_report.txt"

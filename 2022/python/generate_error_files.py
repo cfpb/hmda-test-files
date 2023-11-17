@@ -18,12 +18,12 @@ import utils
 #This script relies on the presence of a clean data file
 
 #load configurations
-config_file = 'configurations/clean_file_config.yaml'
-bank_config = 'configurations/bank1_config.yaml'
-geo_config_file='configurations/geographic_data.yaml'
-filepaths_file = 'configurations/test_filepaths.yaml'
-lar_schema_file="../schemas/lar_schema.json"
-ts_schema_file="../schemas/ts_schema.json"
+config_file = '2022/python/configurations/clean_file_config.yaml'
+bank_config = '2022/python/configurations/bank1_config.yaml'
+geo_config_file='2022/python/configurations/geographic_data.yaml'
+filepaths_file = '2022/python/configurations/test_filepaths.yaml'
+lar_schema_file="2022/schemas/lar_schema.json"
+ts_schema_file="2022/schemas/ts_schema.json"
 
 #load config data
 print("start initialization of LAR generator")
@@ -51,7 +51,7 @@ filepaths["quality_filepath"] = filepaths["quality_filepath"].format(bank_name=b
 DEBUG = False
 
 #load geographic data
-geographic_data = pd.read_csv(geo_config['geographic_data_file'], delimiter=',', header=0,
+geographic_data = pd.read_csv(geo_config['geographic_data_file'], delimiter='|', header=0,
 	names=geo_config['file_columns'], dtype=object) #instantiate Census file data as dataframe
 
 #create 11 digit Census Tract codes from 5 digit county and 6 digit tract

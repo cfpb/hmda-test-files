@@ -1,5 +1,5 @@
-geographic_data_file: '../dependencies/ffiec_census_2022.txt'
-zip_code_file: "../dependencies/zip_codes.json"
+geographic_data_file: '2022/dependencies/ffiec_census_2022.txt'
+zip_code_file: "2022/dependencies/zip_codes.json"
 
 file_columns: ['collection_year', 'msa_md', 'state_code', 'county', 'tracts', 'ffiec_median_family_income', 
                 'population','minority_population_%', 'number_of_owner_occupied_units', 'number_of_1_to_4_family_units', 

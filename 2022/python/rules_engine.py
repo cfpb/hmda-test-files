@@ -21,7 +21,7 @@ class rules_engine(object):
 	"""
 
 	def __init__(self, config_data, state_codes, state_codes_rev, geographic_data, full_lar_file_check=False,
-		lar_schema_file="../schemas/lar_schema.json", ts_schema_file="../schemas/ts_schema.json"):
+		lar_schema_file="2022/schemas/lar_schema.json", ts_schema_file="2022/schemas/ts_schema.json"):
 
 		print("initializing rules engine")
 

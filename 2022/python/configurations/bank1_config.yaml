@@ -2,10 +2,14 @@
     desc: The name of the institution filing data
     type: String
     value: Bank1
+  file_length:
+    desc: The number of lines in the clean or test data file
+    type: Integer
+    value: 100
   activity_year:
     desc: The year of activity
     type: Integer
-    value: 2022
+    value: 2023
   calendar_quarter:
     desc: The calendar quarter to which the filing relates
     type: Integer
@@ -42,10 +46,7 @@
     desc: The agency code of the filing institution
     type: Integer
     value: 9
-  file_length:
-    desc: The number of lines in the clean or test data file
-    type: Integer
-    value: 100
+
   lei:
     desc: The Legal Entity Identifier of the institution
     type: String
