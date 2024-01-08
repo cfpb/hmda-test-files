@@ -11,8 +11,10 @@ import lar_generator
 from rules_engine import rules_engine
 import utils
 
+
+
 config_file = '2023/python/configurations/clean_file_config.yaml'
-bank_config = '2023/python/configurations/bank1_config.yaml'
+bank_config = '2023/python/configurations/bank2_config.yaml'
 
 if len(sys.argv) == 2:
 	bank_config = sys.argv[1]

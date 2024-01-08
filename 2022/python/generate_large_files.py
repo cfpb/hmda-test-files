@@ -10,7 +10,7 @@ import utils
 
 #set configuration files
 #FIXME these will be moved to a single config location
-bank_config = '2022/python/configurations/bank1_config.yaml'
+bank_config = '2022/python/configurations/bank2_config.yaml'
 lar_config_file = '2022/python/configurations/clean_file_config.yaml'
 filepaths_file = '2022/python/configurations/test_filepaths.yaml'
 large_file_config = "2022/python/configurations/large_file_config.yaml"
