@@ -11,8 +11,8 @@ class test_data_creator(object):
 	altered file to fail the specified edit. Modified files may fail other 
 	edits as well."""
 
-	def __init__(self, state_codes, county_df, bank_config_data, filepath_config="2023/python/configurations/test_filepaths.yaml",
-		lar_schema_file="2023/schemas/lar_schema.json", ts_schema_file="2023/schemas/ts_schema.json"):
+	def __init__(self, state_codes, county_df, bank_config_data, filepath_config="2024/python/configurations/test_filepaths.yaml",
+		lar_schema_file="2024/schemas/lar_schema.json", ts_schema_file="2024/schemas/ts_schema.json"):
 		"""Set initial class variables.
 
 		The crosswak_data variable contains the filepath and name for geographic 

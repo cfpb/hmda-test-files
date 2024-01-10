@@ -1,4 +1,4 @@
-geographic_data_file: '2024/dependencies/ffiec_census_2023.txt'
+geographic_data_file: '2024/dependencies/ffiec_census_2024.txt'
 zip_code_file: "2024/dependencies/zip_codes.json"
 
 file_columns: ['collection_year', 'msa_md', 'state_code', 'county', 'tracts', 'ffiec_median_family_income', 

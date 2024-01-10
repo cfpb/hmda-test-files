@@ -76,6 +76,9 @@ ts_df, lar_df = utils.read_data_file(path=clean_data_path, data_file=clean_file_
 test_file_gen.load_ts_data(ts_df)
 test_file_gen.load_lar_data(lar_df)
 
+print(test_file_gen.validity_path)
+print(test_file_gen.syntax_path)
+print(test_file_gen.quality_path)
 
 for edit in test_file_gen.test_file_funcs:
 	print("creating file for: ", edit)
@@ -156,3 +159,4 @@ for quality_file in quality_files:
 #Validates quality edits and stores them in a new directory specified in the test filepaths configuration. 
 #FIXME: this creates a quality edit file that passes S/V for every file in the directory
 #FIXME: change this to only reference the quality files with the current clean file row count
+
