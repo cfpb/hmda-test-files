@@ -9,7 +9,7 @@
   activity_year:
     desc: The year of activity
     type: Integer
-    value: 2023
+    value: 2022
   calendar_quarter:
     desc: The calendar quarter to which the filing relates
     type: Integer
