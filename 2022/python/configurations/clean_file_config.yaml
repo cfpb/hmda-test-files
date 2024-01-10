@@ -1,15 +1,15 @@
     name:
       desc: The name of the institution filing data
       type: String
-      value: Bank1
+      value: Bank2
     lei:
       desc: The Legal Entity Identifier of the institution
       type: String
-      value: BANK1LEIFORTEST12345
+      value: FRONTENDTESTBANK9999
     tax_id:
       desc: The federal tax ID of the filing institution
       type: String
-      value: 02-1234567
+      value: 53-1111111
     activity_year:
       desc: The year of activity
       type: Integer

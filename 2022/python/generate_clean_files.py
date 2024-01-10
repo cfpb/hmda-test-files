@@ -11,16 +11,16 @@ import lar_generator
 from rules_engine import rules_engine
 import utils
 
-config_file = 'configurations/clean_file_config.yaml'
-bank_config = 'configurations/bank1_config.yaml'
+config_file = '2022/python/configurations/clean_file_config.yaml'
+bank_config = '2022/python/configurations/bank2_config.yaml'
 
 if len(sys.argv) == 2:
 	bank_config = sys.argv[1]
 
-geo_config_file='configurations/geographic_data.yaml'
-filepaths_file = 'configurations/test_filepaths.yaml'
-lar_schema_file="../schemas/lar_schema.json"
-ts_schema_file="../schemas/ts_schema.json"
+geo_config_file='2022/python/configurations/geographic_data.yaml'
+filepaths_file = '2022/python/configurations/test_filepaths.yaml'
+lar_schema_file="2022/schemas/lar_schema.json"
+ts_schema_file="2022/schemas/ts_schema.json"
 
 LOGGING = False
 #load config data
@@ -128,7 +128,11 @@ if DEBUG:
 
 clean_filename = filepaths["clean_filename"].format(bank_name=bank_config_data["name"]["value"], row_count=bank_config_data["file_length"]["value"])
 clean_filepath = filepaths["clean_filepath"].format(bank_name=bank_config_data["name"]["value"])
-
+print("*********")
+print("clean_filename:")
+print(clean_filename)
+print("clean_filepath:")
+print(clean_filepath)
 #create directory for test files if it does not exist
 if not os.path.exists(clean_filepath):
 	os.makedirs(clean_filepath)

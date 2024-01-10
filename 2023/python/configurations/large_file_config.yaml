@@ -1,0 +1,8 @@
+    large_file_base_length:
+      desc: the row count of the clean file to use as a base for the large clean file
+      type: Integer
+      value: 100
+    large_file_write_length:
+      desc: The number of lines in the large clean file
+      type: Integer
+      value: 500000

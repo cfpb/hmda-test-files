@@ -1,0 +1,5 @@
+data_filepath: "../edits_files/clean_files/Bank1/"
+data_filename: "clean_file_100_rows_Bank1.txt"
+edit_report_output_filepath: "../edit_reports/"
+clean_file_report_output_filename: "{bank_name}_clean_file_report.txt"
+edit_report_output_filename: "{bank_name}_edit_file_report.txt"

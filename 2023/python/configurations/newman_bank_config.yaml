@@ -1,0 +1,56 @@
+  name:
+    desc: The name of the institution filing data
+    type: String
+    value: Newman Test Bank
+  activity_year:
+    desc: The year of activity
+    type: Integer
+    value: 2023
+  calendar_quarter:
+    desc: The calendar quarter to which the filing relates
+    type: Integer
+    value: 4
+  contact_name:
+    desc: The name of the contact person for the institution
+    type: String
+    value: Mr. Smug Pockets
+  contact_tel:
+    desc: The telephone number of the contact person
+    type: String
+    value: 555-555-5555
+  contact_email:
+    desc: The email of the contact person
+    type: String
+    value: pockets@ficus.com
+  street_addy:
+    desc: Property street address
+    type: String
+    value: 1234 Hocus Potato Way
+  city:
+    desc: Office city
+    type: String
+    value: Tatertown
+  state:
+    desc: Office state
+    type: String
+    value: UT
+  zip_code:
+    desc: Office ZIP code
+    type: String
+    value: 84096
+  agency_code:
+    desc: The agency code of the filing institution
+    type: Integer
+    value: 9
+  file_length:
+    desc: The number of lines in the clean or test data file
+    type: Integer
+    value: 100
+  lei:
+    desc: The Legal Entity Identifier of the institution
+    type: String
+    value: NEWMANLEITEST1234678
+  tax_id:
+    desc: The federal tax ID of the filing institution
+    type: String
+    value: 84-7651434

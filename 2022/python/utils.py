@@ -61,9 +61,9 @@ def read_data_file(path, data_file, lar_schema=None, ts_schema=None):
 	dataframe and returns them.
 	"""
 	if lar_schema is None:
-		lar_schema = pd.DataFrame(json.load(open("../schemas/lar_schema.json", "r")))
+		lar_schema = pd.DataFrame(json.load(open("2022/schemas/lar_schema.json", "r")))
 	if ts_schema is None:
-		ts_schema = pd.DataFrame(json.load(open("../schemas/ts_schema.json", "r")))
+		ts_schema = pd.DataFrame(json.load(open("2022/schemas/ts_schema.json", "r")))
 	
 
 	if data_file is not None:

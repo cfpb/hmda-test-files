@@ -10,10 +10,10 @@ import utils
 
 #set configuration files
 #FIXME these will be moved to a single config location
-bank_config = 'configurations/bank1_config.yaml'
-lar_config_file = 'configurations/clean_file_config.yaml'
-filepaths_file = 'configurations/test_filepaths.yaml'
-large_file_config = "configurations/large_file_config.yaml"
+bank_config = '2022/python/configurations/bank2_config.yaml'
+lar_config_file = '2022/python/configurations/clean_file_config.yaml'
+filepaths_file = '2022/python/configurations/test_filepaths.yaml'
+large_file_config = "2022/python/configurations/large_file_config.yaml"
 
 #Loads the clean lar file configuration. this may no longer be needed here
 with open(lar_config_file) as f:
@@ -40,6 +40,15 @@ source_filepath = filepaths['clean_filepath'].format(bank_name=bank_name)
 source_filename = filepaths['clean_filename'].format(bank_name=bank_name, row_count=base_clean_file_length)
 output_filepath = filepaths['clean_filepath'].format(bank_name=bank_name)
 output_filename = filepaths['clean_filename'].format(bank_name=bank_name, row_count=large_file_length)
+print("*********")
+print("source_filepath:")
+print(source_filepath)
+print("source_filename:")
+print(source_filename)
+print("output_filepath:")
+print(output_filepath)
+print("output_filename:")
+print(output_filename)
 
 #Loads in TS and LAR data from the source filepath and source filename. 
 ts_data, lar_data = utils.read_data_file(path=source_filepath, 
@@ -62,7 +71,8 @@ utils.write_file(path=output_filepath, ts_input=ts_data, lar_input=lar_data, nam
 statement = (str("{:,}".format(len(lar_data.index))) + 
             " Row File Created for " + str(bank_name) + 
             " File Path: " + str(output_filepath+output_filename))
-        
+print("*********")
+print()        
 print(statement)
 
  

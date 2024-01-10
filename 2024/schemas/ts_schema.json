@@ -1,0 +1,76 @@
+[{
+    "field": "record_id",
+    "dtypes_": ["int"],
+    "data_type": "numeric",
+    "valid_vals": [1]
+}, {
+    "field": "inst_name",
+    "dtypes_": ["string"],
+    "data_type": "alphanumeric",
+    "valid_vals": []
+}, {
+    "field": "calendar_year",
+    "dtypes_": ["int"],
+    "data_type": "numeric",
+    "valid_vals": []
+}, {
+    "field": "calendar_quarter",
+    "dtypes_": ["int"],
+    "data_type": "numeric",
+    "valid_vals": [4]
+}, {
+    "field": "contact_name",
+    "dtypes_": ["string"],
+    "data_type": "alphanumeric",
+    "valid_vals": []
+}, {
+    "field": "contact_tel",
+    "dtypes_": ["string"],
+    "data_type": "alphanumeric",
+    "valid_vals": []
+}, {
+    "field": "contact_email",
+    "dtypes_": ["string"],
+    "data_type": "alphanumeric",
+    "valid_vals": []
+}, {
+    "field": "contact_street_address",
+    "dtypes_": ["string"],
+    "data_type": "alphanumeric",
+    "valid_vals": []
+}, {
+    "field": "office_city",
+    "dtypes_": ["string"],
+    "data_type": "alphanumeric",
+    "valid_vals": []
+}, {
+    "field": "office_state",
+    "dtypes_": ["string"],
+    "data_type": "alphanumeric",
+    "valid_vals": []
+}, {
+    "field": "office_zip",
+    "dtypes_": ["string"],
+    "data_type": "alphanumeric",
+    "valid_vals": []
+}, {
+    "field": "federal_agency",
+    "dtypes_": ["int"],
+    "data_type": "numeric",
+    "valid_vals": [1, 2, 3, 5, 7, 9]
+}, {
+    "field": "lar_entries",
+    "dtypes_": ["int"],
+    "data_type": "numeric",
+    "valid_vals": []
+}, {
+    "field": "tax_id",
+    "dtypes_": ["string"],
+    "data_type": "alphanumeric",
+    "valid_vals": []
+}, {
+    "field": "lei",
+    "dtypes_": ["string"],
+    "data_type": "alphanumeric",
+    "valid_vals": []
+}]
