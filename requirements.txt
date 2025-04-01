@@ -1,8 +1,9 @@
-numpy==1.17.4
-pandas==0.25.3
-psycopg2==2.8.4
-pyaml==19.4.1
-python-dateutil==2.8.1
-pytz==2019.3
-PyYAML==5.1.2
-six==1.13.0
+numpy==2.2.4
+pandas==2.2.3
+psycopg2==2.9.10
+pyaml==25.1.0
+python-dateutil==2.9.0.post0
+pytz==2025.2
+PyYAML==6.0.2
+six==1.17.0
+tzdata==2025.2
